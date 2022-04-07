@@ -1,14 +1,12 @@
 <template>
-<!--  服务管理-->
+  <!--  服务管理-->
   <a href="">服务管理</a>
 </template>
 
 <script>
 export default {
-  name: "serve-manage"
+  name: 'serve-manage'
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

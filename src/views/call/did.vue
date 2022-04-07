@@ -5,7 +5,10 @@
       <div class="nav-form">
         <el-form :inline="true" :model="form" class="demo-form-inline">
           <el-form-item label="DID号码">
-            <el-input v-model="form.serialNumber" placeholder="审批人"></el-input>
+            <el-input
+              v-model="form.serialNumber"
+              placeholder="审批人"
+            ></el-input>
           </el-form-item>
           <el-form-item label="所属账户">
             <el-input v-model="form.deviceName" placeholder="审批人"></el-input>
@@ -16,7 +19,9 @@
           </el-form-item>
         </el-form>
         <div>
-          <el-button type="primary" @click="showAddForm(null, '新增设备')">添加DID</el-button>
+          <el-button type="primary" @click="showAddForm(null, '新增设备')"
+            >添加DID</el-button
+          >
         </div>
       </div>
     </div>
@@ -40,24 +45,17 @@
 
         <el-form-item label="DID号码" :label-width="formLabelWidth">
           <el-table
-              ref="singleTable"
-              :data="formTabData"
-              :border="true"
-              :row-class-name="tableRowClassName"
-              highlight-current-row
-              @current-change=""
-              style="width: 100%">
-            <el-table-column
-                type="index"
-                width="50">
-            </el-table-column>
-            <el-table-column
-                property="title"
-                width="120">
-            </el-table-column>
-            <el-table-column
-                property="title"
-                width="120">
+            ref="singleTable"
+            :data="formTabData"
+            :border="true"
+            :row-class-name="tableRowClassName"
+            highlight-current-row
+            @current-change=""
+            style="width: 100%"
+          >
+            <el-table-column type="index" width="50"> </el-table-column>
+            <el-table-column property="title" width="120"> </el-table-column>
+            <el-table-column property="title" width="120">
               <template scope="scope">
                 <a @click="bubbleSort(scope.row.index, scope.row)">上移</a>
                 <a @click="bubbleSort(scope.row.index)">上移</a>
@@ -68,7 +66,9 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="dialogFormVisible = false"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
   </div>
@@ -76,13 +76,13 @@
 
 <script>
 export default {
-  name: "did",
+  name: 'did',
   data() {
     return {
       form: {},
       title: '添加DID',
       dialogFormVisible: true,
-      formLabelWidth: "120px",
+      formLabelWidth: '120px',
 
       addForm: {
         name: '',
@@ -91,26 +91,30 @@ export default {
         turnInside2: '',
         turnInside3: '',
         turnInsideIVR: '',
-        turnInsideSIP: '',
-
+        turnInsideSIP: ''
       },
       formTabData: [
         {
           title: '转内部号码',
           index: 1
-        }, {
+        },
+        {
           title: '转外呼号码1',
           index: 2
-        }, {
+        },
+        {
           title: '转外呼号码2',
           index: 3
-        }, {
+        },
+        {
           title: '转外呼号码3',
           index: 4
-        }, {
+        },
+        {
           title: '转IVR',
           index: 5
-        }, {
+        },
+        {
           title: '转SIP服务器',
           index: 6
         }
@@ -125,7 +129,7 @@ export default {
     bubbleSort(e, index) {
       console.log(index)
     },
-    tableRowClassName({row, rowIndex}){
+    tableRowClassName({ row, rowIndex }) {
       row.index = rowIndex
     }
   }

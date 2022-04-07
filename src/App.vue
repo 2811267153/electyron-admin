@@ -1,22 +1,22 @@
 <template>
   <div id="app">
-    <headers/>
+    <headers />
   </div>
 </template>
 
 <script>
-import headers from "@/components/header";
-  export default {
-    name: 'app',
-    components: {
-      headers
-    }
+import headers from '@/components/header'
+export default {
+  name: 'app',
+  components: {
+    headers
   }
+}
 </script>
 
 <style>
 @import url('./assets/css/index.css');
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;

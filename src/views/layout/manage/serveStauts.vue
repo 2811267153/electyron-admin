@@ -4,10 +4,8 @@
 
 <script>
 export default {
-  name: "serveStarts"
+  name: 'serveStarts'
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

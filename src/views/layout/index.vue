@@ -1,17 +1,14 @@
 <template>
-<!--  字典管理-->
-<div>
-  <router-view>
-  </router-view>
-</div>
+  <!--  字典管理-->
+  <div>
+    <router-view> </router-view>
+  </div>
 </template>
 
 <script>
 export default {
-  name: "index"
+  name: 'index'
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

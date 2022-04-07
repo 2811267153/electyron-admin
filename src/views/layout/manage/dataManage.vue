@@ -17,7 +17,11 @@
         <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
           <el-input v-model="addForm.name" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="数据标示" :label-width="formLabelWidth" prop="mark">
+        <el-form-item
+          label="数据标示"
+          :label-width="formLabelWidth"
+          prop="mark"
+        >
           <el-input v-model="addForm.mark" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="代码值" :label-width="formLabelWidth" prop="value">
@@ -38,50 +42,26 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitAddForm('addForm')">确 定</el-button>
+        <el-button type="primary" @click="submitAddForm('addForm')"
+          >确 定</el-button
+        >
       </div>
     </el-dialog>
 
-    <el-table
-        :data="resultList"
-        style="width: 100%">
-      <el-table-column
-          prop="id"
-          label="ID"
-          width="180">
-      </el-table-column>
-      <el-table-column
-          prop="name"
-          label="名称"
-          width="180">
-      </el-table-column>
-      <el-table-column
-          prop="mark"
-          label="数据标示">
-      </el-table-column>
-      <el-table-column
-          prop="value"
-          label="代码值">
-      </el-table-column>
-      <el-table-column
-          prop="sort"
-          label="排序">
-      </el-table-column>
-      <el-table-column
-          prop="upDataTime"
-          label="更新时间">
-      </el-table-column>
-      <el-table-column
-          prop="sort"
-          label="状态">
+    <el-table :data="resultList" style="width: 100%">
+      <el-table-column prop="id" label="ID" width="180"> </el-table-column>
+      <el-table-column prop="name" label="名称" width="180"> </el-table-column>
+      <el-table-column prop="mark" label="数据标示"> </el-table-column>
+      <el-table-column prop="value" label="代码值"> </el-table-column>
+      <el-table-column prop="sort" label="排序"> </el-table-column>
+      <el-table-column prop="upDataTime" label="更新时间"> </el-table-column>
+      <el-table-column prop="sort" label="状态">
         <template scope="scope">
           <el-tag v-if="scope.row.stats === 1">启用</el-tag>
           <el-tag v-else type="danger">停用</el-tag>
         </template>
       </el-table-column>
-      <el-table-column
-          prop="sort"
-          label="操作">
+      <el-table-column prop="sort" label="操作">
         <template scope="scope">
           <div class="operate">
             <a @click="showAddForm(scope.row, '修改')">修改</a>
@@ -94,10 +74,10 @@
 </template>
 
 <script>
-import {getNowFormatDate} from "@/uti";
+import { getNowFormatDate } from '@/uti'
 
 export default {
-  name: "dataManage",
+  name: 'dataManage',
   data() {
     return {
       title: '',
@@ -114,22 +94,11 @@ export default {
         upDataTime: ''
       },
       rules: {
-        id: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-        ],
-        name: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-        ],
-        mark: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-        ],
-        value: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-        ],
-        sort: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-        ],
-
+        id: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
+        name: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
+        mark: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
+        value: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
+        sort: [{ required: true, message: '请输入活动名称', trigger: 'blur' }]
       }
     }
   },
@@ -138,7 +107,10 @@ export default {
       this.$refs[addForm].validate((valid) => {
         if (valid) {
           this.resultList.push(this.addForm)
-          window.localStorage.setItem('dataManage', JSON.stringify(this.resultList))
+          window.localStorage.setItem(
+            'dataManage',
+            JSON.stringify(this.resultList)
+          )
           this.dialogFormVisible = false
           this.$message({
             message: '提交完成',
@@ -151,22 +123,22 @@ export default {
             type: 'error'
           })
         }
-      });
+      })
     },
 
     showAddForm(row, type) {
       this.title = type
       this.dialogFormVisible = true
       this.resultCopy = this.resultList
-      type === '修改' ? this.addForm = row : this.addForm = {}
-    },
+      type === '修改' ? (this.addForm = row) : (this.addForm = {})
+    }
   },
   created() {
     this.resultList = JSON.parse(window.localStorage.getItem('dataManage'))
   },
   computed: {
-    creatTime(){
-      return this.addForm.upDataTime = getNowFormatDate()
+    creatTime() {
+      return (this.addForm.upDataTime = getNowFormatDate())
     }
   }
 }
@@ -177,7 +149,7 @@ export default {
   display: flex;
   justify-content: space-between;
 }
-.operate a{
+.operate a {
   margin: 0 10px;
 }
 .nav button {

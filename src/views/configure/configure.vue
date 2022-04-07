@@ -1,13 +1,13 @@
 <template>
   <!--设备管理-->
   <div class="">
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
 <script>
 export default {
-  name: "configure"
+  name: 'configure'
 }
 </script>
 
@@ -16,5 +16,4 @@ export default {
 /*  width: calc(100vw - 200px);*/
 /*  overflow: hidden;*/
 /*}*/
-
 </style>

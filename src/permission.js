@@ -8,9 +8,19 @@ import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login','/register',"/home",'/404','/library','/search', '/build', '/detail', '/ipneedpub',]// no redirect whitelist
+const whiteList = [
+  '/login',
+  '/register',
+  '/home',
+  '/404',
+  '/library',
+  '/search',
+  '/build',
+  '/detail',
+  '/ipneedpub'
+] // no redirect whitelist
 
-router.beforeEach(async(to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   // start progress bar
   NProgress.start()
   // set page title
@@ -25,29 +35,35 @@ router.beforeEach(async(to, from, next) => {
     } else if (to.path === '/404') {
       next()
       NProgress.done()
-    } else {     
-          try {
-            // get user info
-            await store.dispatch('user/getInfo')
-            const menuPermission = store.getters['menuPermission']
-            if (whiteList.indexOf(to.path) === -1 && menuPermission && menuPermission.length > 0) {
-              const authority = menuPermission.some(menu => to.meta.permission.includes(menu))
-              if (authority) {
-                next()
-              } else {
-                next(`/404`)
-              }
-            }else{
-              next()
-            }
-          } catch (error) {
-            console.log(error)
-            // remove token and go to login page to re-login
-            await store.dispatch('user/resetToken')
-            Message.error(error || 'Has Error')
-            next({ path: '/home' })
-            NProgress.done()
+    } else {
+      try {
+        // get user info
+        await store.dispatch('user/getInfo')
+        const menuPermission = store.getters['menuPermission']
+        if (
+          whiteList.indexOf(to.path) === -1 &&
+          menuPermission &&
+          menuPermission.length > 0
+        ) {
+          const authority = menuPermission.some((menu) =>
+            to.meta.permission.includes(menu)
+          )
+          if (authority) {
+            next()
+          } else {
+            next(`/404`)
           }
+        } else {
+          next()
+        }
+      } catch (error) {
+        console.log(error)
+        // remove token and go to login page to re-login
+        await store.dispatch('user/resetToken')
+        Message.error(error || 'Has Error')
+        next({ path: '/home' })
+        NProgress.done()
+      }
     }
   } else {
     /* has no token*/

@@ -158,7 +158,7 @@ export default {
     }
   },
   created() {
-    this.list = JSON.parse(window.localStorage.getItem('organizationManage'))
+    this.list = JSON.parse(window.localStorage.getItem('organizationManage')) || []
   },
   computed: {
     createTime(){

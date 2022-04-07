@@ -1,15 +1,11 @@
 <template>
-  <div>
-    dataDictionaryManage
-  </div>
+  <div>dataDictionaryManage</div>
 </template>
 
 <script>
 export default {
-  name: "dataDictionaryManage"
+  name: 'dataDictionaryManage'
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

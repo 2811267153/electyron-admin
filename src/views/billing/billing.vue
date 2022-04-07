@@ -1,15 +1,13 @@
 <template>
-<!--落地管理-->
+  <!--落地管理-->
   <p>落地管理</p>
-  <router-view/>
+  <router-view />
 </template>
 
 <script>
 export default {
-  name: "billing"
+  name: 'billing'
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

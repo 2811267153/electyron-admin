@@ -1,15 +1,13 @@
 <template>
-<!--  呼叫管理-->
+  <!--  呼叫管理-->
 
-  <router-view/>
+  <router-view />
 </template>
 
 <script>
 export default {
-  name: "call"
+  name: 'call'
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
