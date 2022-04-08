@@ -77,7 +77,7 @@
               ></el-input>
             </el-form-item>
             <el-form-item
-              label="序列号"
+              label="SIP号"
               :label-width="formLabelWidth"
               prop="serialNumber"
             >
@@ -215,7 +215,7 @@
         </el-table-column>
         <el-table-column prop="name" label="设备名称" width="100">
         </el-table-column>
-        <el-table-column prop="serialNumber" label="序列号" width="180">
+        <el-table-column prop="serialNumber" label="SIP号" width="180">
         </el-table-column>
         <el-table-column prop="company" label="设备厂商" width="180">
         </el-table-column>

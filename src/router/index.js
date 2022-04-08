@@ -26,6 +26,8 @@ import converse from '@/views/converse/converse'
 import ivr from '@/views/call/ivr'
 import did from '@/views/call/did'
 import calls from '@/views/call/calls'
+import history from "@/views/converse/hisBill";
+import intercept from "@/views/converse/intercept";
 Vue.use(VueRouter)
 
 const routes = [
@@ -167,18 +169,41 @@ const routes = [
       path: '/call/ivr'
     },
     children: [
-      // {meta: {title: 'IVR管理'}, path: '/call/ivr', name: 'ivr', component: ivr, hidden: true},
-      {
-        meta: { title: 'DID管理' },
-        path: '/call/did',
-        name: 'did',
-        component: did
-      },
+      {meta: {title: 'IVR管理'}, path: '/call/ivr', name: 'ivr', component: ivr, hidden: true},
+      // {
+      //   meta: { title: 'DID管理' },
+      //   path: '/call/did',
+      //   name: 'did',
+      //   component: did
+      // },
       {
         meta: { title: '呼叫转移' },
         path: '/call/calls',
         name: 'calls',
         component: calls
+      }
+    ]
+  },
+  {
+    path: '/bill',
+    component: converse,
+    meta: { title: '通话账单' },
+    redirect: {
+      path: '/bill/index'
+    },
+    children: [
+      {meta: {title: '历史话单'}, path: '/bill/index', name: 'billIndex', component: history},
+      // {
+      //   meta: { title: 'DID管理' },
+      //   path: '/call/did',
+      //   name: 'did',
+      //   component: did
+      // },
+      {
+        meta: { title: '拦截通话' },
+        path: '/bill/intercept',
+        name: 'intercept',
+        component: intercept
       }
     ]
   }

@@ -41,6 +41,8 @@
             >{{ scope.row.area[0] }}{{ scope.row.area[1] }}</template
           >
         </el-table-column>
+        <el-table-column prop="SIP" label="SIP号码" width="300">
+        </el-table-column>
         <el-table-column prop="address" label="操作">
           <template scope="scope">
             <el-link
@@ -73,6 +75,13 @@
             prop="name"
           >
             <el-input v-model="addForm.name" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item
+            label="SIP号码"
+            :label-width="formLabelWidth"
+            prop="SIP"
+          >
+            <el-input v-model="addForm.SIP" autocomplete="off"></el-input>
           </el-form-item>
         </div>
         <div class="width">
@@ -150,7 +159,9 @@ export default {
       rules: {
         name: [{ required: true, message: '请输入话机名称', trigger: 'blur' }],
         ip: [{ required: true, message: '请输入IP地址', trigger: 'blur' }],
-        area: [{ required: true, message: '请输入所属区域', trigger: 'blur' }]
+        area: [{ required: true, message: '请输入所属区域', trigger: 'blur' }],
+        SIP: [{ required: true, message: '请输入SIP', trigger: 'blur' }],
+
       }
     }
   },
@@ -199,7 +210,7 @@ export default {
     }
   },
   created() {
-    this.list = JSON.parse(window.localStorage.getItem('terminal'))
+    this.list = JSON.parse(window.localStorage.getItem('terminal')) || []
   }
 }
 </script>

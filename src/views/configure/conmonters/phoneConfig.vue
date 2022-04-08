@@ -7,40 +7,47 @@
       </div>
     </div>
     <div class="phone-r">
-      <div class="nav">
-        <div class="na-l">
-          <el-button type="primary" @click="addForms(null, '添加话机')"
-          >添加话机
-          </el-button
-          >
-        </div>
-        <div class="na-l">
-          <el-button type="primary">刷新</el-button>
-          <el-button type="danger">删除</el-button>
-        </div>
+
+      <div class="container">
+        <p>SIP服务器</p>
       </div>
-      <div class="minor-nav">话机列表 <span>SIP服务器 </span></div>
-      <div class="nav mover-nav">
+      <div class="nav-form">
         <el-form :inline="true" :model="form" class="demo-form-inline">
           <el-form-item label="话机名称">
-            <el-input v-model="form.name" placeholder="审批人"></el-input>
+            <el-input v-model="form.name" placeholder="审网管名称批人"></el-input>
           </el-form-item>
           <el-form-item label="SIP号">
-            <el-input v-model="form.SIP" placeholder="审批人"></el-input>
+            <el-input v-model="form.SIP" placeholder="物理地址"></el-input>
           </el-form-item>
           <el-form-item label="话机类型">
-            <el-input v-model="form.type" placeholder="审批人"></el-input>
+            <el-select v-model="form.type" placeholder="协议类型">
+              <el-option
+                  :label="item.label"
+                  :value="item.value"
+                  v-for="item in type"
+              ></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="话机状态">
-            <el-input v-model="form.stats" placeholder="审批人"></el-input>
+            <el-select v-model="form.stats" placeholder="中继类型">
+              <el-option
+                  :label="item.label"
+                  :value="item.value"
+                  v-for="item in relayType"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit">查询</el-button>
+            <el-button @click="onSubmit">重置</el-button>
           </el-form-item>
         </el-form>
-
-        <div class="btn-info">
-          <el-button type="primary">搜索</el-button>
-          <el-button type="primary">重置</el-button>
-        </div>
+        <el-button type="primary" @click="addForms(null, '添加话机')"
+        >添加话机
+        </el-button
+        >
       </div>
+
       <el-table
           :row-class-name="tableRowClassName"
           :data="list"
@@ -168,26 +175,8 @@
             </div>
           </template>
         </el-form-item>
-        <el-form-item>
-          <template scope="scope">
-            <div class="flex">
-              <el-form-item label="录音状态" :label-width="formLabelWidth" prop="recordingStatus">
-                <el-radio-group v-model="addForm.recordingStatus">
-                  <el-radio :label="1">备选项</el-radio>
-                  <el-radio :label="2">备选项</el-radio>
-                  <el-radio :label="3">备选项</el-radio>
-                </el-radio-group>
-              </el-form-item>
-              <el-form-item label="外网呼叫" :label-width="formLabelWidth" prop="extranetCall">
-                <el-radio-group v-model="addForm.extranetCall">
-                  <el-radio :label="1">备选项</el-radio>
-                  <el-radio :label="2">备选项</el-radio>
-                  <el-radio :label="3">备选项</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </div>
-          </template>
-        </el-form-item>
+
+
         <el-form-item>
           <template>
             <div class="flex">
@@ -270,7 +259,7 @@
       <p class="title">
         <b>充值提醒：</b>
         <span
-        >你将要为 {{ rechargeInfo.name }} ({{rechargeInfo.SIP}})进行充值</span
+        >你将要为 {{ rechargeInfo.name }} ({{ rechargeInfo.SIP }})进行充值</span
         >
       </p>
       <el-input
@@ -343,6 +332,10 @@ export default {
         {label: '6 + 6', value: '6 + 6'},
         {label: '12 + 12', value: '12 + 12'},
         {label: '60 + 60', value: '60 + 60'}
+      ],
+      relayType: [
+        {label: '开启', value: '开启'},
+        {label: '关闭', value: '关闭'},
       ],
       combo: [
         {label: '基本套餐', value: '基本套餐'},
@@ -445,12 +438,6 @@ export default {
   width: 300px;
 }
 
-.minor-nav {
-  padding: 15px 10px;
-  background-color: #ccc;
-  margin: 10px 0;
-  border-radius: 5px;
-}
 
 .phone-r {
   flex: 1;
@@ -459,22 +446,13 @@ export default {
   border-left: 2px solid #cccccc;
 }
 
-.phone-r .nav {
-  justify-content: space-between;
-  display: flex;
-}
-
-.mover-nav {
-  justify-content: space-evenly;
-}
-
 .flex {
   display: flex;
   margin-right: 20px;
 }
 
 .width {
-  width: 50%;
+  flex: 1;
 }
 
 .a-link {
@@ -489,5 +467,31 @@ export default {
   padding: 5px 10px;
   background-color: #f56c6c;
   color: white;
+}
+
+.phone-r.container {
+  border: 1px solid #ccc;
+  margin: 0 20px;
+}
+
+.phone-r .container p {
+  background-color: #f2f2f2;
+  padding: 10px 15px;
+}
+
+.nav-form {
+  margin: 15px;
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+}
+
+#networkManagement .width {
+  display: flex;
+  justify-content: space-between;
+}
+
+.width > * {
+  flex: 1;
 }
 </style>

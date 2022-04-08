@@ -1,38 +1,39 @@
 <template>
   <div id="calls">
     <div class="container">
-      <p>{{ $route.meta.title }}</p>
-      <div class="nav-form">
-        <el-form :inline="true" :model="form" class="demo-form-inline">
-          <el-form-item label="关联号码">
-            <el-input v-model="form.associatedNumber"></el-input>
-          </el-form-item>
-          <el-form-item label="转移类型">
-            <el-select v-model="form.transferType" placeholder="请选择">
-              <el-option
+        <p>{{ $route.meta.title }}</p>
+    </div>
+    <div class="nav-form">
+      <el-form :inline="true" :model="form" class="demo-form-inline">
+        <el-form-item label="关联号码">
+          <el-input v-model="form.associatedNumber"></el-input>
+        </el-form-item>
+        <el-form-item label="转移类型">
+          <el-select v-model="form.transferType" placeholder="请选择">
+            <el-option
                 v-for="item in transferType"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="转移参数">
-            <el-input v-model="form.transferParameter"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="">查询</el-button>
-            <el-button @click="">重置</el-button>
-          </el-form-item>
-        </el-form>
-        <div>
-          <el-button type="primary" @click="showAddForm(null, '添加呼叫转移')"
-            >添加呼叫转移</el-button
-          >
-        </div>
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="转移参数">
+          <el-input v-model="form.transferParameter"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="">查询</el-button>
+          <el-button @click="">重置</el-button>
+        </el-form-item>
+      </el-form>
+      <div>
+        <el-button type="primary" @click="showAddForm(null, '添加呼叫转移')"
+        >添加呼叫转移</el-button
+        >
       </div>
     </div>
+
 
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="addForm" :rules="rules" ref="addForm">
@@ -277,28 +278,24 @@ export default {
 </script>
 
 <style scoped>
-#calls {
-}
-
 .container {
   border: 1px solid #ccc;
+  margin: 0 20px;
 }
 
 .container p {
   background-color: #f2f2f2;
-
   padding: 10px 15px;
 }
 
 .nav-form {
-  margin: 10px 20px;
-  align-items: center;
-
+  margin: 15px;
+  height: 40px;
   display: flex;
   justify-content: space-between;
 }
 
-.width {
+#calls .width {
   display: flex;
   justify-content: space-between;
 }

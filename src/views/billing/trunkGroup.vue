@@ -283,9 +283,9 @@ export default {
             message: '提交完成',
             type: 'success'
           })
-          console.log(this.addForm)
-          this.list.push(this.addForm)
-          window.localStorage.setItem('network', JSON.stringify(this.list))
+          console.log(this.addFrom)
+          this.list.push(this.addFrom)
+          window.localStorage.setItem('trunkGroupData', JSON.stringify(this.list))
           this.dialogFormVisible = false
         } else {
           this.$message.error('提交失败， 请重试')
@@ -355,7 +355,7 @@ export default {
     // }
   },
   created() {
-    this.list = JSON.parse(window.localStorage.getItem('network')) || []
+    this.list = JSON.parse(window.localStorage.getItem('trunkGroupData')) || []
   }
 }
 </script>
