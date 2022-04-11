@@ -27,6 +27,8 @@ import ivr from '@/views/call/ivr'
 import did from '@/views/call/did'
 import calls from '@/views/call/calls'
 import history from "@/views/converse/hisBill";
+
+import hisBill from "@/views/converse/hisBill";
 import intercept from "@/views/converse/intercept";
 Vue.use(VueRouter)
 
@@ -192,7 +194,7 @@ const routes = [
       path: '/bill/index'
     },
     children: [
-      {meta: {title: '历史话单'}, path: '/bill/index', name: 'billIndex', component: history},
+      {meta: {title: '历史话单'}, path: '/bill/index', name: 'billIndex', component: hisBill},
       // {
       //   meta: { title: 'DID管理' },
       //   path: '/call/did',
