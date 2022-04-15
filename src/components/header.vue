@@ -2,6 +2,7 @@
   <div id="headerd">
     <div class="header app-header">
       <el-page-header @back="goBack" content="详情页面"/>
+<!--      <p>  <span>用户</span>: {{userInfo.data.user.username || ''}} <el-button @click="loginOut" class="login-out">退出</el-button></p>-->
     </div>
     <div class="header-nav">
       <div class="main-sub">
@@ -59,24 +60,37 @@
 </template>
 
 <script>
+import {delLogin} from "@/newwork/user";
+
 export default {
   name: 'headers',
   methods: {
     goBack() {
       this.$emit('goBack')
-    }
+    },
     // select(index,indexPath){
     //   console.log(index,indexPath)
     // }
+    loginOut(){
+      delLogin().then(res => {
+        console.log(res)
+      }).catch(e => {
+        this.$message.error(e)
+      })
+    }
   },
   created() {
-    console.log(this.$router.options.routes[1])
+    // this.userInfo = this.$store.state.userInfo
+
   },
   computed: {
     routes() {
       return this.$router.options.routes[1]
+    },
+    userInfo(){
+      return this.$store.state.userInfo
     }
-  }
+  },
 }
 </script>
 
@@ -124,5 +138,8 @@ export default {
 
 .el-menu-vertical-demo {
   background-color: #ff7800;
+}
+.login-out {
+  margin-left: 10px;
 }
 </style>

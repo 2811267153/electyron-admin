@@ -39,6 +39,7 @@
 
 <script>
 import getLogin from "@/newwork/user";
+import {setCookie} from "@/auth";
 export default {
   name: "login",
   data() {
@@ -63,10 +64,10 @@ export default {
     },
     clear(type) {
       if (type === 'text') {
-        this.form.number = '',
+        this.form.number = ''
             this.form.isClearNumShow = false
       } else {
-        this.form.pad = '',
+        this.form.pad = ''
             this.form.isPadShow = false
       }
     },
@@ -76,8 +77,11 @@ export default {
     onSubmit(){
       getLogin(this.username, this.password).then(res => {
         console.log(res)
-        this.$store.dispatch('userInfo', res.data)
+        this.$store.dispatch('userInfo', res.data.data.user)
         window.localStorage.setItem('userInfo', JSON.stringify(res.data))
+        console.log(this.$store.state.userInfo)
+        setCookie(res.data.data.JSESSIONID)
+        this.$router.push({path: '/home'})
       }).catch(e => {
         console.log(e)
         this.$message.error('登录失败请重试')

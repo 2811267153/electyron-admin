@@ -224,6 +224,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'rate',
   data() {

@@ -1,6 +1,5 @@
 <template>
   <!--落地管理-->
-  <p>落地管理</p>
   <router-view />
 </template>
 

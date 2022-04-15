@@ -12,20 +12,25 @@ export default {
   name: 'app',
   data(){
     return {
-      userInfo: null
+      userInfo: {}
     }
   },
   components: {
   },
   created() {
-    this.userInfo = JSON.parse(window.localStorage.getItem('userInfo')) || null
+    this.userInfo = JSON.parse(window.localStorage.getItem('userInfo')) || {}
+    console.log(this.userInfo)
+
+    this.$store.dispatch('userInfo', this.userInfo)
+
     // if(this.$store.state.musicInfo == null){
     //   this.$router.push({path: '/user'})
     // }
-    if(this.userInfo === null ){
+    if(Object.keys(this.userInfo).length === 0){
       this.$router.push('/user')
+    }else {
+      this.$router.push({path: '/home'})
     }
-    this.$router.push({path: '/home'})
   }
 }
 </script>

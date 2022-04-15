@@ -11,30 +11,19 @@
     </div>
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form ref="addForm" :model="addForm" :rules="rules">
-        <el-form-item label="ID" :label-width="formLabelWidth" prop="id">
-          <el-input v-model="addForm.id" autocomplete="off"></el-input>
-        </el-form-item>
         <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
           <el-input v-model="addForm.name" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item
-          label="数据标示"
-          :label-width="formLabelWidth"
-          prop="mark"
-        >
-          <el-input v-model="addForm.mark" autocomplete="off"></el-input>
+
+        <el-form-item label="字典类型编码" :label-width="formLabelWidth" prop="code">
+          <el-input v-model="addForm.code" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="代码值" :label-width="formLabelWidth" prop="value">
-          <el-input v-model="addForm.value" autocomplete="off"></el-input>
+        <el-form-item label="创建时间" :label-width="formLabelWidth" prop="creatTime">
+          <el-input v-model="creatTimes" autocomplete="off" readonly></el-input>
         </el-form-item>
-        <el-form-item label="排序" :label-width="formLabelWidth" prop="sort">
-          <el-input v-model="addForm.sort" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="排序" :label-width="formLabelWidth" prop="sort">
-          <el-input v-model="creatTime" autocomplete="off" readonly></el-input>
-        </el-form-item>
+
         <el-form-item label="状态" :label-width="formLabelWidth">
-          <el-radio-group v-model="addForm.stats">
+          <el-radio-group v-model="addForm.status">
             <el-radio :label="1">启用</el-radio>
             <el-radio :label="2">停用</el-radio>
           </el-radio-group>
@@ -43,21 +32,26 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="submitAddForm('addForm')"
-          >确 定</el-button
+        >确 定
+        </el-button
         >
       </div>
     </el-dialog>
 
     <el-table :data="resultList" style="width: 100%">
-      <el-table-column prop="id" label="ID" width="180"> </el-table-column>
-      <el-table-column prop="name" label="名称" width="180"> </el-table-column>
-      <el-table-column prop="mark" label="数据标示"> </el-table-column>
-      <el-table-column prop="value" label="代码值"> </el-table-column>
-      <el-table-column prop="sort" label="排序"> </el-table-column>
-      <el-table-column prop="upDataTime" label="更新时间"> </el-table-column>
+      <el-table-column prop="id" label="序号" width="50">
+        <template scope="scope">{{ scope.$index + 1 }}</template>
+      </el-table-column>
+      <el-table-column prop="name" label="字典类型名称" width="300"></el-table-column>
+      <!--      <el-table-column prop="mark" label="数据标示"></el-table-column>-->
+      <!--      <el-table-column prop="value" label="标示码"></el-table-column>-->
+      <el-table-column prop="creatTime" label="更新时间"></el-table-column>
+      <el-table-column prop="code" label="字典类型编码" width="300"></el-table-column>
+      <!--      <el-table-column prop="mark" label="数据标示"></el-table-column>-->
+      <!--      <el-table-column prop="code" label="标示码"></el-table-column>-->
       <el-table-column prop="sort" label="状态">
         <template scope="scope">
-          <el-tag v-if="scope.row.stats === 1">启用</el-tag>
+          <el-tag v-if="scope.row.status === 1">启用</el-tag>
           <el-tag v-else type="danger">停用</el-tag>
         </template>
       </el-table-column>
@@ -65,7 +59,7 @@
         <template scope="scope">
           <div class="operate">
             <a @click="showAddForm(scope.row, '修改')">修改</a>
-            <a @click="">删除</a>
+            <a @click="removeIt(scope.row)">删除</a>
           </div>
         </template>
       </el-table-column>
@@ -74,7 +68,14 @@
 </template>
 
 <script>
-import { getNowFormatDate } from '@/uti'
+import {getNowFormatDate, randomWord} from '@/uti'
+
+import {
+  addDictionaryList,
+  addDictionaryTYpe,
+  removeDateDictionaryList,
+  upDateDictionaryList
+} from "@/newwork/system-colltroner";
 
 export default {
   name: 'dataManage',
@@ -85,32 +86,33 @@ export default {
       dialogFormVisible: false,
       resultList: [],
       addForm: {
-        id: '',
         name: '',
-        mark: '',
-        value: '',
-        sort: '',
-        stats: 1,
-        upDataTime: ''
+        creatTime: '',  //创建时间
+        status: 1, // 状态
+        code: '',    //字典编码
+        del: '',
+        id: '',
+        pageNum: 1, //pageNum
+        pageSize: 10,  //分页大小
       },
       rules: {
-        id: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
-        name: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
-        mark: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
-        value: [{ required: true, message: '请输入活动名称', trigger: 'blur' }],
-        sort: [{ required: true, message: '请输入活动名称', trigger: 'blur' }]
+        name: [{required: true, message: '请输入字典类型名称', trigger: 'blur'}],
+        mark: [{required: true, message: '请输入标示码', trigger: 'blur'}],
+        code: [{required: true, message: '请输入字典类型编码', trigger: 'blur'}],
       }
     }
   },
   methods: {
     submitAddForm(addForm) {
-      this.$refs[addForm].validate((valid) => {
+
+      this.$refs['addForm'].validate((valid) => {
         if (valid) {
-          this.resultList.push(this.addForm)
-          window.localStorage.setItem(
-            'dataManage',
-            JSON.stringify(this.resultList)
-          )
+
+          this.title === '新增' ? addDictionaryTYpe(this.addForm).then(res => {
+            this.dictionaryList()
+              }) :      //当前打开的是新增的弹框吗 是就执行第一个不然就执行第二个
+             this.aa(this.addForm)
+
           this.dialogFormVisible = false
           this.$message({
             message: '提交完成',
@@ -125,20 +127,54 @@ export default {
         }
       })
     },
-
+    aa(form) {
+      console.log(form)
+      const data = {}
+      data.id = form.id
+      data.code = form.code
+      data.name = form.name
+      data.status = form.status
+      upDateDictionaryList(data).then(res => {
+        console.log(data)
+        console.log(res, 'ssssssssss')
+      }).catch(e => {
+        console.log(e)
+        this.$message.error(e)
+      })
+    },
+    removeIt(row){
+      console.log(row.id)
+      removeDateDictionaryList(row.id).then(res => {
+        this.dictionaryList(this.addForm)
+      }).catch(e => {
+        this.$message.error(e)
+      })
+    },
     showAddForm(row, type) {
       this.title = type
       this.dialogFormVisible = true
-      this.resultCopy = this.resultList
+      this.addForm = row
+      console.log(this.addForm)
+      // this.resultCopy = this.resultList
       type === '修改' ? (this.addForm = row) : (this.addForm = {})
-    }
+    },
+    dictionaryList(addForm) {
+      addDictionaryList(addForm).then(res => {
+        this.resultList = res.data.data['records']
+      }).catch(e => {
+        this.$message.error('网络请求失败请重试')
+      })
+    },
   },
   created() {
-    this.resultList = JSON.parse(window.localStorage.getItem('dataManage'))
+    this.dictionaryList(this.addForm)
   },
   computed: {
-    creatTime() {
-      return (this.addForm.upDataTime = getNowFormatDate())
+    creatTimes() {
+      return (this.addForm.creatTime = getNowFormatDate())
+    },
+    ids() {
+      // return this.addForm.id = randomWord(false, 13, 16)
     }
   }
 }
@@ -149,9 +185,11 @@ export default {
   display: flex;
   justify-content: space-between;
 }
+
 .operate a {
   margin: 0 10px;
 }
+
 .nav button {
   padding: 10px 15px;
   border-radius: 10px;

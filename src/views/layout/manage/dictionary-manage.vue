@@ -1,10 +1,9 @@
 <template>
   <!--  字典管理-->
   <div>
-    <router-view/>
     <div v-if="$route.path == '/layout/dicManage'">
       <div class="container">
-        <p>网关管理</p>
+        <p>{{ this.$route.meta.title }}</p>
       </div>
       <div class="nav-form">
         <el-form :inline="true" :model="from" class="demo-form-inline">
@@ -16,8 +15,9 @@
             <!--          <el-button @click="onSubmit">重置</el-button>-->
           </el-form-item>
         </el-form>
-        <el-button type="primary" @click="showAddForm(null, '添加网管')"
-        >添加网管</el-button
+        <el-button type="primary" @click="showAddForm(null, '添加字典')"
+        >添加字典
+        </el-button
         >
       </div>
 
@@ -34,7 +34,16 @@
               :label-width="formLabelWidth"
               prop="mark"
           >
-            <el-input v-model="addForm.mark" autocomplete="off"></el-input>
+            <el-select v-model="addForm.mark" placeholder="请选择">
+              <el-option
+                  v-for="item in codeList"
+                  :key="item.value"
+                  :label="item.name"
+                  :disabled="item.status"
+                  :value="item.name">
+              </el-option>
+            </el-select>
+            <el-button class="mask-btn" @click="toPath">添加标示码</el-button>
           </el-form-item>
           <el-form-item label="创建时间" :label-width="formLabelWidth">
             <el-input
@@ -73,11 +82,15 @@
         </el-table-column>
       </el-table>
     </div>
+
+    <router-view/>
+
   </div>
 </template>
 
 <script>
 import {getNowFormatDate} from '@/uti'
+import {addDictionaryList, getDictionaryAll} from "@/newwork/system-colltroner";
 
 export default {
   name: 'serve-manage',
@@ -93,12 +106,19 @@ export default {
       resultCopy: [],
       resultList: [],
       addForm: {
-        name: '',
-        desc: '',
-        mark: '',
-        creatTime: '',
-        status: '1'
+        name: '',  //字典名称
+        mark: '',    //标示码
+        creatTime: '',  //创建时间
+        status: 1, // 状态
+        code: '',    //字典编码
+        del: '',
+        id: '',
+        pageNum: 1,  //分页
+        pageSize: 10,  //大小
+        sort: '', //排序
+        typeId: '',  // typeId
       },
+      codeList: [],
       riles: {
         name: [{required: true, message: '请输入活动名称', trigger: 'blur'}],
         desc: [{required: true, message: '请输入新增描述', trigger: 'blur'}],
@@ -109,18 +129,24 @@ export default {
   computed: {
     creatTime() {
       return (this.addForm.creatTime = getNowFormatDate())
+    },
+    disabled(){
+      console.log(this.item)
     }
   },
   methods: {
-    submitAddForm(addForm) {
-      this.$refs[addForm].validate((valid) => {
+    toPath() {
+      this.$router.push({name: 'dataManage'})
+    },
+    submitAddForm() {
+      this.$refs['addForm'].validate((valid) => {
         if (valid) {
-          console.log(this.resultList)
           this.resultList.push(this.addForm)
-          window.localStorage.setItem(
-              'dicManage',
-              JSON.stringify(this.resultList)
-          )
+          getDictionaryAll(this.addForm).then(res => {
+            console.log(res)
+          }).catch(e => {
+            console.log(e)
+          })
           this.dialogFormVisible = false
           this.$message({
             message: '提交完成',
@@ -142,6 +168,12 @@ export default {
       this.dialogFormVisible = true
       this.resultCopy = this.resultList
       type === '修改' ? (this.addForm = row) : (this.addForm = {})
+      addDictionaryList().then(res => {
+        console.log(res)
+        this.codeList = res.data.data.records
+      }).catch(e => {
+        console.log(e)
+      })
     },
     black() {
       this.dialogFormVisible = false
@@ -190,5 +222,9 @@ export default {
 
 .width > * {
   flex: 1;
+}
+
+.mask-btn {
+  margin-left: 20px;
 }
 </style>
