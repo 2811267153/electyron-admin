@@ -1,15 +1,31 @@
 <template>
   <div id="app">
-    <headers />
+<!--    <headers v-if="$route.path !== '/user'" />-->
+
+    <router-view/>
   </div>
 </template>
 
 <script>
-import headers from '@/components/header'
+// import headers from '@/components/header'
 export default {
   name: 'app',
+  data(){
+    return {
+      userInfo: null
+    }
+  },
   components: {
-    headers
+  },
+  created() {
+    this.userInfo = JSON.parse(window.localStorage.getItem('userInfo')) || null
+    // if(this.$store.state.musicInfo == null){
+    //   this.$router.push({path: '/user'})
+    // }
+    if(this.userInfo === null ){
+      this.$router.push('/user')
+    }
+    this.$router.push({path: '/home'})
   }
 }
 </script>
