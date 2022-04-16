@@ -84,7 +84,7 @@ export default {
         this.$router.push({path: '/home'})
       }).catch(e => {
         console.log(e)
-        this.$message.error('登录失败请重试')
+        this.$message.error('账号或密码输入错误，请重试！')
       })
     },
 

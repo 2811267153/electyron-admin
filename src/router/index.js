@@ -60,15 +60,15 @@ const routes = [
             name: 'serveManage'
           },
           {
-            meta: { title: '字典管理' },
-            path: '/layout/dicManage',
-            component: dictionaryManage,
-            name: 'dicManage',
+            meta: { title: '字典类型' },
+            component: dataManage,
+            path: '/layout/dataManage',
+            name: 'dataManage',
             children: [
               {
-                meta: { title: '数据值' },
-                path: '/layout/dataManage',
-                component: dataManage,
+                meta: { title: '字典管理' },
+                component: dictionaryManage,
+                path: '/layout/dicManage',
                 name: 'dataManage'
               }
             ]

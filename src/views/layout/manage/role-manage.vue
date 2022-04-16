@@ -74,6 +74,7 @@
 </template>
 
 <script>
+import {addReot} from "@/newwork/system-colltroner";
 export default {
   name: 'role-manage',
   data() {

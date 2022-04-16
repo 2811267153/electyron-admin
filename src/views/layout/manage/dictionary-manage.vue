@@ -1,18 +1,13 @@
 <template>
   <!--  字典管理-->
   <div>
-    <div v-if="$route.path == '/layout/dicManage'">
+    <div >
       <div class="container">
         <p>{{ this.$route.meta.title }}</p>
       </div>
       <div class="nav-form">
         <el-form :inline="true" :model="from" class="demo-form-inline">
-          <el-form-item label="网管名称">
-            <el-input v-model="from.searchInp" placeholder="审网管名称批人"></el-input>
-          </el-form-item>
           <el-form-item>
-            <!--          <el-button type="primary" @click="onSubmit">查询</el-button>-->
-            <!--          <el-button @click="onSubmit">重置</el-button>-->
           </el-form-item>
         </el-form>
         <el-button type="primary" @click="showAddForm(null, '添加字典')"
@@ -26,24 +21,15 @@
           <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
             <el-input v-model="addForm.name" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="描述" :label-width="formLabelWidth" prop="desc">
-            <el-input v-model="addForm.desc" autocomplete="off"></el-input>
+          <el-form-item label="排序" :label-width="formLabelWidth" prop="orderNum">
+            <el-input v-model="addForm.orderNum" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item
-              label="标示码"
+              label="字典类型"
+              disabled
               :label-width="formLabelWidth"
-              prop="mark"
           >
-            <el-select v-model="addForm.mark" placeholder="请选择">
-              <el-option
-                  v-for="item in codeList"
-                  :key="item.value"
-                  :label="item.name"
-                  :disabled="item.status"
-                  :value="item.name">
-              </el-option>
-            </el-select>
-            <el-button class="mask-btn" @click="toPath">添加标示码</el-button>
+            <el-input disabled v-model="code"></el-input>
           </el-form-item>
           <el-form-item label="创建时间" :label-width="formLabelWidth">
             <el-input
@@ -53,8 +39,10 @@
             ></el-input>
           </el-form-item>
           <el-form-item label="是否启用" :label-width="formLabelWidth">
-            <el-radio v-model="addForm.status" label="1">开启</el-radio>
-            <el-radio v-model="addForm.status" label="2">关闭</el-radio>
+            <el-radio-group v-model="addForm.status">
+              <el-radio :label="1">启用</el-radio>
+              <el-radio :label="2">停用</el-radio>
+            </el-radio-group>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -66,31 +54,43 @@
         </div>
       </el-dialog>
 
-      <el-table :data="resultList" style="width: 100%">
-        <el-table-column prop="name" label="姓名"></el-table-column>
-        <el-table-column prop="desc" label="描述"></el-table-column>
-        <el-table-column prop="mark" label="状态码"></el-table-column>
-        <el-table-column prop="status" label="标示码"></el-table-column>
-        <el-table-column prop="creatTime" label="创建时间"></el-table-column>
-        <el-table-column prop="mark" label="操作">
+      <el-table :data="resultList" border style="width: 100%">
+        <el-table-column  align="center"  prop="name" label='序号' width="50">
+          <template scope="scope">{{scope.$index}}</template>
+        </el-table-column>
+        <el-table-column  align="center"  prop="name" label='字典名称'></el-table-column>
+        <el-table-column  align="center"  prop="createBy" label="创建人"></el-table-column>
+        <el-table-column  align="center"  prop="status" label="标示码">
+          <template scope="scope">
+            <div v-if="scope.row.status === 1"> <el-tag type="success">启用</el-tag></div>
+            <div v-else> <el-tag type="success">禁用</el-tag></div>
+          </template>
+        </el-table-column>
+        <el-table-column  align="center"  prop="createTime" label="创建时间"></el-table-column>
+        <el-table-column  align="center"  prop="mark" label="操作">
           <template scope="scope">
             <div class="operate">
-              <a @click="showAddForm(scope.row, '修改')">修改</a
-              ><a @click="removeIt(scope.row)">删除</a><a>编辑</a>
+              <a style="margin-right: 20px" @click="showAddForm(scope.row, '修改')">修改</a>
+              <a style="margin-right: 20px" @click="removeIt(scope.row.id)">删除</a>
             </div>
           </template>
         </el-table-column>
       </el-table>
     </div>
 
-    <router-view/>
 
   </div>
 </template>
 
 <script>
 import {getNowFormatDate} from '@/uti'
-import {addDictionaryList, getDictionaryAll} from "@/newwork/system-colltroner";
+import {
+  addDictionaryList,
+  getDictionaryAll,
+  addDictionary,
+  upData,
+  removeDictionary
+} from "@/newwork/system-colltroner";
 
 export default {
   name: 'serve-manage',
@@ -101,52 +101,80 @@ export default {
       from: {
         searchInp: '',
       },
+      showDataList: [
+        {label: '1', value: '字典类型'},
+        {label: '2', value: '字典ID'}
+      ],
       formLabelWidth: '120px',
       dialogFormVisible: false,
-      resultCopy: [],
       resultList: [],
+      showData: '',
       addForm: {
         name: '',  //字典名称
-        mark: '',    //标示码
         creatTime: '',  //创建时间
         status: 1, // 状态
         code: '',    //字典编码
-        del: '',
-        id: '',
         pageNum: 1,  //分页
         pageSize: 10,  //大小
-        sort: '', //排序
+        orderNum: '', //排序
         typeId: '',  // typeId
       },
       codeList: [],
       riles: {
-        name: [{required: true, message: '请输入活动名称', trigger: 'blur'}],
-        desc: [{required: true, message: '请输入新增描述', trigger: 'blur'}],
-        mark: [{required: true, message: '请输入标示码', trigger: 'blur'}]
-      }
+        name: [{required: true, message: '此项为必填项，请确认', trigger: 'blur'}],
+        desc: [{required: true, message: '此项为必填项，请确认', trigger: 'blur'}],
+        mark: [{required: true, message: '此项为必填项，请确认', trigger: 'blur'}],
+        orderNum:  [{required: true, message: '此项为必填项，请确认', trigger: 'blur'}],
+        code:  [{required: true, message: '此项为必填项，请确认', trigger: 'blur'}]
+      },
+      status: [
+        {label: '1', value: '开启'},
+        {label: '0', value: '关闭'},
+      ]
     }
   },
   computed: {
     creatTime() {
       return (this.addForm.creatTime = getNowFormatDate())
     },
-    disabled(){
-      console.log(this.item)
+    code() {
+      return  this.$route.query.name
     }
+
   },
   methods: {
     toPath() {
       this.$router.push({name: 'dataManage'})
     },
+    disabled(status){
+      if(status == 1){
+        return false
+      }else {
+        return  true
+      }
+    },
     submitAddForm() {
       this.$refs['addForm'].validate((valid) => {
         if (valid) {
+          //添加自填编码
+          this.addForm.code = this.$route.query.code
+          this.addForm.typeId = this.$route.query.id
           this.resultList.push(this.addForm)
-          getDictionaryAll(this.addForm).then(res => {
-            console.log(res)
-          }).catch(e => {
-            console.log(e)
-          })
+
+          /*
+          *
+          * 判断用户现在正在进行的操作  新增？ 调用 addDictionary ： upData
+          * */
+         this.title === '修改' ? addDictionary(this.addForm).then(res => {
+               console.log(res)
+          }):
+             upData(this.addForm).then(res => {
+               console.log(res, 'aaaa')
+             }).catch(e => {
+               this.$message.error(e)
+             })
+
+
           this.dialogFormVisible = false
           this.$message({
             message: '提交完成',
@@ -168,31 +196,34 @@ export default {
       this.dialogFormVisible = true
       this.resultCopy = this.resultList
       type === '修改' ? (this.addForm = row) : (this.addForm = {})
-      addDictionaryList().then(res => {
-        console.log(res)
-        this.codeList = res.data.data.records
-      }).catch(e => {
-        console.log(e)
-      })
     },
     black() {
       this.dialogFormVisible = false
       this.resultList = this.resultCopy
     },
-    removeIt(item) {
-      this.resultList.map((i, index) => {
-        if (i === item) {
-          this.resultList.splice(index, 1)
-          window.localStorage.setItem(
-              'dicManage',
-              JSON.stringify(this.resultList)
-          )
-        }
+    removeIt(id) {
+        console.log(id)
+      removeDictionary(id).then(res => {
+        console.log(res)
+      }).catch(e => {
+        this.$message.error(e)
+      })
+    },
+
+    getDictionaryAll(id){
+      getDictionaryAll(id).then(res => {
+        console.log(res)
+        this.resultList = res.data.data
+      }).catch(e => {
+        this.$message.error(e)
       })
     }
   },
   created() {
-    this.resultList = JSON.parse(window.localStorage.getItem('dicManage')) || []
+    this.addForm.code = this.$route.query.code
+    console.log( this.addForm.code )
+    // this.resultList = JSON.parse(window.localStorage.getItem('dicManage')) || []
+    this.getDictionaryAll(this.addForm )
   }
 }
 </script>

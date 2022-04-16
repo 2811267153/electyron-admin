@@ -1,69 +1,63 @@
 <template>
   <div>
-    <div class="nav">
-      <div class="nav-l">
-        <button>刷新</button>
-        <button @click="showAddForm(null, '新增')">新增</button>
+    <div v-if="$route.path == '/layout/dataManage'">
+      <div class="nav">
+        <div class="nav-l">
+          <el-button type="primary"  @click="showAddForm(null, '新增')">新增</el-button>
+        </div>
       </div>
-      <div class="nav-r">
-        <button>返回</button>
-      </div>
+      <el-dialog :title="title" :visible.sync="dialogFormVisible">
+        <el-form ref="addForm" :model="addForm" :rules="rules">
+          <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
+            <el-input v-model="addForm.name" autocomplete="off"></el-input>
+          </el-form-item>
+
+          <el-form-item label="字典类型编码" :label-width="formLabelWidth" prop="code">
+            <el-input v-model="addForm.code" autocomplete="off"></el-input>
+          </el-form-item>
+
+          <el-form-item label="状态" :label-width="formLabelWidth">
+            <el-radio-group v-model="addForm.status">
+              <el-radio :label="1">启用</el-radio>
+              <el-radio :label="2">停用</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="submitAddForm('addForm')"
+          >确 定
+          </el-button
+          >
+        </div>
+      </el-dialog>
+
+      <el-table :data="resultList" style="width: 100%">
+        <el-table-column prop="id" label="序号" width="50">
+          <template scope="scope">{{ scope.$index + 1 }}</template>
+        </el-table-column>
+        <el-table-column prop="name" label="字典类型名称" width="300"></el-table-column>
+        <el-table-column prop="code" label="字典类型编码" width="300"></el-table-column>
+        <el-table-column prop="createTime" label="更新时间"></el-table-column>
+        <el-table-column prop="sort" label="状态">
+          <template scope="scope">
+            <el-tag v-if="scope.row.status === 1">启用</el-tag>
+            <el-tag v-else type="danger">停用</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="sort" label="操作">
+          <template scope="scope">
+            <div class="operate">
+              <a @click="showAddForm(scope.row, '修改')">修改</a>
+              <a @click="removeIt(scope.row)">删除</a>
+              <a @click="toPath(scope.row)">查看字典</a>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
-    <el-dialog :title="title" :visible.sync="dialogFormVisible">
-      <el-form ref="addForm" :model="addForm" :rules="rules">
-        <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
-          <el-input v-model="addForm.name" autocomplete="off"></el-input>
-        </el-form-item>
+    <router-view/>
 
-        <el-form-item label="字典类型编码" :label-width="formLabelWidth" prop="code">
-          <el-input v-model="addForm.code" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="创建时间" :label-width="formLabelWidth" prop="creatTime">
-          <el-input v-model="creatTimes" autocomplete="off" readonly></el-input>
-        </el-form-item>
-
-        <el-form-item label="状态" :label-width="formLabelWidth">
-          <el-radio-group v-model="addForm.status">
-            <el-radio :label="1">启用</el-radio>
-            <el-radio :label="2">停用</el-radio>
-          </el-radio-group>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitAddForm('addForm')"
-        >确 定
-        </el-button
-        >
-      </div>
-    </el-dialog>
-
-    <el-table :data="resultList" style="width: 100%">
-      <el-table-column prop="id" label="序号" width="50">
-        <template scope="scope">{{ scope.$index + 1 }}</template>
-      </el-table-column>
-      <el-table-column prop="name" label="字典类型名称" width="300"></el-table-column>
-      <!--      <el-table-column prop="mark" label="数据标示"></el-table-column>-->
-      <!--      <el-table-column prop="value" label="标示码"></el-table-column>-->
-      <el-table-column prop="creatTime" label="更新时间"></el-table-column>
-      <el-table-column prop="code" label="字典类型编码" width="300"></el-table-column>
-      <!--      <el-table-column prop="mark" label="数据标示"></el-table-column>-->
-      <!--      <el-table-column prop="code" label="标示码"></el-table-column>-->
-      <el-table-column prop="sort" label="状态">
-        <template scope="scope">
-          <el-tag v-if="scope.row.status === 1">启用</el-tag>
-          <el-tag v-else type="danger">停用</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column prop="sort" label="操作">
-        <template scope="scope">
-          <div class="operate">
-            <a @click="showAddForm(scope.row, '修改')">修改</a>
-            <a @click="removeIt(scope.row)">删除</a>
-          </div>
-        </template>
-      </el-table-column>
-    </el-table>
   </div>
 </template>
 
@@ -87,7 +81,8 @@ export default {
       resultList: [],
       addForm: {
         name: '',
-        creatTime: '',  //创建时间
+        endTime: '',
+        startTime: '',  //创建时间
         status: 1, // 状态
         code: '',    //字典编码
         del: '',
@@ -127,6 +122,15 @@ export default {
         }
       })
     },
+    toPath(row){
+
+      this.$router.push({path: '/layout/dicManage', query: {
+          id: row.id,
+          name: row.name,
+          code: row.code
+        }})
+      this.$store.dispatch('dictionaryData', row)
+    },
     aa(form) {
       console.log(form)
       const data = {}
@@ -145,6 +149,7 @@ export default {
     removeIt(row){
       console.log(row.id)
       removeDateDictionaryList(row.id).then(res => {
+
         this.dictionaryList(this.addForm)
       }).catch(e => {
         this.$message.error(e)
@@ -154,11 +159,10 @@ export default {
       this.title = type
       this.dialogFormVisible = true
       this.addForm = row
-      console.log(this.addForm)
-      // this.resultCopy = this.resultList
       type === '修改' ? (this.addForm = row) : (this.addForm = {})
     },
     dictionaryList(addForm) {
+
       addDictionaryList(addForm).then(res => {
         this.resultList = res.data.data['records']
       }).catch(e => {
@@ -167,6 +171,7 @@ export default {
     },
   },
   created() {
+
     this.dictionaryList(this.addForm)
   },
   computed: {
@@ -190,12 +195,4 @@ export default {
   margin: 0 10px;
 }
 
-.nav button {
-  padding: 10px 15px;
-  border-radius: 10px;
-  background-color: #f2f2f2;
-  margin: 0 10px;
-  border: none;
-  outline: none;
-}
 </style>

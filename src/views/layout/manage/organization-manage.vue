@@ -90,6 +90,7 @@
 </template>
 
 <script>
+import {getOrganizeList} from "@/newwork/system-colltroner";
 import {getNowFormatDate} from "@/uti";
 
 export default {
@@ -158,7 +159,11 @@ export default {
     }
   },
   created() {
-    this.list = JSON.parse(window.localStorage.getItem('organizationManage')) || []
+    getOrganizeList().then(res => {
+      console.log(res)
+    }).catch(e => {
+      this.$message.error(e)
+    })
   },
   computed: {
     createTime(){

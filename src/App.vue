@@ -18,19 +18,19 @@ export default {
   components: {
   },
   created() {
-    this.userInfo = JSON.parse(window.localStorage.getItem('userInfo')) || {}
-    console.log(this.userInfo)
-
-    this.$store.dispatch('userInfo', this.userInfo)
-
-    // if(this.$store.state.musicInfo == null){
-    //   this.$router.push({path: '/user'})
-    // }
-    if(Object.keys(this.userInfo).length === 0){
-      this.$router.push('/user')
-    }else {
-      this.$router.push({path: '/home'})
-    }
+  //   this.userInfo = JSON.parse(window.localStorage.getItem('userInfo')) || {}
+  //   console.log(this.userInfo)
+  //
+  //   this.$store.dispatch('userInfo', this.userInfo)
+  //
+  //   // if(this.$store.state.musicInfo == null){
+  //   //   this.$router.push({path: '/user'})
+  //   // }
+  //   if(Object.keys(this.userInfo).length === 0){
+  //     this.$router.push('/user')
+  //   }else {
+  //     this.$router.push({path: '/home'})
+  //   }
   }
 }
 </script>
