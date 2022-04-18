@@ -81,7 +81,7 @@ export function upData(data) {
 //删除字典
 export function removeDictionary(data) {
     return request({
-        url: '/system/dict/item/delete/{id}',
+        url: '/system/dict/item/delete/' + data,
         method: 'delete',
         data: data
     })
@@ -104,10 +104,26 @@ export function getLog(data){
 *  ------------组织管理 -----------------
 *
 * */
-//组织管理
-export function getOrganizeList(){
+//添加组织
+export function addOrganize(data) {
     return request({
-        url: '/organization/list',
+        url: '/system/dept/add',
+        method: "post",
+        data: data
+    })
+}
+
+//获取组织列表
+export function getOrganizeList(data){
+    return request({
+        url: '/system/dept/list',
+        data: data
+    })
+}
+//获取组织id
+export function getOrganizeId(data){
+    return request({
+        url: '/system/dept/detail/' + data,
     })
 }
 
@@ -117,9 +133,31 @@ export function getOrganizeList(){
 *
 * */
 
-export function addReot(data){
+export function addRole(data){
     return request({
         url: '/role/add',
+        method: 'post',
+        data: data
+    })
+}
+export function getRoleList(data){
+    return request({
+        url: '/system/role/list',
+        method: 'get',
+        data: data
+    })
+}
+
+/**
+ * 用户管理
+ *
+ *
+ */
+
+//新增用户
+export function addUser(data) {
+    return request({
+        url: '/system/user/add',
         method: 'post',
         data: data
     })

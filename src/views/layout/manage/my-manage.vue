@@ -6,35 +6,37 @@
     </div>
     <div id="container-main">
       <div class="container-nav">
-        <el-form :inline="true" :model="form" class="demo-form-inline">
-          <el-form-item label="用户名称">
-            <el-input v-model="form.user" placeholder="审批人"></el-input>
-          </el-form-item>
-          <el-form-item label="手机号">
-            <el-input v-model="form.number" placeholder="审批人"></el-input>
-          </el-form-item>
-          <el-form-item label="用户状态">
-            <el-select v-model="form.region" placeholder="活动区域">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="创建时间">
-            <el-select v-model="form.createTime" placeholder="活动区域">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
-            <el-select v-model="form.createTime" placeholder="活动区域">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="onSubmit">查询</el-button>
-            <el-button type="primary" @click="onClear">重置</el-button>
-          </el-form-item>
-        </el-form>
-        <el-button @click="show">新增</el-button>
+        <div class="container-form">
+          <el-form :inline="true" :model="form" class="demo-form-inline">
+            <el-form-item label="用户名称">
+              <el-input v-model="form.user" placeholder="审批人"></el-input>
+            </el-form-item>
+            <el-form-item label="手机号">
+              <el-input v-model="form.number" placeholder="审批人"></el-input>
+            </el-form-item>
+            <el-form-item label="用户状态">
+              <el-select v-model="form.region" placeholder="活动区域">
+                <el-option label="区域一" value="shanghai"></el-option>
+                <el-option label="区域二" value="beijing"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="创建时间">
+              <el-select v-model="form.createTime" placeholder="活动区域">
+                <el-option label="区域一" value="shanghai"></el-option>
+                <el-option label="区域二" value="beijing"></el-option>
+              </el-select>
+              <el-select v-model="form.createTime" placeholder="活动区域">
+                <el-option label="区域一" value="shanghai"></el-option>
+                <el-option label="区域二" value="beijing"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="onSubmit">查询</el-button>
+              <el-button @click="onClear">重置</el-button>
+            </el-form-item>
+          </el-form>
+          <el-button  type="primary" @click="show">新增</el-button>
+        </div>
 
         <el-table
           :row-class-name="tableRowClassName"
@@ -92,19 +94,19 @@
               class="form-item"
               label="用户名称"
               :label-width="formLabelWidth"
-              prop="name"
+              prop="nickName"
             >
-              <el-input v-model="addForm.name" autocomplete="off"></el-input>
+              <el-input v-model="addForm.nickName" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item
               class="form-item"
               label="用户角色"
               :label-width="formLabelWidth"
-              prop="role"
+              prop="roleId"
             >
               <el-select
                 class="form-item"
-                v-model="addForm.role"
+                v-model="addForm.roleId"
                 placeholder="请选择用户角色"
               >
                 <el-option
@@ -118,14 +120,12 @@
               class="form-item"
               label="所属部门"
               :label-width="formLabelWidth"
-              prop="department"
+              prop="deptId"
             >
-              <el-select
-                v-model="addForm.department"
-                placeholder="请选择所属部门"
-              >
-                <el-option label="区域一" value="shanghai"></el-option>
-              </el-select>
+              <el-cascader
+                  v-model="addForm.deptId"
+                  :options="deptIdList"
+                  :props="{ expandTrigger: 'hover' }"></el-cascader>
             </el-form-item>
             <el-form-item
               class="form-item"
@@ -144,9 +144,9 @@
               class="form-item"
               label="账号"
               :label-width="formLabelWidth"
-              prop="account"
+              prop="username"
             >
-              <el-input v-model="addForm.account" autocomplete="off"></el-input>
+              <el-input v-model="addForm.username" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item
               class="form-item"
@@ -164,7 +164,7 @@
               label="手机号"
               :label-width="formLabelWidth"
             >
-              <el-input v-model="addForm.number" autocomplete="off"></el-input>
+              <el-input v-model="addForm.phone" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item
               class="form-item"
@@ -198,6 +198,7 @@
 
 <script>
 import eTree from '@/components/eTree'
+import {addUser} from "@/newwork/system-colltroner";
 export default {
   name: 'serve-manage',
   components: {
@@ -207,17 +208,129 @@ export default {
     return {
       form: {},
       addForm: {
-        name: '',
-        role: '',
-        department: '',
-        sex: '',
-        account: '',
-        password: '',
-        number: '',
-        email: ''
+        avatar: '', //头像
+        deptId: '',//部门
+        email: '', //email
+        nickName: '',//昵称
+        password: '',//密码
+        phone: '', //手机
+        roleId: '', // '角色id'
+        sex: '',  //男 / 女
+        status: '' ,//状态
+        username: '', //账号
+        // name: '',
+        // role: '',
+        // department: '',
+        // account: '',
+        // number: '',
       },
       row: {},
       type: '',
+      deptIdList: [
+        {
+          value: '湖北省',
+          label: '湖北省',
+          children: [{
+            value: '武汉市',
+            label: '武汉市',
+            children: [{
+              value: '洪山区',
+              label: '洪山区',
+              children: [{
+                value: '阳关1路',
+                label: '阳关1路'
+              }, {
+                value: '阳关2路',
+                label: '阳关2路'
+              }
+              ]
+            }, {
+              value: '蔡甸区',
+              label: '蔡甸区',
+              children: [{
+                value: '阳关1路',
+                label: '阳关1路'
+              }, {
+                value: '阳关2路',
+                label: '阳关2路'
+              }
+              ]
+            }, {
+              value: '黄陂区',
+              label: '黄陂区',
+              children: [{
+                value: '阳关1路',
+                label: '阳关1路'
+              }, {
+                value: '阳关2路',
+                label: '阳关2路'
+              }
+              ]
+            }, {
+              value: '江夏区',
+              label: '江夏区',
+              children: [{
+                value: '阳关1路',
+                label: '阳关1路'
+              }, {
+                value: '阳关2路',
+                label: '阳关2路'
+              }
+              ]
+            }]
+          }, {
+            value: '随州市',
+            label: '随州市',
+            children: [{
+              value: '江夏区',
+              label: '江夏区'
+            }, {
+              value: '黄陂区',
+              label: '黄陂区'
+            }
+            ]
+          },
+            {
+            value: '十堰市',
+            label: '十堰市',
+            children: [{
+              value: '蔡甸区',
+              label: '蔡甸区'
+            }, {
+              value: '张湾区',
+              label: '张湾区'
+            },{
+              value: '郧阳区',
+              label: '郧阳区'
+            }
+            ]
+          },
+            {
+            value: '孝感市',
+            label: '孝感市',
+            children: [{
+              value: 'cexiangdaohang',
+              label: '侧向导航'
+            }, {
+              value: 'dingbudaohang',
+              label: '顶部导航'
+            }
+            ]
+          },
+            {
+            value: '荆门市',
+            label: '荆门市',
+            children: [{
+              value: 'cexiangdaohang',
+              label: '侧向导航'
+            }, {
+              value: 'dingbudaohang',
+              label: '顶部导航'
+            }
+            ]
+          }]
+        }
+      ],
       isShow: false,
       resultList: [],
       formLabelWidth: '120px',
@@ -231,35 +344,39 @@ export default {
         { label: '女', value: '女' }
       ],
       rules: {
-        name: [
-          { required: true, message: '请输入活动名称', trigger: 'change' }
+        nickName: [
+          { required: true, message: '此项为必填项，请确认', trigger: 'change' }
         ],
-        role: [
-          { required: true, message: '请输入活动名称', trigger: 'change' }
+        roleId: [
+          { required: true, message: '此项为必填项，请确认', trigger: 'change' }
         ],
-        department: [
-          { required: true, message: '请输入活动名称', trigger: 'change' }
+        deptId: [
+          { required: true, message: '此项为必填项，请确认', trigger: 'change' }
         ],
-        account: [
-          { required: true, message: '请输入活动名称', trigger: 'change' }
+        username: [
+          { required: true, message: '此项为必填项，请确认', trigger: 'change' }
         ],
         password: [
-          { required: true, message: '请输入活动名称', trigger: 'change' }
+          { required: true, message: '此项为必填项，请确认', trigger: 'change' }
         ]
       }
     }
   },
   methods: {
     onSubmit() {},
+    defaultProps(){
+      label
+    },
     addForms(addForm) {
       //点击确定之后 遍历数据 确保必填项不为空
       this.$refs[addForm].validate((valid) => {
         if (valid) {
           this.resultList.push(this.addForm)
-          window.localStorage.setItem(
-            'myManageList',
-            JSON.stringify(this.resultList)
-          )
+          addUser(this.addForm).then(res => {
+            console.log(res)
+          }).catch(e => {
+            this.$message.error(e)
+          })
           this.isShow = false
           this.$message({
             message: '提交完成',
@@ -326,6 +443,11 @@ export default {
 }
 .container-l {
   width: 300px;
+}
+.container-form{
+  display: flex;
+  height: 40px;
+  justify-content: space-between;
 }
 #container-main {
   padding-left: 30px;

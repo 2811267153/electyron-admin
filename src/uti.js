@@ -55,3 +55,24 @@ export function randomWord(randomFlag, min, max) {
   }
   return str;
 }
+
+//利用递归实现数组转树
+export function convert(data) {
+  let result;
+  let map = {};
+  data.forEach(item => {
+    map[item.parentId] = item;
+  });
+  // console.log(map);
+  data.forEach(item => {
+    // item.pid 为0时 返回underfined
+    let parent = map[item.parentId];
+    if (parent) {
+      (parent.children || (parent.children = [])).push(item);
+    } else {
+      // 这里push的item是pid为0的数据
+      result = item;
+    }
+  });
+  return result;
+}

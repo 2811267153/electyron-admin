@@ -29,14 +29,7 @@
               disabled
               :label-width="formLabelWidth"
           >
-            <el-input disabled v-model="code"></el-input>
-          </el-form-item>
-          <el-form-item label="创建时间" :label-width="formLabelWidth">
-            <el-input
-                v-model="creatTime"
-                autocomplete="off"
-                readonly
-            ></el-input>
+            <el-input v-model="addForm.code"></el-input>
           </el-form-item>
           <el-form-item label="是否启用" :label-width="formLabelWidth">
             <el-radio-group v-model="addForm.status">
@@ -56,7 +49,7 @@
 
       <el-table :data="resultList" border style="width: 100%">
         <el-table-column  align="center"  prop="name" label='序号' width="50">
-          <template scope="scope">{{scope.$index}}</template>
+          <template scope="scope">{{scope.$index + 1}}</template>
         </el-table-column>
         <el-table-column  align="center"  prop="name" label='字典名称'></el-table-column>
         <el-table-column  align="center"  prop="createBy" label="创建人"></el-table-column>
@@ -112,7 +105,7 @@ export default {
       addForm: {
         name: '',  //字典名称
         creatTime: '',  //创建时间
-        status: 1, // 状态
+        status: '1', // 状态
         code: '',    //字典编码
         pageNum: 1,  //分页
         pageSize: 10,  //大小
@@ -155,36 +148,38 @@ export default {
     },
     submitAddForm() {
       this.$refs['addForm'].validate((valid) => {
+        const data = {}
+        data.pageNum = 1
+        data.pageSize = 10
+        data.code = this.$route.query.code
         if (valid) {
           //添加自填编码
-          this.addForm.code = this.$route.query.code
           this.addForm.typeId = this.$route.query.id
-          this.resultList.push(this.addForm)
 
           /*
           *
           * 判断用户现在正在进行的操作  新增？ 调用 addDictionary ： upData
           * */
-         this.title === '修改' ? addDictionary(this.addForm).then(res => {
-               console.log(res)
-          }):
-             upData(this.addForm).then(res => {
-               console.log(res, 'aaaa')
+         this.title === '修改' ?  upData(this.addForm).then(res => {
+           if(res.data.code === 200){
+             this.$message.success('修改完成！')
+             this.getDictionaryAll(data)
+           }else {
+             this.$message.error(res.data.msg)
+           }
              }).catch(e => {
                this.$message.error(e)
-             })
+             }):
+             addDictionary(this.addForm).then(res => {
+               if(res.data.code === 200){
+                 this.$message.success('添加完成！')
+                 this.getDictionaryAll(data)
 
-
+               }else {
+                 this.$message.error(res.data.msg)
+               }
+          })
           this.dialogFormVisible = false
-          this.$message({
-            message: '提交完成',
-            type: 'success'
-          })
-        } else {
-          this.$message({
-            message: '提交失败， 请重试',
-            type: 'error'
-          })
         }
       })
     },
@@ -194,7 +189,6 @@ export default {
     showAddForm(row, type) {
       this.title = type
       this.dialogFormVisible = true
-      this.resultCopy = this.resultList
       type === '修改' ? (this.addForm = row) : (this.addForm = {})
     },
     black() {
@@ -204,7 +198,10 @@ export default {
     removeIt(id) {
         console.log(id)
       removeDictionary(id).then(res => {
-        console.log(res)
+          if(res.data.code === 200){
+            this.$message.success('删除成功！')
+            this.getDictionaryAll(this.addForm )
+          }
       }).catch(e => {
         this.$message.error(e)
       })
@@ -221,8 +218,6 @@ export default {
   },
   created() {
     this.addForm.code = this.$route.query.code
-    console.log( this.addForm.code )
-    // this.resultList = JSON.parse(window.localStorage.getItem('dicManage')) || []
     this.getDictionaryAll(this.addForm )
   }
 }

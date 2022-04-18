@@ -27,13 +27,13 @@
             </el-date-picker>
           </el-form-item>
         </el-form>
+        <el-button type="primary">查询</el-button>
+        <el-button >重置</el-button>
       </div>
       <div class="nav-r">
-        <el-button type="primary">查询</el-button>
-        <el-button type="primary">重置</el-button>
+        <el-button type="primary" @click="addForms">新增</el-button>
       </div>
     </div>
-    <el-button type="success" @click="addForms">新增</el-button>
 
     <el-dialog title="新增角色" :visible.sync="dialogFormVisible">
       <el-form :model="addForm" ref="addForm" :rules="rules">
@@ -70,11 +70,65 @@
         >
       </div>
     </el-dialog>
+
+    <el-table
+
+        :data="list"
+        border
+        style="width: 80%; margin-top: 20px">
+      <el-table-column
+          prop="date"
+          align="center"
+          label="序号"
+          width="180">
+        <template scope="scope">{{scope.$index + 1}}</template>
+      </el-table-column>
+      <el-table-column
+          prop="roleName"
+          align="center"
+          label="角色名称"
+          width="180">
+      </el-table-column>
+      <el-table-column
+          prop="name"
+          align="center"
+          label="状态"
+          width="180">
+        <template scope="scope">
+          <p v-if="scope.row.status === 0"><el-tag type="success">启用</el-tag></p>
+          <p v-else><el-tag type="error">禁用</el-tag></p>
+        </template>
+      </el-table-column>
+      <el-table-column
+          prop="createTime"
+          align="center"
+          label="创建时间"
+          width="300">
+      </el-table-column>
+      <el-table-column
+          prop="createTime"
+          align="center"
+          label="数据权限"
+          width="180">
+        <template>
+          <el-link  type="info">数据权限</el-link>
+        </template>
+      </el-table-column>
+      <el-table-column
+          align="center"
+          prop="address"
+          label="操作">
+        <template scope="scope">
+          <el-link style="margin-right: 20px" type="info" @click="">删除</el-link>
+          <el-link style="margin-right: 20px" type="info" @click="">修改</el-link>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
 <script>
-import {addReot} from "@/newwork/system-colltroner";
+import {addRole, getRoleList} from "@/newwork/system-colltroner";
 export default {
   name: 'role-manage',
   data() {
@@ -85,14 +139,19 @@ export default {
         name: '',
         permission: '',
         startCreateTime: '',
-        endCreateTime: ''
+        endCreateTime: '',
+        pageSize: 10,
+        pageNum: 1
       },
       addForm: {
         name: '',
         stats: 1,
         permission: '',
-        desc: ''
+        desc: '',
+        pageSize: 10,
+        pageNum: 1
       },
+      list: [],
       rules: {
         name: [{required: true, message: '请输入活动名称', trigger: 'blur'}],
         permission: [
@@ -135,7 +194,19 @@ export default {
     },
     handleNodeClick(data) {
       console.log(data);
+    },
+    getRoleList(form){
+      getRoleList(form).then(res => {
+        console.log(res)
+        this.list = res.data.data.records
+
+      }).catch(e => {
+        this.$message.error(e)
+      })
     }
+  },
+  created() {
+    this.getRoleList(this.navForm)
   }
 }
 </script>
@@ -144,5 +215,9 @@ export default {
 .nav {
   display: flex;
   justify-content: space-between;
+}
+.nav-l {
+  height: 40px;
+  display: flex;
 }
 </style>

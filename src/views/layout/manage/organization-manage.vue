@@ -16,28 +16,23 @@
 
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form ref="addForm" :model="addForm" :rules="rules">
-        <el-form-item label="组织名称" :label-width="formLabelWidth" prop="name">
-          <el-input v-if="title === '新增'" class="input" v-model="addForm.name" autocomplete="off"></el-input>
-          <el-input  v-else class="input" v-model="addForm.organizationName" autocomplete="off"></el-input>
+        <el-form-item label="部门名称" :label-width="formLabelWidth" prop="deptName">
+          <el-input class="input" v-model="addForm.deptName" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item  label="上级组织" :label-width="formLabelWidth">
-          <el-select v-if="title === '新增'" class="input" v-model="addForm.organization = '新增单位无法选择上级'" placeholder="" disabled>
-          </el-select>
-          <el-select v-else class="input" v-model="addForm.organization = this.addForm.name" placeholder="" disabled>
-          </el-select>
+        <el-form-item label="字典编码" :label-width="formLabelWidth" prop="code">
+          <el-input class="input" v-model="addForm.code" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item  label="创建时间" :label-width="formLabelWidth">
-          <el-select class="input" v-model="createTime" placeholder="新增单位无法选择上级" disabled>
-          </el-select>
+        <el-form-item label="显示顺序" :label-width="formLabelWidth" prop="orderNum">
+          <el-input type="number" class="input" v-model="addForm.orderNum" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item  label="备注" :label-width="formLabelWidth" prop="desc">
-          <el-input
-              type="textarea"
-              autosize
-              placeholder="请输入内容"
-              class="desc"
-              v-model="addForm.desc">
-          </el-input>
+        <el-form-item label="上级部门" :label-width="formLabelWidth" prop="parentId">
+          <el-input ref="input" class="input" v-model="addForm.parentId" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="状态" :label-width="formLabelWidth">
+          <el-radio-group v-model="addForm.status">
+            <el-radio :label="0">启用</el-radio>
+            <el-radio :label="1">停用</el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -49,49 +44,70 @@
 
     <el-table
         :data="list"
-        style="width: 100%">
+        border
+        style="width: 80%">
       <el-table-column
-          prop=""
-          label="组织名称"
+          prop="deptName"
+          label="序号"
+          align="center"
           width="180">
-        <template scope="scope">
-
-          <div v-if="scope.row.organizationName == null"> {{scope.row.name}}</div>
-          <div v-else> {{scope.row.organizationName}}</div>
-        </template>
+        <template scope="scope">{{scope.$index +  1}}</template>
       </el-table-column>
-
+      <el-table-column
+          prop="deptName"
+          label="组织名称"
+          align="center"
+          width="180">
+      </el-table-column>
       <el-table-column
           prop="organization"
           label="上级单位"
+          align="center"
+          width="180">
+      </el-table-column>
+      <el-table-column
+          prop="createBy"
+          label="创建者"
+          align="center"
           width="180">
       </el-table-column>
       <el-table-column
           prop="createTime"
           label="创建时间"
+          align="center"
           width="300">
       </el-table-column>
       <el-table-column
           prop="desc"
-          label="备注">
+          align="center"
+          label="状态">
+        <template scope="scope">
+          <div v-if="scope.row.status === 0"><el-tag type="success">开启</el-tag></div>
+          <div v-else><el-tag type="error">关闭</el-tag></div>
+        </template>
       </el-table-column>
       <el-table-column
           prop="desc"
-          label="备注">
+          align="center"
+          label="操作">
         <template scope="scope">
           <div class="operate">
-            <a>新增</a><a @click="removeIt(scope.row)">删除</a><a @click="addForms(scope.row, '修改')">修改</a>
+            <a @click="addForms(scope.row, '下属单位')">新增</a><a @click="removeIt(scope.row)">删除</a><a @click="addForms(scope.row, '修改')">修改</a>
           </div>
         </template>
       </el-table-column>
     </el-table>
 
+    <el-tree
+        :data="toTreeList"
+        accordion>
+    </el-tree>
   </div>
 </template>
 
 <script>
-import {getOrganizeList} from "@/newwork/system-colltroner";
-import {getNowFormatDate} from "@/uti";
+import {addOrganize, getOrganizeId, getOrganizeList} from "@/newwork/system-colltroner";
+import {convert, filterArray, getNode, getNowFormatDate} from "@/uti";
 
 export default {
   name: "serve-manage",
@@ -101,15 +117,15 @@ export default {
       dialogFormVisible: false,
       formLabelWidth: '120px',
       form: {
-        name: '',
-        area: '',
+        pageNum: 1,
+        pageSize: 10
       },
       addForm: {
-        name: '',
-        organization: '',
-        desc: '',
-        createTime: '',
-        organizationName: null,
+        code: '', //字典编码
+        deptName: '',  //部门名字
+        orderNum: '', //显示顺序
+        parentId: '', //父级单位
+        status: 0 //状态
       },
       list: [],
       stats: [
@@ -118,25 +134,55 @@ export default {
       ],
 
       rules: {
-        name: [
-          { required: true, message: '请输入组织名称', trigger: 'blur' },
+        deptName: [
+          { required: true, message: '此项为必填项， 请确认', trigger: 'blur' },
+        ],
+        code: [
+          { required: true, message: '此项为必填项， 请确认', trigger: 'blur' },
+        ],
+        orderNum: [
+          { required: true, message: '此项为必填项， 请确认', trigger: 'blur' },
+        ],
+        ancestors: [
+          { required: true, message: '此项为必填项， 请确认', trigger: 'blur' },
+        ],
+        parentId: [
+          { required: true, message: '此项为必填项， 请确认', trigger: 'blur' },
         ],
       }
     }
   },
   methods: {
+    getOrganizeList(form){
+      getOrganizeList(form).then(res => {
+        console.log(res)
+        this.list = res.data.data
+      }).catch(e => {
+        console.log(e)
+      })
+    },
+
     addForms(row, title){
       this.title = title
       this.dialogFormVisible = true
       this.resultCopy = this.resultList
-      title === '修改' ? this.addForm = row : this.addForm = {}
+      title === '修改' ? this.addForm = row : 'aa'
+      //判断属否是添加下属单位 如果是  获取 本单位名称 不可更改
+      title === '下属单位' ? getOrganizeId(row.deptId).then(res => {
+        console.log(res)
+        this.addForm.parentId = res.data.data.deptId
+        this.$refs.input.disabled = true
+      }).catch(e => {this.$message.error(e)}) : ''
+
     },
     submitForm(addForm){
       this.$refs[addForm].validate((valid) => {
         if (valid) {
-          this.list.push(this.addForm)
-          window.localStorage.setItem('organizationManage', JSON.stringify(this.list))
-          this.dialogFormVisible = false
+          addOrganize(this.addForm).then(res => {
+            console.log(res)
+          }).catch(e => {
+            console.log(e)
+          })
           this.$message({
             message: '提交完成',
             type: 'success'
@@ -159,16 +205,18 @@ export default {
     }
   },
   created() {
-    getOrganizeList().then(res => {
-      console.log(res)
-    }).catch(e => {
-      this.$message.error(e)
-    })
+
+
+    this.getOrganizeList(this.form)
   },
   computed: {
     createTime(){
       return this.addForm.createTime = getNowFormatDate()
-    }
+    },
+
+    toTreeList(){
+      return  convert(this.list)
+    },
   }
 }
 </script>

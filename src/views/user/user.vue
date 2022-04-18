@@ -21,12 +21,7 @@
         <el-form-item label="密码">
           <el-input type="password" v-model="password" @focus="focus(3)"></el-input>
 
-        <el-form-item label="服务器地址" v-show="isErr">
-<!--          <el-input type="password" v-model="host"></el-input>-->
-        </el-form-item>
-          <el-form-item label="服务器端口" v-show="isErr">
-<!--              <el-input type="password" v-model="path"></el-input>-->
-          </el-form-item>
+
         </el-form-item>
         <el-form-item style="text-align: right">
           <el-button @click="isShow">服务配置</el-button>
@@ -84,7 +79,7 @@ export default {
         this.$router.push({path: '/home'})
       }).catch(e => {
         console.log(e)
-        this.$message.error('账号或密码输入错误，请重试！')
+        this.$message.error(e)
       })
     },
 

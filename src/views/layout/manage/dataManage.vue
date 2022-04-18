@@ -140,7 +140,7 @@ export default {
       data.status = form.status
       upDateDictionaryList(data).then(res => {
         console.log(data)
-        console.log(res, 'ssssssssss')
+        console.log(res)
       }).catch(e => {
         console.log(e)
         this.$message.error(e)
