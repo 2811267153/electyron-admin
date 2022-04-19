@@ -92,7 +92,7 @@
           label="操作">
         <template scope="scope">
           <div class="operate">
-            <a @click="addForms(scope.row, '下属单位.')">新增</a><a @click="removeIt(scope.row)">删除</a><a @click="addForms(scope.row, '修改')">修改</a>
+            <a @click="addForms(scope.row, '下属单位')">新增</a><a @click="removeIt(scope.row)">删除</a><a @click="addForms(scope.row, '修改')">修改</a>
           </div>
         </template>
       </el-table-column>
