@@ -57,22 +57,21 @@ export function randomWord(randomFlag, min, max) {
 }
 
 //利用递归实现数组转树
-export function convert(data) {
-  let result;
+export function  fn(data) {
   let map = {};
-  data.forEach(item => {
-    map[item.parentId] = item;
+  let result = [];
+  // 存映射，方便取值
+  data.forEach((el) => {
+    map[el.deptId] = el;
   });
-  // console.log(map);
-  data.forEach(item => {
-    // item.pid 为0时 返回underfined
-    let parent = map[item.parentId];
-    if (parent) {
-      (parent.children || (parent.children = [])).push(item);
+  data.forEach((item) => {
+    const father = map[item.parentId];
+    if (father) {
+      (father.children || (father.children = [])).push(item);
     } else {
-      // 这里push的item是pid为0的数据
-      result = item;
+      result.push(item);
     }
   });
+
   return result;
 }

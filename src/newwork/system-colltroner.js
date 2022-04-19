@@ -119,6 +119,13 @@ export function getOrganizeList(data){
         url: '/system/dept/list',
         data: data
     })
+}//删除组织
+export function delOrganizeList(data){
+    console.log(data)
+    return request({
+        url: '/system/dept/delete/' + data,
+        method: 'delete'
+    })
 }
 //获取组织id
 export function getOrganizeId(data){
@@ -147,6 +154,18 @@ export function getRoleList(data){
         data: data
     })
 }
+export function upDataRoleList(data){
+    return request({
+        url: '/system/role/update',
+        method: 'put',
+        data: data
+    })
+}export function deleteRoleList(data){
+    return request({
+        url: '/system/role/delete' + data,
+        method: 'delete',
+    })
+}
 
 /**
  * 用户管理
@@ -161,4 +180,22 @@ export function addUser(data) {
         method: 'post',
         data: data
     })
+}
+
+export function getUserAll() {
+    return request({
+        url: "/system/user/list",
+    })
+}
+
+/**
+ *
+ * 菜单权限
+ *
+ */
+
+//查看所有菜单
+
+export function getMenuAll(){
+
 }
