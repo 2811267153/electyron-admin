@@ -32,6 +32,7 @@ import hisBill from "@/views/converse/hisBill";
 import intercept from "@/views/converse/intercept";
 
 import user from "@/views/user/user";
+import menu from "@/views/layout/manage/menu";
 Vue.use(VueRouter)
 
 const routes = [
@@ -90,6 +91,12 @@ const routes = [
             path: '/layout/organizationManage',
             component: organizationManage,
             name: 'organizationManage'
+          },
+          {
+            meta: { title: '菜单权限' },
+            path: '/layout/menu',
+            component: menu,
+            name: 'menu'
           },
           {
             meta: { title: '日志' },

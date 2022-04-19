@@ -40,74 +40,51 @@
         <el-button type="primary" @click="submitForm('addForm')">确 定</el-button>
       </div>
     </el-dialog>
-
-
-    <el-table
-        :data="list"
-        border
-        style="width: 80%">
-      <el-table-column
-          prop="deptName"
-          label="序号"
-          align="center"
-          width="180">
-        <template scope="scope">{{scope.$index +  1}}</template>
-      </el-table-column>
-      <el-table-column
-          prop="deptName"
-          label="组织名称"
-          align="center"
-          width="180">
-      </el-table-column>
-      <el-table-column
-          prop="organization"
-          label="上级单位"
-          align="center"
-          width="180">
-      </el-table-column>
-      <el-table-column
-          prop="createBy"
-          label="创建者"
-          align="center"
-          width="180">
-      </el-table-column>
-      <el-table-column
-          prop="createTime"
-          label="创建时间"
-          align="center"
-          width="300">
-      </el-table-column>
-      <el-table-column
-          prop="desc"
-          align="center"
-          label="状态">
-        <template scope="scope">
-          <div v-if="scope.row.status === 0"><el-tag type="success">开启</el-tag></div>
-          <div v-else><el-tag type="error">关闭</el-tag></div>
-        </template>
-      </el-table-column>
-      <el-table-column
-          prop="desc"
-          align="center"
-          label="操作">
-        <template scope="scope">
-          <div class="operate">
-            <a @click="addForms(scope.row, '下属单位')">新增</a><a @click="removeIt(scope.row)">删除</a><a @click="addForms(scope.row, '修改')">修改</a>
-          </div>
-        </template>
-      </el-table-column>
-    </el-table>
+    <el-dialog :title="title" :visible.sync="dialogFormVisibles">
+      <el-form ref="addForm" :model="addForm" :rules="rules">
+        <el-form-item label="部门名称" :label-width="formLabelWidth" prop="deptName">
+          <el-input class="input" v-model="addForm.deptName" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="字典编码" :label-width="formLabelWidth" prop="code">
+          <el-input class="input" v-model="addForm.code" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="显示顺序" :label-width="formLabelWidth" prop="orderNum">
+          <el-input type="number" class="input" v-model="addForm.orderNum" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="上级部门" :label-width="formLabelWidth" prop="parentId">
+          <el-input ref="input" class="input" v-model="parentName" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item style="display: none" label="上级部门" :label-width="formLabelWidth" prop="parentId">
+          <el-input ref="input" class="input" v-model="addForm.parentId" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="状态" :label-width="formLabelWidth">
+          <el-radio-group v-model="addForm.status">
+            <el-radio :label="0">启用</el-radio>
+            <el-radio :label="1">停用</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisibles = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm('addForm')">确 定</el-button>
+      </div>
+    </el-dialog>
 
     <el-tree
+        @node-click="handleNodeClick"
         :data="toTreeList"
+        :expand-on-click-node="false"
+        :render-content="renderContent"
+        :node-key="list.deptId"
+        :props="defaultProps"
         accordion>
     </el-tree>
   </div>
 </template>
 
 <script>
-import {addOrganize, getOrganizeId, getOrganizeList} from "@/newwork/system-colltroner";
-import {convert, filterArray, getNode, getNowFormatDate} from "@/uti";
+import {addOrganize, delOrganizeList, getOrganizeId, getOrganizeList} from "@/newwork/system-colltroner";
+import {convert, filterArray, fn, getNode, getNowFormatDate} from "@/uti";
 
 export default {
   name: "serve-manage",
@@ -115,6 +92,7 @@ export default {
     return {
       title: '新增',
       dialogFormVisible: false,
+      dialogFormVisibles: false,
       formLabelWidth: '120px',
       form: {
         pageNum: 1,
@@ -127,11 +105,19 @@ export default {
         parentId: '', //父级单位
         status: 0 //状态
       },
+      clickCount: 0,
+
+      parentName: '', //父级单位
+      row: [],  //获取当前 点击的那一行
       list: [],
       stats: [
         {label: '启用', value: '启用'},
         {label: '禁用', value: '禁用'}
       ],
+      defaultProps:{
+        children: 'children',
+        label: 'deptName',
+      },
 
       rules: {
         deptName: [
@@ -152,16 +138,56 @@ export default {
       }
     }
   },
+
   methods: {
+    handleNodeClick(data){
+      this.row  = data
+      this.parentName = this.row.deptName
+      this.addForm.parentId = this.row.deptId
+    },
     getOrganizeList(form){
       getOrganizeList(form).then(res => {
-        console.log(res)
         this.list = res.data.data
       }).catch(e => {
         console.log(e)
       })
     },
+    itemClick(e){
+      this.dialogFormVisibles = true
+    },
+    renderContent(h, data){
+      return h('p',{
+        class: 'tree-item'
+      },[
+        h('span',{
+          class: 'job-name',
 
+        }, data.data.deptName),
+
+        h('p', {}, [
+          h('span', data.data.createTime),
+        ]),
+        h('p', {}, [
+          h("el-link",{
+            class: 'a',
+            props:{
+              type:'primary'
+            },
+            on: {
+              click: this.itemClick
+            }
+          },'新增'),
+          h("el-link",{
+            props:{
+              type:'primary'
+            },
+            on: {
+              click: this.removeIt
+            }
+          },'删除'),
+        ])
+      ])
+    },
     addForms(row, title){
       this.title = title
       this.dialogFormVisible = true
@@ -169,11 +195,10 @@ export default {
       title === '修改' ? this.addForm = row : 'aa'
       //判断属否是添加下属单位 如果是  获取 本单位名称 不可更改
       title === '下属单位' ? getOrganizeId(row.deptId).then(res => {
-        console.log(res)
+
         this.addForm.parentId = res.data.data.deptId
         this.$refs.input.disabled = true
       }).catch(e => {this.$message.error(e)}) : ''
-
     },
     submitForm(addForm){
       this.$refs[addForm].validate((valid) => {
@@ -196,17 +221,19 @@ export default {
         }
       });
     },
-    removeIt(item){
-      this.list.map((items, i) => {
-        if(item === items){
-          this.list.splice(i, 1)
-        }
+    removeIt(){
+      delOrganizeList(this.row.deptId).then(res => {
+        console.log(res )
+        if(res.data.code === 200){
+          this.$message.success('删除成功!')
+          this.getOrganizeList(this.form)
+        }else {}
+        this.$message.error(res.data.msg)
       })
-    }
+    },
+
   },
   created() {
-
-
     this.getOrganizeList(this.form)
   },
   computed: {
@@ -215,20 +242,44 @@ export default {
     },
 
     toTreeList(){
-      return  convert(this.list)
+      return  fn(this.list)
     },
   }
 }
 </script>
 
-<style scoped>
+<style>
 .input{
   width: 30%;
 }
-.desc {
-  height: 100px;
-}
+
 .operate a{
   margin: 0 10px;
+}
+.treeitem, .el-tree-node__content{
+  height: 40px !important;
+  padding: 0 10px;
+  line-height: 40px;
+}
+.tree-item{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.a{
+  margin-right: 20px;
+}
+.createTime {
+  text-align: center;
+  flex: 1;
+}
+.job-name{
+  width: 150px;
+}
+.none {
+  display: none;
+}
+.blick{
+  display: block;
 }
 </style>
