@@ -90,14 +90,6 @@ export function removeDictionary(data) {
 
 
 
-//查看日志
-export function getLog(data){
-    return request({
-        url: '/log/list',
-        params: stringify(data)
-    })
-}
-
 
 /*
 *
@@ -162,7 +154,7 @@ export function upDataRoleList(data){
     })
 }export function deleteRoleList(data){
     return request({
-        url: '/system/role/delete' + data,
+        url: '/system/role/delete/' + data,
         method: 'delete',
     })
 }
@@ -187,6 +179,12 @@ export function getUserAll() {
         url: "/system/user/list",
     })
 }
+export function deleteUser(data){
+    return request({
+        url: '/system/user/delete/' + data,
+        method: 'delete'
+    })
+}
 
 /**
  *
@@ -197,5 +195,28 @@ export function getUserAll() {
 //查看所有菜单
 
 export function getMenuAll(){
+    return request({
+        url: '/system/menu/list',
+        method: 'get'
+    })
+}
 
+/**
+ *
+ * 系统相关接口
+ */
+
+
+//查看日志
+export function getLog(data){
+    return request({
+        url: '/system/log/list',
+        params: stringify(data)
+    })
+}
+//查看 服务器运行信息
+export function getSystem(){
+    return request({
+        url: '/system/monitor/server',
+    })
 }

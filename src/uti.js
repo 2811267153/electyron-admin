@@ -75,3 +75,36 @@ export function  fn(data) {
 
   return result;
 }
+
+//菜单类型结构转树结构
+export function menuToTree(data){
+  let maps = {};
+  let result = [];
+  // 存映射，方便取值
+  data.forEach((el) => {
+    maps[el.menuId] = el;
+  });
+  data.forEach((item) => {
+    const father = maps[item.parentId];
+    if (father) {
+      (father.children || (father.children = [])).push(item);
+    } else {
+      result.push(item);
+    }
+  });
+
+  return result;
+}
+
+//属性结构平面化
+export function treeToArray(tree){
+  let res = []
+  for(const item in tree){
+    const { children, ...i } = item
+    if (children  && children.length){
+      res = res.concat(treeToArray(children))
+    }
+    res.push(i)
+  }
+  return res
+}

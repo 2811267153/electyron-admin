@@ -191,8 +191,6 @@
                   v-model="addForm.email"
                   autocomplete="off"
               ></el-input>
-
-
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -217,7 +215,14 @@
 
 <script>
 import eTree from '@/components/eTree'
-import {addUser, deleteRoleList, getOrganizeList, getUserAll, upDataRoleList} from "@/newwork/system-colltroner";
+import {
+  addUser,
+  deleteRoleList,
+  getUserAll,
+  getOrganizeList,
+  upDataRoleList,
+  getOrganizeId, deleteUser
+} from "@/newwork/system-colltroner";
 import {fn} from "@/uti";
 
 export default {
@@ -227,138 +232,38 @@ export default {
   },
   data() {
     return {
-      form: {},
+      form: {
+        pageSize: 10,
+        pageNum: 1
+      },
       addForm: {
         deptId: '',//部门
         email: '', //email
         nickName: '',//昵称
         password: '',//密码
         phone: '', //手机
-        roleId: '', // '角色id'
-        sex: '',  //男 / 女
+        roleId: 3, // '角色id'
+        sex: 0,  //男 / 女
         status: 0,//状态
         username: '', //账号
       },
       row: {},
       type: '',
       title: '新增',
-      deptIdList: [
-        {
-          value: '湖北省',
-          label: '湖北省',
-          children: [{
-            value: '武汉市',
-            label: '武汉市',
-            children: [{
-              value: '洪山区',
-              label: '洪山区',
-              children: [{
-                value: '阳关1路',
-                label: '阳关1路'
-              }, {
-                value: '阳关2路',
-                label: '阳关2路'
-              }
-              ]
-            }, {
-              value: '蔡甸区',
-              label: '蔡甸区',
-              children: [{
-                value: '阳关1路',
-                label: '阳关1路'
-              }, {
-                value: '阳关2路',
-                label: '阳关2路'
-              }
-              ]
-            }, {
-              value: '黄陂区',
-              label: '黄陂区',
-              children: [{
-                value: '阳关1路',
-                label: '阳关1路'
-              }, {
-                value: '阳关2路',
-                label: '阳关2路'
-              }
-              ]
-            }, {
-              value: '江夏区',
-              label: '江夏区',
-              children: [{
-                value: '阳关1路',
-                label: '阳关1路'
-              }, {
-                value: '阳关2路',
-                label: '阳关2路'
-              }
-              ]
-            }]
-          }, {
-            value: '随州市',
-            label: '随州市',
-            children: [{
-              value: '江夏区',
-              label: '江夏区'
-            }, {
-              value: '黄陂区',
-              label: '黄陂区'
-            }
-            ]
-          },
-            {
-              value: '十堰市',
-              label: '十堰市',
-              children: [{
-                value: '蔡甸区',
-                label: '蔡甸区'
-              }, {
-                value: '张湾区',
-                label: '张湾区'
-              }, {
-                value: '郧阳区',
-                label: '郧阳区'
-              }
-              ]
-            },
-            {
-              value: '孝感市',
-              label: '孝感市',
-              children: [{
-                value: 'cexiangdaohang',
-                label: '侧向导航'
-              }, {
-                value: 'dingbudaohang',
-                label: '顶部导航'
-              }
-              ]
-            },
-            {
-              value: '荆门市',
-              label: '荆门市',
-              children: [{
-                value: 'cexiangdaohang',
-                label: '侧向导航'
-              }, {
-                value: 'dingbudaohang',
-                label: '顶部导航'
-              }
-              ]
-            }]
-        }
-      ],
+      deptIdList: [],
       isShow: false,
       resultList: [],
+      departmentList: [],
       deptId: '',
       formLabelWidth: '120px',
       roleList: [
-        {label: '系统管理员', value: '0'},
-        {label: '审核员', value: '1'},
-        {label: '录入员', value: '2'}
+        {label: '系统管理员', value: 0},
+        {label: '审核员', value: 1},
+        {label: '录入员', value: 2}
       ],
       sexList: [
-        {label: '男', value: '0'},
-        {label: '女', value: '1'}
+        {label: '男', value: 0},
+        {label: '女', value: 1}
       ],
       rules: {
         nickName: [
@@ -376,27 +281,26 @@ export default {
         password: [
           {required: true, message: '此项为必填项，请确认', trigger: 'change'}
         ],
-
+        phone: [
+          {required: true, message: '此项为必填项，请确认', trigger: 'change'}
+        ]
       },
-
     }
   },
   methods: {
     onSubmit() {
     },
-
     addForms(addForm) {
       //点击确定之后 遍历数据 确保必填项不为空
       this.$refs[addForm].validate((valid) => {
         if (valid) {
-
           if (this.title === '新增') {
             addUser(this.addForm).then(res => {
               if (res.data.code === 200) {
-                this.getUserAll()
+                this.getUserAll(this.form)
                 this.$message.success('提交完成')
               } else {
-                this.$message.error(res.data)
+                this.$message.error(res.data.msg)
               }
             }).catch(e => {
               this.$message.error(e)
@@ -409,7 +313,7 @@ export default {
           } else {
             upDataRoleList(this.addForm).then(res => {
               if (res.data.code === 200) {
-                this.getUserAll()
+                this.getUserAll(this.form)
                 this.$message.success('提交完成')
               } else {
                 this.$message.error('提交失败，请重试')
@@ -431,24 +335,37 @@ export default {
       if(title === '新增'){
         this.title = title
         this.isShow = true
+        getOrganizeList(this.form).then(res => {
+          this.deptIdList = res.data.data
+        }).catch(e => {
+          this.$message.error(e)
+        })
+        this.addForm = {
+          status: 0
+        }
       }
       if(title === '修改'){
       this.title = title
         this.addForm = row
         this.isShow = true
       }else if(title === '删除'){
-        deleteRoleList(row.deptId).then(res => {
-          console.log(res)
+        deleteUser(row.userId).then(res => {
+          console.log(row.userId)
+          if(res.data.code === 200){
+            this.$message.success('删除完成!')
+            this.getUserAll(this.form)
+          }else {
+            this.$message.error(res.data.msg)
+          }
         }).catch(e => {
-
+          this.$message.error(e)
         })
       }
     },
 
-    rowClick(row, a) {
+    rowClick(row) {
       this.row = row
       const index = row.index
-      console.log(index)
     },
     tableRowClassName({row, rowIndex}) {
       //把每一行的索引放进row
@@ -456,17 +373,29 @@ export default {
     },
     getUserAll() {
       getUserAll().then(res => {
-        console.log(res)
         this.resultList = res.data.data.records
+        const deepName = {}
+        //去除所有的id 循环 发宋民国请求 获取 详细公司
+        this.resultList.forEach((item, i) => {
+          if(item.hasOwnProperty('deptId')){
+            getOrganizeId(item.deptId).then(res => {
+              deepName.deepNames = res.data.data.deptName
+
+              deepName.deepIndex = i
+              JSON.stringify(this.departmentList.push(deepName))
+              console.log((this.departmentList))
+            }).catch(e => {
+              console.log(e)
+            })
+          }
+        })
       }).catch(e => {
-        console.log(e)
         this.$message.error(e)
       })
     }
   },
   created() {
-    this.getUserAll()
-
+    this.getUserAll(this.form)
   },
   computed: {
     getterDeptIdList() {

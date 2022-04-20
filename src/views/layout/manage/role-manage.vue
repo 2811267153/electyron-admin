@@ -3,7 +3,7 @@
   <div>
     <div class="nav">
       <div class="nav-l">
-        <el-form label-width="80px" inline="true" :model="navForm">
+        <el-form label-width="80px" :inline="true" :model="navForm">
           <el-form-item label="角色名称">
             <el-input v-model="navForm.name"></el-input>
           </el-form-item>
@@ -28,7 +28,7 @@
           </el-form-item>
         </el-form>
         <el-button type="primary">查询</el-button>
-        <el-button >重置</el-button>
+        <el-button>重置</el-button>
       </div>
       <div class="nav-r">
         <el-button type="primary" @click="addForms">新增</el-button>
@@ -40,23 +40,41 @@
         <el-form-item
             label="角色名称"
             :label-width="formLabelWidth"
-            prop="name"
+            prop="roleName"
         >
-          <el-input v-model="addForm.name" autocomplete="off"></el-input>
+          <el-input v-model="addForm.roleName" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="权限状态" :label-width="formLabelWidth">
-          <el-radio-group v-model="addForm.stats">
-            <el-radio :label="1">启用</el-radio>
-            <el-radio :label="2">停用</el-radio>
-          </el-radio-group>
+        <el-form-item
+            label="显示顺序"
+            :label-width="formLabelWidth"
+            prop="orderNum"
+        >
+          <el-input v-model="addForm.orderNum" autocomplete="off"></el-input>
         </el-form-item>
+        <el-form-item
+            label="角色编码"
+            :label-width="formLabelWidth"
+            prop="roleCode"
+        >
+          <el-input v-model="addForm.roleCode" autocomplete="off"></el-input>
+        </el-form-item>
+
         <el-form-item label="菜单权限" :label-width="formLabelWidth" required>
           <el-tree
-              :data="data"
+              props="permission"
+              :data="menuIds"
               :props="defaultProps"
               accordion
-              @node-click="handleNodeClick">
+              :check-on-click-node="true"
+              show-checkbox
+              @check="checkChange">
           </el-tree>
+        </el-form-item>
+        <el-form-item label="权限状态" :label-width="formLabelWidth">
+          <el-radio-group v-model="addForm.status">
+            <el-radio :label="0">启用</el-radio>
+            <el-radio :label="1">停用</el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="备注" :label-width="formLabelWidth">
           <el-input v-model="addForm.desc" autocomplete="off"></el-input>
@@ -72,7 +90,6 @@
     </el-dialog>
 
     <el-table
-
         :data="list"
         border
         style="width: 80%; margin-top: 20px">
@@ -81,7 +98,7 @@
           align="center"
           label="序号"
           width="180">
-        <template scope="scope">{{scope.$index + 1}}</template>
+        <template scope="scope">{{ scope.$index + 1 }}</template>
       </el-table-column>
       <el-table-column
           prop="roleName"
@@ -95,8 +112,12 @@
           label="状态"
           width="180">
         <template scope="scope">
-          <p v-if="scope.row.status === 0"><el-tag type="success">启用</el-tag></p>
-          <p v-else><el-tag type="error">禁用</el-tag></p>
+          <p v-if="scope.row.status === 0">
+            <el-tag type="success">启用</el-tag>
+          </p>
+          <p v-else>
+            <el-tag type="error">禁用</el-tag>
+          </p>
         </template>
       </el-table-column>
       <el-table-column
@@ -111,7 +132,7 @@
           label="数据权限"
           width="180">
         <template>
-          <el-link  type="info">数据权限</el-link>
+          <el-link type="info">数据权限</el-link>
         </template>
       </el-table-column>
       <el-table-column
@@ -128,60 +149,59 @@
 </template>
 
 <script>
-import {addRole, getRoleList} from "@/newwork/system-colltroner";
+import {addRole, getRoleList, getMenuAll} from "@/newwork/system-colltroner";
+import {menuToTree, treeToArray} from "@/uti";
+
 export default {
   name: 'role-manage',
   data() {
     return {
+      menuIds: [],//菜单列表
       formLabelWidth: '120px',
       dialogFormVisible: false,
       navForm: {
-        name: '',
-        permission: '',
-        startCreateTime: '',
-        endCreateTime: '',
+        menuIds: [],
         pageSize: 10,
-        pageNum: 1
+        pageNum: 1,
+        orderNum: '', //显示顺序
+        roleCode: '', //角色编码
+        roleName: '', //角色名称
+        status: 0
       },
       addForm: {
-        name: '',
-        stats: 1,
-        permission: '',
-        desc: '',
+        menuIds: [],
         pageSize: 10,
-        pageNum: 1
+        pageNum: 1,
+        orderNum: '', //显示顺序
+        roleCode: '', //角色编码
+        roleName: '', //角色名称
+        status: 0
       },
+      selectMenuList: [],
       list: [],
       rules: {
-        name: [{required: true, message: '请输入活动名称', trigger: 'blur'}],
+        roleName: [{required: true, message: '此项为必填项，请确认', trigger: 'change'}],
+        orderNum: [{required: true, message: '此项为必填项，请确认', trigger: 'change'}],
+        roleCode: [{required: true, message: '此项为必填项，请确认', trigger: 'change'}],
         permission: [
-          {required: true, message: '请输入活动名称', trigger: 'change'}
+          {required: true, message: '此项为必填项，请确认', trigger: 'change'}
         ]
       },
-
-      data: [
-        {
-          id: 1,
-          label: '张三的公司',
-          children: [
-            {
-              id: '1-2',
-              label: '二级标题'
-            },
-            {
-              id: '1-3',
-              label: '二级标题'
-            },
-            {
-              id: '1-4',
-              label: '二级标题',
-            }
-          ]
-        },
-      ],
       defaultProps: {
         children: 'children',
-        label: 'label'
+        label: 'menuName'
+      }
+    }
+  },
+  watch: {
+    dialogFormVisible(val) {
+      if (val) {
+        getMenuAll().then(res => {
+          console.log(res)
+          this.menuIds = menuToTree(res.data.data)
+        }).catch(e => {
+          console.log(e)
+        })
       }
     }
   },
@@ -189,17 +209,17 @@ export default {
     addForms() {
       this.dialogFormVisible = true
     },
-    check(a, b) {
-      console.log(a, b)
+    check(a, context) {
+
     },
-    handleNodeClick(data) {
-      console.log(data);
+    checkChange(a, context) {
+      const c =(context.checkedNodes)
+      console.log(treeToArray(c))
     },
-    getRoleList(form){
+    getRoleList(form) {
       getRoleList(form).then(res => {
         console.log(res)
         this.list = res.data.data.records
-
       }).catch(e => {
         this.$message.error(e)
       })
@@ -216,6 +236,7 @@ export default {
   display: flex;
   justify-content: space-between;
 }
+
 .nav-l {
   height: 40px;
   display: flex;

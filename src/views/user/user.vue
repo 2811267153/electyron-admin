@@ -20,8 +20,6 @@
         </el-form-item>
         <el-form-item label="密码">
           <el-input type="password" v-model="password" @focus="focus(3)"></el-input>
-
-
         </el-form-item>
         <el-form-item style="text-align: right">
           <el-button @click="isShow">服务配置</el-button>
@@ -78,7 +76,6 @@ export default {
         setCookie(res.data.data.JSESSIONID)
         this.$router.push({path: '/home'})
       }).catch(e => {
-        console.log(e)
         this.$message.error(e)
       })
     },
@@ -88,7 +85,6 @@ export default {
     },
     focus(index){
       this.index = index
-      console.log(this.index)
     }
   },
 };

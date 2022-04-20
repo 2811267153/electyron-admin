@@ -84,7 +84,7 @@
 
 <script>
 import {addOrganize, delOrganizeList, getOrganizeId, getOrganizeList} from "@/newwork/system-colltroner";
-import {convert, filterArray, fn, getNode, getNowFormatDate} from "@/uti";
+import { fn, getNowFormatDate} from "@/uti";
 
 export default {
   name: "serve-manage",
