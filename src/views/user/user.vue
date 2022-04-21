@@ -71,7 +71,6 @@ export default {
       getLogin(this.username, this.password).then(res => {
         console.log(res)
         this.$store.dispatch('userInfo', res.data.data.user)
-        window.localStorage.setItem('userInfo', JSON.stringify(res.data))
         console.log(this.$store.state.userInfo)
         setCookie(res.data.data.JSESSIONID)
         this.$router.push({path: '/home'})

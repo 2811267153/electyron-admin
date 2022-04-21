@@ -151,7 +151,7 @@ const routes = [
         },
         children: [
           {
-            meta: { title: '网管管理' },
+            meta: { title: '网关管理' },
             path: '/billing/networkManagement',
             name: 'networkManagement',
             component: networkManagement

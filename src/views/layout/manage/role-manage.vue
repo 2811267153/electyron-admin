@@ -168,6 +168,7 @@ export default {
         roleName: '', //角色名称
         status: 0
       },
+      timer: {},
       addForm: {
         menuIds: [],
         pageSize: 10,
@@ -214,7 +215,7 @@ export default {
     },
     checkChange(a, context) {
       const c =(context.checkedNodes)
-      console.log(treeToArray(c))
+      console.log((c))
     },
     getRoleList(form) {
       getRoleList(form).then(res => {

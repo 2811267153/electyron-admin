@@ -2,33 +2,33 @@
   <!--  用户管理-->
   <div id="my-manage">
     <div class="container-l">
-      <e-tree/>
+      <e-tree @treeClick="treeClick" :data="treeArr"/>
     </div>
     <div id="container-main">
       <div class="container-nav">
         <div class="container-form">
           <el-form :inline="true" :model="form" class="demo-form-inline">
             <el-form-item label="用户名称">
-              <el-input v-model="form.user" placeholder="审批人"></el-input>
+              <el-input v-model="form.nickName" placeholder="审批人"></el-input>
             </el-form-item>
             <el-form-item label="手机号">
-              <el-input v-model="form.number" placeholder="审批人"></el-input>
+              <el-input v-model="form.phone" placeholder="审批人"></el-input>
             </el-form-item>
             <el-form-item label="用户状态">
-              <el-select v-model="form.region" placeholder="活动区域">
+              <el-select v-model="form.status" placeholder="活动区域">
                 <el-option label="区域一" value="shanghai"></el-option>
                 <el-option label="区域二" value="beijing"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="创建时间">
-              <el-select v-model="form.createTime" placeholder="活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
-              <el-select v-model="form.createTime" placeholder="活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
+              <el-date-picker
+                  v-model="timer"
+                  type="daterange"
+                  format="yyyy-MM-dd HH:mm:ss"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期">
+              </el-date-picker>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -80,9 +80,6 @@
             <template scope="scope" class="link">
               <a @click="show(scope.row, '修改')" class="link-item">修改</a>
               <a @click="show(scope.row, '删除')"  class="link-item err">删除</a>
-              <a @click="show(scope.row, '重置密码')"  class="link-item warning"
-              >重置密码</a
-              >
             </template>
           </el-table-column>
         </el-table>
@@ -154,7 +151,6 @@
                 prop="username"
             >
               <el-input v-model="addForm.username" autocomplete="off">
-                <template slot="append">.com</template>
               </el-input>
             </el-form-item>
             <el-form-item label="状态" :label-width="formLabelWidth">
@@ -162,6 +158,15 @@
                 <el-radio :label="0">启用</el-radio>
                 <el-radio :label="1">停用</el-radio>
               </el-radio-group>
+            </el-form-item>
+
+            <el-form-item
+                class="form-item"
+                label="手机号"
+                prop="phone"
+                :label-width="formLabelWidth"
+            >
+              <el-input v-model="addForm.phone" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item
                 class="form-item"
@@ -173,13 +178,6 @@
                   v-model="addForm.password"
                   autocomplete="off"
               ></el-input>
-            </el-form-item>
-            <el-form-item
-                class="form-item"
-                label="手机号"
-                :label-width="formLabelWidth"
-            >
-              <el-input v-model="addForm.phone" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item
                 class="form-item"
@@ -245,6 +243,8 @@ export default {
         roleId: 3, // '角色id'
         sex: 0,  //男 / 女
         status: 0,//状态
+        pageSize: 10,
+        pageNum: 1,
         username: '', //账号
       },
       row: {},
@@ -261,6 +261,8 @@ export default {
         {label: '审核员', value: 1},
         {label: '录入员', value: 2}
       ],
+      timer: {},
+      treeArr: [],
       sexList: [
         {label: '男', value: 0},
         {label: '女', value: 1}
@@ -287,8 +289,13 @@ export default {
       },
     }
   },
+
   methods: {
     onSubmit() {
+    },
+    treeClick(a){
+      this.form.deptIds = a.deptId
+      this.getUserAll(this.form)
     },
     addForms(addForm) {
       //点击确定之后 遍历数据 确保必填项不为空
@@ -374,19 +381,20 @@ export default {
     getUserAll() {
       getUserAll().then(res => {
         this.resultList = res.data.data.records
-        const deepName = {}
-        //去除所有的id 循环 发宋民国请求 获取 详细公司
+        //更具用户id获取他在 公司的职位
         this.resultList.forEach((item, i) => {
           if(item.hasOwnProperty('deptId')){
             getOrganizeId(item.deptId).then(res => {
-              deepName.deepNames = res.data.data.deptName
+              // const deepName = {}
+              // deepName.deepNames = res.data.data.deptName
+              // deepName.deepIndex = i
+              // this.departmentList.push(deepName)
 
-              deepName.deepIndex = i
-              JSON.stringify(this.departmentList.push(deepName))
-              console.log((this.departmentList))
+              this.$set( this.resultList[i], 'department', res.data.data.deptName)
             }).catch(e => {
               console.log(e)
             })
+              console.log((this.departmentList))
           }
         })
       }).catch(e => {
@@ -396,6 +404,10 @@ export default {
   },
   created() {
     this.getUserAll(this.form)
+    getOrganizeList().then(res => {
+      console.log(res)
+      this.treeArr = fn(res.data.data)
+    })
   },
   computed: {
     getterDeptIdList() {
@@ -414,10 +426,15 @@ export default {
 
 
   watch: {
-
     deptId(val) {
       this.addForm.deptId = this.deptId[this.deptId.length - 1]
     },
+    timer(val){
+      console.log(val)
+      this.addForm.createTime = val[0]
+      this.addForm.endTime = val[1]
+    }
+
   }
 }
 </script>

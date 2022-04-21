@@ -11,18 +11,18 @@
         <el-form-item label="策略类型">
           <el-select v-model="from.protocol" placeholder="协议类型">
             <el-option
-              :label="item.label"
-              :value="item.value"
-              v-for="item in policyType"
+                :label="item.label"
+                :value="item.value"
+                v-for="item in policyType"
             ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="重试策略">
           <el-select v-model="from.relay" placeholder="中继类型">
             <el-option
-              :label="item.label"
-              :value="item.value"
-              v-for="item in retryStrategyType"
+                :label="item.label"
+                :value="item.value"
+                v-for="item in retryStrategyType"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -32,7 +32,8 @@
         </el-form-item>
       </el-form>
       <el-button type="primary" @click="showAddForm(null, '添加中继组')"
-        >添加中继组</el-button
+      >添加中继组
+      </el-button
       >
     </div>
 
@@ -40,51 +41,40 @@
       <el-form :model="addFrom" ref="addForm" :rules="rules">
         <div class="width">
           <el-form-item
-            label="中继名称"
-            :label-width="formLabelWidth"
-            prop="name"
+              label="中继组名称"
+              :label-width="formLabelWidth"
+              prop="name"
           >
-            <el-input v-model="addFrom.name" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item
-            slot="from-item-r"
-            label="中继超时（s）"
-            :label-width="formLabelWidth"
-            prop="overtimeTime"
-          >
-            <el-input
-              v-model="addFrom.overtimeTime"
-              autocomplete="off"
-            ></el-input>
+            <el-input v-model="addFrom.groupName" autocomplete="off"></el-input>
           </el-form-item>
         </div>
         <div class="width">
           <el-form-item
-            label="策略类型"
-            :label-width="formLabelWidth"
-            prop="policy"
+              label="重试策略"
+              :label-width="formLabelWidth"
+              prop="policy"
           >
-            <el-select v-model="addFrom.policy" placeholder="请选择">
+            <el-select v-model="addFrom.strategyRetry" placeholder="请选择">
               <el-option
-                v-for="item in policyType"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                  v-for="item in retryStrategyType"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
               >
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item
-            label="重试策略"
-            :label-width="formLabelWidth"
-            prop="retryStrategy"
+              label="策略类型"
+              :label-width="formLabelWidth"
+              prop="retryStrategy"
           >
-            <el-select v-model="addFrom.retryStrategy" placeholder="请选择">
+            <el-select v-model="addFrom.strategyType" placeholder="请选择">
               <el-option
-                v-for="item in retryStrategyType"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                  v-for="item in policyType"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
               >
               </el-option>
             </el-select>
@@ -92,96 +82,99 @@
         </div>
         <div class="width">
           <el-form-item
-            label="添加网管"
-            :label-width="formLabelWidth"
-            prop="policy"
+              label="添加网管"
+              :label-width="formLabelWidth"
+              prop="policy"
           >
             <el-select v-model="addFrom.network" placeholder="请选择">
               <el-option
-                v-for="item in networkData"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                  v-for="item in networkData"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
               >
               </el-option>
             </el-select>
-          </el-form-item>
-          <el-form-item
-            label="工作时间"
-            :label-width="formLabelWidth"
-            :required="true"
-          >
-            <div class="width">
-              <el-form-item prop="startTime">
-                <el-time-select
-                  placeholder="起始时间"
-                  v-model="addFrom.startTime"
-                  :picker-options="{
-                    start: '08:30',
-                    step: '00:15',
-                    end: '18:30'
-                  }"
-                >
-                </el-time-select>
-              </el-form-item>
-
-              <el-form-item prop="startTime">
-                <el-time-select
-                  placeholder="结束时间"
-                  v-model="addFrom.endTime"
-                  :picker-options="{
-                    start: '08:30',
-                    step: '00:15',
-                    end: '18:30',
-                    minTime: addFrom.startTime
-                  }"
-                >
-                </el-time-select>
-              </el-form-item>
-            </div>
           </el-form-item>
         </div>
 
         <el-form-item
-          style="margin: 10px 20px 0"
-          label="备注"
-          :label-width="formLabelWidth"
+            style="margin: 10px 20px 0"
+            label="备注"
+            :label-width="formLabelWidth"
         >
           <el-input
-            v-model="addFrom.remark"
-            placeholder="请输入内容"
+              v-model="addFrom.remark"
+              placeholder="请输入内容"
           ></el-input>
         </el-form-item>
+        <el-form-item style="margin-top: 20px" label="中继数组"  :label-width="formLabelWidth">
+          <el-table
+              ref="multipleTable"
+              :data="tableData"
+              border
+              tooltip-effect="dark"
+              style="width: 50%">
+            <el-table-column
+                align="center"
+                type="selection"
+                width="55">
+              <template scope="scope">{{scope.$index}}</template>
+            </el-table-column>
+              <el-table-column
+                  align="center"
+                  label='网关'>
+                <template slot-scope="scope">
+                  jiu
+                  <el-select v-model="value">
+                    <el-option
+                        v-for="item in pbxList"
+                        :key="item.value"
+                        :label="item.gatewayName"
+                        :value="item.id">
+                    </el-option>
+                  </el-select>
+                </template>
+              </el-table-column>
+              <el-table-column
+                  align="center"
+                  prop="name"
+                  label="优先级">
+              </el-table-column>
+          </el-table>
+        </el-form-item>
+
       </el-form>
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="submitForm()"
-          >确 定</el-button
+        >确 定
+        </el-button
         >
       </div>
     </el-dialog>
 
-    <el-table :data="list" style="width: 100%">
-      <el-table-column prop="index" label="序号" width="50">
+    <el-table border :data="list" style="width: 80%">
+      <el-table-column align="center" prop="index" label="序号" width="50">
         <template scope="scope">{{ scope.$index + 1 }}</template>
       </el-table-column>
-      <el-table-column prop="name" label="中继名称" width="100">
+      <el-table-column align="center" prop="groupName" label="中继名称">
         <template scope="scope">
-          {{ scope.row.name }}
+          {{ scope.row.groupName }}
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="策略类型" width="100">
+      <el-table-column align="center" prop="pbxGwgroupGatewayList" label="中继组 数组">
         <template scope="scope">
-          {{ scope.row.policy }}
+          <span v-for="item in scope.row.pbxGwgroupGatewayList">{{item.id}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="retryStrategy" label="重试策略" width="100">
+      <el-table-column align="center" prop="pbxGatewayList" label="pbxGatewayList">
         <template scope="scope">
           {{ scope.row.retryStrategy }}
         </template>
       </el-table-column>
-      <el-table-column prop="retryStrategy" label="关联网关">
+      <el-table-column align="center" prop="retryStrategy" label="关联网关">
         <template scope="scope">
           <span style="margin: 0 10px">{{ scope.row.network }}: </span>
           <span style="margin: 0 10px">{{ scope.row.startTime }}</span>
@@ -189,18 +182,19 @@
           <span style="margin: 0 10px">{{ scope.row.endTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="remark" label="操作">
+      <el-table-column align="center" prop="remark" label="操作">
         <template scope="scope">
           <el-link
-            style="margin-right: 20px"
-            @click="showAddForm(scope.row, '编辑')"
-            type="info"
-            >编辑</el-link
+              style="margin-right: 20px"
+              @click="showAddForm(scope.row, '编辑')"
+              type="info"
+          >编辑
+          </el-link
           >
           <el-link @click="removeIt(scope.row)" style="margin-right: 20px" type="info">删除</el-link>
         </template>
       </el-table-column>
-      <el-table-column prop="remark" label="备注">
+      <el-table-column align="center" prop="remark" label="备注">
         <template scope="scope">
           {{ scope.row.remark || '暂无备注' }}
         </template>
@@ -210,6 +204,8 @@
 </template>
 
 <script>
+import {getGwgroup, getPbxAdd, getPbxAll} from "@/newwork/ground-colltroner";
+
 export default {
   name: 'trunkGroup',
   data() {
@@ -217,51 +213,54 @@ export default {
       from: {},
       title: '添加中继组',
       dialogFormVisible: false,
+      pbxList: [],
       addFrom: {
-        name: '', //中继名称
-        policy: '', // 策略类型
-        overtimeTime: '', //超时时间
-        retryStrategy: '', //重试策略，
-        remark: '', // 备注
-        network: '', // 网管
-        startTime: '', //开始时间
-        endTime: '' //结束时间
+        groupName: '', //中继名称
+        strategyRetry: '', //重试策略，
+        strategyType: '', // 策略类型
+        pbxGwgroupGatewayList: '', //中继数组
+        totalWeight: '', //总的权重值，为组内中继之和
+        pageNum: 1,
+        pageSize: 10,
       },
       list: [],
       startTime: '',
       formLabelWidth: '120px',
       policyType: [
-        { label: '循环呼叫', value: '循环呼叫' },
-        { label: '随机呼叫', value: '随机呼叫' }
+        {label: '循环呼叫', value: '循环呼叫'},
+        {label: '随机呼叫', value: '随机呼叫'}
       ],
       retryStrategyType: [
-        { label: '无响应重试', value: '无响应重试' },
-        { label: '强制重试', value: '强制重试' }
+        {label: '无响应重试', value: '无响应重试'},
+        {label: '强制重试', value: '强制重试'}
       ],
-      networkData: [
-        { label: '1233', value: '23595' },
-        { label: '265', value: '265' },
-        { label: '788', value: '788' },
-        { label: '455', value: '455' }
-      ],// 表数据
       rules: {
         name: [
-          { required: true, message: '请输入中继组名称', trigger: 'blur' }
+          {required: true, message: '请输入中继组名称', trigger: 'blur'}
         ],
         overtimeTime: [
-          { required: true, message: '请输入超时时间', trigger: 'blur' }
+          {required: true, message: '请输入超时时间', trigger: 'blur'}
         ],
         policy: [
-          { required: true, message: '请选择策略类型', trigger: 'blur' }
+          {required: true, message: '请选择策略类型', trigger: 'blur'}
         ],
         retryStrategy: [
-          { required: true, message: '请输入重试策略', trigger: 'blur' }
+          {required: true, message: '请输入重试策略', trigger: 'blur'}
         ],
-        startTime: [{ required: true, message: '请选择工作时间', trigger: 'blur' }]
-      }
+        startTime: [{required: true, message: '请选择工作时间', trigger: 'blur'}]
+      },
+      value: ''
     }
   },
   methods: {
+    getGwgroup(form){
+      getGwgroup(form).then(res => {
+        console.log(res)
+        this.list = res.data.data.records
+      }).catch(e => {
+        console.log(e)
+      })
+    },
 
     showAddForm(row, title) {
       this.dialogFormVisible = true
@@ -296,7 +295,7 @@ export default {
     resetForm() {
       this.$refs['addForm'].resetFields()
     },
-    tableRowClassName({ row, rowIndex }) {
+    tableRowClassName({row, rowIndex}) {
       row.index = rowIndex
     },
 
@@ -355,7 +354,18 @@ export default {
     // }
   },
   created() {
-    this.list = JSON.parse(window.localStorage.getItem('trunkGroupData')) || []
+    this.getGwgroup(this.form)
+  },
+  watch: {
+    dialogFormVisible(val ){
+      if(val){
+        console.log(val)
+        getPbxAll().then(res => {
+          console.log(res )
+          this.pbxList = res.data.data.records
+        })
+      }
+    }
   }
 }
 </script>
