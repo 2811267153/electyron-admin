@@ -48,8 +48,9 @@ export function getGwgroup(data) {
         method: 'get'
     })
 }export function addGwgroup(data) {
+    console.log(data);
     return request({
-        url: '/pbx/gwgroup/list',
+        url: '/pbx/gwgroup/add',
         data: data,
         method: 'post'
     })
@@ -63,8 +64,39 @@ export function upDateGwgroup(data) {
 }
 export function deleteGwgroup(data) {
     return request({
-        url: '/pbx/gwgroup/delete' + data,
+        url: '/pbx/gwgroup/delete/' + data,
         data: data,
+        method: 'delete'
+    })
+}
+
+/**
+ *
+ * 拨号方案
+ */
+export function diaPlanList(data) {
+    return request({
+        url: '/pbx/diaplan/list',
+        params: data
+    })
+}
+export function addDiaPlanList(data) {
+    return request({
+        url: '/pbx/diaplan/add',
+        method: 'post',
+        data: data
+    })
+}
+export function upDateDiaPlan(data) {
+    return request({
+        url: '/pbx/diaplan/update',
+        method: 'put',
+        data: data
+    })
+}
+export function delDiaPlan(data) {
+    return request({
+        url: '/dispatch/pbx/diaplan/delete/' + data,
         method: 'delete'
     })
 }

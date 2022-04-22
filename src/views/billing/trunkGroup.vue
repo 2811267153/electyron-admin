@@ -43,7 +43,7 @@
           <el-form-item
               label="中继组名称"
               :label-width="formLabelWidth"
-              prop="name"
+              prop="groupName"
           >
             <el-input v-model="addFrom.groupName" autocomplete="off"></el-input>
           </el-form-item>
@@ -52,7 +52,7 @@
           <el-form-item
               label="重试策略"
               :label-width="formLabelWidth"
-              prop="policy"
+              prop="strategyRetry"
           >
             <el-select v-model="addFrom.strategyRetry" placeholder="请选择">
               <el-option
@@ -67,7 +67,7 @@
           <el-form-item
               label="策略类型"
               :label-width="formLabelWidth"
-              prop="retryStrategy"
+              prop="strategyType"
           >
             <el-select v-model="addFrom.strategyType" placeholder="请选择">
               <el-option
@@ -80,26 +80,24 @@
             </el-select>
           </el-form-item>
         </div>
-        <div class="width">
-          <el-form-item
-              label="添加网管"
-              :label-width="formLabelWidth"
-              prop="policy"
-          >
-            <el-select v-model="addFrom.network" placeholder="请选择">
-              <el-option
-                  v-for="item in networkData"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </div>
 
+        <el-form-item style="margin-top: 20px" label="中继数组"  :label-width="formLabelWidth">
+          <ul>
+            <li v-for="(item, i) in tableData">
+              <el-select v-model="tableData[i].gatewayId">
+                <el-option
+                    v-for="item in pbxList"
+                    :key="item.value"
+                    :label="item.gatewayName"
+                    placeholder="请选择网关"
+                    :value="item.id">
+                </el-option>
+              </el-select>
+              <el-input class="li-input" v-model="tableData[i].weight" placeholder="请输入内容"></el-input>
+            </li>
+          </ul>
+        </el-form-item>
         <el-form-item
-            style="margin: 10px 20px 0"
             label="备注"
             :label-width="formLabelWidth"
         >
@@ -108,42 +106,6 @@
               placeholder="请输入内容"
           ></el-input>
         </el-form-item>
-        <el-form-item style="margin-top: 20px" label="中继数组"  :label-width="formLabelWidth">
-          <el-table
-              ref="multipleTable"
-              :data="tableData"
-              border
-              tooltip-effect="dark"
-              style="width: 50%">
-            <el-table-column
-                align="center"
-                type="selection"
-                width="55">
-              <template scope="scope">{{scope.$index}}</template>
-            </el-table-column>
-              <el-table-column
-                  align="center"
-                  label='网关'>
-                <template slot-scope="scope">
-                  jiu
-                  <el-select v-model="value">
-                    <el-option
-                        v-for="item in pbxList"
-                        :key="item.value"
-                        :label="item.gatewayName"
-                        :value="item.id">
-                    </el-option>
-                  </el-select>
-                </template>
-              </el-table-column>
-              <el-table-column
-                  align="center"
-                  prop="name"
-                  label="优先级">
-              </el-table-column>
-          </el-table>
-        </el-form-item>
-
       </el-form>
 
       <div slot="footer" class="dialog-footer">
@@ -164,22 +126,25 @@
           {{ scope.row.groupName }}
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="pbxGwgroupGatewayList" label="中继组 数组">
+      <el-table-column align="center" prop="pbxGwgroupGatewayList" label="策略类型">
         <template scope="scope">
-          <span v-for="item in scope.row.pbxGwgroupGatewayList">{{item.id}}</span>
+          <span v-if="scope.strategyType === 0">无响应重试</span>
+          <span v-else>强制重试</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="pbxGatewayList" label="pbxGatewayList">
+      <el-table-column align="center" prop="pbxGwgroupGatewayList" label="重试策略">
         <template scope="scope">
-          {{ scope.row.retryStrategy }}
+          <span v-if="scope.strategyRetry === 0">无响应重试</span>
+          <span v-else>强制重试</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="retryStrategy" label="关联网关">
+      <el-table-column align="center" prop="retryStrategy" label="关联网关" width="300px">
         <template scope="scope">
-          <span style="margin: 0 10px">{{ scope.row.network }}: </span>
-          <span style="margin: 0 10px">{{ scope.row.startTime }}</span>
-          <span style="margin: 0 10px">--</span>
-          <span style="margin: 0 10px">{{ scope.row.endTime }}</span>
+          <div class="table" v-for="(item, i) in scope.row.pbxGatewayList">
+            <p>
+              <span>{{ scope.row.pbxGatewayList[i].gatewayName }}</span> --<span>{{ scope.row.pbxGwgroupGatewayList[i].createTime }}</span>
+            </p>
+          </div>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="remark" label="操作">
@@ -204,7 +169,7 @@
 </template>
 
 <script>
-import {getGwgroup, getPbxAdd, getPbxAll} from "@/newwork/ground-colltroner";
+import {addGwgroup, deleteGwgroup, getGwgroup,  getPbxAll} from "@/newwork/ground-colltroner";
 
 export default {
   name: 'trunkGroup',
@@ -219,7 +184,7 @@ export default {
         strategyRetry: '', //重试策略，
         strategyType: '', // 策略类型
         pbxGwgroupGatewayList: '', //中继数组
-        totalWeight: '', //总的权重值，为组内中继之和
+        totalWeight: 0, //总的权重值，为组内中继之和
         pageNum: 1,
         pageSize: 10,
       },
@@ -227,21 +192,21 @@ export default {
       startTime: '',
       formLabelWidth: '120px',
       policyType: [
-        {label: '循环呼叫', value: '循环呼叫'},
-        {label: '随机呼叫', value: '随机呼叫'}
+        {label: '循环呼叫', value: 0},
+        {label: '随机呼叫', value: 1}
       ],
       retryStrategyType: [
-        {label: '无响应重试', value: '无响应重试'},
-        {label: '强制重试', value: '强制重试'}
+        {label: '无响应重试', value: 0},
+        {label: '强制重试', value: 1}
       ],
       rules: {
-        name: [
+        groupName: [
           {required: true, message: '请输入中继组名称', trigger: 'blur'}
         ],
-        overtimeTime: [
+        strategyRetry: [
           {required: true, message: '请输入超时时间', trigger: 'blur'}
         ],
-        policy: [
+        strategyType: [
           {required: true, message: '请选择策略类型', trigger: 'blur'}
         ],
         retryStrategy: [
@@ -249,43 +214,70 @@ export default {
         ],
         startTime: [{required: true, message: '请选择工作时间', trigger: 'blur'}]
       },
-      value: ''
+      value: '',
+      tableData: [{gatewayId: '', weight: ''},{gatewayId: '', weight: ''}]
     }
   },
   methods: {
     getGwgroup(form){
       getGwgroup(form).then(res => {
-        console.log(res)
         this.list = res.data.data.records
       }).catch(e => {
-        console.log(e)
+        this.$message.error(e)
       })
+    },
+    tableRowClassName({row, rowIndex}) {
+      row.index = rowIndex
     },
 
     showAddForm(row, title) {
       this.dialogFormVisible = true
       this.title = title
       if (title === '编辑') {
-        this.addForm = row
-        console.log(row)
-      } else if (title === '查看') {
-        this.addForm = row
-        this.isReadOnly = true
-      } else {
-        this.resetForm('addForm')
+        this.addFrom = row
+      }else {
+       this.addFrom = {
+         groupName: '', //中继名称
+         strategyRetry: '', //重试策略，
+         strategyType: '', // 策略类型
+         pbxGwgroupGatewayList: '', //中继数组
+         totalWeight: '', //总的权重值，为组内中继之和
+         pageNum: 1,
+         pageSize: 10,
+       }
       }
     },
     submitForm() {
       this.$refs['addForm'].validate((valid) => {
         if (valid) {
-          this.$message({
-            message: '提交完成',
-            type: 'success'
+          const totalWeight = []
+          this.tableData.forEach(item => {
+            if(item.gatewayId.length !== 0 && item.weight !== 0){
+              totalWeight.push(parseInt(item.weight))
+              this.dialogFormVisible = false
+            }else {
+              this.$message.error('请确保中继数组内已填写')
+            }
           })
-          console.log(this.addFrom)
-          this.list.push(this.addFrom)
-          window.localStorage.setItem('trunkGroupData', JSON.stringify(this.list))
-          this.dialogFormVisible = false
+          let s = 0
+          totalWeight.forEach((item, i) => {
+            s += parseInt(item)
+            this.addFrom.totalWeight = s
+          })
+          console.log(this.addFrom.totalWeight )
+          if(this.addFrom.totalWeight.length !== 0){
+            //添加中继数组
+            addGwgroup(this.addFrom).then(res => {
+              if(res.data.code === 200){
+                this.$message.success('提交完成')
+                this.getGwgroup(this.form)
+              }else {
+                this.$message.error(res.data.msg)
+              }
+            }).catch(e => {
+              this.$message.error(e)
+            })
+          }
         } else {
           this.$message.error('提交失败， 请重试')
           return false
@@ -295,64 +287,23 @@ export default {
     resetForm() {
       this.$refs['addForm'].resetFields()
     },
-    tableRowClassName({row, rowIndex}) {
-      row.index = rowIndex
-    },
-
     removeIt(row) {
-      this.list.map((item, i) => {
-        if (row === item) {
-          this.list.splice(i, 1)
+      deleteGwgroup(row.id).then(res => {
+        console.log(row)
+        console.log(res)
+        if(res.data.code === 200){
+          this.$message.success('提交完成')
+          this.getGwgroup(this.from)
+        }else {
+          this.$message.error(res.data.msg)
         }
+      }).catch(e => {
+        this.$message.error(e)
       })
     },
-    //
-    // submitForm() {
-    //   this.$refs['addForm'].validate((valid) => {
-    //     if (valid) {
-    //       this.$message({
-    //         message: '提交完成',
-    //         type: 'success'
-    //       })
-    //       this.list.push(this.addFrom)
-    //       window.localStorage.setItem('network', JSON.stringify(this.list))
-    //       this.dialogFormVisible = false
-    //     } else {
-    //       this.$message({
-    //         message: '提交失败， 请重试',
-    //         type: 'error'
-    //       })
-    //       return false
-    //     }
-    //   })
-    // },
-    //
-    //
-    // resetForm() {
-    //    this.$refs['addForm'].resetFields();
-    // },
-    // showAddForm(row, title) {
-    //   this.dialogFormVisible = true
-    //   this.title = title
-    //   if (title === '编辑') {
-    //     this.addFrom = row
-    //     // this.listTable = [row]
-    //   } else {
-    //     this.resetForm()
-    //   }
-    // },
-    // tableRowClassName({ row, rowIndex }) {
-    //   row.index = rowIndex
-    // },
-    //
-    // removeIt(row) {
-    //   this.list.map((item, i) => {
-    //     if (row === item) {
-    //       this.list.splice(i, 1)
-    //     }
-    //   })
-    // }
+
   },
+
   created() {
     this.getGwgroup(this.form)
   },
@@ -361,9 +312,18 @@ export default {
       if(val){
         console.log(val)
         getPbxAll().then(res => {
-          console.log(res )
           this.pbxList = res.data.data.records
         })
+      }
+    },
+    tableData: {
+      handler: function (val){
+        this.addFrom.pbxGwgroupGatewayList = val
+      },
+      deep: true
+    },
+    totalWeight(val){
+      if(val.length !== 0){
       }
     }
   }
@@ -400,5 +360,22 @@ export default {
 
 .width > * {
   flex: 1;
+}
+ul {
+  width: 80%;
+  flex-direction: column;
+}
+ul li {
+  display: flex;
+  list-style: none;
+  margin-bottom: 20px;
+  margin-right: 20px;
+}
+.li-input{
+  width: 50%;
+  margin-left: 20px;
+}
+.table p{
+  background-color: transparent;
 }
 </style>
