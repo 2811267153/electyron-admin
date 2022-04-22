@@ -1,5 +1,4 @@
 import {request} from "@/newwork/axios";
-import da from "element-ui/src/locale/lang/da";
 
 /**
  *
@@ -97,6 +96,68 @@ export function upDateDiaPlan(data) {
 export function delDiaPlan(data) {
     return request({
         url: '/dispatch/pbx/diaplan/delete/' + data,
+        method: 'delete'
+    })
+}
+
+/**
+ *
+ * 费率组
+ */
+
+//查询费率组
+
+export function getRateList(data) {
+    return request({
+        url: '/pbx/rate/group/list',
+        params: data
+    })
+}
+export function addRateList(data) {
+    console.log(data)
+    return request({
+        url: '/pbx/rate/group/add',
+        data: data,
+        method: 'post'
+    })
+}
+export function putRateList(data) {
+    return request({
+        url: '/pbx/rate/group/update'
+    })
+}
+export function deleteRateList(data) {
+    return request({
+        url: '/pbx/rate/group/delete/' + data
+    })
+}
+
+//新增费率
+export function addRateItemList(data){
+    return request({
+        url: '/pbx/rate/group/item/add',
+        method: 'post',
+        data: data
+    })
+}
+
+export function getRateItemList(data) {
+    return request({
+        url: '/pbx/rate/group/item/list',
+        method: 'get',
+        params: data
+    })
+}
+export function upDaterateItem(data) {
+    return request({
+        url: '/pbx/rate/group/item/update',
+        method: 'put',
+        data: data
+    })
+}
+export function deleteRateItem(data) {
+    return request({
+        url: '/pbx/rate/group/item/delete/' + data,
         method: 'delete'
     })
 }

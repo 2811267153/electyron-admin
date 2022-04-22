@@ -13,61 +13,59 @@
           </el-form-item>
         </el-form>
         <el-button type="primary" @click="showAddForm(null, '编辑')"
-          >添加费率组</el-button
+        >添加费率组
+        </el-button
         >
       </div>
 
       <el-dialog :title="title" :visible.sync="dialogFormVisible">
-        <el-form :model="addForm" :rules="rules" ref="addForm">
+        <el-form :model="addForm" :rules="addRules" ref="addForm">
           <el-form-item
-            label="活动名称"
-            :label-width="formLabelWidth"
-            prop="name"
+              label="活动名称"
+              :label-width="formLabelWidth"
+              prop="groupName"
           >
-            <el-input v-model="addForm.name" autocomplete="off"></el-input>
+            <el-input v-model="addForm.groupName" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="ID" :label-width="formLabelWidth">
-            <el-input
-              v-model="createId"
-              :readonly="true"
-              autocomplete="off"
-            ></el-input>
-          </el-form-item>
+
           <el-form-item label="备注" :label-width="formLabelWidth">
             <el-input v-model="addForm.remark" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="submitForm()">确 定</el-button>
+          <el-button type="primary" @click="submitForm">确 定</el-button>
         </div>
       </el-dialog>
 
-      <el-table :data="list" stripe style="width: 100%">
-        <el-table-column prop="date" label="日期" width="180">
+      <el-table :data="list" stripe style="width: 50%" border>
+        <el-table-column align="center" prop="date" label="日期" width="180">
           <template scope="scope">
             {{ scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="费率组名称" width="180">
+        <el-table-column align="center" prop="groupName" label="费率组名称" width="180">
         </el-table-column>
-        <el-table-column prop="address" label="操作">
+        <el-table-column align="center" prop="address" label="操作">
           <template scope="scope">
             <el-link
-              class="a-link"
-              type="info"
-              @click="showAddForm(scope.row, '编辑')"
-              >编辑</el-link
+                class="a-link"
+                type="info"
+                @click="showAddForm(scope.row, '编辑')"
+            >编辑
+            </el-link
             >
             <el-link class="a-link" type="info" @click="removeIt(scope.row)"
-              >删除</el-link
+            >删除
+            </el-link
             >
             <el-link class="a-link" type="info" @click="isToggle"
-              >查看费率组列表</el-link
+            >查看费率组列表
+            </el-link
             >
           </template>
         </el-table-column>
-        <el-table-column prop="remark" label="备注"> </el-table-column>
+        <el-table-column align="center" prop="remark" label="备注"></el-table-column>
       </el-table>
     </div>
 
@@ -80,22 +78,22 @@
           <el-form :inline="true" :model="listFrom" class="demo-form-inline">
             <el-form-item label="号码前缀">
               <el-input
-                v-model="listFrom.numberPrefix"
-                placeholder="审批人"
+                  v-model="listFrom.numberPrefix"
+                  placeholder="审批人"
               ></el-input>
             </el-form-item>
             <el-form-item label="费率名称">
               <el-input
-                v-model="listFrom.billingName"
-                placeholder="审批人"
+                  v-model="listFrom.billingName"
+                  placeholder="审批人"
               ></el-input>
             </el-form-item>
             <el-form-item label="地区类型">
               <el-select v-model="listFrom.region">
                 <el-option
-                  :label="item.label"
-                  :value="item.value"
-                  v-for="item in region"
+                    :label="item.label"
+                    :value="item.value"
+                    v-for="item in region"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -104,110 +102,82 @@
               <el-button @click="clearSubmit">重置</el-button>
             </el-form-item>
           </el-form>
-          <el-button type="primary" @click="onSubmits">添加费率</el-button>
+          <div>
+            <el-button type="primary" @click="onSubmits">添加费率</el-button>
+            <el-button type="primary" @click="black">返回</el-button></div>
         </div>
       </div>
 
       <el-dialog :listTitle="listTitle" :visible.sync="listDialogFormVisible">
         <el-form :model="addListFrom" ref="formName" :rules="addRules">
           <el-form-item
-            label="费率名称"
-            :label-width="formLabelWidth"
-            prop="name"
+              label="费率名称"
+              :label-width="formLabelWidth"
+              prop="rateName"
           >
-            <el-input v-model="addListFrom.name" autocomplete="off"></el-input>
+            <el-input v-model="addListFrom.rateName" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item
-            label="费率组"
-            :label-width="formLabelWidth"
-            name="rateGroup"
+              label="费率组"
+              :label-width="formLabelWidth"
+              name="rateGroup"
+              required
           >
             <el-select
-              v-model="addListFrom.rateGroup"
-              placeholder="请选择活动区域"
+                v-model="addListFrom.rateGroupId"
             >
               <el-option
-                :label="item.label"
-                :value="item.value"
-                v-for="item in rateGroup"
+                  :label="item.groupName"
+                  :value="item.id"
+                  v-for="item in list"
               ></el-option>
             </el-select>
           </el-form-item>
           <div class="width">
             <el-form-item
-              label="号码前缀"
-              :label-width="formLabelWidth"
-              prop="numberPrefix"
+                label="费率前缀"
+                :label-width="formLabelWidth"
+                prop="ratePrefix"
             >
               <el-input
-                class="input"
-                v-model="addListFrom.numberPrefix"
-                autocomplete="off"
+                  class="input"
+                  v-model="addListFrom.ratePrefix"
+                  autocomplete="off"
               ></el-input>
-            </el-form-item>
-            <el-form-item label="地区类型" :label-width="formLabelWidth">
-              <el-radio-group v-model="addListFrom.area">
-                <el-radio :label="3">分机</el-radio>
-                <el-radio :label="6">国外</el-radio>
-                <el-radio :label="9">国内</el-radio>
-              </el-radio-group>
             </el-form-item>
           </div>
           <el-form-item
-            label="计费方式"
-            :label-width="formLabelWidth"
-            prop="billingMethod"
+              label="计费方式"
+              :label-width="formLabelWidth"
+              required
           >
-            <el-table
-              ref="singleTable"
-              :border="true"
-              :data="billingData"
-              highlight-current-row
-              v-model="addListFrom.billingMethod"
-              @current-change="handleCurrentChange"
-              style="width: 100%"
-            >
-              <el-table-column type="index" width="120"> </el-table-column>
-              <el-table-column property="unit" label="计费单元(秒)">
-              </el-table-column>
-              <el-table-column property="cost" label="计费费用(元)">
-              </el-table-column>
-              <el-table-column property="count" label="计费次数">
-              </el-table-column>
-              <el-table-column property="priority" label="优先级">
-              </el-table-column>
-            </el-table>
-          </el-form-item>
-          <el-form-item
-            style="margin-top: 20px"
-            label="备注"
-            :label-width="formLabelWidth"
-          >
-            <el-input
-              v-model="addListFrom.remark"
-              autocomplete="off"
-            ></el-input>
+            <div class="width">
+              <el-form-item prop="rate"> <el-input style="margin-right: 20px" v-model="addListFrom.rate" placeholder="请输入费率"></el-input></el-form-item>
+
+              <el-form-item style="margin-left: 20px" prop="billingPeriod"><el-input v-model="addListFrom.billingPeriod" placeholder="请输入计费单位"></el-input></el-form-item>
+            </div>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="listDialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="submitForms(formName)"
-            >确 定</el-button
+          <el-button type="primary" @click="submitForms('formName')"
+          >确 定
+          </el-button
           >
         </div>
       </el-dialog>
-      <el-table :data="addList" style="width: 100%">
-        <el-table-column prop="date" label="序号" width="180">
+      <el-table :data="rateItemList" border style="width: 50%">
+        <el-table-column align="center" prop="date" label="序号" width="180">
           <template scope="scope">{{ scope.$index }}</template>
         </el-table-column>
-        <el-table-column prop="name" label="费率名称" width="180">
+        <el-table-column align="center" prop="name" label="费率名称" width="180">
         </el-table-column>
 
-        <el-table-column prop="numberPrefix" label="号码前缀" width="180">
+        <el-table-column align="center" prop="numberPrefix" label="号码前缀" width="180">
         </el-table-column>
-        <el-table-column prop="area" label="地区类型" width="180">
+        <el-table-column align="center" prop="area" label="地区类型" width="180">
         </el-table-column>
-        <el-table-column prop="area" label="费率">
+        <el-table-column align="center" prop="area" label="费率">
           <template scope="scope">
             {{ scope.row.billingMethod.cost }}/{{
               scope.row.billingMethod.unit
@@ -225,22 +195,30 @@
 
 <script>
 
+import {addRateList, getRateItemList, getRateList} from "@/newwork/ground-colltroner";
+
 export default {
   name: 'rate',
   data() {
     return {
       title: '添加费率组',
       form: {},
+      /**
+       *
+       * 费率组表单
+       */
       addForm: {
-        id: '',
-        list: []
+        groupName: '',  //费率名称
       },
-
+      list: [],  //保存费率组列表
+      rateItemList: [], //保存费率列表
       dialogFormVisible: false,
       formLabelWidth: '120px',
-      toggle: true,
+      toggle: false,
 
-      //添加费率页面数据
+      /**
+       * 费率添加表单
+       */
       addList: [],
       listFrom: {
         numberPrefix: '',
@@ -249,54 +227,67 @@ export default {
       listTitle: '添加费率',
       listDialogFormVisible: false,
       addListFrom: {
-        name: '',
-        rateGroup: '',
-        numberPrefix: '',
-        area: '',
-        billingMethod: '',
-        remark: ''
+        rateName: '',  //费率名称
+        billingPeriod: '',//计费周期单位为秒
+        rateGroupId: '', //费率组ID
+        ratePrefix: '', //费率前缀
+        rate: '', //费率
       },
 
       region: [
-        { label: '分机', value: '分机' },
-        { label: '国外', value: '国外' },
-        { label: '国内', value: '国内' }
+        {label: '分机', value: '分机'},
+        {label: '国外', value: '国外'},
+        {label: '国内', value: '国内'}
       ],
-      rateGroup: [{ label: '基本功能费率', value: '基本功能费率' }],
-      rules: {
-        name: [{ required: true, message: '请输入费率组名称', trigger: 'blur' }]
-      },
+
       addRules: {
-        name: [
-          { required: true, message: '请输入费率组名称', trigger: 'blur' }
+        rateName: [
+          {required: true, message: '该选项为必填项，请曲确认', trigger: 'blur'}
         ],
-        rateGroup: [
-          { required: true, message: '请输入费率组名称', trigger: 'blur' }
+        ratePrefix: [
+          {required: true, message: '该选项为必填项，请曲确认', trigger: 'blur'}
         ],
-        numberPrefix: [
-          { required: true, message: '请输入费率组名称', trigger: 'blur' }
+        rate: [
+          {required: true, message: '该选项为必填项，请曲确认', trigger: 'blur'}
         ],
-        area: [
-          { required: false, message: '请输入费率组名称', trigger: 'blur' }
+        billingPeriod: [
+          {required: true, message: '该选项为必填项，请曲确认', trigger: 'blur'}
         ],
-        billingData: [
-          { required: true, message: '请输入费率组名称', trigger: 'blur' }
-        ],
-        remark: [
-          { required: false, message: '请输入费率组名称', trigger: 'blur' }
-        ]
+
       },
       billingData: [
-        { unit: '15', cost: '0.03', count: 3, priority: 1 },
-        { unit: '30', cost: '0.05', count: 1, priority: 2 },
-        { unit: '60', cost: '0.08', count: 100, priority: 3 }
+        {},
+        {unit: '30', cost: '0.05', count: 1, priority: 2},
+        {unit: '60', cost: '0.08', count: 100, priority: 3}
       ]
     }
   },
   methods: {
-    onSubmit() {},
+    onSubmit() {
+    },
+    black(){
+      this.toggle = true
+    },
     clearSubmit() {
       this.listFrom = {}
+    },
+    getRateList(form) {
+      getRateList(form).then(res => {
+        this.list = res.data.data.records
+      }).catch(e => {
+        this.$message.error(e)
+      })
+    },
+    getRateItemList(form){
+      getRateItemList(form).then(res => {
+        if(res.data.data.code === 200){
+          this.rateItemList = res.data.data.records
+        }else {
+          this.$message.error(res.data.data.msg)
+        }
+      }).catch(e => {
+        this.$message.error(e)
+      })
     },
     onSubmits() {
       this.listDialogFormVisible = true
@@ -307,9 +298,8 @@ export default {
     submitForm() {
       this.$refs.addForm.validate((valid) => {
         if (valid) {
-          this.$message({
-            message: '提交完成',
-            type: 'success'
+          addRateList(this.addForm).then(res => {
+            console.log(res)
           })
           this.list.push(this.addForm)
           window.localStorage.setItem('rate', JSON.stringify(this.list))
@@ -321,7 +311,11 @@ export default {
       this.$refs.formName.validate((valid) => {
         if (valid) {
           // alert('submit!')
-          this.addList.push(this.addListFrom)
+          addRateList(this.addListFrom).then(res => {
+            console.log(res)
+          }).catch(e => {
+            console.log(e)
+          })
         } else {
           console.log('error submit!!')
           this.$message({
@@ -353,7 +347,8 @@ export default {
     }
   },
   created() {
-    this.list = JSON.parse(window.localStorage.getItem('rate')) || []
+    this.getRateList(this.form)
+    this.getRateItemList(this.form)
   }
 }
 </script>
