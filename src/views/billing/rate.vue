@@ -305,8 +305,7 @@ export default {
     },
     isToggle(row) {
       this.toggle = false
-      this.form = row
-      this.getRateItemList(this.form)
+      this.getRateItemList(row.id)
     },
     /**
      *

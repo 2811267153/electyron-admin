@@ -1,6 +1,7 @@
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
+  publicPath:"./",
   devServer: {
     open: true,
     host: "localhost", //如果是真机测试，就使用这个IP

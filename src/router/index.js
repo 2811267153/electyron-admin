@@ -33,6 +33,7 @@ import intercept from "@/views/converse/intercept";
 
 import user from "@/views/user/user";
 import menu from "@/views/layout/manage/menu";
+import jsCookie from "js-cookie";
 Vue.use(VueRouter)
 
 const routes = [
@@ -236,6 +237,24 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+router.beforeEach((to, form, next) => {
+  console.log(to)
+  next()
+  if(to.path !== '/user'){
+    console.log(jsCookie.get('JSESSIONID') === undefined)
+    /**
+     * 哈看用户是否有cookie 没有则登录
+     * 有则继续
+     */
+    if(jsCookie.get('JSESSIONID') === undefined){
+      next('/user')
+    }else {
+      next()
+    }
+  }else {
+    next('/user')
+  }
 })
 
 export default router
