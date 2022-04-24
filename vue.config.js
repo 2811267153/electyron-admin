@@ -7,7 +7,7 @@ module.exports = defineConfig({
     port: 8080,
     proxy: {
       'dispatch': {
-        target: 'http://192.168.2.103:9527/dispatch',
+        target: 'http://123.60.212.9:9528/dispatch',
         ws: true,
         changeOrigin: true,
         pathRewrite: {

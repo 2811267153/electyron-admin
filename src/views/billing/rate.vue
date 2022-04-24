@@ -59,7 +59,7 @@
             >删除
             </el-link
             >
-            <el-link class="a-link" type="info" @click="isToggle"
+            <el-link class="a-link" type="info" @click="isToggle(scope.row)"
             >查看费率组列表
             </el-link
             >
@@ -166,36 +166,40 @@
           >
         </div>
       </el-dialog>
-      <el-table :data="rateItemList" border style="width: 50%">
-        <el-table-column align="center" prop="date" label="序号" width="180">
-          <template scope="scope">{{ scope.$index }}</template>
+      <el-table :data="rateItemList" border style="width: 50%;">
+        <el-table-column align="center" prop="date" label="序号">
+          <template scope="scope">{{ scope.$index + 1}}</template>
         </el-table-column>
-        <el-table-column align="center" prop="name" label="费率名称" width="180">
+        <el-table-column align="center" prop="groupName" label="费率名称">
         </el-table-column>
 
-        <el-table-column align="center" prop="numberPrefix" label="号码前缀" width="180">
+        <el-table-column align="center" prop="createTime" label="创建时间">
         </el-table-column>
-        <el-table-column align="center" prop="area" label="地区类型" width="180">
-        </el-table-column>
-        <el-table-column align="center" prop="area" label="费率">
-          <template scope="scope">
-            {{ scope.row.billingMethod.cost }}/{{
-              scope.row.billingMethod.unit
-            }},
-          </template>
-        </el-table-column>
-        <el-table-column prop="area" label="操作" width="180">
+        <el-table-column prop="area" label="操作">
           <el-link class="a-link" type="info" @click="">编辑</el-link>
           <el-link class="a-link" type="info" @click="">删除</el-link>
         </el-table-column>
       </el-table>
+
+
+      <el-pagination
+          class='pagination'
+          background
+          layout="prev, pager, next"
+          :total="1000">
+      </el-pagination>
     </div>
+
+
+    <el-empty>
+      <el-button type="primary">按钮</el-button>
+    </el-empty>
   </div>
 </template>
 
 <script>
 
-import {addRateList, getRateItemList, getRateList} from "@/newwork/ground-colltroner";
+import {addRateItemList, addRateList, getRateItemList, getRateList} from "@/newwork/ground-colltroner";
 
 export default {
   name: 'rate',
@@ -278,12 +282,19 @@ export default {
         this.$message.error(e)
       })
     },
+
+    /**
+     *
+     * 获取费率组列表
+     * @param form
+     */
     getRateItemList(form){
       getRateItemList(form).then(res => {
-        if(res.data.data.code === 200){
+        console.log(res)
+        if(res.data.code === 200){
           this.rateItemList = res.data.data.records
         }else {
-          this.$message.error(res.data.data.msg)
+          console.log(res)
         }
       }).catch(e => {
         this.$message.error(e)
@@ -292,9 +303,15 @@ export default {
     onSubmits() {
       this.listDialogFormVisible = true
     },
-    isToggle() {
+    isToggle(row) {
       this.toggle = false
+      this.form = row
+      this.getRateItemList(this.form)
     },
+    /**
+     *
+     * 添加费率
+     */
     submitForm() {
       this.$refs.addForm.validate((valid) => {
         if (valid) {
@@ -302,7 +319,6 @@ export default {
             console.log(res)
           })
           this.list.push(this.addForm)
-          window.localStorage.setItem('rate', JSON.stringify(this.list))
           this.dialogFormVisible = false
         }
       })
@@ -310,14 +326,18 @@ export default {
     submitForms(formName) {
       this.$refs.formName.validate((valid) => {
         if (valid) {
-          // alert('submit!')
-          addRateList(this.addListFrom).then(res => {
+          addRateItemList(this.addListFrom).then(res => {
             console.log(res)
+            if(res.data.code === 200){
+              this.$message.success('添加完成')
+            }else {
+              this.$message.error(res.data.msg())
+            }
           }).catch(e => {
             console.log(e)
+            this.$message.error(e)
           })
         } else {
-          console.log('error submit!!')
           this.$message({
             message: '提交失败， 请重试',
             type: 'error'
@@ -377,7 +397,9 @@ export default {
   display: flex;
   justify-content: space-between;
 }
-
+.pagination{
+  margin-top: 20px;
+}
 .width {
   display: flex;
 }

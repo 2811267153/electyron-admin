@@ -22,7 +22,6 @@
           <el-input type="password" v-model="password" @focus="focus(3)"></el-input>
         </el-form-item>
         <el-form-item style="text-align: right">
-          <el-button @click="isShow">服务配置</el-button>
           <el-button type="primary" @click="onSubmit">登录</el-button>
         </el-form-item>
       </el-form>
@@ -68,8 +67,8 @@ export default {
       this.settingShow = !this.settingShow
     },
     onSubmit(){
+      this.index  = 4
       getLogin(this.username, this.password).then(res => {
-        console.log(res)
         this.$store.dispatch('userInfo', res.data.data.user)
         console.log(this.$store.state.userInfo)
         setCookie(res.data.data.JSESSIONID)
