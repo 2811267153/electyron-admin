@@ -113,13 +113,13 @@ stages:
 #    paths:
 #      - ${NPM_CONFIG_CACHE}
   
-build:
-  stage: build
-  tags:  
-    - jdk8
-  script:
-    - ssh root@jm.shuweiapp.com 'rm -rf /www/wwwroot/jm.shuweiapp.com/*' && scp -r ./dist/* root@jm.shuweiapp.com:/www/wwwroot/jm.shuweiapp.com/
-  allow_failure: true
+#build:
+#  stage: build
+#  tags:  
+#    - jdk8
+#  script:
+#    - ssh root@jm.shuweiapp.com 'rm -rf /www/wwwroot/jm.shuweiapp.com/*' && scp -r ./dist/* root@jm.shuweiapp.com:/www/wwwroot/jm.shuweiapp.com/
+#  allow_failure: true
 
 # Use the generated build output to run the tests.
 #deploy:
