@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from "@/store";
+
 import headers from "@/components/header";
 
 import layout from '@/views/layout'
@@ -26,7 +28,7 @@ import call from '@/views/call/call'
 import converse from '@/views/converse/converse'
 import ivr from '@/views/call/ivr'
 import calls from '@/views/call/calls'
-import history from "@/views/converse/hisBill";
+
 
 import hisBill from "@/views/converse/hisBill";
 import intercept from "@/views/converse/intercept";
@@ -249,11 +251,16 @@ router.beforeEach((to, form, next) => {
      */
     if(jsCookie.get('JSESSIONID') === undefined){
       next('/user')
+      window.localStorage.setItem('userInfo', '')
     }else {
       next()
+      console.log(store)
+      store.dispatch('userInfo', JSON.parse(window.localStorage.getItem('userInfo')))
     }
   }else {
     next('/user')
+    window.localStorage.setItem('userInfo', '')
+
   }
 })
 

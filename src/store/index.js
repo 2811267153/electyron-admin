@@ -9,6 +9,17 @@ export default new Vuex.Store({
     dictionaryData: {}
   },
   getters: {},
+
+  actions: {
+    userInfo(context, value){
+      context.commit('userInfo', value)
+      window.localStorage.setItem('userInfo', JSON.stringify(value))
+    },
+    dictionaryData(context, value){
+      context.commit('dictionaryData', value)
+    }
+  },
+
   mutations: {
     userInfo(state, userInfo){
       state.userInfo = userInfo
@@ -17,13 +28,6 @@ export default new Vuex.Store({
       state.dictionaryData = dictionaryData
     }
   },
-  actions: {
-    userInfo(state, value){
-      state.commit('userInfo', value)
-    },
-    dictionaryData(context, value){
-      context.commit('dictionaryData', value)
-    }
-  },
+
   modules: {}
 })

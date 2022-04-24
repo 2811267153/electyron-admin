@@ -1,5 +1,6 @@
 import axios from 'axios'
 import store from "@/store";
+import router from "@/router/index";
 import {getCookie} from "@/auth";
 
 export function request(config) {
@@ -17,7 +18,11 @@ export function request(config) {
     }, error => {
 
     })
-
+    instance.interceptors.response.use(config => {
+        return config
+    }, error => {
+        console.log(error)
+    })
 
     return instance(config)
 }

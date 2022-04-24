@@ -2,6 +2,7 @@
   <div id="headerd">
     <div class="header app-header">
       <el-page-header @back="goBack" content="详情页面"/>
+      <p><span>当前用户:</span> {{userInfo.nickName}}</p>
 <!--      <p>  <span>用户</span>: {{userInfo.data.user.username || ''}} <el-button @click="loginOut" class="login-out">退出</el-button></p>-->
     </div>
     <div class="header-nav">
@@ -68,9 +69,7 @@ export default {
     goBack() {
       this.$emit('goBack')
     },
-    // select(index,indexPath){
-    //   console.log(index,indexPath)
-    // }
+
     loginOut(){
       delLogin().then(res => {
         console.log(res)
@@ -79,10 +78,7 @@ export default {
       })
     }
   },
-  created() {
-    // this.userInfo = this.$store.state.userInfo
 
-  },
   computed: {
     routes() {
       return this.$router.options.routes[1]

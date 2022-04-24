@@ -69,10 +69,13 @@ export default {
     onSubmit(){
       this.index  = 4
       getLogin(this.username, this.password).then(res => {
-        this.$store.dispatch('userInfo', res.data.data.user)
-        console.log(this.$store.state.userInfo)
-        setCookie(res.data.data.JSESSIONID)
-        this.$router.push({path: '/home'})
+        if (res.data.code === 200){
+          this.$store.dispatch('userInfo', res.data.data.user)
+          setCookie(res.data.data.JSESSIONID)
+          this.$router.push({path: '/home'})
+        }else {
+          this.$message.error(res.data.msg)
+        }
       }).catch(e => {
         this.$message.error(e)
       })

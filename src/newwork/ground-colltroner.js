@@ -122,13 +122,17 @@ export function addRateList(data) {
     })
 }
 export function putRateList(data) {
+    console.log(data)
     return request({
-        url: '/pbx/rate/group/update'
+        url: '/pbx/rate/group/update',
+        method: 'put',
+        data:data
     })
 }
-export function deleteRateList(data) {
+export function deleteRate(data) {
     return request({
-        url: '/pbx/rate/group/delete/' + data
+        url: '/pbx/rate/group/delete/' + data,
+        method: 'delete'
     })
 }
 
@@ -144,7 +148,6 @@ export function addRateItemList(data){
 export function getRateItemList(data) {
     return request({
         url: '/pbx/rate/group/item/list',
-        method: 'get',
         params: data
     })
 }
