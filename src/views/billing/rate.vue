@@ -38,7 +38,7 @@
         </div>
       </el-dialog>
 
-      <el-table :data="list" stripe style="width: 50%" border v-if="list.length !== 0">
+      <el-table :data="list" stripe style="width: 100%" border v-if="list.length !== 0">
         <el-table-column align="center" prop="date" label="日期" width="180">
           <template scope="scope">
             {{ scope.$index + 1 }}
@@ -169,7 +169,7 @@
           >
         </div>
       </el-dialog>
-      <el-table :data="rateItemList" border style="width: 50%;">
+      <el-table :data="rateItemList" border style="width: 100%;">
         <el-table-column align="center" prop="date" label="序号">
           <template scope="scope">{{ scope.$index + 1}}</template>
         </el-table-column>
@@ -449,8 +449,8 @@ export default {
 
 <style scoped>
 #rate > div[class] > p {
-  border: 1px solid #ccc;
   padding: 10px 15px;
+  border-radius: 5px;
   background-color: #f2f2f2;
 }
 
@@ -458,8 +458,8 @@ export default {
   display: flex;
   justify-content: space-between;
   margin: 20px 0;
-
   height: 40px;
+  background-color: #fff;
 }
 
 .a-link {

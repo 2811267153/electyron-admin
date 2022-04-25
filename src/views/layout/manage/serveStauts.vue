@@ -94,18 +94,15 @@ export default {
       formLabelWidth: '120px',
       percentage: {},
       customColor: '#ff7800',
-
       serveData: [],
       timer: []
     }
   },
   created() {
+    this.getSystem()
+
     this.timer = setInterval(() => {
-      getSystem().then(res => {
-        console.log(res)
-        this.serveData = res.data.data
-        this.percentage = this.serveData.cpu
-      })
+      this.getSystem()
     }, 1000)
   },
   methods: {
