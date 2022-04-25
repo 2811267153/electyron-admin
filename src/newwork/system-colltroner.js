@@ -1,5 +1,4 @@
 import {request} from "@/newwork/axios";
-import {getCookie} from "@/auth";
 import {stringify, parse} from 'qs';
 
 /*

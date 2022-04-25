@@ -384,30 +384,15 @@ export default {
         //更具用户id获取他在 公司的职位
         this.resultList.forEach((item, i) => {
           if(item.hasOwnProperty('deptId')){
-            getOrganizeId(item.deptId).then(res => {
-              // const deepName = {}
-              // deepName.deepNames = res.data.data.deptName
-              // deepName.deepIndex = i
-              // this.departmentList.push(deepName)
-
-              this.$set( this.resultList[i], 'department', res.data.data.deptName)
-            }).catch(e => {
-              console.log(e)
-            })
-              console.log((this.departmentList))
+            getOrganizeId(item.deptId).then(res => this.$set( this.resultList[i], 'department', res.data.data.deptName))
           }
         })
-      }).catch(e => {
-        this.$message.error(e)
-      })
+      }).catch(e =>  this.$message.error(e))
     }
   },
   created() {
     this.getUserAll(this.form)
-    getOrganizeList().then(res => {
-      console.log(res)
-      this.treeArr = fn(res.data.data)
-    })
+    getOrganizeList().then(res =>  this.treeArr = fn(res.data.data))
   },
   computed: {
     getterDeptIdList() {

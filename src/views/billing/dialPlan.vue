@@ -6,23 +6,11 @@
         <el-form-item label="方案名称">
           <el-input v-model="form.name" placeholder="审批人"></el-input>
         </el-form-item>
-        <el-form-item label="呼出前缀">
-          <el-input v-model="form.prefix" placeholder="审批人"></el-input>
-        </el-form-item>
         <el-form-item label="活动区域">
           <el-select v-model="form.trunk" placeholder="活动区域">
             <el-option
                 :label="item.label"
                 v-for="item in trunkGroup"
-                :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="方案状态">
-          <el-select v-model="form.program" placeholder="活动区域">
-            <el-option
-                :label="item.label"
-                v-for="item in programStatus"
                 :value="item.value"
             ></el-option>
           </el-select>
@@ -39,16 +27,20 @@
     </div>
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="addForm" ref="formName" :rules="rules">
-        <el-form-item
-            label="方案名称"
-            :label-width="formLabelWidth"
-            prop="name"
-        >
-          <el-input v-model="addForm.name" autocomplete="off"></el-input>
-        </el-form-item>
         <div class="width">
-          <el-form-item label="中继组" label-width="100px" prop="prefix">
-            <el-select v-model="addForm.diaplanPrefix">
+          <el-form-item
+              label="拨号方案名称"
+              :label-width="formLabelWidth"
+              prop="diaplanName"
+          >
+            <el-input v-model="addForm.diaplanName" autocomplete="off"></el-input>
+          </el-form-item>
+          <div></div>
+
+        </div>
+        <div class="width">
+          <el-form-item label="中继组" :label-width="formLabelWidth" prop="prefix">
+            <el-select v-model="addForm.diaplanGatewayGroup">
               <el-option
                   :label="item.groupName"
                   v-for="item in trunkGroup"
@@ -56,26 +48,30 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="状态">
-            <el-radio-group v-model="addForm.stauts">
-              <el-radio :label="1">启用</el-radio>
-              <el-radio :label="2">停用</el-radio>
-            </el-radio-group>
+        </div>
+
+        <div class="width">
+          <el-form-item label="费率组" :label-width="formLabelWidth" prop="diaplanRateGroup">
+            <el-select v-model="addForm.diaplanRateGroup" placeholder="请选择" @change="change">
+              <el-option
+                  v-for="item in rateList"
+                  :key="item.id"
+                  :label="item.groupName"
+                  :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="呼出前缀" :label-width="formLabelWidth" prop="prefix">
+            <el-select v-model="addForm.diaplanPrefix" placeholder="请选择">
+              <el-option
+                  v-for="item in rateItemList"
+                  :key="item.id"
+                  :label="item.ratePrefix"
+                  :value="item.ratePrefix">
+              </el-option>
+            </el-select>
           </el-form-item>
         </div>
-        <el-form-item
-            label="呼出前缀"
-            :label-width="formLabelWidth"
-            prop="prefix"
-        >
-          <el-input v-model="addForm.prefix" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="并发数" :label-width="formLabelWidth">
-          <el-input v-model="addForm.concurrency" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="备注" :label-width="formLabelWidth">
-          <el-input v-model="addForm.remark" autocomplete="off"></el-input>
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -85,27 +81,25 @@
         >
       </div>
     </el-dialog>
-    <el-table :data="list" style="width: 100%">
-      <el-table-column prop="date" label="序号" width="180">
+    <el-table :data="list" border  style="width: 80%; margin-top: 20px">
+      <el-table-column prop="date" align="center" label="序号" width="180">
         <template scope="scope">
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column prop="diaplanName" label="方案名称" width="180">
+      <el-table-column prop="diaplanName" align="center" label="方案名称" width="300">
       </el-table-column>
-      <el-table-column prop="trunk" label="中继组" width="180">
-      </el-table-column>
-      <el-table-column prop="diaplanPrefix" label="呼出前缀" width="180">
-      </el-table-column>
-      <el-table-column prop="stauts" label="状态" width="180">
+      <el-table-column prop="trunk" align="center" label="中继组" width="300">
         <template scope="scope">
-          <el-tag v-if="scope.row.stauts === 1" type="success">启用</el-tag>
-          <el-tag v-else type="danger">停用</el-tag>
+          {{diaplanGatewayGroup}}
         </template>
+      </el-table-column>
+      <el-table-column prop="diaplanPrefix" align="center" label="呼出前缀"   width="300">
+      </el-table-column>
+      <el-table-column prop="createTime"  align="center" label="更新时间" width="300">
       </el-table-column>
       <el-table-column align="center" prop="stauts" label="操作">
         <template scope="scope">
-          <el-link style="margin-right: 20px" type="info">应用到</el-link>
           <el-link
               style="margin-right: 20px"
               @click="showAddForm(scope.row, '编辑')"
@@ -113,18 +107,24 @@
           >编辑
           </el-link
           >
-          <el-link style="margin-right: 20px" type="info">删除</el-link>
-          <el-link style="margin-right: 20px" type="info">添加规则</el-link>
+          <el-link style="margin-right: 20px" @click="removeIt(scope.row)" type="info">删除</el-link>
         </template>
       </el-table-column>
-      <el-table-column prop="remark" label="备注" width="180">
+      <el-table-column prop="remark" label="备注"  align="center">
       </el-table-column>
     </el-table>
   </div>
 </template>
 
 <script>
-import {addDiaPlanList, diaPlanList, getGwgroup} from "@/newwork/ground-colltroner";
+import {
+  addDiaPlanList, delDiaPlan,
+  diaPlanList,
+  getGwgroup,
+  getRateItemList,
+  getRateList,
+  upDateDiaPlan
+} from "@/newwork/ground-colltroner";
 
 export default {
   name: 'dialPlan',
@@ -142,15 +142,15 @@ export default {
       title: '',
       list: [],
       addForm: {
-        diaplanGatewayGroup: '', //绑定的路由组
+        diaplanGatewayGroup: '', //中继组ID
         diaplanName: '', //拨号计划名称
         diaplanPrefix: '',  //呼出前缀
+        diaplanRateGroup: '', //费率组
       },
+        rateGroupId: '',//获取费率组ID
       trunkGroup: [],
-      programStatus: [
-        {label: '启用', value: '启用'},
-        {label: '停用', value: '停用'}
-      ],
+      rateList: [],
+      rateItemList: [],
       rules: {
         diaplanGatewayGroup: [{required: true, message: '此项为必填项， 请确认', trigger: 'blur'}],
         diaplanName: [{required: true, message: '此项为必填项， 请确认', trigger: 'blur'}],
@@ -185,21 +185,43 @@ export default {
       } else {
       }
     },
+
+    /**
+     *
+     * 提交和更新表单
+     * @param formName
+     */
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           /**
            * 添加拨号方案
            */
-          addDiaPlanList(this.addForm).then(res => {
-            console.log(res)
-          }).catch(e => {
-            console.log(e)
-          })
-          this.$message({
-            message: '提交完成',
-            type: 'success'
-          })
+          if(this.title !== '编辑'){
+            addDiaPlanList(this.addForm).then(res => {
+              console.log(res)
+              if(res.data.code === 200){
+                this.$message.success('提交完成')
+                this.getDaiPlan(this.form)
+
+              }else {
+                this.$message.error(res.data.msg)
+              }
+              this.dialogFormVisible = false
+            }).catch(e => {
+              console.log(e)
+              this.$message.error(e)
+            })
+          }else {
+            upDateDiaPlan(this.addForm).then(res => {
+              if(res.data.code  === 200){
+                this.$message.success('提交完成')
+                this.getDaiPlan(this.form)
+              }else {
+                this.$message.error(res.data.msg)
+              }
+            }).catch(e => this.$message.error(e))
+          }
         } else {
           this.$message({
             message: '提交失败， 请重试',
@@ -208,10 +230,44 @@ export default {
           return false
         }
       })
+    },
+    change(e){
+      //获取费率组下的所有费率
+      this.rateGroupId = e
+      const  data ={}
+      data.rateGroupId = e
+
+      getRateItemList(data).then(res => {
+        console.log(res)
+        if(res.data.code === 200){
+          this.rateItemList = res.data.data.records
+        }else {
+          this.$message.error(res.data.msg)
+        }
+      })
+    },
+    removeIt(row){
+      delDiaPlan(row.id).then(res => {
+        if(res.data.code === 200 ){
+          this.$message.success('提交完成')
+          this.getDaiPlan(this.form);
+        }else {
+          this.$message.error(res.data.msg)
+        }
+      }).catch(e => {this.$message.error(e)})
+
     }
   },
   created() {
     this.getDaiPlan(this.form)
+  },
+  computed: {
+    diaplanGatewayGroup(){
+      this.list.map(item => {
+        console.log(item.diaplanGatewayGroup)
+        return item.diaplanGatewayGroup
+      })
+    }
   },
   watch: {
     dialogFormVisible(val) {
@@ -224,6 +280,14 @@ export default {
             this.$message.error(e)
           })
         }
+        getRateList(this.form).then(res => {
+          console.log(res)
+          if(res.data.code === 200){
+            this.rateList = res.data.data.records
+          }else {
+            this.$message.error(res.data.msg)
+          }
+        }).catch(e => this.$message.error(e))
       }
     }
   }
@@ -248,9 +312,11 @@ export default {
   display: flex;
   justify-content: space-between;
   padding: 0 20px;
+  width: 100% !important;
 }
 
 .width > * {
   flex: 1;
+  padding-right: 20%;
 }
 </style>
