@@ -80,7 +80,6 @@ export function diaPlanList(data) {
     })
 }
 export function addDiaPlanList(data) {
-    console.log(data);
     return request({
         url: '/pbx/diaplan/add',
         method: 'post',

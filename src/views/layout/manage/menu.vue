@@ -1,10 +1,12 @@
 <template>
 
   <el-tree
-      :data="pathRes"
+      :data="path"
       :props="defaultProps"
-      accordion
-      @node-click="handleNodeClick">
+      node-key="menuId"
+      @node-click="meunClick"
+      :default-expanded-keys="defaultShowNodes"
+      accordion>
   </el-tree>
 
 </template>
@@ -21,7 +23,8 @@ export default {
       defaultProps: {
         children: 'children',
         label: 'menuName'
-      }
+      },
+      defaultShowNodes: [],
     }
   },
   created() {
@@ -30,18 +33,31 @@ export default {
   methods: {
     getMenuAll(form){
       getMenuAll(form).then(res => {
-        this.path = res.data.data
+        this.path = menuToTree(res.data.data)
       }).catch(e => {
         console.log(e)
         this.$message.error(e)
       })
+    },
+    meunClick(a, b, c){
+      console.log(a, b, c )
     }
   },
   computed: {
-    pathRes(){
-      return menuToTree(this.path)
+    // pathRes(){
+    //   return (this.path)
+    // }
+  },
+  watch: {
+    path: {
+      handler(){
+        console.log(this.path)
+        this.path.forEach(item => {
+          this.defaultShowNodes.push(item.menuId)
+        })
+      },
+      deep: true
     }
-
   }
 }
 </script>

@@ -2,8 +2,8 @@
   <div id="headerd">
     <div class="header app-header">
       <div></div>
-      <p><span>当前用户:</span> {{userInfo.nickName}}</p>
-<!--      <p>  <span>用户</span>: {{userInfo.data.user.username || ''}} <el-button @click="loginOut" class="login-out">退出</el-button></p>-->
+      <p><span>当前用户:</span> {{ userInfo.nickName }}</p>
+      <!--      <p>  <span>用户</span>: {{userInfo.data.user.username || ''}} <el-button @click="loginOut" class="login-out">退出</el-button></p>-->
     </div>
     <div class="header-nav">
       <div class="main-sub">
@@ -55,7 +55,20 @@
         <div class="container" style="text-align: left">
           <router-view/>
         </div>
+        <div class="footer">
+          <el-pagination
+              background
+              :page-size="14"
+              layout="prev, pager, next"
+              @next-click="next"
+              @current-change="pageChange"
+              @prev-click="prev"
+              :total="total">
+          </el-pagination>
+        </div>
+
       </div>
+
     </div>
   </div>
 </template>
@@ -65,26 +78,42 @@ import {delLogin} from "@/newwork/user";
 
 export default {
   name: 'headers',
+  data() {
+    return {}
+  },
   methods: {
-    goBack() {
-      this.$emit('goBack')
+    currentChange() {
+      this.$bus.$emit('pageChange', this.pageSize,)
     },
 
-    loginOut(){
+    loginOut() {
       delLogin().then(res => {
         console.log(res)
       }).catch(e => {
         this.$message.error(e)
       })
+    },
+    prev(){
+      return this.$store.state.formPage.pageNum --
+    },
+    next(){
+      return this.$store.state.formPage.pageNum ++
+    },
+    pageChange(){
+      this.$bus.$emit('pageChange',)
     }
+
   },
 
   computed: {
     routes() {
       return this.$router.options.routes[1]
     },
-    userInfo(){
+    userInfo() {
       return this.$store.state.userInfo
+    },
+    total() {
+      return this.$store.state.total
     }
   },
 }
@@ -101,10 +130,13 @@ export default {
 .main-sub {
   height: calc(100vh - 80px);
   overflow: hidden;
+  width: 200px;
 }
-.header-nav{
+
+.header-nav {
   background-color: #545c64;
 }
+
 .app-header {
   height: 80px;
 }
@@ -117,22 +149,38 @@ export default {
   margin-top: 20px;
   margin-left: 20px;
   padding: 20px;
-  width: calc(100vw - 220px);
-  border: 1px solid #ccc;
+  width: calc(100vw - 240px);
+  box-shadow: 0 0 15px #ccc;
+  border-radius: 10px;
+  background-color: #fff;
+
 }
-.content{
+
+.content {
   border-top: 1px solid #f2f2f2;
   background-color: #f2f2f2;
+  padding-right: 20px;
 }
 
 .container {
-  width: calc(100vw - 220px);
+  width: calc(100vw - 240px);
   padding: 20px;
   margin-left: 20px;
   margin-top: 20px;
-  border: 1px solid #ccc;
+  box-shadow: 0 0 15px #ccc;
   overflow: hidden;
+  background-color: #fff;
+  border-radius: 10px;
+  height: 79vh;
 }
 
-
+.footer {
+  text-align: right;
+  box-shadow: 0 0 15px #ccc;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 10px 15px;
+  margin-left: 20px;
+  margin-top: 20px;
+}
 </style>

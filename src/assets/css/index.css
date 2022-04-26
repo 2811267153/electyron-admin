@@ -16,3 +16,15 @@ input {
 html {
   font-size: 16px;
 }
+
+::-webkit-resizer  {
+  width: 2px;
+}
+
+::-webkit-scrollbar-corner{
+  width: 2px;
+}
+
+::-webkit-scrollbar {
+  width: 2px;
+}

@@ -98,13 +98,16 @@ export function menuToTree(data){
 
 //属性结构平面化
 export function treeToArray(tree){
-  let res = []
-  for(const item in tree){
-    const { children, ...i } = item
-    if (children  && children.length){
-      res = res.concat(treeToArray(children))
+    let queen = [];
+    let out = [];
+    queen = queen.concat(tree);
+    while(queen.length) {
+      const first = queen.shift();
+      if (first.children) {
+        queen = queen.concat(first.children)
+        delete first['children'];
+      }
+      out.push(first);
     }
-    res.push(i)
-  }
-  return res
+    return out;
 }

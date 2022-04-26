@@ -133,16 +133,17 @@ export function getOrganizeId(data){
 
 export function addRole(data){
     return request({
-        url: '/role/add',
+        url: '/system/role/add',
         method: 'post',
         data: data
     })
 }
 export function getRoleList(data){
+    console.log(data)
     return request({
         url: '/system/role/list',
         method: 'get',
-        data: data
+        params: data
     })
 }
 export function upDataRoleList(data){

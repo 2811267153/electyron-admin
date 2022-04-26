@@ -6,6 +6,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
 import echarts from 'echarts'
+Vue.prototype.$bus = new Vue()
 
 
 Vue.config.productionTip = false

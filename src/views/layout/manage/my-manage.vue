@@ -45,6 +45,7 @@
             :data="resultList"
             tooltip-effect="dark"
             style="width: 100%"
+            v-if="resultList.length !== 0"
         >
           <el-table-column type="selection" width="55"></el-table-column>
           <el-table-column label="序号" width="120">
@@ -381,6 +382,8 @@ export default {
     getUserAll() {
       getUserAll().then(res => {
         this.resultList = res.data.data.records
+        const total = res.data.data.total
+        this.$store.dispatch('total', total)
         //更具用户id获取他在 公司的职位
         this.resultList.forEach((item, i) => {
           if(item.hasOwnProperty('deptId')){
