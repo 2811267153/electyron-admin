@@ -8,16 +8,12 @@
 
 <script>
 // import headers from '@/components/header'
+import jsCookie from "js-cookie";
+
 export default {
   name: 'app',
-  data(){
-    return {
-      userInfo: {}
-    }
-  },
-  components: {
-  },
-  created() {
+  beforeDestroy() {
+    jsCookie.remove('JSESSIONID')
   }
 }
 </script>

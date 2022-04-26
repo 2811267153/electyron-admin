@@ -7,9 +7,6 @@
       </div>
     </div>
     <div class="phone-r">
-      <div class="container">
-        <p>SIP服务器</p>
-      </div>
       <div class="nav-form">
         <el-form :inline="true" :model="form" class="demo-form-inline">
           <el-form-item label="话机名称">
@@ -42,6 +39,7 @@
           :row-class-name="tableRowClassName"
           :data="list"
           style="width: 100%"
+          v-if="list.length !== 0"
       >
         <el-table-column prop="date" label="序号" width="50">
           <template scope="scope">
@@ -96,22 +94,13 @@
           </template>
         </el-table-column>
       </el-table>
+      <my-empty v-else/>
+
     </div>
 
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="addForm" :rules="rules" ref="addForm">
         <div class="width">
-          <el-form-item
-              label="计费账号"
-              :label-width="formLabelWidth"
-              prop="accountUser"
-          >
-            <el-input
-                v-model="addForm.accountUser"
-                autocomplete="off"
-            >
-            </el-input>
-          </el-form-item>
           <el-form-item
 
               label="分机名称"
@@ -124,6 +113,18 @@
             >
             </el-input>
           </el-form-item>
+          <el-form-item
+              label="计费账号"
+              :label-width="formLabelWidth"
+              prop="accountUser"
+          >
+            <el-input
+                v-model="addForm.accountUser"
+                autocomplete="off"
+            >
+            </el-input>
+          </el-form-item>
+
         </div>
 
         <div class="width">
@@ -175,100 +176,73 @@
           </el-form-item>
         </div>
         <div class="width">
-
-          <el-form-item>
-            <template>
-              <div class="flex">
-                <el-form-item label="账户余额" :label-width="formLabelWidth" prop="balance">
-                  <el-input v-model="addForm.balance" ></el-input>
-                </el-form-item>
-                <el-form-item label="域地址" :label-width="formLabelWidth" prop="domain">
-                  <el-input v-model="addForm.domain" ></el-input>
-                </el-form-item>
-              </div>
-            </template>
+          <el-form-item label="账户余额" :label-width="formLabelWidth" prop="balance">
+            <el-input v-model="addForm.balance" ></el-input>
           </el-form-item>
-          <el-form-item>
-            <template>
-              <div class="flex">
-                <el-form-item label="使能状态" :label-width="formLabelWidth" prop="disable">
-                  <el-select v-model="addForm.disable" placeholder="请选择">
-                    <el-option
-                        v-for="item in disable"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                    >
-                    </el-option>
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="部门名称" :label-width="formLabelWidth" prop="deptId">
-                  <el-cascader
-                      v-model="deptId"
-                      :options="getterDeptIdList"
-                      :props="defaultProps"></el-cascader>
-                </el-form-item>
-              </div>
-            </template>
+
+          <el-form-item label="域地址" :label-width="formLabelWidth" prop="domain">
+            <el-input v-model="addForm.domain" ></el-input>
           </el-form-item>
         </div>
-        <el-form-item label="拨号方案" :label-width="formLabelWidth" prop="diaplan">
-          <el-select v-model="addForm.diaplan" placeholder="请选择">
-            <el-option
-                v-for="item in diaPlanList"
-                :key="item.value"
-                :label="item.diaplanName"
-                :value="item.id">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="费率组" :label-width="formLabelWidth" prop="rateGroup">
-          <el-select v-model="addForm.rateGroup" placeholder="请选择">
-            <el-option
-                v-for="item in rateGroup"
-                :key="item.value"
-                :label="item.groupName"
-                :value="item.id">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="超时时长" :label-width="formLabelWidth" prop="expire">
-          <el-input
-              style="display: inline-block; width: 40%; margin-right: 10px"
-              v-model="addForm.expire"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="资源类型" :label-width="formLabelWidth" prop="latitude">
-          <el-select v-model="addForm.type" placeholder="请选择">
-            <el-option
-                v-for="item in typeList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="坐标" :label-width="formLabelWidth" prop="longitude">
-          <template scope="scope">
+        <div class="width">
+          <el-form-item label="使能状态" :label-width="formLabelWidth" prop="disable">
+            <el-select v-model="addForm.disable" placeholder="请选择">
+              <el-option
+                  v-for="item in disable"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="部门名称" :label-width="formLabelWidth" prop="deptId">
+            <el-cascader
+                v-model="deptId"
+                :options="getterDeptIdList"
+                :props="defaultProps"></el-cascader>
+          </el-form-item>
+        </div>
+        <div class="width">
+          <el-form-item label="拨号方案" :label-width="formLabelWidth" prop="diaplan">
+            <el-select v-model="addForm.diaplan" placeholder="请选择">
+              <el-option
+                  v-for="item in diaPlanList"
+                  :key="item.value"
+                  :label="item.diaplanName"
+                  :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="费率组" :label-width="formLabelWidth" prop="rateGroup">
+            <el-select v-model="addForm.rateGroup" placeholder="请选择">
+              <el-option
+                  v-for="item in rateGroup"
+                  :key="item.value"
+                  :label="item.groupName"
+                  :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </div>
+        <div class="width">
+            <el-form-item label="超时时长" :label-width="formLabelWidth" prop="expire">
             <el-input
-                type="number"
                 style="display: inline-block; width: 40%; margin-right: 10px"
-                v-model="addForm.latitude"
-                placeholder="请输入经度"
+                v-model="addForm.expire"
             ></el-input>
-
-            <el-input
-                type="number"
-                style="display: inline-block; width: 40%; margin-right: 10px"
-                v-model="addForm.longitude"
-                placeholder="请输入纬度"
-            ></el-input>
-            <el-button style="margin-left: 20px" type="primary"
-            >打开地图
-            </el-button
-            >
-          </template>
-        </el-form-item>
+          </el-form-item>
+          <el-form-item label="资源类型" :label-width="formLabelWidth" prop="type">
+            <el-select v-model="addForm.type" placeholder="请选择">
+              <el-option
+                  v-for="item in typeList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
@@ -305,11 +279,13 @@ import {getOrganizeId, getOrganizeList} from "@/newwork/system-colltroner";
 import {diaPlanList, getRateList} from "@/newwork/ground-colltroner";
 import {fn} from "@/uti";
 import {addDirectory, deleteDirectory, getDirectory, recharge, upDateDirectory} from "@/newwork/directory";
+import myEmpty from "@/newwork/myEmpty";
 
 export default {
   name: 'phoneConfig',
   components: {
-    eTree
+    eTree,
+    myEmpty
   },
   computed: {
     defaultProps() {
@@ -381,20 +357,9 @@ export default {
         {label: '预付费', value: 1},
         {label: '后付费', value: 2},
       ],
-      billingModel: [
-        {label: '1 + 1', value: '1 + 1'},
-        {label: '6 + 6', value: '6 + 6'},
-        {label: '12 + 12', value: '12 + 12'},
-        {label: '60 + 60', value: '60 + 60'}
-      ],
       relayType: [
         {label: '开启', value: '开启'},
         {label: '关闭', value: '关闭'},
-      ],
-      combo: [
-        {label: '基本套餐', value: '基本套餐'},
-        {label: '白金套餐', value: '白金套餐'},
-        {label: '黄金套餐', value: '黄金套餐'}
       ],
       rules: {
         accountUser: [{required: true, message: '该项为必填项目,请确认', trigger: 'blur'},],

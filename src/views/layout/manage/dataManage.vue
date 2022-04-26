@@ -3,6 +3,32 @@
     <div v-if="$route.path == '/layout/dataManage'">
       <div class="nav">
         <div class="nav-l">
+
+          <el-form :model="form" inline :rules="rule" ref="form" label-width="100px" class="demo-ruleForm">
+            <el-form-item label="字典类型名称" prop="name" label-width="180">
+              <el-input v-model="form.name"></el-input>
+            </el-form-item>
+            <el-form-item label="字典编码" prop="mark">
+              <el-input v-model="form.code"></el-input>
+            </el-form-item>
+            <el-form-item label="字典状态" prop="status">
+              <el-select v-model="form.status">
+                <el-option
+                    v-for="item in status"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="submitForm">查找</el-button>
+              <el-button @click="resetForm('form')">重置</el-button>
+            </el-form-item>
+          </el-form>
+
+        </div>
+        <div class="nav-l">
           <el-button type="primary"  @click="showAddForm(null, '新增')">新增</el-button>
         </div>
       </div>
@@ -32,7 +58,7 @@
         </div>
       </el-dialog>
 
-      <el-table :data="resultList" style="width: 100%">
+      <el-table :data="resultList" style="width: 100%"  v-if="resultList.length !== 0">
         <el-table-column prop="id" label="序号" width="50">
           <template scope="scope">{{ scope.$index + 1 }}</template>
         </el-table-column>
@@ -48,13 +74,14 @@
         <el-table-column prop="sort" label="操作">
           <template scope="scope">
             <div class="operate">
-              <a @click="showAddForm(scope.row, '修改')">修改</a>
-              <a @click="removeIt(scope.row)">删除</a>
-              <a @click="toPath(scope.row)">查看字典</a>
+              <el-link type="info" @click="showAddForm(scope.row, '修改')">修改</el-link>
+              <el-link type="info" @click="removeIt(scope.row)">删除</el-link >
+              <el-link type="info" @click="toPath(scope.row)">查看字典</el-link >
             </div>
           </template>
         </el-table-column>
       </el-table>
+      <my-empty v-else/>
     </div>
     <router-view/>
 
@@ -70,9 +97,14 @@ import {
   removeDateDictionaryList,
   upDateDictionaryList
 } from "@/newwork/system-colltroner";
+import myEmpty from "@/newwork/myEmpty";
 
 export default {
   name: 'dataManage',
+  components: {
+    myEmpty
+  },
+
   data() {
     return {
       title: '',
@@ -81,23 +113,36 @@ export default {
       resultList: [],
       addForm: {
         name: '',
-        endTime: '',
-        startTime: '',  //创建时间
         status: 1, // 状态
         code: '',    //字典编码
-        del: '',
-        id: '',
         pageNum: 1, //pageNum
         pageSize: 10,  //分页大小
+      },
+      form: {
+
       },
       rules: {
         name: [{required: true, message: '请输入字典类型名称', trigger: 'blur'}],
         mark: [{required: true, message: '请输入标示码', trigger: 'blur'}],
         code: [{required: true, message: '请输入字典类型编码', trigger: 'blur'}],
-      }
+      },
+      rule: {
+        name: [{required: false, message: '请输入字典类型名称', trigger: 'blur'}],
+        mark: [{required: false, message: '请输入标示码', trigger: 'blur'}],
+        status: [{required: false, message: '请输入字典类型编码', trigger: 'blur'}],
+      },
+      status: [
+        {label: '启用', value: 0},
+        {label: '停用', value: 1},
+      ]
     }
   },
   methods: {
+    submitForm(){
+      this.form.pageNum = this.$store.state.formPage.pageNum
+      this.form.pageSize = this.$store.state.formPage.pageSize
+      this.dictionaryList(this.form)
+    },
     submitAddForm(addForm) {
 
       this.$refs['addForm'].validate((valid) => {
@@ -122,8 +167,12 @@ export default {
         }
       })
     },
-    toPath(row){
 
+    resetForm(string) {
+      string === 'form' ? this.$refs.form.resetFields() : this.$refs.addForm.resetFields();
+      this.dictionaryList(this.$store.state.formPage)
+    },
+    toPath(row){
       this.$router.push({path: '/layout/dicManage', query: {
           id: row.id,
           name: row.name,
@@ -162,25 +211,27 @@ export default {
       type === '修改' ? (this.addForm = row) : (this.addForm = {})
     },
     dictionaryList(addForm) {
-
       addDictionaryList(addForm).then(res => {
         this.resultList = res.data.data['records']
+        this.$store.dispatch('total', res.data.data.total)
       }).catch(e => {
-        this.$message.error('网络请求失败请重试')
+        this.$message.error(e)
       })
     },
   },
   created() {
-
-    this.dictionaryList(this.addForm)
+    this.dictionaryList(this.$store.state.formPage)
+  },
+  mounted() {
+    this.$bus.$on('pageChange', () => {
+      this.dictionaryList(this.$store.state.formPage)
+    })
   },
   computed: {
     creatTimes() {
       return (this.addForm.creatTime = getNowFormatDate())
     },
-    ids() {
-      // return this.addForm.id = randomWord(false, 13, 16)
-    }
+
   }
 }
 </script>

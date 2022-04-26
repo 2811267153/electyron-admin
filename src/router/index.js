@@ -241,7 +241,7 @@ const router = new VueRouter({
   routes
 })
 router.beforeEach((to, form, next) => {
-  console.log(to)
+  store.state.total = 0
   next()
   if(to.path !== '/user'){
     console.log(jsCookie.get('JSESSIONID') === undefined)

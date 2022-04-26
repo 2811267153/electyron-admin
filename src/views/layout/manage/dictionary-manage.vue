@@ -2,18 +2,19 @@
   <!--  字典管理-->
   <div>
     <div >
-      <div class="container">
-        <p>{{ this.$route.meta.title }}</p>
-      </div>
       <div class="nav-form">
         <el-form :inline="true" :model="from" class="demo-form-inline">
           <el-form-item>
           </el-form-item>
         </el-form>
-        <el-button type="primary" @click="showAddForm(null, '添加字典')"
-        >添加字典
+        <a>         <el-button type="primary" @click="black"
+        >返回
         </el-button
         >
+          <el-button type="primary" @click="showAddForm(null, '添加字典')"
+          >添加字典
+          </el-button
+          ></a>
       </div>
 
       <el-dialog :title="title" :visible.sync="dialogFormVisible">
@@ -78,7 +79,6 @@
 <script>
 import {getNowFormatDate} from '@/uti'
 import {
-  addDictionaryList,
   getDictionaryAll,
   addDictionary,
   upData,
@@ -192,8 +192,7 @@ export default {
       type === '修改' ? (this.addForm = row) : (this.addForm = {})
     },
     black() {
-      this.dialogFormVisible = false
-      this.resultList = this.resultCopy
+      this.$router.go(-1)
     },
     removeIt(id) {
         console.log(id)

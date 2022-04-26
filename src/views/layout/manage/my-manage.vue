@@ -84,6 +84,8 @@
             </template>
           </el-table-column>
         </el-table>
+        <my-empty v-else />
+
 
         <!--
               新增悬浮窗
@@ -223,11 +225,13 @@ import {
   getOrganizeId, deleteUser
 } from "@/newwork/system-colltroner";
 import {fn} from "@/uti";
+import myEmpty from "@/newwork/myEmpty";
 
 export default {
   name: 'serve-manage',
   components: {
-    eTree
+    eTree,
+    myEmpty
   },
   data() {
     return {
@@ -305,7 +309,7 @@ export default {
           if (this.title === '新增') {
             addUser(this.addForm).then(res => {
               if (res.data.code === 200) {
-                this.getUserAll(this.form)
+                this.getUserAll(this.$store.state.formPage)
                 this.$message.success('提交完成')
               } else {
                 this.$message.error(res.data.msg)
@@ -321,7 +325,7 @@ export default {
           } else {
             upDataRoleList(this.addForm).then(res => {
               if (res.data.code === 200) {
-                this.getUserAll(this.form)
+                this.getUserAll(this.$store.state.formPage)
                 this.$message.success('提交完成')
               } else {
                 this.$message.error('提交失败，请重试')
@@ -379,11 +383,12 @@ export default {
       //把每一行的索引放进row
       row.index = rowIndex
     },
-    getUserAll() {
-      getUserAll().then(res => {
+    getUserAll(formPage) {
+      getUserAll(formPage).then(res => {
         this.resultList = res.data.data.records
-        const total = res.data.data.total
-        this.$store.dispatch('total', total)
+        console.log(res.data)
+
+        this.$store.dispatch('total', res.data.data.total)
         //更具用户id获取他在 公司的职位
         this.resultList.forEach((item, i) => {
           if(item.hasOwnProperty('deptId')){
@@ -394,7 +399,7 @@ export default {
     }
   },
   created() {
-    this.getUserAll(this.form)
+    this.getUserAll(this.$store.state.formPage)
     getOrganizeList().then(res =>  this.treeArr = fn(res.data.data))
   },
   computed: {
@@ -422,7 +427,11 @@ export default {
       this.addForm.createTime = val[0]
       this.addForm.endTime = val[1]
     }
-
+  },
+  mounted() {
+    this.$bus.$on('pageChange', () => {
+      this.getUserAll(this.$store.state.formPage)
+    })
   }
 }
 </script>

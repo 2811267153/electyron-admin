@@ -2,6 +2,7 @@ import axios from 'axios'
 import store from "@/store";
 import router from "@/router/index";
 import {getCookie} from "@/auth";
+import jsCookie from "js-cookie";
 
 export function request(config) {
     const instance = axios.create({
@@ -19,9 +20,12 @@ export function request(config) {
 
     })
     instance.interceptors.response.use(config => {
+        console.log(config.data)
+        if(config.data.code !== 200){
+            jsCookie.remove('JSESSIONID')
+        }
         return config
     }, error => {
-        console.log(error)
     })
 
     return instance(config)

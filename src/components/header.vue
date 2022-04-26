@@ -1,7 +1,10 @@
 <template>
   <div id="headerd">
     <div class="header app-header">
-      <div></div>
+      <div class="logo-info">
+        <div class="logo"></div>
+        <h1>金数GDP1000  融合通信管理平台</h1>
+      </div>
       <p><span>当前用户:</span> {{ userInfo.nickName }}</p>
       <!--      <p>  <span>用户</span>: {{userInfo.data.user.username || ''}} <el-button @click="loginOut" class="login-out">退出</el-button></p>-->
     </div>
@@ -99,7 +102,11 @@ export default {
     next(){
       return this.$store.state.formPage.pageNum ++
     },
-    pageChange(){
+    pageChange(e){
+      const formPage = {}
+      formPage.pageNum = e
+      formPage.pageSize = 14
+      this.$store.dispatch('formPage', formPage)
       this.$bus.$emit('pageChange',)
     }
 
@@ -121,7 +128,7 @@ export default {
 
 <style scoped>
 .header {
-  padding: 0 30px;
+  padding: 0 30px 0 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -132,11 +139,24 @@ export default {
   overflow: hidden;
   width: 200px;
 }
-
+.logo{
+  height: 80px;
+  width: 200px;
+  background: no-repeat center/80% url("/src/assets/logo.png");;
+}
 .header-nav {
   background-color: #545c64;
 }
 
+.header h1{
+  font-weight: 600;
+  font-size: 30px;
+}
+.logo-info{
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
 .app-header {
   height: 80px;
 }
@@ -153,7 +173,6 @@ export default {
   box-shadow: 0 0 15px #ccc;
   border-radius: 10px;
   background-color: #fff;
-
 }
 
 .content {

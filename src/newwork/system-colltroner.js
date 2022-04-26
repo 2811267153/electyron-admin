@@ -174,9 +174,10 @@ export function addUser(data) {
     })
 }
 
-export function getUserAll() {
+export function getUserAll(data) {
     return request({
         url: "/system/user/list",
+        params: data
     })
 }
 export function deleteUser(data){
