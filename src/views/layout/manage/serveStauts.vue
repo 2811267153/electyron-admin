@@ -17,57 +17,59 @@
             <el-progress class="percentage" :percentage="percentage.free" :color="customColor"></el-progress>
           </div>
       </div>
+      <div class="warp" style="border: none; border-radius: 5px; background-color: #f2f2f2;">
+        <h2>磁盘状态</h2>
+        <el-table
+            class="table"
+            :data="serveData.sysFiles"
+            style="width: 100%">
+          <el-table-column
+              align="center"
+              prop="dirName"
+              label="盘符路径"
+              width="180">
+          </el-table-column>
+          <el-table-column
+              align="center"
+              prop="sysTypeName"
+              label="文件系统">
+          </el-table-column>
+          <el-table-column
+              align="center"
+              prop="total"
+              label="总大小">
+          </el-table-column>
+          <el-table-column
+              align="center"
+              prop="usage"
+              label="已使用">
+          </el-table-column>
+          <el-table-column
+              align="center"
+              prop="used"
+              label="未使用">
+          </el-table-column>
+        </el-table>
+
+      </div>
+
     </div>
 
     <div class="warp">
       <h2>服务器信息</h2>
       <ul>
-        <li><div class="warp-li"> <span>服务器名称</span>{{ serveData.sys.computerName || ''}}</div><div class="warp-li"><span>操作系统</span>{{ serveData.sys.osName }}</div></li>
-        <li><div class="warp-li"><span>服务器IP</span>{{ serveData.sys.computerIp }}</div><div class="warp-li"><span>系统架构</span>{{ serveData.sys.osArch }}</div></li>
+        <li v-if="serveData.sys != null"><div class="warp-li"> <span>服务器名称</span>{{ serveData.sys.computerName}}</div><div class="warp-li"><span>操作系统</span>{{ serveData.sys.osName }}</div></li>
+        <li  v-if="serveData.sys != null"><div class="warp-li"><span>服务器IP</span>{{ serveData.sys.computerIp }}</div><div class="warp-li"><span>系统架构</span>{{ serveData.sys.osArch }}</div></li>
       </ul>
     </div>
 
     <div class="warp">
       <h2>JAVA虚拟机信息</h2>
       <ul>
-        <li><div class="warp-li"> <span>JAVA名称</span>{{ serveData.jvm.name }}</div><div class="warp-li"><span>Java版本</span>{{ serveData.jvm.version }}</div></li>
-        <li><div class="warp-li"><span>启动时间</span>{{ serveData.jvm.runTime }}</div><div class="warp-li"><span>运行时长</span>{{ serveData.jvm.startTime }}</div></li>
-        <li><div class="warp-li"><span>安装路径</span>{{ serveData.jvm.home }}</div><div class="warp-li"></div></li>
+        <li  v-if="serveData.sys != null"><div class="warp-li"> <span>JAVA名称</span>{{ serveData.jvm.name }}</div><div class="warp-li"><span>Java版本</span>{{ serveData.jvm.version }}</div></li>
+        <li  v-if="serveData.sys != null"><div class="warp-li"><span>启动时间</span>{{ serveData.jvm.runTime }}</div><div class="warp-li"><span>运行时长</span>{{ serveData.jvm.startTime }}</div></li>
+        <li  v-if="serveData.sys != null"><div class="warp-li"><span>安装路径</span>{{ serveData.jvm.home }}</div><div class="warp-li"></div></li>
       </ul>
-    </div>
-    <div class="warp">
-      <h2>磁盘状态</h2>
-      <el-table
-          border
-          :data="serveData.sysFiles"
-          style="width: 50%">
-        <el-table-column
-            align="center"
-            prop="dirName"
-            label="盘符路径"
-            width="180">
-        </el-table-column>
-        <el-table-column
-            align="center"
-            prop="sysTypeName"
-            label="文件系统">
-        </el-table-column>
-        <el-table-column
-            align="center"
-            prop="total"
-            label="总大小">
-        </el-table-column>
-        <el-table-column
-            align="center"
-            prop="usage"
-            label="已使用">
-        </el-table-column>
-        <el-table-column
-            align="center"
-            prop="used"
-            label="未使用">
-        </el-table-column>
-      </el-table>
     </div>
   </div>
 </template>
@@ -100,10 +102,6 @@ export default {
   },
   created() {
     this.getSystem()
-
-    this.timer = setInterval(() => {
-      this.getSystem()
-    }, 1000)
   },
   methods: {
     getSystem() {
@@ -133,6 +131,11 @@ export default {
   background-color: #f2f2f2;
   margin: 20px 0 30px;
   border-radius: 5px;
+}
+.overview > * {
+  flex: 1;
+  padding: 20px 15px;
+  margin: 10px 20px;
 }
 
 .overview .percentage {
@@ -171,5 +174,11 @@ export default {
 .warp-li span{
   display: inline-block;
   padding-right: 20px;
+}
+.table  .el-table__row, .el-table_1_column_1{
+  background-color: #f2f2f2 !important  ;
+}
+ .overview .el-table th.el-table__cell{
+  background-color: #f2f2f2 !important  ;
 }
 </style>

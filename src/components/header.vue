@@ -60,6 +60,7 @@
           <router-view/>
         </div>
         <div class="footer">
+          <div class="total">共查询到:  <span> {{$store.state.total}} </span> 条相关数据</div>
           <el-pagination
               background
               :page-size="14"
@@ -134,7 +135,7 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-  .el-submenu li{
+.el-submenu li{
   background-color: rgb(67, 74, 80) !important;
 }
 
@@ -198,7 +199,8 @@ export default {
 }
 
 .footer {
-  text-align: right;
+  display: flex;
+  justify-content: space-between;
   box-shadow: 0 0 15px #ccc;
   background-color: #fff;
   border-radius: 10px;
@@ -206,4 +208,20 @@ export default {
   margin-left: 20px;
   margin-top: 20px;
 }
+.total {
+  height: 28px;
+  background-color: #f4f4f5;
+  border-radius: 5px;
+  padding: 5px 10px;
+  text-align: center;
+  font-size: 13px;
+}
+.total span{
+  display: inline-block;
+  background-color: #409EFF;
+  padding: 5px;
+  border-radius: 5px;
+  color: #fff;
+}
+
 </style>

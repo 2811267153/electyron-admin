@@ -1,27 +1,21 @@
 <template>
   <div id="networkManagement">
-    <div class="container">
-      <p>网关管理</p>
-    </div>
     <div class="nav-form">
-      <el-form :inline="true" :model="from" class="demo-form-inline">
-        <el-form-item label="网管名称">
-          <el-input v-model="from.user" placeholder="审网管名称批人"></el-input>
+      <el-form :model="form" :hide-required-asterisk="true" :show-message="false" :inline="true" class="demo-form-inline" ref="formName" :rules="rules" >
+        <el-form-item label="网关名称" prop="gatewayName">
+          <el-input v-model="form.gatewayName" placeholder="审网管名称批人"></el-input>
         </el-form-item>
-        <el-form-item label="物理地址">
-          <el-input v-model="from.address" placeholder="物理地址"></el-input>
+        <el-form-item label="注册用户名" prop="gatewayName">
+          <el-input v-model="form.username" placeholder="审网管名称批人"></el-input>
         </el-form-item>
-        <el-form-item label="协议类型">
-          <el-select v-model="from.protocol" placeholder="协议类型">
-            <el-option
-                :label="item.label"
-                :value="item.value"
-                v-for="item in protocolType"
-            ></el-option>
-          </el-select>
+        <el-form-item label="代理IP" prop="proxyIp">
+          <el-input v-model="form.proxyIp" placeholder="审网管名称批人"></el-input>
         </el-form-item>
-        <el-form-item label="中继类型">
-          <el-select v-model="from.relay" placeholder="中继类型">
+        <el-form-item label="域地址" prop="realm">
+          <el-input v-model="form.realm" placeholder="物理地址"></el-input>
+        </el-form-item>
+        <el-form-item label="中继类型" prop="gatewayType">
+          <el-select v-model="form.gatewayType" placeholder="协议类型">
             <el-option
                 :label="item.label"
                 :value="item.value"
@@ -29,27 +23,9 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="录音支持">
-          <el-select v-model="from.recording">
-            <el-option
-                :label="item.label"
-                :value="item.value"
-                v-for="item in recording"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="网管状态">
-          <el-select v-model="from.networkStat">
-            <el-option
-                :label="item.label"
-                :value="item.value"
-                v-for="item in networkStat"
-            ></el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item>
-          <!--          <el-button type="primary" @click="onSubmit">查询</el-button>-->
-          <!--          <el-button @click="onSubmit">重置</el-button>-->
+                    <el-button type="primary" @click="find">查询</el-button>
+                    <el-button @click="clear">重置</el-button>
         </el-form-item>
       </el-form>
       <el-button type="primary" @click="showAddForm(null, '添加网管')"
@@ -281,7 +257,7 @@ export default {
       dialogFormVisible: false,
       formLabelWidth: '120px',
       title: '添加网管',
-      from: {
+      form: {
         user: '',
         address: '',
         protocol: '',
@@ -308,10 +284,7 @@ export default {
         realm: '', //域地址
         register: 1, //是否注册 0不注册/ 1 注册
         username: '', //注册用户名
-
-
       },
-
       protocolType: [
         {label: 'SIP', value: 'SIP'},
         {label: 'H.323', value: 'H.323'}
@@ -363,9 +336,21 @@ export default {
     }
   },
   methods: {
+    clear(){
+      this.resetForm()
+      this.getPbxAll(this.form)
+    },
+    find(){
+      this.getPbxAll(this.form)
+    },
+
     getPbxAll(form) {
       getPbxAll(form).then(res => {
-        this.list = res.data.data.records
+        if(res.data.code === 200 ){
+          console.log(res)
+          this.$store.dispatch('total', res.data.data.total)
+          this.list = res.data.data.records
+        }
       }).catch(e => {
         this.$message.error(e)
       })
@@ -403,7 +388,7 @@ export default {
         }
       })
     },
-    resetForm(formName) {
+    resetForm() {
       this.$refs['formName'].resetFields();
     },
     showAddForm(row, title) {
@@ -438,15 +423,22 @@ export default {
     },
   },
   created() {
+    this.form = this.$store.state.formPage
     this.getPbxAll(this.form)
   },
   watch: {
     dialogFormVisible(val) {
       if (val === false) {
-        console.log('--------')
-        this.resetForm()
+        this.addFrom = this.$options.data().form;
       }
     }
+  },
+  mounted() {
+    this.$bus.$on('pageChange', () => {
+      console.log('aaa')
+      this.form = this.$store.state.formPage
+      this.getPbxAll(this.form)
+    })
   }
 
 }

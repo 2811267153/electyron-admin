@@ -8,7 +8,7 @@ import {request} from "@/newwork/axios";
 export function getPbxAll(data){
     return request({
         url:'/pbx/gateway/list',
-        data: data
+        params: data
     })
 }
 export function getPbxAdd(data){
@@ -43,7 +43,7 @@ export function upDatePbx(data){
 export function getGwgroup(data) {
     return request({
         url: '/pbx/gwgroup/list',
-        data: data,
+        params: data,
         method: 'get'
     })
 }export function addGwgroup(data) {

@@ -17,9 +17,8 @@
         </el-button
         >
       </div>
-
       <el-dialog :title="title" :visible.sync="dialogFormVisible">
-        <el-form :model="addForm" :rules="addRules" ref="addForm">
+        <el-form :model="addForm" :rules="addFroms" ref="addForm">
           <el-form-item
               label="添加费率组名称"
               :label-width="formLabelWidth"
@@ -76,40 +75,44 @@
     <!--      如果toggle == false 则显示  不然显示 首标题-->
     <div class="rate-list" v-else>
       <p>费率组列表</p>
-      <div class="container">
+
+            <div class="container">
         <div class="nav-form">
-          <el-form :inline="true" :model="listFrom" class="demo-form-inline">
-            <el-form-item label="号码前缀">
-              <el-input
-                  v-model="listFrom.numberPrefix"
-                  placeholder="审批人"
-              ></el-input>
-            </el-form-item>
-            <el-form-item label="费率名称">
-              <el-input
-                  v-model="listFrom.billingName"
-                  placeholder="审批人"
-              ></el-input>
-            </el-form-item>
-            <el-form-item label="地区类型">
-              <el-select v-model="listFrom.region">
-                <el-option
-                    :label="item.label"
-                    :value="item.value"
-                    v-for="item in region"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="onSubmit">查询</el-button>
-              <el-button @click="clearSubmit">重置</el-button>
-            </el-form-item>
-          </el-form>
+<!--          <el-form :inline="true" :model="listFrom" class="demo-form-inline">-->
+<!--            <el-form-item label="号码前缀">-->
+<!--              <el-input-->
+<!--                  v-model="listFrom.numberPrefix"-->
+<!--                  placeholder="审批人"-->
+<!--              ></el-input>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="费率名称">-->
+<!--              <el-input-->
+<!--                  v-model="listFrom.billingName"-->
+<!--                  placeholder="审批人"-->
+<!--              ></el-input>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item label="地区类型">-->
+<!--              <el-select v-model="listFrom.region">-->
+<!--                <el-option-->
+<!--                    :label="item.label"-->
+<!--                    :value="item.value"-->
+<!--                    v-for="item in region"-->
+<!--                ></el-option>-->
+<!--              </el-select>-->
+<!--            </el-form-item>-->
+<!--            <el-form-item>-->
+<!--              <el-button type="primary" @click="onSubmit">查询</el-button>-->
+<!--              <el-button @click="clearSubmit">重置</el-button>-->
+<!--            </el-form-item>-->
+<!--          </el-form>-->
+
+          <div></div>
           <div>
             <el-button type="primary" @click="onSubmits">添加费率</el-button>
             <el-button type="primary" @click="black">返回</el-button></div>
         </div>
       </div>
+
 
       <el-dialog :title="listTitle" :visible.sync="listDialogFormVisible">
         <el-form :model="addListFrom" ref="formName" :rules="addRules">
@@ -126,15 +129,7 @@
               name="rateGroup"
               required
           >
-            <el-select
-                v-model="addListFrom.rateGroupId"
-            >
-              <el-option
-                  :label="item.groupName"
-                  :value="item.id"
-                  v-for="item in list"
-              ></el-option>
-            </el-select>
+            <el-input v-model="row.groupName" disabled></el-input>
           </el-form-item>
           <div class="width">
             <el-form-item
@@ -156,7 +151,6 @@
           >
             <div class="width">
               <el-form-item prop="rate"> <el-input style="margin-right: 20px" v-model="addListFrom.rate" placeholder="请输入费率"></el-input></el-form-item>
-
               <el-form-item style="margin-left: 20px" prop="billingPeriod"><el-input v-model="addListFrom.billingPeriod" placeholder="请输入计费单位"></el-input></el-form-item>
             </div>
           </el-form-item>
@@ -169,7 +163,7 @@
           >
         </div>
       </el-dialog>
-      <el-table :data="rateItemList" border style="width: 100%;">
+      <el-table :data="rateItemList" border style="width: 100%; margin-top: 20px">
         <el-table-column align="center" prop="date" label="序号">
           <template scope="scope">{{ scope.$index + 1}}</template>
         </el-table-column>
@@ -191,12 +185,6 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination
-          class='pagination'
-          background
-          layout="prev, pager, next"
-          :total="1000">
-      </el-pagination>
     </div>
   </div>
 </template>
@@ -229,9 +217,10 @@ export default {
       list: [],  //保存费率组列表
       rateItemList: [], //保存费率列表
       dialogFormVisible: false,
-      formLabelWidth: '120px',
+      formLabelWidth: '140px',
       toggle: true,
       shows: '',  //设置费率编辑状态
+      rateGroupId: '',
       /**
        * 费率添加表单
        */
@@ -249,13 +238,12 @@ export default {
         ratePrefix: '', //费率前缀
         rate: '', //费率
       },
-
+      row: {},
       region: [
         {label: '分机', value: '分机'},
         {label: '国外', value: '国外'},
         {label: '国内', value: '国内'}
       ],
-
       addRules: {
         rateName: [
           {required: true, message: '该选项为必填项，请曲确认', trigger: 'blur'}
@@ -269,13 +257,12 @@ export default {
         billingPeriod: [
           {required: true, message: '该选项为必填项，请曲确认', trigger: 'blur'}
         ],
-
       },
-      billingData: [
-        {},
-        {unit: '30', cost: '0.05', count: 1, priority: 2},
-        {unit: '60', cost: '0.08', count: 100, priority: 3}
-      ]
+      addFroms: {
+        groupName: [
+          {required: true, message: '该选项为必填项，请曲确认', trigger: 'blur'}
+        ],
+      }
     }
   },
   methods: {
@@ -294,7 +281,6 @@ export default {
         this.$message.error(e)
       })
     },
-
     /**
      *
      * 获取费率组列表
@@ -314,12 +300,14 @@ export default {
     },
     onSubmits() {
       this.listDialogFormVisible = true
+      this.listTitle = '添加费率'
     },
     isToggle(row) {
       this.toggle = false
-
+      this.row = row
+      console.log(row)
       this.form.rateGroupId =row.id
-          this.getRateItemList(this.form)
+      this.getRateItemList(this.form)
     },
     /**
      *
@@ -328,10 +316,10 @@ export default {
     submitForm() {
       this.$refs.addForm.validate((valid) => {
         if (valid) {
-
           if(this.title === '添加费率组'){
             addRateList(this.addForm).then(res => {
               console.log(res)
+              this.getRateList(this.form)
             })
             this.getRateList(this.form)
             this.dialogFormVisible = false
@@ -339,6 +327,7 @@ export default {
             putRateList(this.addForm).then(res => {
               console.log(res)
               if(res.data.code === 200){
+                this.getRateList()
                 this.$message.success('提交完成')
                 this.dialogFormVisible = false
               }else {
@@ -355,11 +344,13 @@ export default {
         if (valid) {
           if(this.listTitle === '添加费率'){
             addRateItemList(this.addListFrom).then(res => {
-              console.log(res)
+              this.resetForm()
               if(res.data.code === 200){
                 this.$message.success('添加完成')
+                this.dialogFormVisible = false
+                this.getRateItemList(this.form)
               }else {
-                this.$message.error(res.data.msg())
+                this.$message.error(res.data.msg)
               }
             }).catch(e => {
               this.$message.error(e)
@@ -389,7 +380,6 @@ export default {
     showAddForm(row, title) {
       this.title = title
       if(title === '编辑'){
-        console.log(row)
         this.addForm = row
       }
       this.dialogFormVisible = true
@@ -430,10 +420,17 @@ export default {
   watch: {
     listDialogFormVisible(val){
       if(val!== true){
+        this.getRateItemList(this.form)
         this.resetForm()
       }
     },
-
+    toggle(val){
+      if(val === true){
+        this.rateItemList = []
+      }else {
+        this.addListFrom.rateGroupId = this.row.id
+      }
+    },
   },
   computed: {
     createId() {

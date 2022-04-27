@@ -1,15 +1,12 @@
 <template>
   <div id="trunk">
-    <div class="container">
-      <p>中继组</p>
-    </div>
     <div class="nav-form">
-      <el-form :inline="true" :model="from" class="demo-form-inline">
+      <el-form :inline="true" :model="form" class="demo-form-inline">
         <el-form-item label="中继名称">
-          <el-input v-model="from.user" placeholder="审网管名称批人"></el-input>
+          <el-input v-model="form.user" placeholder="审网管名称批人"></el-input>
         </el-form-item>
         <el-form-item label="策略类型">
-          <el-select v-model="from.protocol" placeholder="协议类型">
+          <el-select v-model="form.protocol" placeholder="协议类型">
             <el-option
                 :label="item.label"
                 :value="item.value"
@@ -18,7 +15,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="重试策略">
-          <el-select v-model="from.relay" placeholder="中继类型">
+          <el-select v-model="form.relay" placeholder="中继类型">
             <el-option
                 :label="item.label"
                 :value="item.value"
@@ -80,8 +77,11 @@
             </el-select>
           </el-form-item>
         </div>
+        <el-form-item label="前缀" :label-width="formLabelWidth" prop="groupPrefix">
+          <el-input v-model="addFrom.groupPrefix"></el-input>
+        </el-form-item>
 
-        <el-form-item style="margin-top: 20px" label="中继数组"  :label-width="formLabelWidth">
+        <el-form-item v-if="title === '添加中继组'" style="margin-top: 20px" label="中继数组" :label-width="formLabelWidth">
           <ul>
             <li v-for="(item, i) in tableData">
               <el-select v-model="tableData[i].gatewayId">
@@ -89,11 +89,25 @@
                     v-for="item in pbxList"
                     :key="item.value"
                     :label="item.gatewayName"
-                    placeholder="请选择网关"
                     :value="item.id">
                 </el-option>
               </el-select>
               <el-input class="li-input" v-model="tableData[i].weight" placeholder="请输入内容"></el-input>
+            </li>
+          </ul>
+        </el-form-item>
+        <el-form-item v-else style="margin-top: 20px" label="中继数组" :label-width="formLabelWidth">
+          <ul class="table">
+            <li v-for="(item, i) in tableData">
+              <el-select v-model="tableData[i].gatewayId" placeholder="未更改">
+                <el-option
+                    v-for="item in pbxList"
+                    :key="item.value"
+                    :label="item.gatewayName"
+                    :value="item.id">
+                </el-option>
+              </el-select>
+              <el-input class="li-input" v-model="tableData[i].weight" placeholder="未更改"></el-input>
             </li>
           </ul>
         </el-form-item>
@@ -117,7 +131,7 @@
       </div>
     </el-dialog>
 
-    <el-table border :data="list" style="width: 80%">
+    <el-table border :data="list" style="width: 100%">
       <el-table-column align="center" prop="index" label="序号" width="50">
         <template scope="scope">{{ scope.$index + 1 }}</template>
       </el-table-column>
@@ -142,7 +156,8 @@
         <template scope="scope">
           <div class="table" v-for="(item, i) in scope.row.pbxGatewayList">
             <p>
-              <span>{{ scope.row.pbxGatewayList[i].gatewayName }}</span> --<span>{{ scope.row.pbxGwgroupGatewayList[i].createTime }}</span>
+              <span>{{ scope.row.pbxGatewayList[i].gatewayName }}</span>
+              --<span>{{ scope.row.pbxGwgroupGatewayList[i].createTime }}</span>
             </p>
           </div>
         </template>
@@ -169,17 +184,18 @@
 </template>
 
 <script>
-import {addGwgroup, deleteGwgroup, getGwgroup,  getPbxAll} from "@/newwork/ground-colltroner";
+import {addGwgroup, deleteGwgroup, getGwgroup, getPbxAll} from "@/newwork/ground-colltroner";
 
 export default {
   name: 'trunkGroup',
   data() {
     return {
-      from: {},
+      form: {},
       title: '添加中继组',
       dialogFormVisible: false,
       pbxList: [],
       addFrom: {
+        groupPrefix: '',
         groupName: '', //中继名称
         strategyRetry: '', //重试策略，
         strategyType: '', // 策略类型
@@ -201,26 +217,30 @@ export default {
       ],
       rules: {
         groupName: [
-          {required: true, message: '请输入中继组名称', trigger: 'blur'}
+          {required: true, message: '该项为必填项,请确认', trigger: 'blur'}
+        ],
+        groupPrefix: [
+          {required: true, message: '该项为必填项,请确认', trigger: 'blur'}
         ],
         strategyRetry: [
-          {required: true, message: '请输入超时时间', trigger: 'blur'}
+          {required: true, message: '该项为必填项,请确认', trigger: 'blur'}
         ],
         strategyType: [
-          {required: true, message: '请选择策略类型', trigger: 'blur'}
+          {required: true, message: '该项为必填项,请确认', trigger: 'blur'}
         ],
         retryStrategy: [
-          {required: true, message: '请输入重试策略', trigger: 'blur'}
+          {required: true, message: '该项为必填项,请确认', trigger: 'blur'}
         ],
-        startTime: [{required: true, message: '请选择工作时间', trigger: 'blur'}]
       },
       value: '',
-      tableData: [{gatewayId: '', weight: ''},{gatewayId: '', weight: ''}]
+      tableData: [{gatewayId: '', weight: ''}, {gatewayId: '', weight: ''}]
     }
   },
   methods: {
-    getGwgroup(form){
+    getGwgroup(form) {
       getGwgroup(form).then(res => {
+        this.$store.dispatch('total', res.data.data.total)
+        console.log(res )
         this.list = res.data.data.records
       }).catch(e => {
         this.$message.error(e)
@@ -235,16 +255,8 @@ export default {
       this.title = title
       if (title === '编辑') {
         this.addFrom = row
-      }else {
-       this.addFrom = {
-         groupName: '', //中继名称
-         strategyRetry: '', //重试策略，
-         strategyType: '', // 策略类型
-         pbxGwgroupGatewayList: '', //中继数组
-         totalWeight: '', //总的权重值，为组内中继之和
-         pageNum: 1,
-         pageSize: 10,
-       }
+      } else {
+        this.addFrom = this.$options.data().addFrom
       }
     },
     submitForm() {
@@ -252,10 +264,10 @@ export default {
         if (valid) {
           const totalWeight = []
           this.tableData.forEach(item => {
-            if(item.gatewayId.length !== 0 && item.weight !== 0){
+            if (item.gatewayId.length !== 0 && item.weight !== 0) {
               totalWeight.push(parseInt(item.weight))
               this.dialogFormVisible = false
-            }else {
+            } else {
               this.$message.error('请确保中继数组内已填写')
             }
           })
@@ -264,14 +276,13 @@ export default {
             s += parseInt(item)
             this.addFrom.totalWeight = s
           })
-          console.log(this.addFrom.totalWeight )
-          if(this.addFrom.totalWeight.length !== 0){
+          if (this.addFrom.totalWeight.length !== 0) {
             //添加中继数组
             addGwgroup(this.addFrom).then(res => {
-              if(res.data.code === 200){
+              if (res.data.code === 200) {
                 this.$message.success('提交完成')
                 this.getGwgroup(this.form)
-              }else {
+              } else {
                 this.$message.error(res.data.msg)
               }
             }).catch(e => {
@@ -289,12 +300,10 @@ export default {
     },
     removeIt(row) {
       deleteGwgroup(row.id).then(res => {
-        console.log(row)
-        console.log(res)
-        if(res.data.code === 200){
+        if (res.data.code === 200) {
           this.$message.success('提交完成')
           this.getGwgroup(this.from)
-        }else {
+        } else {
           this.$message.error(res.data.msg)
         }
       }).catch(e => {
@@ -305,36 +314,30 @@ export default {
   },
 
   created() {
+    this.form = this.$store.state.formPage
     this.getGwgroup(this.form)
   },
   watch: {
-    dialogFormVisible(val ){
-      if(val){
-        console.log(val)
+    dialogFormVisible(val) {
+      if (val === true  ) {
         getPbxAll().then(res => {
+          console.log(res)
           this.pbxList = res.data.data.records
         })
       }
     },
     tableData: {
-      handler: function (val){
+      handler: function (val) {
         this.addFrom.pbxGwgroupGatewayList = val
+        console.log(val)
       },
       deep: true
     },
-    totalWeight(val){
-      if(val.length !== 0){
-      }
-    }
   }
 }
 </script>
 
 <style scoped>
-.container {
-  border: 1px solid #ccc;
-  margin: 0 20px;
-}
 
 .container p {
   background-color: #f2f2f2;
@@ -355,27 +358,31 @@ export default {
 
 .width {
   display: flex;
+  width: 100%;
   justify-content: space-between;
 }
 
 .width > * {
   flex: 1;
 }
+
 ul {
   width: 80%;
   flex-direction: column;
 }
+
 ul li {
   display: flex;
   list-style: none;
-  margin-bottom: 20px;
-  margin-right: 20px;
 }
-.li-input{
+
+.li-input {
   width: 50%;
   margin-left: 20px;
 }
-.table p{
+
+.table p {
   background-color: transparent;
 }
+
 </style>

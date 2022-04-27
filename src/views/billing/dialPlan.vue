@@ -1,22 +1,13 @@
 <template>
   <div id="dialPlan">
-    <p>{{ this.$route.meta.title }}</p>
     <div class="container">
-      <el-form :inline="true" :model="form" class="demo-form-inline">
-        <el-form-item label="方案名称">
-          <el-input v-model="form.name" placeholder="审批人"></el-input>
+      <el-form :inline="true" :model="form" class="demo-form-inline" ref="form" rules="rules">
+        <el-form-item label="方案名称" prop="diaplanName">
+          <el-input v-model="form.diaplanName" placeholder="审批人"></el-input>
         </el-form-item>
-        <el-form-item label="活动区域">
-          <el-select v-model="form.trunk" placeholder="活动区域">
-            <el-option
-                :label="item.label"
-                v-for="item in trunkGroup"
-                :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
+
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">查询</el-button>
+          <el-button type="primary" @click="find">查询</el-button>
           <el-button @click="clearSubmit">重置</el-button>
         </el-form-item>
       </el-form>
@@ -35,10 +26,6 @@
           >
             <el-input v-model="addForm.diaplanName" autocomplete="off"></el-input>
           </el-form-item>
-          <div></div>
-
-        </div>
-        <div class="width">
           <el-form-item label="中继组" :label-width="formLabelWidth" prop="prefix">
             <el-select v-model="addForm.diaplanGatewayGroup">
               <el-option
@@ -48,8 +35,8 @@
               ></el-option>
             </el-select>
           </el-form-item>
-        </div>
 
+        </div>
         <div class="width">
           <el-form-item label="费率组" :label-width="formLabelWidth" prop="diaplanRateGroup">
             <el-select v-model="addForm.diaplanRateGroup" placeholder="请选择" @change="change">
@@ -81,22 +68,22 @@
         >
       </div>
     </el-dialog>
-    <el-table :data="list" border  style="width: 80%; margin-top: 20px">
+    <el-table :data="list" border style="width: 100%; margin-top: 20px">
       <el-table-column prop="date" align="center" label="序号" width="180">
         <template scope="scope">
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column prop="diaplanName" align="center" label="方案名称" width="300">
+      <el-table-column prop="diaplanName" align="center" label="方案名称">
       </el-table-column>
-      <el-table-column prop="trunk" align="center" label="中继组" width="300">
+      <el-table-column prop="trunk" align="center" label="中继组">
         <template scope="scope">
-          {{diaplanGatewayGroup}}
+          {{ scope.row.pbxGwgroup.groupName }}
         </template>
       </el-table-column>
-      <el-table-column prop="diaplanPrefix" align="center" label="呼出前缀"   width="300">
+      <el-table-column prop="diaplanPrefix" align="center" label="呼出前缀">
       </el-table-column>
-      <el-table-column prop="createTime"  align="center" label="更新时间" width="300">
+      <el-table-column prop="createTime" align="center" label="更新时间">
       </el-table-column>
       <el-table-column align="center" prop="stauts" label="操作">
         <template scope="scope">
@@ -110,7 +97,7 @@
           <el-link style="margin-right: 20px" @click="removeIt(scope.row)" type="info">删除</el-link>
         </template>
       </el-table-column>
-      <el-table-column prop="remark" label="备注"  align="center">
+      <el-table-column prop="remark" label="备注" align="center">
       </el-table-column>
     </el-table>
   </div>
@@ -137,7 +124,7 @@ export default {
         pageSize: 10,
         diaplanGatewayGroup: '',
         diaplanName: '',
-        diaplanPrefix: ''
+        diaplanPrefix: '',
       },
       title: '',
       list: [],
@@ -147,7 +134,7 @@ export default {
         diaplanPrefix: '',  //呼出前缀
         diaplanRateGroup: '', //费率组
       },
-        rateGroupId: '',//获取费率组ID
+      rateGroupId: '',//获取费率组ID
       trunkGroup: [],
       rateList: [],
       rateItemList: [],
@@ -162,6 +149,7 @@ export default {
     getDaiPlan(form) {
       diaPlanList(form).then(res => {
         console.log(res)
+        this.$store.dispatch('total', res.data.data.total)
         this.list = res.data.data.records
       }).catch(e => {
         console.log(e)
@@ -169,20 +157,21 @@ export default {
     },
 
     //搜索
-    onSubmit() {
+    find() {
+      this.getDaiPlan(this.form)
     },
     //重置
     clearSubmit() {
+      this.resetForm()
+      this.getDaiPlan(this.form)
     },
     showAddForm(row, title) {
       this.dialogFormVisible = true
       this.title = title
       if (title === '编辑') {
         this.addForm = row
-      } else if (title === '查看') {
-        this.addForm = row
-        this.isReadOnly = true
       } else {
+        this.addForm = this.$options.data().addForm
       }
     },
 
@@ -191,20 +180,25 @@ export default {
      * 提交和更新表单
      * @param formName
      */
+    resetForm(formName) {
+      this.$refs.form.resetFields();
+    },
+
+
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           /**
            * 添加拨号方案
            */
-          if(this.title !== '编辑'){
+          if (this.title !== '编辑') {
             addDiaPlanList(this.addForm).then(res => {
               console.log(res)
-              if(res.data.code === 200){
+              if (res.data.code === 200) {
                 this.$message.success('提交完成')
                 this.getDaiPlan(this.form)
 
-              }else {
+              } else {
                 this.$message.error(res.data.msg)
               }
               this.dialogFormVisible = false
@@ -212,12 +206,12 @@ export default {
               console.log(e)
               this.$message.error(e)
             })
-          }else {
+          } else {
             upDateDiaPlan(this.addForm).then(res => {
-              if(res.data.code  === 200){
+              if (res.data.code === 200) {
                 this.$message.success('提交完成')
                 this.getDaiPlan(this.form)
-              }else {
+              } else {
                 this.$message.error(res.data.msg)
               }
             }).catch(e => this.$message.error(e))
@@ -231,42 +225,41 @@ export default {
         }
       })
     },
-    change(e){
+    change(e) {
       //获取费率组下的所有费率
       this.rateGroupId = e
-      const  data ={}
+      const data = {}
       data.rateGroupId = e
-
       getRateItemList(data).then(res => {
         console.log(res)
-        if(res.data.code === 200){
+        if (res.data.code === 200) {
           this.rateItemList = res.data.data.records
-        }else {
+        } else {
           this.$message.error(res.data.msg)
         }
       })
     },
-    removeIt(row){
+    removeIt(row) {
       delDiaPlan(row.id).then(res => {
-        if(res.data.code === 200 ){
+        if (res.data.code === 200) {
           this.$message.success('提交完成')
           this.getDaiPlan(this.form);
-        }else {
+        } else {
           this.$message.error(res.data.msg)
         }
-      }).catch(e => {this.$message.error(e)})
+      }).catch(e => {
+        this.$message.error(e)
+      })
 
     }
   },
   created() {
+    this.form = this.$store.state.formPage
     this.getDaiPlan(this.form)
   },
   computed: {
-    diaplanGatewayGroup(){
-      this.list.map(item => {
-        console.log(item.diaplanGatewayGroup)
-        return item.diaplanGatewayGroup
-      })
+    diaplanPrefix(){
+      return this.addForm.diaplanRateGroup
     }
   },
   watch: {
@@ -281,15 +274,23 @@ export default {
           })
         }
         getRateList(this.form).then(res => {
-          console.log(res)
-          if(res.data.code === 200){
+          if (res.data.code === 200) {
             this.rateList = res.data.data.records
-          }else {
+          } else {
             this.$message.error(res.data.msg)
           }
         }).catch(e => this.$message.error(e))
       }
+    },
+    diaplanPrefix(){
+      this.addForm.diaplanPrefix = ''
     }
+  },
+  mounted() {
+    this.$bus.$on('pageChange', () => {
+      this.form = this.$store.state.formPage
+      this.getDaiPlan(this.form)
+    })
   }
 }
 </script>
@@ -317,6 +318,5 @@ export default {
 
 .width > * {
   flex: 1;
-  padding-right: 20%;
 }
 </style>

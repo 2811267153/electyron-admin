@@ -1,32 +1,26 @@
 <template>
   <div class="phone">
-    <div class="phone-l">
-      <p>所属区域</p>
-      <div class="el-tree">
-        <e-tree></e-tree>
-      </div>
-    </div>
     <div class="phone-r">
       <div class="nav-form">
-        <el-form :inline="true" :model="form" class="demo-form-inline">
-          <el-form-item label="话机名称">
-            <el-input v-model="form.name" placeholder="审网管名称批人"></el-input>
+        <el-form :inline="true" :model="form" ref="addForm" class="demo-form-inline">
+          <el-form-item label="分机名称" prop="directoryName">
+            <el-input v-model="form.directoryName"></el-input>
           </el-form-item>
-          <el-form-item label="SIP号">
-            <el-input v-model="form.SIP" placeholder="物理地址"></el-input>
+          <el-form-item label="域地址" prop="domain">
+            <el-input v-model="form.domain"></el-input>
           </el-form-item>
-          <el-form-item label="话机状态">
-            <el-select v-model="form.stats" placeholder="中继类型">
+          <el-form-item label="计费方式" prop="billingType">
+            <el-select v-model="form.billingType" placeholder="中继类型">
               <el-option
                   :label="item.label"
                   :value="item.value"
-                  v-for="item in relayType"
+                  v-for="item in billingType"
               ></el-option>
             </el-select>
           </el-form-item>
           <el-form-item>
-<!--            <el-button type="primary" @click="onSubmit">查询</el-button>-->
-<!--            <el-button @click="onSubmit">重置</el-button>-->
+            <el-button type="primary" @click="find">查询</el-button>
+            <el-button @click="clear">重置</el-button>
           </el-form-item>
         </el-form>
         <el-button type="primary" @click="addForms(null, '添加话机')"
@@ -47,9 +41,9 @@
           </template>
         </el-table-column>
         <el-table-column prop="directoryName" label="分机名称"></el-table-column>
-        <el-table-column prop="directoryNumber" label="电话号码" width="180">
+        <el-table-column prop="directoryNumber" label="电话号码">
         </el-table-column>
-        <el-table-column prop="diaplan" label="拨号地址" width="180">
+        <el-table-column prop="diaplan" label="拨号地址">
         </el-table-column>
         <el-table-column prop="deptName" label="部门">
 
@@ -147,7 +141,7 @@
               :label-width="formLabelWidth"
               prop="bussiness"
           >
-            <el-select v-model="addForm.bussiness" >
+            <el-select v-model="bussinessss" >
               <el-option :label="item.label" :value="item.value" v-for="item in bussiness"> </el-option>
             </el-select>
           </el-form-item>
@@ -299,6 +293,13 @@ export default {
     getterDeptIdList(){
       return fn(this.deptIdList)
     },
+    bussinessss(){
+      if(this.addForm.bussiness.length !== 0){
+        return  parseInt(this.addForm.bussiness)
+      }else {
+        this.addForm.bussiness = ''
+      }
+    }
   },
   data() {
     return {
@@ -307,10 +308,9 @@ export default {
       formLabelWidth: '150px',
       showBar: false,
       form: {
-        name: '',
-        SIP: '',
-        type: '',
-        stats: '',
+        directoryName: '',
+        domain: '',
+        billingType: '',
       },
       deptId: '',//部门ID列表
       diaPlanList: [],//拨号方案
@@ -397,12 +397,18 @@ export default {
     })
   },
   methods: {
-    submitForm(addForm) {
+    find(){
+      this.getDirectory(this.form)
+    },
+    clear(){
+      this.resetForm('form')
+      this.getDirectory(this.form)
+    },
+    submitForm() {
       this.$refs['addForm'].validate((valid) => {
         if (valid) {
           if(this.title !== '编辑'){
             addDirectory(this.addForm).then(res => {
-              console.log(res)
               if(res.data.code === 200){
                 this.$message.success('提交完成')
                 this.getDirectory(this.form)
@@ -424,18 +430,16 @@ export default {
           }
         } else {
           this.$message.error('提交失败， 请重试')
-          return false
         }
       })
     },
     addForms(row, title) {
       this.dialogFormVisible = true
       this.title = title
-      if (title === '编辑') {
+      if (title === '编辑'  && this.dialogFormVisible === true) {
         this.addForm = row
-      } else {
-        this.resetForm('addForm')
-        console.log('aaa')
+      }else {
+        this.resetForm()
       }
     },
     tableRowClassName({row, rowIndex}) {
@@ -452,8 +456,9 @@ export default {
       }).catch(e => this.$message.error(e))
     },
     resetForm() {
-      this.$refs['addForm'].resetFields()
+     this.$refs['addForm'].resetFields()
     },
+    // string === 'form' ? this.$refs.form.resetFields() :
     recharge(row) {
       this.showBar = true
       this.rechargeInfo = row
@@ -472,7 +477,6 @@ export default {
     },
     getDiaPlanList(form){
       diaPlanList(form).then(res => {
-        console.log(res)
         if(res.data.code === 200){
           this.list = res.data.data.records
         }else {this.$message.error(res.data.msg)}
@@ -480,7 +484,6 @@ export default {
     },
     getDirectory(form){
       getDirectory(form).then(res => {
-        console.log(res)
         this.$store.dispatch('total', res.data.data.total)
         if(res.data.code === 200){
           this.list = res.data.data.records
@@ -509,6 +512,9 @@ export default {
           console.log(res)
           this.diaPlanList = res.data.data.records
         }).catch(e => this.$message.error(e))
+      }else {
+        this.resetForm()
+        this.getDirectory(this.form)
       }
       /**
        *
@@ -521,7 +527,8 @@ export default {
     deptId(val){
       this.addForm.deptId = val[ val.length - 1]
     }
-  }
+  },
+
 }
 </script>
 
@@ -530,22 +537,8 @@ export default {
   display: flex;
   justify-content: space-between;
 }
-
-.phone .phone-l {
-  width: 300px;
-}
-
-
 .phone-r {
   flex: 1;
-  padding: 20px 25px;
-  margin-left: 10px;
-  border-left: 2px solid #cccccc;
-}
-
-.flex {
-  display: flex;
-  margin-right: 20px;
 }
 
 .width {
@@ -564,11 +557,6 @@ export default {
   padding: 5px 10px;
   background-color: #f56c6c;
   color: white;
-}
-
-.phone-r.container {
-  border: 1px solid #ccc;
-  margin: 0 20px;
 }
 
 .phone-r .container p {
