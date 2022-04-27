@@ -71,6 +71,7 @@
         </div>
         <div class="width">
           <el-form-item
+            v-if="title === '新增'"
               label="支持编码"
               :label-width="formLabelWidth"
               prop="codecs"
@@ -93,6 +94,7 @@
         </div>
         <div class="width">
           <el-form-item
+            v-if="title === '新增'"
               label="超时时长"
               :label-width="formLabelWidth"
               prop="expires"
@@ -160,6 +162,7 @@
         <div class="width">
           <el-form-item
               label="注册用户"
+              v-if="title === '新增'"
               :label-width="formLabelWidth"
               prop="username"
           >
@@ -167,6 +170,7 @@
           </el-form-item>
           <el-form-item
               label="密码"
+              v-if="title === '新增'"
               :label-width="formLabelWidth"
               prop="password"
           >
@@ -175,6 +179,7 @@
         </div>
         <div class="width">
           <el-form-item
+            v-if="title === '新增'"
               label="是否注册"
               :label-width="formLabelWidth"
               prop="register"
@@ -290,9 +295,9 @@ export default {
         {label: 'H.323', value: 'H.323'}
       ],
       relayType: [
-        {label: '入中继', value: '0'},
-        {label: '出中继', value: '1'},
-        {label: '双向中继', value: '2'}
+        {label: '入中继', value: 0},
+        {label: '出中继', value: 1},
+        {label: '双向中继', value: 2}
       ],
       networkStat: [
         {label: '开启', value: '开启'},

@@ -159,6 +159,13 @@ export function upDataRoleList(data){
     })
 }
 
+export function getDistribution(data) {
+    return request({
+        url: '/system/role/data/distribution',
+        params: data
+    })
+}
+
 /**
  * 用户管理
  *

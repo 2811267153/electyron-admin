@@ -2,7 +2,7 @@
   <div class="phone">
     <div class="phone-r">
       <div class="nav-form">
-        <el-form :inline="true" :model="form" ref="addForm" class="demo-form-inline">
+        <el-form :inline="true" :model="form" ref="form" class="demo-form-inline">
           <el-form-item label="分机名称" prop="directoryName">
             <el-input v-model="form.directoryName"></el-input>
           </el-form-item>
@@ -35,7 +35,7 @@
           style="width: 100%"
           v-if="list.length !== 0"
       >
-        <el-table-column prop="date" label="序号" width="50">
+        <el-table-column prop="date" label="序号" width="100">
           <template scope="scope">
             {{ scope.$index + 1 }}
           </template>
@@ -141,7 +141,7 @@
               :label-width="formLabelWidth"
               prop="bussiness"
           >
-            <el-select v-model="bussinessss" >
+            <el-select v-model="addForm.bussiness" >
               <el-option :label="item.label" :value="item.value" v-for="item in bussiness"> </el-option>
             </el-select>
           </el-form-item>
@@ -235,6 +235,16 @@
                   :value="item.value">
               </el-option>
             </el-select>
+          </el-form-item>
+        </div>
+        <div class="width">
+            <el-form-item label="经度" :label-width="formLabelWidth" prop="latitude">
+            <el-input
+                v-model="addForm.latitude"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="纬度" :label-width="formLabelWidth" prop="longitude">
+            <el-input v-model="addForm.longitude"></el-input>
           </el-form-item>
         </div>
       </el-form>
@@ -376,8 +386,8 @@ export default {
         rateGroup: [{required: true, message: '该项为必填项目,请确认', trigger: 'blur'},],
         expire: [{required: true, message: '该项为必填项目,请确认', trigger: 'blur'},],
         type: [{required: true, message: '该项为必填项目,请确认', trigger: 'blur'},],
-        latitude: [{required: true, message: '该项为必填项目,请确认', trigger: 'blur'},],
-        longitude: [{required: true, message: '该项为必填项目,请确认', trigger: 'blur'},],
+        latitude: [{required: false, message: '该项为必填项目,请确认', trigger: 'blur'},],
+        longitude: [{required: false, message: '该项为必填项目,请确认', trigger: 'blur'},],
       },
       bussiness: [
         {label: '语音', value: 1},
@@ -401,7 +411,7 @@ export default {
       this.getDirectory(this.form)
     },
     clear(){
-      this.resetForm('form')
+      this.resetForm()
       this.getDirectory(this.form)
     },
     submitForm() {
@@ -439,7 +449,7 @@ export default {
       if (title === '编辑'  && this.dialogFormVisible === true) {
         this.addForm = row
       }else {
-        this.resetForm()
+        this.addForm = this.$options.data().addForm
       }
     },
     tableRowClassName({row, rowIndex}) {
@@ -456,7 +466,7 @@ export default {
       }).catch(e => this.$message.error(e))
     },
     resetForm() {
-     this.$refs['addForm'].resetFields()
+     this.$refs.form.resetFields()
     },
     // string === 'form' ? this.$refs.form.resetFields() :
     recharge(row) {
@@ -469,6 +479,7 @@ export default {
         if(res.data.code === 200){
           this.getDirectory(this.form)
           this.$message.success('充值完成')
+          this.chongZhi = {}
         }else {
           this.$message.error(res.data.data)
         }

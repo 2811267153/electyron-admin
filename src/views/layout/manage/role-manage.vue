@@ -23,11 +23,11 @@
           <el-button @click="clearForm">重置</el-button>
         </div>
         <div class="nav-r">
-          <el-button type="primary" @click="addForms">新增</el-button>
+          <el-button type="primary" @click="addForms(null, '新增')">新增</el-button>
         </div>
       </div>
 
-      <el-dialog title="新增角色" :visible.sync="dialogFormVisible">
+      <el-dialog :title="title" :visible.sync="dialogFormVisible">
         <el-form :model="addForm" ref="addForm" :rules="rules">
           <el-form-item
               label="角色名称"
@@ -56,6 +56,8 @@
                 props="permission"
                 :data="menuIds"
                 :props="defaultProps"
+                node-key="id"
+                :default-checked-keys="defaultMenuId"
                 accordion
                 :check-on-click-node="true"
                 show-checkbox
@@ -124,8 +126,8 @@
             align="center"
             label="数据权限"
             width="180">
-          <template>
-            <el-link type="info">数据权限</el-link>
+          <template scope="scope">
+            <el-link @click="distribution(scope.row.roleId)" type="info">数据权限</el-link>
           </template>
         </el-table-column>
         <el-table-column
@@ -133,8 +135,8 @@
             prop="address"
             label="操作">
           <template scope="scope">
+            <el-link style="margin-right: 20px" type="info" @click="addForms(scope.row, '编辑')">编辑</el-link>
             <el-link style="margin-right: 20px" type="info" @click="removeIt(scope.row)">删除</el-link>
-            <el-link style="margin-right: 20px" type="info" @click="">修改</el-link>
           </template>
         </el-table-column>
       </el-table>
@@ -145,7 +147,7 @@
 </template>
 
 <script>
-import {addRole, getRoleList, getMenuAll} from "@/newwork/system-colltroner";
+import { addRole, getRoleList, getMenuAll, deleteRoleList, getDistribution } from "@/newwork/system-colltroner";
 import {menuToTree, treeToArray} from "@/uti";
 import {deleteRate} from "@/newwork/ground-colltroner";
 import myEmpty from "@/newwork/myEmpty";
@@ -158,6 +160,7 @@ export default {
       menuIds: [],//菜单列表
       formLabelWidth: '120px',
       dialogFormVisible: false,
+      title: '新增',
       navForm: {
         menuIds: [],
         pageSize: 14,
@@ -175,7 +178,8 @@ export default {
         orderNum: '', //显示顺序
         roleCode: '', //角色编码
         roleName: '', //角色名称
-        status: 0
+        status: 0,
+        sysMenuList: []
       },
       total: 0,
       selectMenuList: [],
@@ -215,8 +219,16 @@ export default {
     }
   },
   methods: {
-    addForms() {
+    distribution(row ){
+      console.log(row);
+      getDistribution(row).then(res => {
+        console.log(res);
+      })
+    },
+    addForms(row, title) {
       this.dialogFormVisible = true
+      this.title = title
+      this.title === '新增' ? this.addForm = this.$options.data().addForm : this.addForm = row
     },
     find(){
       this.getRoleList(this.navForm)
@@ -226,7 +238,7 @@ export default {
     },
     removeIt(row){
       console.log(row)
-      deleteRate(row.roleId).then(res => {
+      deleteRoleList(row.roleId).then(res => {
         if(res.data.code === 200 ){
           this.$message.success('提交完成')
           this.getRoleList(this.navForm)
@@ -294,6 +306,18 @@ export default {
   },
   components: {
     myEmpty
+  },
+  computed: {
+    defaultMenuId(){
+      if(this.addForm.sysMenuList.length !== 0){
+        this.addForm.sysMenuList.forEach((item, i) => {
+          this.addForm.menuIds.push(item.id)
+        })
+        return this.addForm.sysMenuList.menuIds.id
+      }else {
+        return  []
+      }
+    }
   }
 }
 </script>

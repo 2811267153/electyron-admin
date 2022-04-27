@@ -3,12 +3,12 @@
     <div class="rate-true" v-if="toggle">
       <p>{{ this.$route.meta.title }}</p>
       <div class="container">
-        <el-form :inline="true" :model="form" class="demo-form-inline">
-          <el-form-item label="审批人">
-            <el-input v-model="form.user" placeholder="审批人"></el-input>
+        <el-form :inline="true" :model="form" class="demo-form-inline"  ref="addForm">
+          <el-form-item label="费率组" prop="diaplanRateGroup">
+            <el-input v-model="form.diaplanRateGroup"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="onSubmit">查询</el-button>
+            <el-button type="primary" @click="find">查询</el-button>
             <el-button @click="clearSubmit">查询</el-button>
           </el-form-item>
         </el-form>
@@ -18,7 +18,7 @@
         >
       </div>
       <el-dialog :title="title" :visible.sync="dialogFormVisible">
-        <el-form :model="addForm" :rules="addFroms" ref="addForm">
+        <el-form :model="addForm" :rules="addFroms" ref="formName">
           <el-form-item
               label="添加费率组名称"
               :label-width="formLabelWidth"
@@ -38,12 +38,12 @@
       </el-dialog>
 
       <el-table :data="list" stripe style="width: 100%" border v-if="list.length !== 0">
-        <el-table-column align="center" prop="date" label="日期" width="180">
+        <el-table-column align="center" prop="date" label="序号" width="180">
           <template scope="scope">
             {{ scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="groupName" label="费率组名称" width="180">
+        <el-table-column align="center" prop="groupName" label="费率组名称">
         </el-table-column>
         <el-table-column align="center" prop="address" label="操作">
           <template scope="scope">
@@ -163,7 +163,7 @@
           >
         </div>
       </el-dialog>
-      <el-table :data="rateItemList" border style="width: 100%; margin-top: 20px">
+      <el-table :data="rateItemList" border style="width: 100%; margin-top: 20px"  v-if="list.length !== 0">
         <el-table-column align="center" prop="date" label="序号">
           <template scope="scope">{{ scope.$index + 1}}</template>
         </el-table-column>
@@ -185,6 +185,8 @@
           </template>
         </el-table-column>
       </el-table>
+
+      <my-empty v-else/>
     </div>
   </div>
 </template>
@@ -198,9 +200,14 @@ import {
   getRateItemList,
   getRateList, putRateList, upDaterateItem
 } from "@/newwork/ground-colltroner";
+import myEmpty from "@/newwork/myEmpty";
 
 export default {
   name: 'rate',
+  components: {
+    myEmpty
+  },
+
   data() {
     return {
       title: '添加费率组',
@@ -265,17 +272,26 @@ export default {
       }
     }
   },
+  mounted() {
+    this.$bus.$on('pageChange', () => {
+      this.form = this.$store.state.formPage
+      this.getRateList(this.form)
+    })
+  },
   methods: {
-    onSubmit() {
+    find() {
+      this.getRateList(this.form)
     },
     black(){
       this.toggle = true
     },
     clearSubmit() {
-      this.listFrom = {}
+      this.resetForm()
+      this.getRateList(this.form)
     },
     getRateList(form) {
       getRateList(form).then(res => {
+        this.$store.dispatch('total', res.data.data.total)
         this.list = res.data.data.records
       }).catch(e => {
         this.$message.error(e)
@@ -320,6 +336,8 @@ export default {
             addRateList(this.addForm).then(res => {
               console.log(res)
               this.getRateList(this.form)
+              this.addForm = this.$options.data().addForm
+              location.reload()
             })
             this.getRateList(this.form)
             this.dialogFormVisible = false
@@ -438,6 +456,7 @@ export default {
     }
   },
   created() {
+    this.form = this.$store.state.formPage
     this.getRateList(this.form)
     this.getRateItemList(this.form)
   }

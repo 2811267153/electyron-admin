@@ -5,7 +5,7 @@
         <div class="logo"></div>
         <h1>金数GDP1000  融合通信管理平台</h1>
       </div>
-      <p><span>当前用户:</span> {{ userInfo.nickName }}</p>
+      <p><span @click="loginOut">当前用户:</span> {{ userInfo.nickName }}</p>
       <!--      <p>  <span>用户</span>: {{userInfo.data.user.username || ''}} <el-button @click="loginOut" class="login-out">退出</el-button></p>-->
     </div>
     <div class="header-nav">
@@ -25,7 +25,6 @@
                   popper-class="aa"
                   :index="item.name"
                   style="width: 200px"
-
                   v-for="item in routes.children"
               >
                 <template slot="title">
@@ -33,15 +32,11 @@
                 </template>
                 <el-menu-item-group
                     :route="path"
-                    :index="item.path"
                     style="width: 200px"
                     v-for="path in item.children"
                 >
                   <div v-if="path.meta">
-                    <el-menu-item class="menu-item" :index="path.path">{{
-                        path.meta.title
-                      }}
-                    </el-menu-item>
+                    <el-menu-item class="menu-item"  :index="path.path + ''">{{ path.meta.title   }} </el-menu-item>
                   </div>
                 </el-menu-item-group>
               </el-submenu>
@@ -71,7 +66,6 @@
               :total="total">
           </el-pagination>
         </div>
-
       </div>
 
     </div>
@@ -80,6 +74,7 @@
 
 <script>
 import {delLogin} from "@/newwork/user";
+import jsCookie from "js-cookie";
 
 export default {
   name: 'headers',
@@ -94,6 +89,11 @@ export default {
     loginOut() {
       delLogin().then(res => {
         console.log(res)
+        if(res.data.code === 200){
+          this.$message.success('正在跳转登录页面')
+          jsCookie.remove('JSESSIONID')
+          this.$router.push('/user')
+        }
       }).catch(e => {
         this.$message.error(e)
       })
@@ -184,6 +184,9 @@ export default {
   border-top: 1px solid #f2f2f2;
   background-color: #f2f2f2;
   padding-right: 20px;
+  overflow: scroll;
+  height: calc(100vh - 80px);
+
 }
 
 .container-header {
@@ -194,7 +197,7 @@ export default {
   box-shadow: 0 0 15px #ccc;
   background-color: #fff;
   border-radius: 10px;
-  height: 79vh;
+  height: 80%;
   overflow: auto;
 }
 

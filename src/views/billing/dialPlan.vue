@@ -26,7 +26,7 @@
           >
             <el-input v-model="addForm.diaplanName" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="中继组" :label-width="formLabelWidth" prop="prefix">
+          <el-form-item label="中继组" :label-width="formLabelWidth" prop="diaplanGatewayGroup">
             <el-select v-model="addForm.diaplanGatewayGroup">
               <el-option
                   :label="item.groupName"
@@ -48,7 +48,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="呼出前缀" :label-width="formLabelWidth" prop="prefix">
+          <el-form-item label="呼出前缀" :label-width="formLabelWidth" prop="diaplanPrefix">
             <el-select v-model="addForm.diaplanPrefix" placeholder="请选择">
               <el-option
                   v-for="item in rateItemList"
@@ -68,7 +68,7 @@
         >
       </div>
     </el-dialog>
-    <el-table :data="list" border style="width: 100%; margin-top: 20px">
+    <el-table :data="list" border style="width: 100%; margin-top: 20px"  v-if="list.length !==0">
       <el-table-column prop="date" align="center" label="序号" width="180">
         <template scope="scope">
           {{ scope.$index + 1 }}
@@ -100,6 +100,8 @@
       <el-table-column prop="remark" label="备注" align="center">
       </el-table-column>
     </el-table>
+
+    <my-empty v-else/>
   </div>
 </template>
 
@@ -112,9 +114,15 @@ import {
   getRateList,
   upDateDiaPlan
 } from "@/newwork/ground-colltroner";
+import myEmpty from "@/newwork/myEmpty";
+
 
 export default {
   name: 'dialPlan',
+  components: {
+    myEmpty
+  },
+
   data() {
     return {
       dialogFormVisible: false,
@@ -139,8 +147,9 @@ export default {
       rateList: [],
       rateItemList: [],
       rules: {
-        diaplanGatewayGroup: [{required: true, message: '此项为必填项， 请确认', trigger: 'blur'}],
         diaplanName: [{required: true, message: '此项为必填项， 请确认', trigger: 'blur'}],
+        diaplanGatewayGroup: [{required: true, message: '此项为必填项， 请确认', trigger: 'blur'}],
+        diaplanRateGroup: [{required: true, message: '此项为必填项， 请确认', trigger: 'blur'}],
         diaplanPrefix: [{required: true, message: '此项为必填项， 请确认', trigger: 'blur'}]
       }
     }

@@ -2,12 +2,12 @@
   <!--  用户管理-->
   <div id="my-manage">
     <div class="container-l">
-      <e-tree @treeClick="treeClick" :data="treeArr"/>
+      <e-tree @treeClick="treeClick" :data="treeArr" />
     </div>
     <div id="container-main">
       <div class="container-nav">
         <div class="container-form">
-          <el-form :inline="true" :model="form" rules="rules" class="demo-form-inline">
+          <el-form :inline="true" ref="addForm" :model="form" :rules="rules" class="demo-form-inline">
             <el-form-item label="用户名称">
               <el-input v-model="form.nickName" placeholder="审批人"></el-input>
             </el-form-item>
@@ -29,13 +29,13 @@
         </div>
 
         <el-table
-            :row-class-name="tableRowClassName"
-            @row-click="rowClick"
-            ref="multipleTable"
-            :data="resultList"
-            tooltip-effect="dark"
-            style="width: 100%"
-            v-if="resultList.length !== 0"
+          :row-class-name="tableRowClassName"
+          @row-click="rowClick"
+          ref="multipleTable"
+          :data="resultList"
+          tooltip-effect="dark"
+          style="width: 100%"
+          v-if="resultList.length !== 0"
         >
           <el-table-column type="selection" width="55"></el-table-column>
           <el-table-column label="序号" width="120">
@@ -48,15 +48,15 @@
           <el-table-column prop="phone" label="手机号" show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-              prop="department"
-              label="所属部门"
-              show-overflow-tooltip
+            prop="department"
+            label="所属部门"
+            show-overflow-tooltip
           >
           </el-table-column>
           <el-table-column
-              prop="createTime"
-              label="创建时间"
-              show-overflow-tooltip
+            prop="createTime"
+            label="创建时间"
+            show-overflow-tooltip
           >
           </el-table-column>
           <el-table-column prop="starts" label="状态" show-overflow-tooltip>
@@ -70,7 +70,7 @@
           <el-table-column prop="starts" label="操作" show-overflow-tooltip>
             <template scope="scope" class="link">
               <a @click="show(scope.row, '修改')" class="link-item">修改</a>
-              <a @click="show(scope.row, '删除')"  class="link-item err">删除</a>
+              <a @click="show(scope.row, '删除')" class="link-item err">删除</a>
             </template>
           </el-table-column>
         </el-table>
@@ -79,68 +79,81 @@
               新增悬浮窗
           -->
         <el-dialog
-            :title="title"
-            :visible.sync="isShow"
-            width="40%"
+          :title="title"
+          :visible.sync="isShow"
+          width="40%"
         >
           <el-form ref="addForm" :model="addForm" id="form" :rules="rules">
             <el-form-item
-                class="form-item"
-                label="用户名称"
-                :label-width="formLabelWidth"
-                prop="nickName"
+              class="form-item"
+              label="用户名称"
+              :label-width="formLabelWidth"
+              prop="nickName"
             >
               <el-input v-model="addForm.nickName" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item
-                class="form-item"
-                label="用户角色"
-                :label-width="formLabelWidth"
-                prop="roleId"
+              class="form-item"
+              label="用户角色"
+              :label-width="formLabelWidth"
+              prop="roleId"
             >
               <el-select
-                  class="form-item"
-                  v-model="addForm.roleId"
-                  placeholder="请选择用户角色"
+                v-if="title === '新增'"
+                class="form-item"
+                v-model="addForm.roleId "
+                placeholder="请选择用户角色"
               >
                 <el-option
-                    :label="item.label"
-                    :value="item.value"
-                    v-for="item in roleList"
+                  :label="item.label"
+                  :value="item.value"
+                  v-for="item in roleList"
+                ></el-option>
+              </el-select>
+              <el-select
+                v-else
+                class="form-item"
+                v-model="addForm.roleId "
+                :placeholder="addForm.department"
+              >
+                <el-option
+                  :label="item.label"
+                  :value="item.value"
+                  v-for="item in roleList"
                 ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item
-                class="form-item"
-                label="所属部门"
-                required
-                :label-width="formLabelWidth"
+              class="form-item"
+              label="所属部门"
+              required
+              :label-width="formLabelWidth"
             >
               <el-cascader
-                  v-model="deptId"
-                  :options="getterDeptIdList"
-                  :props="defaultProps"></el-cascader>
+                v-model="deptId"
+                :options="treeArr"
+                :props="defaultProps"></el-cascader>
             </el-form-item>
             <el-form-item
-                class="form-item"
-                label="用户性别"
-                :label-width="formLabelWidth"
-                prop="sex"
+              class="form-item"
+              label="用户性别"
+              :label-width="formLabelWidth"
+              prop="sex"
             >
               <el-select v-model="addForm.sex" placeholder="请选择用户性别">
                 <el-option
-                    :label="item.label"
-                    :value="item.value"
-                    v-for="item in sexList"
+                  :label="item.label"
+                  :value="item.value"
+                  v-for="item in sexList"
                 ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item
-                class="form-item"
-                label="账号"
-                type="email"
-                :label-width="formLabelWidth"
-                prop="username"
+              class="form-item"
+              label="账号"
+              type="email"
+              :label-width="formLabelWidth"
+              prop="username"
             >
               <el-input v-model="addForm.username" autocomplete="off">
               </el-input>
@@ -153,46 +166,47 @@
             </el-form-item>
 
             <el-form-item
-                class="form-item"
-                label="手机号"
-                prop="phone"
-                :label-width="formLabelWidth"
+              class="form-item"
+              label="手机号"
+              prop="phone"
+              :label-width="formLabelWidth"
             >
               <el-input v-model="addForm.phone" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item
-                class="form-item"
-                label="密码"
-                :label-width="formLabelWidth"
-                prop="password"
+              v-if="title !== '修改'"
+              class="form-item"
+              label="密码"
+              :label-width="formLabelWidth"
+              prop="password"
             >
               <el-input
-                  v-model="addForm.password"
-                  autocomplete="off"
+                v-model="addForm.password"
+                autocomplete="off"
               ></el-input>
             </el-form-item>
             <el-form-item
-                class="form-item"
-                label="邮箱"
-                :label-width="formLabelWidth"
+              class="form-item"
+              label="邮箱"
+              :label-width="formLabelWidth"
             >
               <el-input
-                  type="email"
-                  v-model="addForm.email"
-                  autocomplete="off"
+                type="email"
+                v-model="addForm.email"
+                autocomplete="off"
               ></el-input>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <el-button @click="isShow = false">取 消</el-button>
-<!--            <el-button-->
-<!--                v-if="type"-->
-<!--                type="primary"-->
-<!--                @click="upDataAddForms('addForm')"-->
-<!--            >确 定-->
-<!--            </el-button-->
-<!--            >-->
-            <el-button  type="primary" @click="addForms('addForm')"
+            <!--            <el-button-->
+            <!--                v-if="type"-->
+            <!--                type="primary"-->
+            <!--                @click="upDataAddForms('addForm')"-->
+            <!--            >确 定-->
+            <!--            </el-button-->
+            <!--            >-->
+            <el-button type="primary" @click="addForms('addForm')"
             >确 定
             </el-button
             >
@@ -204,7 +218,7 @@
 </template>
 
 <script>
-import eTree from '@/components/eTree'
+import eTree from "@/components/eTree";
 import {
   addUser,
   deleteRoleList,
@@ -213,11 +227,11 @@ import {
   upDataRoleList,
   getOrganizeId, deleteUser
 } from "@/newwork/system-colltroner";
-import {fn} from "@/uti";
+import { fn } from "@/uti";
 import myEmpty from "@/newwork/myEmpty";
 
 export default {
-  name: 'serve-manage',
+  name: "serve-manage",
   components: {
     eTree,
     myEmpty
@@ -225,143 +239,140 @@ export default {
   data() {
     return {
       form: {
-        nickName: '',
-        phone: '',
+        nickName: "",
+        phone: ""
       },
       addForm: {
-        deptId: '',//部门
-        email: '', //email
-        nickName: '',//昵称
-        password: '',//密码
-        phone: '', //手机
-        roleId: '', // '角色id'
-        sex: '',  //男 / 女
+        deptId: "",//部门
+        email: "", //email
+        nickName: "",//昵称
+        password: "",//密码
+        phone: "", //手机
+        roleId: "", // '角色id'
+        sex: "",  //男 / 女
         status: 0,//状态
         pageSize: 10,
         pageNum: 1,
-        username: '', //账号
+        username: "" //账号
       },
       row: {},
-      type: '',
-      title: '新增',
+      type: "",
+      title: "新增",
       deptIdList: [],
       isShow: false,
       resultList: [],
       departmentList: [],
-      deptId: '',
-      formLabelWidth: '120px',
+      deptId: "",
+      formLabelWidth: "120px",
       roleList: [
-        {label: '系统管理员', value: 0},
-        {label: '审核员', value: 1},
-        {label: '录入员', value: 2}
+        { label: "系统管理员", value: 0 },
+        { label: "审核员", value: 1 },
+        { label: "录入员", value: 2 }
       ],
       timer: {},
       treeArr: [],
       sexList: [
-        {label: '男', value: 0},
-        {label: '女', value: 1}
+        { label: "男", value: 0 },
+        { label: "女", value: 1 }
       ],
       rules: {
         nickName: [
-          {required: true, message: '此项为必填项，请确认', trigger: 'change'}
+          { required: true, message: "此项为必填项，请确认", trigger: "change" }
         ],
         roleId: [
-          {required: true, message: '此项为必填项，请确认', trigger: 'change'}
+          { required: true, message: "此项为必填项，请确认", trigger: "change" }
         ],
         deptId: [
-          {required: false, message: '此项为必填项，请确认', trigger: 'change'}
+          { required: false, message: "此项为必填项，请确认", trigger: "change" }
         ],
         username: [
-          {required: true, message: '此项为必填项，请确认', trigger: 'change'}
+          { required: true, message: "此项为必填项，请确认", trigger: "change" }
         ],
         password: [
-          {required: true, message: '此项为必填项，请确认', trigger: 'change'}
+          { required: true, message: "此项为必填项，请确认", trigger: "change" }
         ],
         phone: [
-          {required: true, message: '此项为必填项，请确认', trigger: 'change'}
+          { required: true, message: "此项为必填项，请确认", trigger: "change" }
         ],
         status: [
-          {required: false, message: '此项为必填项，请确认', trigger: 'change'}
+          { required: false, message: "此项为必填项，请确认", trigger: "change" }
         ],
         sex: [
-          {required: false, message: '此项为必填项，请确认', trigger: 'change'}
+          { required: false, message: "此项为必填项，请确认", trigger: "change" }
         ]
-      },
-    }
+      }
+    };
   },
 
   methods: {
     onSubmit() {
-      this.getUserAll(this.form)
+      this.getUserAll(this.form);
     },
-    treeClick(a){
-      this.form = this.$store.state.formPage
-      this.form.deptIds = a.deptId
-      this.getUserAll(this.form)
+    treeClick(a) {
+      this.form = this.$store.state.formPage;
+      this.form.deptIds = a.deptId;
+      this.getUserAll(this.form);
     },
     addForms(addForm) {
       //点击确定之后 遍历数据 确保必填项不为空
       this.$refs.addForm.validate((valid) => {
-        if (valid  && this.addForm.deptId.length !== 0) {
-          if (this.title === '新增') {
+        if (valid && this.addForm.deptId.length !== 0) {
+          if (this.title === "新增") {
             addUser(this.addForm).then(res => {
               if (res.data.code === 200) {
-                this.getUserAll(this.$store.state.formPage)
-                this.$message.success('提交完成')
-                this.deptIdList = []
+                this.getUserAll(this.$store.state.formPage);
+                this.$message.success("提交完成");
               } else {
-                this.$message.error(res.data.msg)
+                this.$message.error(res.data.msg);
               }
             }).catch(e => {
-              this.$message.error(e)
-            })
-            this.isShow = false
+              this.$message.error(e);
+            });
+            this.isShow = false;
           } else {
             upDataRoleList(this.addForm).then(res => {
               if (res.data.code === 200) {
-                this.getUserAll(this.$store.state.formPage)
-                this.$message.success('提交完成')
+                this.getUserAll(this.$store.state.formPage);
+                this.$message.success("提交完成");
               } else {
-                this.$message.error('提交失败，请重试')
+                this.$message.error(res.data.msg);
               }
-            })
+            });
           }
-        } else{
-          return false
+        } else {
+          return false;
         }
-      })
+      });
     },
     onClear() {
-      this.resetForm()
-      this.getUserAll(this.form)
+      this.resetForm();
+      this.getUserAll(this.form);
     },
     show(row, title) {
-      if(title === '新增'){
-        this.title = title
-        this.isShow = true
-        this.resetForm()
+      this.title = title;
+      if (this.title === "新增") {
+        this.isShow = true;
+        this.$refs.addForm.clearValidate();
+        this.addForm = this.$options.data().addForm;
         getOrganizeList(this.form).then(res => {
-          this.deptIdList = res.data.data
+          this.deptIdList = res.data.data;
         }).catch(e => {
-          this.$message.error(e)
-        })
-      }
-      if(title === '修改'){
-      this.title = title
-        this.addForm = row
-        console.log(row)
-        this.isShow = true
-      }else if(title === '删除'){
+          this.$message.error(e);
+        });
+      } else if (title === "修改") {
+        this.addForm = row;
+        this.isShow = true;
+      } else if (title === "删除") {
         deleteUser(row.userId).then(res => {
-          if(res.data.code === 200){
-            this.$message.success('删除完成!')
-            this.getUserAll(this.$store.state.formPage)
-          }else {
-            this.$message.error(res.data.msg)
+          if (res.data.code === 200) {
+            this.$message.success("删除完成!");
+            this.getUserAll(this.$store.state.formPage);
+          } else {
+            this.$message.error(res.data.msg);
           }
         }).catch(e => {
-          this.$message.error(e)
-        })
+          this.$message.error(e);
+        });
       }
     },
     resetForm() {
@@ -369,64 +380,74 @@ export default {
     },
 
     rowClick(row) {
-      this.row = row
+      this.row = row;
     },
-    tableRowClassName({row, rowIndex}) {
+    tableRowClassName({ row, rowIndex }) {
       //把每一行的索引放进row
-      row.index = rowIndex
+      row.index = rowIndex;
     },
     getUserAll(formPage) {
       getUserAll(formPage).then(res => {
-        this.resultList = res.data.data.records
-        console.log(res.data)
+        this.resultList = res.data.data.records;
+        console.log(res.data);
 
-        this.$store.dispatch('total', res.data.data.total)
+        this.$store.dispatch("total", res.data.data.total);
         //更具用户id获取他在 公司的职位
         this.resultList.forEach((item, i) => {
-          if(item.hasOwnProperty('deptId')){
-            getOrganizeId(item.deptId).then(res => this.$set( this.resultList[i], 'department', res.data.data.deptName))
+          if (item.hasOwnProperty("deptId")) {
+            getOrganizeId(item.deptId).then(res => this.$set(this.resultList[i], "department", res.data.data.deptName));
           }
-        })
-      }).catch(e =>  this.$message.error(e))
+        });
+      }).catch(e => this.$message.error(e));
     }
   },
   created() {
-    this.getUserAll(this.$store.state.formPage)
-    getOrganizeList().then(res =>  this.treeArr = fn(res.data.data))
-    this.form = this.$store.state.formPage
+    this.getUserAll(this.$store.state.formPage);
+    getOrganizeList().then(res => {
+      this.treeArr = fn(res.data.data);
+
+      console.log(this.treeArr);
+    });
+    this.form = this.$store.state.formPage;
   },
   computed: {
     getterDeptIdList() {
-      return fn(this.deptIdList)
+      return fn(this.deptIdList);
     },
-
+    // roleId(){
+    //   if(this.addForm.roleId.length !== 0){
+    //     return parseInt(this.addForm.roleId)
+    //   }else {
+    //     return   = ''
+    //   }
+    // },
     defaultProps() {
       return {
-        children: 'children',
-        label: 'deptName',
-        value: 'deptId',
-        expandTrigger: 'hover'
-      }
-    },
+        children: "children",
+        label: "deptName",
+        value: "deptId",
+        expandTrigger: "hover"
+      };
+    }
   },
 
 
   watch: {
     deptId(val) {
-      this.addForm.deptId = this.deptId[this.deptId.length - 1]
+      this.addForm.deptId = this.deptId[this.deptId.length - 1];
     },
-    timer(val){
-      console.log(val)
-      this.addForm.createTime = val[0]
-      this.addForm.endTime = val[1]
-    },
+    timer(val) {
+      console.log(val);
+      this.addForm.createTime = val[0];
+      this.addForm.endTime = val[1];
+    }
   },
   mounted() {
-    this.$bus.$on('pageChange', () => {
-      this.getUserAll(this.$store.state.formPage)
-    })
+    this.$bus.$on("pageChange", () => {
+      this.getUserAll(this.$store.state.formPage);
+    });
   }
-}
+};
 </script>
 
 <style scoped>
@@ -435,7 +456,7 @@ export default {
 }
 
 .container-l {
-  width: 300px;
+  width: 200px;
 }
 
 .container-form {

@@ -1,12 +1,12 @@
 <template>
   <div id="trunk">
     <div class="nav-form">
-      <el-form :inline="true" :model="form" class="demo-form-inline">
-        <el-form-item label="中继名称">
-          <el-input v-model="form.user" placeholder="审网管名称批人"></el-input>
+      <el-form :inline="true"  ref="addForm" :model="form" class="demo-form-inline">
+        <el-form-item label="中继名称" prop="groupName">
+          <el-input v-model="form.groupName" placeholder="审网管名称批人"></el-input>
         </el-form-item>
-        <el-form-item label="策略类型">
-          <el-select v-model="form.protocol" placeholder="协议类型">
+        <el-form-item label="策略类型" prop="strategyRetry">
+          <el-select v-model="form.strategyRetry" placeholder="协议类型">
             <el-option
                 :label="item.label"
                 :value="item.value"
@@ -14,8 +14,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="重试策略">
-          <el-select v-model="form.relay" placeholder="中继类型">
+        <el-form-item label="重试策略" prop="strategyType">
+          <el-select v-model="form.strategyType" placeholder="中继类型">
             <el-option
                 :label="item.label"
                 :value="item.value"
@@ -24,9 +24,9 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <!--          <el-button type="primary" @click="onSubmit">查询</el-button>-->
-          <!--          <el-button @click="onSubmit">重置</el-button>-->
-        </el-form-item>
+                    <el-button type="primary" @click="find">查询</el-button>
+                    <el-button @click="clear">重置</el-button>
+        </el-form-item><!---->
       </el-form>
       <el-button type="primary" @click="showAddForm(null, '添加中继组')"
       >添加中继组
@@ -131,7 +131,7 @@
       </div>
     </el-dialog>
 
-    <el-table border :data="list" style="width: 100%">
+    <el-table border :data="list" style="width: 100%" v-if="list.length !== 0">
       <el-table-column align="center" prop="index" label="序号" width="50">
         <template scope="scope">{{ scope.$index + 1 }}</template>
       </el-table-column>
@@ -142,8 +142,8 @@
       </el-table-column>
       <el-table-column align="center" prop="pbxGwgroupGatewayList" label="策略类型">
         <template scope="scope">
-          <span v-if="scope.strategyType === 0">无响应重试</span>
-          <span v-else>强制重试</span>
+          <span v-if="scope.strategyType === 0">循环呼叫</span>
+          <span v-else>随机呼叫</span>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="pbxGwgroupGatewayList" label="重试策略">
@@ -180,14 +180,19 @@
         </template>
       </el-table-column>
     </el-table>
+    <my-empty v-else/>
   </div>
 </template>
 
 <script>
 import {addGwgroup, deleteGwgroup, getGwgroup, getPbxAll} from "@/newwork/ground-colltroner";
+import myEmpty from "@/newwork/myEmpty";
 
 export default {
   name: 'trunkGroup',
+  components: {
+    myEmpty
+  },
   data() {
     return {
       form: {},
@@ -258,6 +263,13 @@ export default {
       } else {
         this.addFrom = this.$options.data().addFrom
       }
+    },
+    find(){
+      this.getGwgroup(this.form)
+    },
+    clear(){
+      this.resetForm()
+      this.getGwgroup(this.form)
     },
     submitForm() {
       this.$refs['addForm'].validate((valid) => {
