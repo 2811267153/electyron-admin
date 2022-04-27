@@ -14,6 +14,10 @@ export default {
   name: 'app',
   beforeDestroy() {
     jsCookie.remove('JSESSIONID')
+  },
+  created() {
+    jsCookie.remove('JSESSIONID')
+    this.$router.push({'path': '/user'})
   }
 }
 </script>
