@@ -212,7 +212,7 @@ export function getMenuAll(){
 export function getLog(data){
     return request({
         url: '/system/log/list',
-        params: stringify(data)
+        params: data
     })
 }
 //查看 服务器运行信息

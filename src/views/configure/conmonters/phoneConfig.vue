@@ -390,6 +390,12 @@ export default {
       ]
     }
   },
+  mounted() {
+    this.$bus.$on('pageChange', () => {
+      this.form = this.$store.state.formPage
+      this.getDirectory(this.form)
+    })
+  },
   methods: {
     submitForm(addForm) {
       this.$refs['addForm'].validate((valid) => {
@@ -475,6 +481,7 @@ export default {
     getDirectory(form){
       getDirectory(form).then(res => {
         console.log(res)
+        this.$store.dispatch('total', res.data.data.total)
         if(res.data.code === 200){
           this.list = res.data.data.records
         }
@@ -484,6 +491,7 @@ export default {
   },
 
   created() {
+    this.form = this.$store.state.formPage
     this.getDirectory(this.form)
   },
   watch: {

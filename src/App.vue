@@ -1,13 +1,10 @@
 <template>
   <div id="app">
-<!--    <headers v-if="$route.path !== '/user'" />-->
-
     <router-view/>
   </div>
 </template>
 
 <script>
-// import headers from '@/components/header'
 import jsCookie from "js-cookie";
 
 export default {
@@ -15,10 +12,6 @@ export default {
   beforeDestroy() {
     jsCookie.remove('JSESSIONID')
   },
-  created() {
-    jsCookie.remove('JSESSIONID')
-    this.$router.push({'path': '/user'})
-  }
 }
 </script>
 

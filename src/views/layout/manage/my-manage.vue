@@ -7,7 +7,7 @@
     <div id="container-main">
       <div class="container-nav">
         <div class="container-form">
-          <el-form :inline="true" :model="form" class="demo-form-inline">
+          <el-form :inline="true" :model="form" rules="rules" class="demo-form-inline">
             <el-form-item label="用户名称">
               <el-input v-model="form.nickName" placeholder="审批人"></el-input>
             </el-form-item>
@@ -16,19 +16,9 @@
             </el-form-item>
             <el-form-item label="用户状态">
               <el-select v-model="form.status" placeholder="活动区域">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
+                <el-option label="开启" :value=0></el-option>
+                <el-option label="关闭" :value=1></el-option>
               </el-select>
-            </el-form-item>
-            <el-form-item label="创建时间">
-              <el-date-picker
-                  v-model="timer"
-                  type="daterange"
-                  format="yyyy-MM-dd HH:mm:ss"
-                  range-separator="至"
-                  start-placeholder="开始日期"
-                  end-placeholder="结束日期">
-              </el-date-picker>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -85,8 +75,6 @@
           </el-table-column>
         </el-table>
         <my-empty v-else />
-
-
         <!--
               新增悬浮窗
           -->
@@ -125,8 +113,8 @@
             <el-form-item
                 class="form-item"
                 label="所属部门"
+                required
                 :label-width="formLabelWidth"
-                prop="deptId"
             >
               <el-cascader
                   v-model="deptId"
@@ -137,6 +125,7 @@
                 class="form-item"
                 label="用户性别"
                 :label-width="formLabelWidth"
+                prop="sex"
             >
               <el-select v-model="addForm.sex" placeholder="请选择用户性别">
                 <el-option
@@ -196,14 +185,14 @@
           </el-form>
           <div slot="footer" class="dialog-footer">
             <el-button @click="isShow = false">取 消</el-button>
-            <el-button
-                v-if="type"
-                type="primary"
-                @click="upDataAddForms('addForm')"
-            >确 定
-            </el-button
-            >
-            <el-button v-else type="primary" @click="addForms('addForm')"
+<!--            <el-button-->
+<!--                v-if="type"-->
+<!--                type="primary"-->
+<!--                @click="upDataAddForms('addForm')"-->
+<!--            >确 定-->
+<!--            </el-button-->
+<!--            >-->
+            <el-button  type="primary" @click="addForms('addForm')"
             >确 定
             </el-button
             >
@@ -236,8 +225,8 @@ export default {
   data() {
     return {
       form: {
-        pageSize: 10,
-        pageNum: 1
+        nickName: '',
+        phone: '',
       },
       addForm: {
         deptId: '',//部门
@@ -245,8 +234,8 @@ export default {
         nickName: '',//昵称
         password: '',//密码
         phone: '', //手机
-        roleId: 3, // '角色id'
-        sex: 0,  //男 / 女
+        roleId: '', // '角色id'
+        sex: '',  //男 / 女
         status: 0,//状态
         pageSize: 10,
         pageNum: 1,
@@ -280,7 +269,7 @@ export default {
           {required: true, message: '此项为必填项，请确认', trigger: 'change'}
         ],
         deptId: [
-          {required: true, message: '此项为必填项，请确认', trigger: 'change'}
+          {required: false, message: '此项为必填项，请确认', trigger: 'change'}
         ],
         username: [
           {required: true, message: '此项为必填项，请确认', trigger: 'change'}
@@ -290,6 +279,12 @@ export default {
         ],
         phone: [
           {required: true, message: '此项为必填项，请确认', trigger: 'change'}
+        ],
+        status: [
+          {required: false, message: '此项为必填项，请确认', trigger: 'change'}
+        ],
+        sex: [
+          {required: false, message: '此项为必填项，请确认', trigger: 'change'}
         ]
       },
     }
@@ -297,20 +292,23 @@ export default {
 
   methods: {
     onSubmit() {
+      this.getUserAll(this.form)
     },
     treeClick(a){
+      this.form = this.$store.state.formPage
       this.form.deptIds = a.deptId
       this.getUserAll(this.form)
     },
     addForms(addForm) {
       //点击确定之后 遍历数据 确保必填项不为空
-      this.$refs[addForm].validate((valid) => {
-        if (valid) {
+      this.$refs.addForm.validate((valid) => {
+        if (valid  && this.addForm.deptId.length !== 0) {
           if (this.title === '新增') {
             addUser(this.addForm).then(res => {
               if (res.data.code === 200) {
                 this.getUserAll(this.$store.state.formPage)
                 this.$message.success('提交完成')
+                this.deptIdList = []
               } else {
                 this.$message.error(res.data.msg)
               }
@@ -318,10 +316,6 @@ export default {
               this.$message.error(e)
             })
             this.isShow = false
-            this.$message({
-              message: '提交完成',
-              type: 'success'
-            })
           } else {
             upDataRoleList(this.addForm).then(res => {
               if (res.data.code === 200) {
@@ -337,35 +331,31 @@ export default {
         }
       })
     },
-    upDataAddForms(a, b) {
-      console.log(a, b)
-    },
     onClear() {
-      this.form = {}
+      this.resetForm()
+      this.getUserAll(this.form)
     },
     show(row, title) {
       if(title === '新增'){
         this.title = title
         this.isShow = true
+        this.resetForm()
         getOrganizeList(this.form).then(res => {
           this.deptIdList = res.data.data
         }).catch(e => {
           this.$message.error(e)
         })
-        this.addForm = {
-          status: 0
-        }
       }
       if(title === '修改'){
       this.title = title
         this.addForm = row
+        console.log(row)
         this.isShow = true
       }else if(title === '删除'){
         deleteUser(row.userId).then(res => {
-          console.log(row.userId)
           if(res.data.code === 200){
             this.$message.success('删除完成!')
-            this.getUserAll(this.form)
+            this.getUserAll(this.$store.state.formPage)
           }else {
             this.$message.error(res.data.msg)
           }
@@ -374,10 +364,12 @@ export default {
         })
       }
     },
+    resetForm() {
+      this.$refs.addForm.resetFields();
+    },
 
     rowClick(row) {
       this.row = row
-      const index = row.index
     },
     tableRowClassName({row, rowIndex}) {
       //把每一行的索引放进row
@@ -401,6 +393,7 @@ export default {
   created() {
     this.getUserAll(this.$store.state.formPage)
     getOrganizeList().then(res =>  this.treeArr = fn(res.data.data))
+    this.form = this.$store.state.formPage
   },
   computed: {
     getterDeptIdList() {
@@ -426,7 +419,7 @@ export default {
       console.log(val)
       this.addForm.createTime = val[0]
       this.addForm.endTime = val[1]
-    }
+    },
   },
   mounted() {
     this.$bus.$on('pageChange', () => {

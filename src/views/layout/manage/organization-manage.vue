@@ -190,7 +190,7 @@ export default {
     },
     addForms(row, title){
       this.title = title
-      this.dialogFormVisible = true
+      this.dialogFormVisibles = true
       this.resultCopy = this.resultList
       title === '修改' ? this.addForm = row : 'aa'
       //判断属否是添加下属单位 如果是  获取 本单位名称 不可更改

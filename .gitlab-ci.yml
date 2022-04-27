@@ -19,8 +19,8 @@ stages:
 # isolated from any previous builds.
 #variables:
 #    GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-    
-    
+
+
 
 # Make the gradle wrapper executable. This essentially downloads a copy of
 # Gradle to build the project with.
@@ -47,13 +47,13 @@ stages:
 #  cache:
 #    paths:
 #      - ${NPM_CONFIG_CACHE}
-  
+
 build:
   stage: build
-  tags:  
+  tags:
     - jdk8
   script:
-    - ssh root@123.60.212.9 'rm -rf /usr/share/nginx/html/dispatch-admin/*' && scp -r ./dist/* root@123.60.212.9:/usr/share/nginx/html/dispatch-admin/
+    - ssh root@123.60.212.9 'rm -rf /usr/share/nginx/html/dis/*' && scp -r ./dist/* root@123.60.212.9:/usr/share/nginx/html/dis/
   allow_failure: true
 
 # Use the generated build output to run the tests.
@@ -84,8 +84,8 @@ stages:
 # isolated from any previous builds.
 #variables:
 #    GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-    
-    
+
+
 
 # Make the gradle wrapper executable. This essentially downloads a copy of
 # Gradle to build the project with.
@@ -112,10 +112,10 @@ stages:
 #  cache:
 #    paths:
 #      - ${NPM_CONFIG_CACHE}
-  
+
 #build:
 #  stage: build
-#  tags:  
+#  tags:
 #    - jdk8
 #  script:
 #    - ssh root@jm.shuweiapp.com 'rm -rf /www/wwwroot/jm.shuweiapp.com/*' && scp -r ./dist/* root@jm.shuweiapp.com:/www/wwwroot/jm.shuweiapp.com/

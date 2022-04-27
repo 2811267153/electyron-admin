@@ -20,7 +20,6 @@ export function request(config) {
 
     })
     instance.interceptors.response.use(config => {
-        console.log(config.data)
         if(config.data.code !== 200){
             jsCookie.remove('JSESSIONID')
         }

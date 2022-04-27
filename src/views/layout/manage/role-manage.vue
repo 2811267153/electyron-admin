@@ -165,7 +165,7 @@ export default {
         orderNum: '', //显示顺序
         roleCode: '', //角色编码
         roleName: '', //角色名称
-        status: 0,
+        status: '',
       },
       timer: {},
       addForm: {

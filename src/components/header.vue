@@ -17,14 +17,15 @@
                 :unique-opened="true"
                 :default-active="this.$route.path"
                 class="el-menu-vertical-demo"
-                background-color="#545c64"
                 text-color="#fff"
+                background-color="#545c64"
                 active-text-color="#ff7800"
             >
               <el-submenu
                   popper-class="aa"
                   :index="item.name"
                   style="width: 200px"
+
                   v-for="item in routes.children"
               >
                 <template slot="title">
@@ -55,7 +56,7 @@
             <el-breadcrumb-item><a :href="this.$route.path">{{ $route.meta.title }}</a></el-breadcrumb-item>
           </el-breadcrumb>
         </div>
-        <div class="container" style="text-align: left">
+        <div class="container-header" style="text-align: left">
           <router-view/>
         </div>
         <div class="footer">
@@ -126,12 +127,15 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .header {
   padding: 0 30px 0 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+  .el-submenu li{
+  background-color: rgb(67, 74, 80) !important;
 }
 
 .main-sub {
@@ -181,16 +185,16 @@ export default {
   padding-right: 20px;
 }
 
-.container {
+.container-header {
   width: calc(100vw - 240px);
   padding: 20px;
   margin-left: 20px;
   margin-top: 20px;
   box-shadow: 0 0 15px #ccc;
-  overflow: hidden;
   background-color: #fff;
   border-radius: 10px;
   height: 79vh;
+  overflow: auto;
 }
 
 .footer {

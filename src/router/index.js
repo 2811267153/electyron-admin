@@ -242,6 +242,11 @@ const router = new VueRouter({
 })
 router.beforeEach((to, form, next) => {
   store.state.total = 0
+  const formPage = {
+    pageNum: 1,
+    pageSize: 14
+  }
+  store.state.formPage = formPage
   next()
   if(to.path !== '/user'){
     console.log(jsCookie.get('JSESSIONID') === undefined)
@@ -254,7 +259,6 @@ router.beforeEach((to, form, next) => {
       window.localStorage.setItem('userInfo', '')
     }else {
       next()
-      console.log(store)
       store.dispatch('userInfo', JSON.parse(window.localStorage.getItem('userInfo')))
     }
   }else {
