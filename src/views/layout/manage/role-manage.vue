@@ -57,7 +57,6 @@
                 :data="menuIds"
                 :props="defaultProps"
                 node-key="id"
-                :default-checked-keys="defaultMenuId"
                 accordion
                 :check-on-click-node="true"
                 show-checkbox
@@ -212,6 +211,7 @@ export default {
       if (val) {
         getMenuAll().then(res => {
           this.menuIds = menuToTree(res.data.data)
+          console.log(res)
         }).catch(e => {
           this.$message.error(e)
         })
@@ -308,16 +308,16 @@ export default {
     myEmpty
   },
   computed: {
-    defaultMenuId(){
-      if(this.addForm.sysMenuList.length !== 0){
-        this.addForm.sysMenuList.forEach((item, i) => {
-          this.addForm.menuIds.push(item.id)
-        })
-        return this.addForm.sysMenuList.menuIds.id
-      }else {
-        return  []
-      }
-    }
+    // defaultMenuId(){
+    //   if(this.addForm.sysMenuList.length !== 0){
+    //     this.addForm.sysMenuList.forEach((item, i) => {
+    //       this.addForm.menuIds.push(item.id)
+    //     })
+    //     return this.addForm.sysMenuList.menuIds.id
+    //   }else {
+    //     return  []
+    //   }
+    // }
   }
 }
 </script>

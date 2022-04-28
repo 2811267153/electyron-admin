@@ -225,7 +225,7 @@ import {
   getUserAll,
   getOrganizeList,
   upDataRoleList,
-  getOrganizeId, deleteUser
+  getOrganizeId, deleteUser, upDataUser
 } from "@/newwork/system-colltroner";
 import { fn } from "@/uti";
 import myEmpty from "@/newwork/myEmpty";
@@ -265,9 +265,9 @@ export default {
       deptId: "",
       formLabelWidth: "120px",
       roleList: [
-        { label: "系统管理员", value: 0 },
-        { label: "审核员", value: 1 },
-        { label: "录入员", value: 2 }
+        { label: "系统管理员", value: "0" },
+        { label: "审核员", value: "1" },
+        { label: "录入员", value: "2" }
       ],
       timer: {},
       treeArr: [],
@@ -330,7 +330,7 @@ export default {
             });
             this.isShow = false;
           } else {
-            upDataRoleList(this.addForm).then(res => {
+            upDataUser(this.addForm).then(res => {
               if (res.data.code === 200) {
                 this.getUserAll(this.$store.state.formPage);
                 this.$message.success("提交完成");

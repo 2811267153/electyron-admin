@@ -193,6 +193,13 @@ export function deleteUser(data){
         method: 'delete'
     })
 }
+export function upDataUser(data){
+    return request({
+        url: '/system/user/update',
+        method: 'put',
+        data
+    })
+}
 
 /**
  *
@@ -202,10 +209,31 @@ export function deleteUser(data){
 
 //查看所有菜单
 
-export function getMenuAll(){
+export function getMenuAll(data){
     return request({
         url: '/system/menu/list',
-        method: 'get'
+        method: 'get',
+        params: data
+    })
+}
+export function addMenuAll(data){
+    return request({
+        url: '/system/menu/add',
+        method: 'post',
+        data
+    })
+}
+export function upDataMenu(data){
+    return request({
+        url: '/system/menu/update',
+        method: 'put',
+        data
+    })
+}
+export function delMenu(data) {
+    return request({
+        url: '/system/menu/update' + data,
+        method: 'delete'
     })
 }
 

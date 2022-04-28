@@ -132,7 +132,7 @@ const routes = [
           },
           {
             meta: { title: '摄像头' },
-            path: '/configure/cameraView',
+              path: '/configure/cameraView',
             name: 'cameraView',
             component: cameraView
           },
@@ -259,7 +259,7 @@ router.beforeEach((to, form, next) => {
       window.localStorage.setItem('userInfo', '')
     }else {
       next()
-      store.dispatch('userInfo', JSON.parse(window.localStorage.getItem('userInfo')))
+      store.dispatch('userInfo', JSON.parse(window.localStorage.getItem('userInfo'))).catch()
     }
   }else {
     next('/user')
