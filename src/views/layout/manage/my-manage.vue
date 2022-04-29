@@ -105,8 +105,8 @@
                 placeholder="请选择用户角色"
               >
                 <el-option
-                  :label="item.label"
-                  :value="item.value"
+                  :label="item.roleName"
+                  :value="item.roleId"
                   v-for="item in roleList"
                 ></el-option>
               </el-select>
@@ -117,8 +117,8 @@
                 :placeholder="addForm.department"
               >
                 <el-option
-                  :label="item.label"
-                  :value="item.value"
+                  :label="item.roleName"
+                  :value="item.roleId"
                   v-for="item in roleList"
                 ></el-option>
               </el-select>
@@ -225,7 +225,7 @@ import {
   getUserAll,
   getOrganizeList,
   upDataRoleList,
-  getOrganizeId, deleteUser, upDataUser
+  getOrganizeId, deleteUser, upDataUser, getRoleList
 } from "@/newwork/system-colltroner";
 import { fn } from "@/uti";
 import myEmpty from "@/newwork/myEmpty";
@@ -264,11 +264,7 @@ export default {
       departmentList: [],
       deptId: "",
       formLabelWidth: "120px",
-      roleList: [
-        { label: "系统管理员", value: "0" },
-        { label: "审核员", value: "1" },
-        { label: "录入员", value: "2" }
-      ],
+      roleList: [],
       timer: {},
       treeArr: [],
       sexList: [
@@ -349,16 +345,23 @@ export default {
       this.getUserAll(this.form);
     },
     show(row, title) {
+      getOrganizeList(this.form).then(res => {
+        this.deptIdList = res.data.data;
+      }).catch(e => {
+        this.$message.error(e);
+      });
+      getRoleList().then(res => {
+        console.log(res )
+        if(res.data.code === 200){
+          this.roleList = res.data.data.records
+        }
+      })
       this.title = title;
       if (this.title === "新增") {
         this.isShow = true;
-        this.$refs.addForm.clearValidate();
         this.addForm = this.$options.data().addForm;
-        getOrganizeList(this.form).then(res => {
-          this.deptIdList = res.data.data;
-        }).catch(e => {
-          this.$message.error(e);
-        });
+        this.$refs.addForm.clearValidate();
+
       } else if (title === "修改") {
         this.addForm = row;
         this.isShow = true;

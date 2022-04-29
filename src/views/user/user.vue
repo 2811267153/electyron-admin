@@ -71,8 +71,10 @@ export default {
       getLogin(this.username, this.password).then(res => {
         if (res.data.code === 200){
           this.$store.dispatch('userInfo', res.data.data.user)
+          const sysMenuList = res.data.data.user.sysMenuList
           setCookie(res.data.data.JSESSIONID)
-          this.$router.push({path: '/home'})
+          console.log(res.data.data.user.sysMenuList[1].path)
+          this.$router.push({path: sysMenuList[1].path}).catch(e => console.log(e))
         }else {
           this.$message.error(res.data.msg)
         }

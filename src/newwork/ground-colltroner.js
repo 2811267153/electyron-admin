@@ -164,3 +164,52 @@ export function deleteRateItem(data) {
         method: 'delete'
     })
 }
+
+/**
+ *
+ *
+ * @param data  配置管理
+ * @return {AxiosPromise}
+ */
+export function addProfile(data) {
+    return request({
+        url: '/pbx/profile/add',
+        method: 'post',
+        data
+    })
+}
+
+/**
+ *
+ *
+ * @param data 获取初试列表
+ * @return {AxiosPromise}
+ */
+export  function getProfile(data) {
+    return request({
+        url: '/pbx/profile/init/list',
+        method: 'get',
+        params: data
+    })
+}
+
+export function getProfileInfo(data) {
+    return request({
+        url: '/pbx/profile/list',
+        method: 'get',
+        params: data,
+
+    })
+}
+export function upDataProFile(data) {
+    return request({
+        url: '/pbx/profile/update',
+        method: 'put',
+        data
+    })
+}
+export function delProFile(data) {
+    return request({
+        url: '/pbx/profile/delete/' + data
+    })
+}

@@ -112,7 +112,7 @@ export default {
   data() {
     return {
       title: '添加虚拟接待',
-      dialogFormVisible: true,
+      dialogFormVisible: false,
       formLabelWidth: '120px',
       form: {},
       addForm: {

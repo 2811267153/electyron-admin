@@ -25,31 +25,31 @@
 
     <div>
       <el-dialog :title="title" :visible.sync="dialogFormVisible">
-        <el-form :model="form" ref="addForm">
-          <el-form-item label="菜单名称" :label-width="formLabelWidth">
+        <el-form :model="addForm" ref="addForm" :rules="rules">
+          <el-form-item label="菜单名称" :label-width="formLabelWidth" prop="menuName">
             <el-input v-model="addForm.menuName" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="菜单类型" :label-width="formLabelWidth">
-            <el-select v-model="addForm.menuType" placeholder="请选择活动区域">
+          <el-form-item label="菜单类型" :label-width="formLabelWidth" prop="menuType">
+            <el-select v-model="addForm.menuType">
               <el-option v-for="item in menuType" :value="item.value" :label="item.label"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="显示顺序" :label-width="formLabelWidth">
+          <el-form-item label="显示顺序" :label-width="formLabelWidth" prop="orderNum">
             <el-input v-model="addForm.orderNum"/>
           </el-form-item>
-          <el-form-item label="父菜单ID" :label-width="formLabelWidth">
+          <el-form-item label="父菜单ID" :label-width="formLabelWidth" prop="parentId">
             <el-input v-model="addForm.parentId"/>
           </el-form-item>
-          <el-form-item label="路由地址" :label-width="formLabelWidth">
+          <el-form-item label="路由地址" :label-width="formLabelWidth" prop="path">
             <el-input v-model="addForm.path"/>
           </el-form-item>
-          <el-form-item label="权限标识" :label-width="formLabelWidth">
+          <el-form-item label="权限标识" :label-width="formLabelWidth" prop="perms">
             <el-input v-model="addForm.perms"/>
           </el-form-item>
-          <el-form-item label="状态" :label-width="formLabelWidth">
+          <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
             <el-radio-group v-model="addForm.status">
-              <el-radio :label="0">备选项</el-radio>
-              <el-radio :label="1">备选项</el-radio>
+              <el-radio :label="0">开启</el-radio>
+              <el-radio :label="1">关闭</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-form>
@@ -72,7 +72,7 @@ export default {
     return {
       title: '新增',
       formLabelWidth: "120px",
-      dialogFormVisible: true,
+      dialogFormVisible: false,
       form: {},
       path: [],
       defaultProps: {
@@ -91,13 +91,22 @@ export default {
       row: {},
       defaultShowNodes: [],
       menuType: [
-        {label: 'M', value: 0},
-        {label: 'F', value: 1}
+        {label: '菜单(M)', value: 0},
+        {label: '按钮(F)', value: 1}
       ],
       statusType: [
         {label: '开启', value: 0},
         {label: '关闭', value: 1},
-      ]
+      ],
+      rules: {
+        menuName: [  { required: true, message: '该选项不可为空, 请确认', trigger: 'change' },],
+        menuType: [  { required: true, message: '该选项不可为空, 请确认', trigger: 'change' },],
+        orderNum: [  { required: true, message: '该选项不可为空, 请确认', trigger: 'change' },],
+        parentId: [  { required: true, message: '该选项不可为空, 请确认', trigger: 'change' },],
+        path: [  { required: true, message: '改选行不可为空, 请确认'},],
+        perms: [  { required: true, message: '改选行不可为空, 请确认'},],
+        status: [  { required: false, message: '改选行不可为空, 请确认'},],
+      }
     }
   },
   created() {

@@ -175,7 +175,7 @@ export default {
   display: inline-block;
   padding-right: 20px;
 }
-.table  .el-table__row, .el-table_1_column_1{
+.overview .table  .el-table__row, .el-table_1_column_1{
   background-color: #f2f2f2 !important  ;
 }
  .overview .el-table th.el-table__cell{

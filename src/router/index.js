@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from "@/store";
+import { Message } from 'element-ui'
 
 import headers from "@/components/header";
 
@@ -36,6 +37,7 @@ import intercept from "@/views/converse/intercept";
 import user from "@/views/user/user";
 import menu from "@/views/layout/manage/menu";
 import jsCookie from "js-cookie";
+import queue from "@/views/configure/conmonters/queue";
 Vue.use(VueRouter)
 
 const routes = [
@@ -96,7 +98,7 @@ const routes = [
             name: 'organizationManage'
           },
           {
-            meta: { title: '菜单权限' },
+            meta: { title: '菜单管理' },
             path: '/layout/menu',
             component: menu,
             name: 'menu'
@@ -141,6 +143,12 @@ const routes = [
             path: '/configure/terminal',
             name: 'terminal',
             component: terminal
+          },
+          {
+            meta: { title: '队列管理' },
+            path: '/configure/queue',
+            name: 'queue',
+            component: queue
           }
         ]
       },
@@ -176,6 +184,12 @@ const routes = [
             path: '/billing/rate',
             name: 'rate',
             component: rate
+          },
+          {
+            meta: { title: '配置管理' },
+            path: '/billing/configure',
+            name: 'configure',
+            component: configure
           }
         ]
       },
@@ -232,6 +246,9 @@ const routes = [
   {
     path : '/user',
     component: user,
+    meta: [
+      {permission: true}
+    ]
   }
 ]
 
@@ -249,17 +266,26 @@ router.beforeEach((to, form, next) => {
   store.state.formPage = formPage
   next()
   if(to.path !== '/user'){
-    console.log(jsCookie.get('JSESSIONID') === undefined)
-    /**
-     * 哈看用户是否有cookie 没有则登录
-     * 有则继续
-     */
+
     if(jsCookie.get('JSESSIONID') === undefined){
       next('/user')
       window.localStorage.setItem('userInfo', '')
     }else {
-      next()
       store.dispatch('userInfo', JSON.parse(window.localStorage.getItem('userInfo'))).catch()
+      let flag = false
+      if(!flag){
+        store.state.userInfo.sysMenuList.forEach(item => {
+          if(item.menuName.indexOf(to.meta.title) !== -1){
+            flag = true
+          }
+        })
+        if(flag){
+          next()
+        }else {
+          Message.error('你没有访问这个页面的权利哦')
+          next('/user')
+        }
+      }
     }
   }else {
     next('/user')

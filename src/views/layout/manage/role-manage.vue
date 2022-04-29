@@ -27,6 +27,24 @@
         </div>
       </div>
 
+      <el-dialog title="数据权限" :visible.sync="dialogFormVisibles">
+        <el-form :model="dataScopeForm">
+          <el-form-item label="角色ID" :label-width="formLabelWidth">
+            <el-input v-model="dataScopeForm.roleId"/>
+          </el-form-item>
+          <el-form-item label="数据权限" :label-width="formLabelWidth">
+            <el-select v-model="dataScopeForm.dataScope">
+              <el-option :label="item.label" :value="item.value" v-for="item in dataScopeType"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="submitDataScopeForm(dataScopeForm)">确 定</el-button>
+        </div>
+      </el-dialog>
+
+
       <el-dialog :title="title" :visible.sync="dialogFormVisible">
         <el-form :model="addForm" ref="addForm" :rules="rules">
           <el-form-item
@@ -146,7 +164,14 @@
 </template>
 
 <script>
-import { addRole, getRoleList, getMenuAll, deleteRoleList, getDistribution } from "@/newwork/system-colltroner";
+import {
+  addRole,
+  getRoleList,
+  getMenuAll,
+  deleteRoleList,
+  getDistribution,
+  distribution, upDataRoleList
+} from "@/newwork/system-colltroner";
 import {menuToTree, treeToArray} from "@/uti";
 import {deleteRate} from "@/newwork/ground-colltroner";
 import myEmpty from "@/newwork/myEmpty";
@@ -159,6 +184,7 @@ export default {
       menuIds: [],//菜单列表
       formLabelWidth: '120px',
       dialogFormVisible: false,
+      dialogFormVisibles: false,
       title: '新增',
       navForm: {
         menuIds: [],
@@ -178,10 +204,12 @@ export default {
         roleCode: '', //角色编码
         roleName: '', //角色名称
         status: 0,
-        sysMenuList: []
       },
       total: 0,
       selectMenuList: [],
+      dataScopeForm: {
+        dataScope: ''
+      },
       list: [],
       rules: {
         roleName: [{required: true, message: '此项为必填项，请确认', trigger: 'change'}],
@@ -202,7 +230,15 @@ export default {
       status: [
         {label: '启用', value: 0},
         {label: '停用', value: 1},
+      ],
+      dataScopeType: [
+        {label: '全部数据权限', value: 1},
+        {label: '自定义数据权限', value: 2},
+        {label: '本部门数据权限', value: 3},
+        {label: '本部门及一下数据权限', value: 4},
+        {label: '本人', value: 5},
       ]
+
 
     }
   },
@@ -219,10 +255,18 @@ export default {
     }
   },
   methods: {
-    distribution(row ){
-      console.log(row);
-      getDistribution(row).then(res => {
+    distribution(row) {
+      this.dialogFormVisibles = true
+      this.dataScopeForm.roleId = row
+    },
+    submitDataScopeForm(dataScopeForm){
+      distribution(dataScopeForm).then(res => {
         console.log(res);
+        if(res.data.code === 200){
+          this.$message.success('提交完成')
+        }else {
+          this.$message.error(res.data.msg)
+        }
       })
     },
     addForms(row, title) {
@@ -230,19 +274,19 @@ export default {
       this.title = title
       this.title === '新增' ? this.addForm = this.$options.data().addForm : this.addForm = row
     },
-    find(){
+    find() {
       this.getRoleList(this.navForm)
     },
-    clearForm(){
+    clearForm() {
       this.resetForm('form')
     },
-    removeIt(row){
+    removeIt(row) {
       console.log(row)
       deleteRoleList(row.roleId).then(res => {
-        if(res.data.code === 200 ){
+        if (res.data.code === 200) {
           this.$message.success('提交完成')
           this.getRoleList(this.navForm)
-        }else {
+        } else {
           this.$message.error(res.data.msg)
         }
       })
@@ -250,16 +294,26 @@ export default {
     submitForm() {
       this.$refs.addForm.validate((valid) => {
         if (valid && !this.isVacancy) {
-          addRole(this.addForm).then(res => {
-            if(res.data.code === 200){
-              this.$message.success('提交完成')
-              this.getRoleList(this.navForm)
-              this.resetForm()
-              this.dialogFormVisible = false
-            }else {
-              this.$message.error(res.data.msg)
-            }
-          }).catch(e => this.$message.error(e))
+          if (this.title === '新增') {
+            addRole(this.addForm).then(res => {
+              if (res.data.code === 200) {
+                this.$message.success('提交完成')
+                this.getRoleList(this.navForm)
+                this.resetForm()
+                this.dialogFormVisible = false
+              } else {
+                this.$message.error(res.data.msg)
+              }
+            }).catch(e => this.$message.error(e))
+          } else {
+            upDataRoleList(this.addForm).then((res => {
+              if(res.data.code === 200){
+                this.$message.success('提交完成')
+              }else {
+                this.$message.error(res.data.msg)
+              }
+            }))
+          }
         } else {
           this.$message.error('提交失败， 请重试')
           return false;
@@ -273,8 +327,8 @@ export default {
 
     checkChange(a, context) {
       this.addForm.menuIds = []
-      const menuId =treeToArray(context.checkedNodes)
-      menuId.forEach((item, i ) => {
+      const menuId = treeToArray(context.checkedNodes)
+      menuId.forEach((item, i) => {
         this.addForm.menuIds.push(item.menuId)
       })
       this.addForm.menuIds.length === 0 ? this.isVacancy = true : this.isVacancy = false

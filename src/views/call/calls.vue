@@ -181,7 +181,7 @@ export default {
     return {
       title: '添加呼叫转移',
       formLabelWidth: '120px',
-      dialogFormVisible: true,
+      dialogFormVisible: false,
 
       form: {
         associatedNumber: '',

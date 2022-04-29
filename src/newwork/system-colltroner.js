@@ -165,6 +165,13 @@ export function getDistribution(data) {
         params: data
     })
 }
+export function distribution(data) {
+    return request({
+        url: '/system/role/data/distribution',
+        data,
+        method: 'post'
+    })
+}
 
 /**
  * 用户管理
