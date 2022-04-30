@@ -390,9 +390,9 @@ export default {
         longitude: [{required: false, message: '该项为必填项目,请确认', trigger: 'blur'},],
       },
       bussiness: [
-        {label: '语音', value: 1},
-        {label: '视频', value: 2},
-        {label: '广播', value: 3},
+        {label: '语音', value: '1'},
+        {label: '视频', value: '2'},
+        {label: '广播', value: '3'},
       ],
       disable: [
         {label: '正常', value: 0},

@@ -210,6 +210,15 @@ export function upDataProFile(data) {
 }
 export function delProFile(data) {
     return request({
-        url: '/pbx/profile/delete/' + data
+        url: '/pbx/profile/delete/' + data,
+        method: 'delete'
+    })
+}
+
+export function addFroFile(data) {
+    return request({
+        url: '/pbx/profile/add',
+        method: 'post',
+        data
     })
 }

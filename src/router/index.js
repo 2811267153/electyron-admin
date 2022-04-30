@@ -29,6 +29,7 @@ import call from '@/views/call/call'
 import converse from '@/views/converse/converse'
 import ivr from '@/views/call/ivr'
 import calls from '@/views/call/calls'
+import configures from '@/views/billing/configure'
 
 
 import hisBill from "@/views/converse/hisBill";
@@ -189,7 +190,7 @@ const routes = [
             meta: { title: '配置管理' },
             path: '/billing/configure',
             name: 'configure',
-            component: configure
+            component: configures
           }
         ]
       },

@@ -156,7 +156,7 @@ export default {
         wrapupTime : '', //接听下一路电话的间隔
       },
       list: [],
-      dialogFormVisible: true,
+      dialogFormVisible: false,
       title: '新增',
       formLabelWidth: '120px',
       rules: {
@@ -204,7 +204,7 @@ export default {
   methods: {
     addForms(row, type){
       this.title = type
-      type === '新增' ? this.resetForm() : this.addForm = row
+      type !== '新增' ?  this.addForm = row : ''
       this.getFifo(this.form)
       this.dialogFormVisible = true
     },
@@ -252,6 +252,7 @@ export default {
       getFifo(form).then(res => {
         console.log(res)
         if(res.data.code === 200){
+          this.$store.dispatch('total', res.data.data.total)
           this.list = res.data.data.records
         }else {
           this.$message.error(res.data.msg)
@@ -271,6 +272,13 @@ export default {
       this.form = this.$store.state.formPage
       this.getFifo(this.form)
     })
+  },
+  watch: {
+    dialogFormVisible (val){
+      if(!val){
+        this.addForm = this.$options.data().addForm
+      }
+    }
   }
 }
 </script>
