@@ -202,7 +202,7 @@ const routes = [
           path: '/call/ivr'
         },
         children: [
-          {meta: {title: 'IVR管理'}, path: '/call/ivr', name: 'ivr', component: ivr, hidden: true},
+          {meta: {title: 'ivr管理'}, path: '/call/ivr', name: 'ivr', component: ivr, hidden: true},
           // {
           //   meta: { title: 'DID管理' },
           //   path: '/call/did',
@@ -218,9 +218,10 @@ const routes = [
         ]
       },
       {
-        path: '/bill',
+          path: '/bill',
         component: converse,
         meta: { title: '通话账单' },
+        name: 'bill',
         redirect: {
           path: '/bill/index'
         },

@@ -23,6 +23,7 @@ export function request(config) {
         if(config.data.code !== 200){
             jsCookie.remove('JSESSIONID')
         }
+        console.log(config)
         return config
     }, error => {
     })
