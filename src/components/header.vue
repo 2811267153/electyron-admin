@@ -23,9 +23,10 @@
             >
               <el-submenu
                   popper-class="aa"
-                  :index="item.name"
+                  :index="item.name + '' "
                   style="width: 200px"
-                  v-for="item in routes.children"
+                  :key="index"
+                  v-for="(item, index) in routes.children"
               >
                 <template slot="title">
                   <span>{{ item.meta.title }}</span>

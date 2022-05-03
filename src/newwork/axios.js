@@ -1,7 +1,7 @@
 import axios from 'axios'
 import store from "@/store";
 import {getCookie, removeCookie} from "@/auth";
-import message from "element-ui/packages/message";
+import { Message } from 'element-ui'
 
 export function request(config) {
     const instance = axios.create({
@@ -25,6 +25,8 @@ export function request(config) {
         }
         return config
     }, error => {
+        Message.error('登录状态异常')
+        location.reload()
         removeCookie()
     })
 
