@@ -108,7 +108,7 @@
 </template>
 
 <script>
-import {addFroFile, delProFile, getProfile, upDataProFile} from "@/newwork/ground-colltroner";
+import {addFroFile, delProFile, getProfile, getProfileInfo, upDataProFile} from "@/newwork/ground-colltroner";
 
 export default {
   name: "configure",
@@ -129,8 +129,8 @@ export default {
         template: '' , //配置文件模板:internal/external(internal为内部注册，external为对外中继通道接口)
       },
       templateType: [
-        {label: '内部注册(internal)', value: 'internal'},
-        {label: '对外中继通道接口(external)', value: 'external'}
+        {label: '内部注册', value: 'internal'},
+        {label: '对外中继通道接口', value: 'external'}
       ],
       rules: {
         netMac: [
@@ -169,12 +169,12 @@ export default {
     find(){
       this.getProfile(this.form)
     },
-    getProfile(form){
-      getProfile(form).then(res => {
+    getProfileInfo(form){
+      getProfileInfo(form).then(res => {
         console.log(res)
         this.$store.dispatch('total', res.data.data.total)
         if(res.data.code === 200) {
-          this.list = res.data.data
+          this.list = res.data.data.records
         }else {
           this.$message.error(res.data.msg)
         }
@@ -192,7 +192,7 @@ export default {
       delProFile(id).then(res => {
         console.log(res)
         if(res.data.code === 200){
-          this.getProfile(this.form)
+          this.getProfileInfo(this.form)
           this.$message.success('提交完成')
         }else {
           this.$message.error(res.data.msg)
@@ -207,7 +207,7 @@ export default {
         console.log(res)
         if(res.data.code === 200){
           this.dialogFormVisible = false
-          this.getProfile(this.form)
+          this.getProfileInfo(this.form)
           this.$message.success('提交完成')
         }else {
           this.$message.error(res.data.msg)
@@ -218,7 +218,7 @@ export default {
       upDataProFile(this.addForm).then(res => {
         console.log(res)
         if(res.data.code === 200){
-          this.getProfile(this.form)
+          this.getProfileInfo(this.form)
           this.$message.success('提交完成')
           this.dialogFormVisible = false
         }else {
@@ -229,7 +229,7 @@ export default {
   },
   created() {
     this.form = this.$store.state.formPage
-    this.getProfile(this.form)
+    this.getProfileInfo(this.form)
   },
   watch: {
     dialogFormVisible(){
@@ -240,7 +240,7 @@ export default {
   mounted() {
     this.$bus.$on('pageChange', () => {
       this.form = this.$store.state.formPage
-      this.getProfile(this.form)
+      this.getProfileInfo(this.form)
     })
   }
 }

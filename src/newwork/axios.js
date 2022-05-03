@@ -1,8 +1,7 @@
 import axios from 'axios'
 import store from "@/store";
-import router from "@/router/index";
-import {getCookie} from "@/auth";
-import jsCookie from "js-cookie";
+import {getCookie, removeCookie} from "@/auth";
+import message from "element-ui/packages/message";
 
 export function request(config) {
     const instance = axios.create({
@@ -10,6 +9,7 @@ export function request(config) {
         timeout: 1500,
         withCredentials: true,
     })
+    const login = store.state.isLogin
     instance.interceptors.request.use(config => {
         // 如果有一个接口需要认证才能访问，就在这里统一设置
         if(store.state.userInfo){
@@ -21,11 +21,11 @@ export function request(config) {
     })
     instance.interceptors.response.use(config => {
         if(config.data.code !== 200){
-            jsCookie.remove('JSESSIONID')
+            removeCookie()
         }
-        console.log(config)
         return config
     }, error => {
+        console.log(error)
     })
 
     return instance(config)

@@ -43,7 +43,7 @@ export default new Vuex.Store({
     },
     formPage(state, formPage){
       state.formPage = formPage
-    }
+    },
   },
 
   modules: {}

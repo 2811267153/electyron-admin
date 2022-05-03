@@ -52,6 +52,7 @@
             label="所属部门"
             show-overflow-tooltip
           >
+            <template scope="scope">{{scope.row.sysDept.deptName}}</template>
           </el-table-column>
           <el-table-column
             prop="createTime"
@@ -131,6 +132,7 @@
             >
               <el-cascader
                 v-model="deptId"
+                :getCheckedNodes="true"
                 :options="treeArr"
                 :props="defaultProps"></el-cascader>
             </el-form-item>
@@ -306,7 +308,9 @@ export default {
     },
     treeClick(a) {
       this.form = this.$store.state.formPage;
-      this.form.deptIds = a.deptId;
+      this.form.deptId = a.deptId;
+
+      console.log(this.form)
       this.getUserAll(this.form);
     },
     addForms(addForm) {
@@ -341,6 +345,7 @@ export default {
       });
     },
     onClear() {
+      this.form.deptId = ''
       this.resetForm();
       this.getUserAll(this.form);
     },
@@ -393,23 +398,13 @@ export default {
       getUserAll(formPage).then(res => {
         this.resultList = res.data.data.records;
         console.log(res.data);
-
-        this.$store.dispatch("total", res.data.data.total);
-        //更具用户id获取他在 公司的职位
-        this.resultList.forEach((item, i) => {
-          if (item.hasOwnProperty("deptId")) {
-            getOrganizeId(item.deptId).then(res => this.$set(this.resultList[i], "department", res.data.data.deptName));
-          }
-        });
-      }).catch(e => this.$message.error(e));
+      });
     }
   },
   created() {
     this.getUserAll(this.$store.state.formPage);
     getOrganizeList().then(res => {
       this.treeArr = fn(res.data.data);
-
-      console.log(this.treeArr);
     });
     this.form = this.$store.state.formPage;
   },
@@ -417,13 +412,6 @@ export default {
     getterDeptIdList() {
       return fn(this.deptIdList);
     },
-    // roleId(){
-    //   if(this.addForm.roleId.length !== 0){
-    //     return parseInt(this.addForm.roleId)
-    //   }else {
-    //     return   = ''
-    //   }
-    // },
     defaultProps() {
       return {
         children: "children",
@@ -436,17 +424,22 @@ export default {
 
 
   watch: {
-    deptId(val) {
+    deptId() {
       this.addForm.deptId = this.deptId[this.deptId.length - 1];
     },
     timer(val) {
-      console.log(val);
       this.addForm.createTime = val[0];
       this.addForm.endTime = val[1];
+    },
+    isShow(val){
+      if(!val){
+        this.addForm = this.$options.data().addForm
+      }
     }
   },
   mounted() {
     this.$bus.$on("pageChange", () => {
+      this.form = this.$store.state.formPage
       this.getUserAll(this.$store.state.formPage);
     });
   }

@@ -127,7 +127,7 @@
             ></el-input>
           </el-form-item>
           <el-form-item
-              label="profileId"
+              label="服务端口ID"
               :label-width="formLabelWidth"
               prop="profileId"
           >
@@ -214,7 +214,7 @@
       <el-table-column align="center" prop="expires" label="超时时长"></el-table-column>
       <el-table-column align="center" prop="gatewayIp" label="中继IP"></el-table-column>
       <el-table-column align="center" prop="gatewayPort" label="中继端口"></el-table-column>
-      <el-table-column align="center" prop="profileId" label="profileId"></el-table-column>
+      <el-table-column align="center" prop="profileId" label="服务端口ID"></el-table-column>
       <el-table-column align="center" prop="gatewayType" label="中继类型">
         <template scope="scope">
           <a v-if="scope.row.gatewayType === 0">入中继</a>
@@ -469,7 +469,7 @@ export default {
 
 #networkManagement .width {
   display: flex;
-  width: 60%;
+  width: 100%;
   justify-content: space-between;
 }
 
