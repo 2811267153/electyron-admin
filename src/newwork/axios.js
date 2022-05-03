@@ -25,7 +25,7 @@ export function request(config) {
         }
         return config
     }, error => {
-        console.log(error)
+        removeCookie()
     })
 
     return instance(config)

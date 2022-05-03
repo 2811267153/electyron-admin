@@ -3,7 +3,7 @@
     <div class="rate-true" v-if="toggle">
       <p>{{ this.$route.meta.title }}</p>
       <div class="container">
-        <el-form :inline="true" :model="form" class="demo-form-inline"  ref="addForm">
+        <el-form :inline="true" :model="form" class="demo-form-inline" ref="addForm">
           <el-form-item label="费率组" prop="diaplanRateGroup">
             <el-input v-model="form.diaplanRateGroup"></el-input>
           </el-form-item>
@@ -76,40 +76,13 @@
     <div class="rate-list" v-else>
       <p>费率组列表</p>
 
-            <div class="container">
+      <div class="container">
         <div class="nav-form">
-<!--          <el-form :inline="true" :model="listFrom" class="demo-form-inline">-->
-<!--            <el-form-item label="号码前缀">-->
-<!--              <el-input-->
-<!--                  v-model="listFrom.numberPrefix"-->
-<!--                  placeholder="审批人"-->
-<!--              ></el-input>-->
-<!--            </el-form-item>-->
-<!--            <el-form-item label="费率名称">-->
-<!--              <el-input-->
-<!--                  v-model="listFrom.billingName"-->
-<!--                  placeholder="审批人"-->
-<!--              ></el-input>-->
-<!--            </el-form-item>-->
-<!--            <el-form-item label="地区类型">-->
-<!--              <el-select v-model="listFrom.region">-->
-<!--                <el-option-->
-<!--                    :label="item.label"-->
-<!--                    :value="item.value"-->
-<!--                    v-for="item in region"-->
-<!--                ></el-option>-->
-<!--              </el-select>-->
-<!--            </el-form-item>-->
-<!--            <el-form-item>-->
-<!--              <el-button type="primary" @click="onSubmit">查询</el-button>-->
-<!--              <el-button @click="clearSubmit">重置</el-button>-->
-<!--            </el-form-item>-->
-<!--          </el-form>-->
-
           <div></div>
           <div>
             <el-button type="primary" @click="onSubmits">添加费率</el-button>
-            <el-button type="primary" @click="black">返回</el-button></div>
+            <el-button type="primary" @click="black">返回</el-button>
+          </div>
         </div>
       </div>
 
@@ -150,22 +123,31 @@
               required
           >
             <div class="width">
-              <el-form-item prop="rate"> <el-input style="margin-right: 20px" v-model="addListFrom.rate" placeholder="请输入费率"></el-input></el-form-item>
-              <el-form-item style="margin-left: 20px" prop="billingPeriod"><el-input v-model="addListFrom.billingPeriod" placeholder="请输入计费单位"></el-input></el-form-item>
+              <el-form-item prop="rate">
+                <el-input style="margin-right: 20px" v-model="addListFrom.rate" placeholder="请输入费率"></el-input>
+              </el-form-item>
+              <el-form-item style="margin-left: 20px" prop="billingPeriod">
+                <el-input v-model="addListFrom.billingPeriod" placeholder="请输入计费单位"></el-input>
+              </el-form-item>
             </div>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="listDialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="submitForms('编辑')"
-          >确 定
-          </el-button
-          >
+          <div class="footers">
+            <p>注意: 费率默认已分为单位, 计费时间为60(s)秒</p>
+            <div class="footers">
+              <el-button @click="listDialogFormVisible = false">取 消</el-button>
+              <el-button type="primary" @click="submitForms('编辑')"
+              >确 定
+              </el-button
+              >
+            </div>
+          </div>
         </div>
       </el-dialog>
-      <el-table :data="rateItemList" border style="width: 100%; margin-top: 20px"  v-if="list.length !== 0">
+      <el-table :data="rateItemList" border style="width: 100%; margin-top: 20px" v-if="list.length !== 0">
         <el-table-column align="center" prop="date" label="序号">
-          <template scope="scope">{{ scope.$index + 1}}</template>
+          <template scope="scope">{{ scope.$index + 1 }}</template>
         </el-table-column>
         <el-table-column align="center" prop="rateName" label="费率名称">
         </el-table-column>
@@ -282,7 +264,7 @@ export default {
     find() {
       this.getRateList(this.form)
     },
-    black(){
+    black() {
       this.toggle = true
     },
     clearSubmit() {
@@ -302,12 +284,12 @@ export default {
      * 获取费率组列表
      * @param form
      */
-    getRateItemList(form){
+    getRateItemList(form) {
       getRateItemList(form).then(res => {
         console.log(res)
-        if(res.data.code === 200){
+        if (res.data.code === 200) {
           this.rateItemList = res.data.data.records
-        }else {
+        } else {
           console.log(res)
         }
       }).catch(e => {
@@ -322,7 +304,7 @@ export default {
       this.toggle = false
       this.row = row
       console.log(row)
-      this.form.rateGroupId =row.id
+      this.form.rateGroupId = row.id
       this.getRateItemList(this.form)
     },
     /**
@@ -332,7 +314,7 @@ export default {
     submitForm() {
       this.$refs.addForm.validate((valid) => {
         if (valid) {
-          if(this.title === '添加费率组'){
+          if (this.title === '添加费率组') {
             addRateList(this.addForm).then(res => {
               console.log(res)
               this.getRateList(this.form)
@@ -341,14 +323,14 @@ export default {
             })
             this.getRateList(this.form)
             this.dialogFormVisible = false
-          }else{
+          } else {
             putRateList(this.addForm).then(res => {
               console.log(res)
-              if(res.data.code === 200){
+              if (res.data.code === 200) {
                 this.getRateList()
                 this.$message.success('提交完成')
                 this.dialogFormVisible = false
-              }else {
+              } else {
                 this.$message.error(res.data.msg)
               }
             })
@@ -360,28 +342,28 @@ export default {
     submitForms() {
       this.$refs.formName.validate((valid) => {
         if (valid) {
-          if(this.listTitle === '添加费率'){
+          if (this.listTitle === '添加费率') {
             addRateItemList(this.addListFrom).then(res => {
               this.resetForm()
-              if(res.data.code === 200){
+              if (res.data.code === 200) {
                 this.$message.success('添加完成')
                 this.dialogFormVisible = false
                 this.getRateItemList(this.form)
-              }else {
+              } else {
                 this.$message.error(res.data.msg)
               }
             }).catch(e => {
               this.$message.error(e)
             })
-          }else {
+          } else {
             upDaterateItem(this.addListFrom).then(res => {
               console.log(res)
-              if(res.data.code === 200){
+              if (res.data.code === 200) {
                 this.getRateItemList(this.form)
                 this.listDialogFormVisible = false
                 this.$message.success('提交完成')
 
-              }else {
+              } else {
                 this.$message.error(res.data.msg)
               }
             })
@@ -397,34 +379,34 @@ export default {
     },
     showAddForm(row, title) {
       this.title = title
-      if(title === '编辑'){
+      if (title === '编辑') {
         this.addForm = row
       }
       this.dialogFormVisible = true
     },
     //编辑费率
 
-    upDataForm(row){
+    upDataForm(row) {
       this.addListFrom = row
       this.listTitle = '编辑费率'
       this.listDialogFormVisible = true
     },
     //删除费率组
     removeIt(row) {
-      this.toggle ? deleteRate(row.id).then(res=> {
-        if(res.data.code == 200){
+      this.toggle ? deleteRate(row.id).then(res => {
+        if (res.data.code == 200) {
           this.$message.success('提交完成')
           this.getRateList(this.form)
-        }else {
+        } else {
           this.$message.error(res.data.msg)
         }
-      }).catch(e =>   this.$message.error(e)) : deleteRateItem(row.id).then(res => {
-        if(res.data.code ===200){
+      }).catch(e => this.$message.error(e)) : deleteRateItem(row.id).then(res => {
+        if (res.data.code === 200) {
 
           this.$message.success('提交完成')
           //由于上边已经给form表单设置过id了 这里直接使用就ok
           this.getRateItemList(this.form)
-        }else {
+        } else {
           this.$message.error(res.data.msg)
         }
       })
@@ -436,16 +418,16 @@ export default {
     }
   },
   watch: {
-    listDialogFormVisible(val){
-      if(val!== true){
+    listDialogFormVisible(val) {
+      if (val !== true) {
         this.getRateItemList(this.form)
         this.resetForm()
       }
     },
-    toggle(val){
-      if(val === true){
+    toggle(val) {
+      if (val === true) {
         this.rateItemList = []
-      }else {
+      } else {
         this.addListFrom.rateGroupId = this.row.id
       }
     },
@@ -482,14 +464,23 @@ export default {
   margin-right: 20px;
 }
 
+.footers {
+  display: flex;
+  justify-content: space-between;
+}
+.footers p{
+  color: #cccccc;
+}
 .nav-form {
   width: 100%;
   display: flex;
   justify-content: space-between;
 }
-.pagination{
+
+.pagination {
   margin-top: 20px;
 }
+
 .width {
   display: flex;
 }

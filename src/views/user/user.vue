@@ -73,7 +73,7 @@ export default {
           this.$store.dispatch('userInfo', res.data.data.user)
           const sysMenuList = res.data.data.user.sysMenuList
           setCookie(res.data.data.JSESSIONID)
-          console.log(res.data.data.user.sysMenuList[1].path)
+          console.log(res.data.data.user.sysMenuList)
           this.$router.push({path: sysMenuList[1].path}).catch(e => console.log(e))
         }else {
           this.$message.error(res.data.msg)
