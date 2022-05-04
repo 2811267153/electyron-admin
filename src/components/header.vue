@@ -3,7 +3,7 @@
     <div class="header app-header">
       <div class="logo-info">
         <div class="logo"></div>
-        <h1>金数GDP1000  融合通信管理平台</h1>
+        <h1 v-if="$route.path !== '/index'">金数GDP1000  融合通信管理平台</h1>
       </div>
       <p><span @click="loginOut">当前用户:</span> {{ userInfo.nickName }}</p>
       <!--      <p>  <span>用户</span>: {{userInfo.data.user.username || ''}} <el-button @click="loginOut" class="login-out">退出</el-button></p>-->
@@ -45,8 +45,8 @@
           </el-col>
         </div>
       </div>
-      <div class="content" v-if="home">
-        {{routes.path}}
+      <div class="content" v-if="$route.path !== '/index'">
+
         <div class="content-nav">
           <el-breadcrumb class="nav-bar" separator="/">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
@@ -69,8 +69,8 @@
           </el-pagination>
         </div>
       </div>
-      <div class="" v-else>
-        <router-view/>
+      <div v-else>
+        <router-view></router-view>
       </div>
     </div>
   </div>
@@ -116,10 +116,12 @@ export default {
       formPage.pageSize = 10
       this.$store.dispatch('formPage', formPage)
       this.$bus.$emit('pageChange',)
-    }
+    },
 
   },
-
+  created(){
+    console.log(this.$route, '--------------')
+  },
   computed: {
     routes() {
       console.log(this.$router.options.routes[1])
