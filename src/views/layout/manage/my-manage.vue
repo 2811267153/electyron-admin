@@ -191,6 +191,7 @@
               class="form-item"
               label="邮箱"
               :label-width="formLabelWidth"
+              prop="email"
             >
               <el-input
                 type="email"
@@ -231,6 +232,7 @@ import {
 } from "@/newwork/system-colltroner";
 import { fn } from "@/uti";
 import myEmpty from "@/newwork/myEmpty";
+import {isValidEmail, isValidNumber, isValidPhone} from "@/util/validate";
 
 export default {
   name: "serve-manage",
@@ -239,6 +241,20 @@ export default {
     myEmpty
   },
   data() {
+    const validatePhone = (rule, value, callback) => {
+      if(!isValidPhone(value)){
+        callback(new Error('手机号格式输入有误,请确认'))
+      }else {
+        callback()
+      }
+    }
+    const validateEmail = (rule, value, callback) => {
+      if(!isValidEmail(value)){
+        callback(new Error('邮箱地址输入格式有误,请确认'))
+      }else {
+        callback()
+      }
+    }
     return {
       form: {
         nickName: "",
@@ -280,6 +296,10 @@ export default {
         roleId: [
           { required: true, message: "此项为必填项，请确认", trigger: "change" }
         ],
+        email: [
+          { required: false, message: "此项为必填项，请确认", trigger: "change" },
+          {validator: validatePhone, message: '手机号格式输入有误,请确认', trigger: 'change'}
+        ],
         deptId: [
           { required: false, message: "此项为必填项，请确认", trigger: "change" }
         ],
@@ -290,7 +310,8 @@ export default {
           { required: true, message: "此项为必填项，请确认", trigger: "change" }
         ],
         phone: [
-          { required: true, message: "此项为必填项，请确认", trigger: "change" }
+          { required: true, message: "此项为必填项，请确认", trigger: "change" },
+          {validator: validateEmail, message: '邮箱格式输入有误,请确认', trigger: 'change'}
         ],
         status: [
           { required: false, message: "此项为必填项，请确认", trigger: "change" }
@@ -313,7 +334,7 @@ export default {
       console.log(this.form)
       this.getUserAll(this.form);
     },
-    addForms(addForm) {
+    addForms() {
       //点击确定之后 遍历数据 确保必填项不为空
       this.$refs.addForm.validate((valid) => {
         if (valid && this.addForm.deptId.length !== 0) {

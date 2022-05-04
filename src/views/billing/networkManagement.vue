@@ -3,13 +3,13 @@
     <div class="nav-form">
       <el-form :model="form" :hide-required-asterisk="true" :show-message="false" :inline="true" class="demo-form-inline" ref="formName" :rules="rules" >
         <el-form-item label="网关名称" prop="gatewayName">
-          <el-input v-model="form.gatewayName" placeholder="审网管名称批人"></el-input>
+          <el-input v-model="form.gatewayName"></el-input>
         </el-form-item>
         <el-form-item label="注册用户名" prop="gatewayName">
-          <el-input v-model="form.username" placeholder="审网管名称批人"></el-input>
+          <el-input v-model="form.username" ></el-input>
         </el-form-item>
         <el-form-item label="代理IP" prop="proxyIp">
-          <el-input v-model="form.proxyIp" placeholder="审网管名称批人"></el-input>
+          <el-input v-model="form.proxyIp" ></el-input>
         </el-form-item>
         <el-form-item label="域地址" prop="realm">
           <el-input v-model="form.realm" placeholder="物理地址"></el-input>
@@ -28,8 +28,8 @@
                     <el-button @click="clear">重置</el-button>
         </el-form-item>
       </el-form>
-      <el-button type="primary" @click="showAddForm(null, '添加网管')"
-      >添加网管
+      <el-button type="primary" @click="showAddForm(null, '添加网关')"
+      >添加网关
       </el-button
       >
     </div>
@@ -37,7 +37,7 @@
       <el-form :model="addFrom" ref="formName" :rules="rules">
         <div class="width">
           <el-form-item
-              label="网管名称"
+              label="网关名称"
               :label-width="formLabelWidth"
               prop="gatewayName"
           >
@@ -71,30 +71,41 @@
         </div>
         <div class="width">
           <el-form-item
-            v-if="title === '新增'"
+            v-if="title === '添加网关'"
               label="支持编码"
               :label-width="formLabelWidth"
               prop="codecs"
           >
-            <el-input
-                v-model="addFrom.codecs"
-                autocomplete="off"
-            ></el-input>
+            <el-select v-model="codecs"
+                       @change="codecsBlur"
+                       multiple
+                       collapse-tags>
+              <el-option
+                  v-for="item in dictionaryList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.name">
+              </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item
-              label="dtmfMode"
+              label="二次拨号方式"
               :label-width="formLabelWidth"
-              prop="dtmfMode"
+              required
           >
-            <el-input
-                v-model="addFrom.dtmfMode"
-                autocomplete="off"
-            ></el-input>
+            <el-select v-model="addFrom.dtmfMode" >
+              <el-option
+                  v-for="item in dtmfModeData"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+              </el-option>
+            </el-select>
           </el-form-item>
         </div>
         <div class="width">
           <el-form-item
-            v-if="title === '新增'"
+            v-if="title === '添加网关'"
               label="超时时长"
               :label-width="formLabelWidth"
               prop="expires"
@@ -127,14 +138,18 @@
             ></el-input>
           </el-form-item>
           <el-form-item
-              label="服务端口ID"
+              label="服务接口"
               :label-width="formLabelWidth"
               prop="profileId"
           >
-            <el-input
-                v-model="addFrom.profileId"
-                autocomplete="off"
-            ></el-input>
+            <el-select v-model="addFrom.profileId" placeholder="请选择">
+              <el-option
+                  v-for="item in profileIdList"
+                  :key="item.id"
+                  :label="item.netName"
+                  :value="item.id">
+              </el-option>
+            </el-select>
           </el-form-item>
         </div>
         <div class="width">
@@ -161,8 +176,19 @@
         </div>
         <div class="width">
           <el-form-item
+              label="是否注册"
+              :label-width="formLabelWidth"
+              prop="register"
+          >
+            <el-radio-group v-model="addFrom.register">
+              <el-radio :label="1">注册</el-radio>
+              <el-radio :label="0">不注册</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </div>
+        <div class="width" v-if="addFrom.register === 1">
+          <el-form-item
               label="注册用户"
-              v-if="title === '新增'"
               :label-width="formLabelWidth"
               prop="username"
           >
@@ -170,26 +196,11 @@
           </el-form-item>
           <el-form-item
               label="密码"
-              v-if="title === '新增'"
               :label-width="formLabelWidth"
               prop="password"
           >
             <el-input v-model="addFrom.password"/>
           </el-form-item>
-        </div>
-        <div class="width">
-          <el-form-item
-            v-if="title === '新增'"
-              label="是否注册"
-              :label-width="formLabelWidth"
-              prop="register"
-          >
-            <el-radio-group v-model="addFrom.register">
-              <el-radio :label="0">不注册</el-radio>
-              <el-radio :label="1">注册</el-radio>
-            </el-radio-group>
-          </el-form-item>
-
         </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -205,18 +216,18 @@
       <el-table-column align="center" prop="date" label="序号" width="50px">
         <template scope="scope">{{ scope.$index + 1 }}</template>
       </el-table-column>
-      <el-table-column align="center" prop="gatewayName" label="网管名称"></el-table-column>
+      <el-table-column align="center" prop="gatewayName" label="网关名称"></el-table-column>
       <el-table-column align="center" prop="accountUser" label="计费账号"></el-table-column>
-      <el-table-column align="center" prop="realm" label="域地址"></el-table-column>
-      <el-table-column align="center" prop="proxyIp" label="代理地址"></el-table-column>
+<!--      <el-table-column align="center" prop="realm" label="域地址"></el-table-column>-->
+<!--      <el-table-column align="center" prop="proxyIp" label="代理地址"></el-table-column>-->
       <el-table-column align="center" prop="codecs" label="支持编码"></el-table-column>
-      <el-table-column align="center" prop="dtmfMode" label="dtmfMode"></el-table-column>
-      <el-table-column align="center" prop="expires" label="超时时长"></el-table-column>
+<!--      <el-table-column align="center" prop="dtmfMode" label="dtmfMode"></el-table-column>-->
+      <el-table-column align="center" prop="expires" label="超时时长(s)"></el-table-column>
       <el-table-column align="center" prop="gatewayIp" label="中继IP"></el-table-column>
       <el-table-column align="center" prop="gatewayPort" label="中继端口"></el-table-column>
-      <el-table-column align="center" prop="profileId" label="服务端口ID"></el-table-column>
+<!--      <el-table-column align="center" prop="profileId" label="服务端口ID"></el-table-column>-->
       <el-table-column align="center" prop="gatewayType" label="中继类型">
-        <template scope="scope">
+        <template scope="scope" >
           <a v-if="scope.row.gatewayType === 0">入中继</a>
           <a v-else-if="scope.row.gatewayType === 1">出中继</a>
           <a v-else-if="scope.row.gatewayType === 2">双向中继</a>
@@ -231,7 +242,7 @@
           <div v-else> 不注册</div>
         </template>
       </el-table-column>
-      <el-table-column prop="recording" label="操作">
+      <el-table-column prop="recording" align="center" label="操作">
         <template scope="scope">
           <div class="operate">
             <el-link
@@ -253,15 +264,47 @@
 </template>
 
 <script>
-import {deletePbx, getPbxAdd, getPbxAll, upDatePbx} from "@/newwork/ground-colltroner";
+import {deletePbx, getPbxAdd, getPbxAll, getProfileInfo, upDatePbx} from "@/newwork/ground-colltroner";
+import {addDictionaryList, getDictionaryAll} from "@/newwork/system-colltroner";
+import {isValidIP, isValidNumber, isValidPost} from "@/util/validate";
+
 
 export default {
   name: 'networkManagement',
   data() {
+
+    /**
+     *
+     * 验证ip地址
+     * @param rule  验证规则
+     * @param value 需要验证的内容
+     * @param callback  返回的验证结果
+     */
+    const validateIP = (rule, value, callback) => {
+      if(!isValidIP(value)){
+        callback(new Error('ip地址输入有误,请确认'))
+      }else {
+        callback()
+      }
+    }
+    const validatePost =  (rule, value, callback) => {
+      if(!isValidPost(value)){
+        callback(new Error('ip地址输入有误,请确认'))
+      }else {
+        callback()
+      }
+    }
+    const validateNum = (rule, value, callback) => {
+      if(!isValidNumber(value)){
+        callback(new Error('ip地址输入有误,请确认'))
+      }else {
+        callback()
+      }
+    }
     return {
       dialogFormVisible: false,
       formLabelWidth: '120px',
-      title: '添加网管',
+      title: '添加网关',
       form: {
         user: '',
         address: '',
@@ -273,13 +316,17 @@ export default {
         pageSize: 10,
       },
       list: [],
+      dtmfModeData: [],
+      dictionaryList: [],//'字典列表'
+      profileIdList:[], // 服务端口ID
+      codecs: [],
       addFrom: {
         accountUser: '', //计费账号
         codecs: '', //支持编码
         dtmfMode: '', //dtmfMode
         expires: '', //超时时长
         gatewayIp: '', //中继IP
-        gatewayName: '', //网管名称
+        gatewayName: '', //网关名称
         gatewayPort: '', //中继端口
         gatewayType: '', //中继类型
         maxCall: '', //最大呼叫线数
@@ -290,10 +337,7 @@ export default {
         register: 1, //是否注册 0不注册/ 1 注册
         username: '', //注册用户名
       },
-      protocolType: [
-        {label: 'SIP', value: 'SIP'},
-        {label: 'H.323', value: 'H.323'}
-      ],
+      codecsList: [],
       relayType: [
         {label: '入中继', value: 0},
         {label: '出中继', value: 1},
@@ -303,9 +347,9 @@ export default {
         {label: '开启', value: '开启'},
         {label: '关闭', value: '关闭'}
       ],
-      recording: [
-        {label: '开启', value: '开启'},
-        {label: '关闭', value: '关闭'}
+      registerTypr: [
+        {label: '注册', value: 1},
+        {label: '不注册', value: 0},
       ],
       rules: {
         accountUser: [{required: true, message: '该选项为必填项， 请确认', trigger: 'blur'}],
@@ -315,14 +359,20 @@ export default {
         dtmfMode: [
           {required: true, message: '该选项为必填项， 请确认', trigger: 'blur'}
         ],
-        expires: [{required: true, message: '该选项为必填项， 请确认', trigger: 'blur'}],
+        expires: [
+          {required: true, message: '该选项为必填项， 请确认', trigger: 'blur'},
+          {validator: validateNum, message: '请输入合法的数字', trigger: 'blur'}
+        ],
         gatewayIp: [
-          {required: true, message: '该选项为必填项， 请确认', trigger: 'blur'}
+          {required: true, message: '该选项为必填项， 请确认', trigger: 'blur'},
+          {validator: validateIP, message: 'IP输入有误, 请确认', trigger: 'blur'}
         ],
         gatewayName: [
           {required: true, message: '该选项为必填项， 请确认', trigger: 'blur'}
         ],
-        gatewayPort: [{required: true, message: '该选项为必填项， 请确认', trigger: 'blur'}],
+        gatewayPort: [{required: true, message: '该选项为必填项， 请确认', trigger: 'blur'},
+          {validator: validatePost, message: '端口号输入有误, 请确认', trigger: 'blur'}
+        ],
         gatewayType: [
           {required: true, message: '该选项为必填项， 请确认', trigger: 'blur'}
         ],
@@ -333,7 +383,8 @@ export default {
         profileId: [
           {required: true, message: '该选项为必填项， 请确认', trigger: 'blur'}
         ],
-        proxyIp: [{required: true, message: '该选项为必填项， 请确认', trigger: 'blur'}],
+        proxyIp: [{required: true, message: '该选项为必填项， 请确认', trigger: 'blur'},
+          {validator: validateIP, message: 'IP输入有误, 请确认', trigger: 'blur'}],
         realm: [{required: true, message: '该选项为必填项， 请确认', trigger: 'blur'}],
         register: [{required: true, message: '该选项为必填项， 请确认', trigger: 'blur'}],
         username: [{required: true, message: '该选项为必填项， 请确认', trigger: 'blur'}],
@@ -352,7 +403,6 @@ export default {
     getPbxAll(form) {
       getPbxAll(form).then(res => {
         if(res.data.code === 200 ){
-          console.log(res)
           this.$store.dispatch('total', res.data.data.total)
           this.list = res.data.data.records
         }
@@ -363,9 +413,8 @@ export default {
     submitForm() {
       this.$refs['formName'].validate((valid) => {
         if (valid) {
-          if (this.title === '添加网管') {
+          if (this.title === '添加网关') {
             getPbxAdd(this.addFrom).then(res => {
-              console.log(res)
               if (res.data.code === 200) {
                 this.$message.success('添加完成')
                 this.getPbxAll(this.from)
@@ -375,7 +424,6 @@ export default {
               }
             })
           } else {
-            console.log(this.addFrom)
             upDatePbx(this.addFrom).then(res => {
               if (res.data.code === 200) {
                 this.$message.success('添加完成')
@@ -389,7 +437,6 @@ export default {
           // this.resetForm('formName')
         } else {
           console.log('error submit!!')
-          return false
         }
       })
     },
@@ -413,9 +460,7 @@ export default {
     },
 
     removeIt(row) {
-      console.log(row)
       deletePbx(row.id).then(res => {
-        console.log(res)
         if (res.data.code === 200) {
           this.$message.success('删除完成')
           this.getPbxAll(this.form)
@@ -426,21 +471,63 @@ export default {
         this.$message.error(e)
       })
     },
+    getProfileInfo(){
+      getProfileInfo().then(res => {
+        if(res.data.code === 200){
+          this.profileIdList = res.data.data.records
+        }
+      })
+    },
+    codecsBlur(){
+     this.addFrom.codecs =  this.codecs.join(',')
+    },
+    /**
+     * 获取网关对象, 保存code
+     *
+     * @param dictionaryTypeList
+     */
+    filterGateway(dictionaryTypeList){
+    let _data = {}
+      let _dtmfModeData = {}
+
+      dictionaryTypeList.forEach(item => {
+        if(item.name === '网关编码'){
+          _data.id = item.id
+          _data.code = item.code
+          getDictionaryAll(_data).then(res => {
+            this.dictionaryList = res.data.data
+          })
+        }
+        if(item.name === '二次拨号方式'){
+          _dtmfModeData.code = item.code
+          getDictionaryAll(_dtmfModeData).then(res => {
+            this.dtmfModeData = res.data.data
+          })
+        }
+      })
+    }
   },
   created() {
     this.form = this.$store.state.formPage
     this.getPbxAll(this.form)
+    this.getProfileInfo()
   },
   watch: {
     dialogFormVisible(val) {
       if (val === false) {
         this.addFrom = this.$options.data().form;
+      }else {
+        let  dictionaryTypeList = []
+        addDictionaryList().then(res => {
+          dictionaryTypeList = res.data.data.records
+          //过滤网关ID
+          this.filterGateway(dictionaryTypeList)
+        })
       }
     }
   },
   mounted() {
     this.$bus.$on('pageChange', () => {
-      console.log('aaa')
       this.form = this.$store.state.formPage
       this.getPbxAll(this.form)
     })
@@ -450,12 +537,7 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  border: 1px solid #ccc;
-  margin: 0 20px;
-}
-
-.container p {
+  .container p {
   background-color: #f2f2f2;
   padding: 10px 15px;
 }

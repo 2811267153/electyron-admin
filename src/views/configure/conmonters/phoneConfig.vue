@@ -279,11 +279,12 @@
 
 <script>
 import eTree from '../../../components/eTree.vue'
-import {getOrganizeId, getOrganizeList} from "@/newwork/system-colltroner";
+import { getOrganizeList} from "@/newwork/system-colltroner";
 import {diaPlanList, getRateList} from "@/newwork/ground-colltroner";
 import {fn} from "@/uti";
 import {addDirectory, deleteDirectory, getDirectory, recharge, upDateDirectory} from "@/newwork/directory";
 import myEmpty from "@/newwork/myEmpty";
+import {isValidIP, isValidNumber} from "@/util/validate";
 
 export default {
   name: 'phoneConfig',
@@ -312,6 +313,21 @@ export default {
     }
   },
   data() {
+    const validateIP = (rule, value, callback) => {
+      if(!isValidIP(value)){
+        callback(new Error('ip地址输入有误,请确认'))
+      }else {
+        callback()
+      }
+    }
+    const validateNum = (rule, value, callback) => {
+      if(!isValidNumber(value)){
+        callback(new Error('ip地址输入有误,请确认'))
+      }else {
+        callback()
+      }
+    }
+
     return {
       title: '添加话机',
       dialogFormVisible: false,
@@ -322,14 +338,14 @@ export default {
         domain: '',
         billingType: '',
       },
-      deptId: '',//部门ID列表
+      deptId: '',//部门ID列表§
       diaPlanList: [],//拨号方案
       rechargeInfo: {
         value: null
       },
       chongZhi: {},
       addForm: {
-        // domain: '', //域地址
+        domain: '', //域地址
         accountUser: '', //计费账号
         balance: '', // balance
         billingType: '', //计费方式（1、为后付费。2、预付费）
@@ -376,15 +392,23 @@ export default {
         directoryName: [{required: true, message: '该项为必填项目,请确认', trigger: 'blur'},],
         billingType: [{required: true, message: '该项为必填项目,请确认', trigger: 'blur'},],
         bussiness: [{required: true, message: '该项为必填项目,请确认', trigger: 'blur'},],
-        directoryNumber: [{required: true, message: '该项为必填项目,请确认', trigger: 'blur'},],
+        directoryNumber: [{required: true, message: '该项为必填项目,请确认', trigger: 'blur'},
+          {validator: validateNum, message: '请输入合法的数字', trigger: 'blur'}
+        ],
         password: [{required: true, message: '该项为必填项目,请确认', trigger: 'blur'},],
-        balance: [{required: true, message: '该项为必填项目,请确认', trigger: 'blur'},],
-        domain: [{required: true, message: '该项为必填项目,请确认', trigger: 'blur'},],
+        balance: [{required: true, message: '该项为必填项目,请确认', trigger: 'blur'},
+          {validator: validateNum, message: '请输入合法的数字', trigger: 'blur'}],
+        domain: [
+            {required: true, message: '该项为必填项目,请确认', trigger: 'blur'},
+          {validator: validateIP, message: 'IP输入有误, 请确认', trigger: 'blur'}
+        ],
         disable: [{required: true, message: '该项为必填项目,请确认', trigger: 'blur'},],
         deptId: [{required: true, message: '该项为必填项目,请确认', trigger: 'blur'},],
         diaplan: [{required: true, message: '该项为必填项目,请确认', trigger: 'blur'},],
         rateGroup: [{required: true, message: '该项为必填项目,请确认', trigger: 'blur'},],
-        expire: [{required: true, message: '该项为必填项目,请确认', trigger: 'blur'},],
+        expire: [{required: true, message: '该项为必填项目,请确认', trigger: 'blur'},
+          {validator: validateNum, message: '请输入合法的数字', trigger: 'blur'}
+        ],
         type: [{required: true, message: '该项为必填项目,请确认', trigger: 'blur'},],
         latitude: [{required: false, message: '该项为必填项目,请确认', trigger: 'blur'},],
         longitude: [{required: false, message: '该项为必填项目,请确认', trigger: 'blur'},],
@@ -525,6 +549,8 @@ export default {
         }).catch(e => this.$message.error(e))
       }else {
         this.resetForm()
+
+        this.deptIdList = []
         this.getDirectory(this.form)
       }
       /**

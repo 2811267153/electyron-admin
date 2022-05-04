@@ -9,7 +9,6 @@ export function request(config) {
         timeout: 1500,
         withCredentials: true,
     })
-    const login = store.state.isLogin
     instance.interceptors.request.use(config => {
         // 如果有一个接口需要认证才能访问，就在这里统一设置
         if(store.state.userInfo){
@@ -20,14 +19,14 @@ export function request(config) {
 
     })
     instance.interceptors.response.use(config => {
-        if(config.data.code !== 200){
-            removeCookie()
-        }
+        // if(config.data.code !== 200){
+        //     removeCookie()
+        // }
         return config
     }, error => {
-        Message.error('登录状态异常')
-        location.reload()
-        removeCookie()
+        // removeCookie()
+        // location.reload()
+        // Message.error('登录状态超时')
     })
 
     return instance(config)

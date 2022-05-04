@@ -27,10 +27,10 @@
           </el-form-item>
           <el-form-item
               label="字典类型"
-              disabled
+              prop="code"
               :label-width="formLabelWidth"
           >
-            <el-input v-model="addForm.code"></el-input>
+            <el-input v-model="addForm.code">aqa</el-input>
           </el-form-item>
           <el-form-item label="是否启用" :label-width="formLabelWidth">
             <el-radio-group v-model="addForm.status">
@@ -182,9 +182,6 @@ export default {
           this.dialogFormVisible = false
         }
       })
-    },
-    onSubmit() {
-
     },
     showAddForm(row, type) {
       this.title = type

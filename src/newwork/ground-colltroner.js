@@ -27,7 +27,6 @@ export function deletePbx(data){
     })
 }
 export function upDatePbx(data){
-    console.log(data)
     return request({
         url:'/pbx/gateway/update',
         data: data,
@@ -185,11 +184,10 @@ export function addProfile(data) {
  * @param data 获取初试列表
  * @return {AxiosPromise}
  */
-export  function getProfile(data) {
+export  function getProfile() {
     return request({
         url: '/pbx/profile/init/list',
         method: 'get',
-        params: data
     })
 }
 

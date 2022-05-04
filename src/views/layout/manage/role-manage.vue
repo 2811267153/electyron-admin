@@ -175,11 +175,19 @@ import {
 import {menuToTree, treeToArray} from "@/uti";
 import {deleteRate} from "@/newwork/ground-colltroner";
 import myEmpty from "@/newwork/myEmpty";
+import {isValidNumber} from "@/util/validate";
 
 
 export default {
   name: 'role-manage',
   data() {
+    const validateNum = (rule, value, callback) => {
+      if(!isValidNumber(value)){
+        callback(new Error('ip地址输入有误,请确认'))
+      }else {
+        callback()
+      }
+    }
     return {
       menuIds: [],//菜单列表
       formLabelWidth: '120px',
@@ -212,9 +220,14 @@ export default {
       },
       list: [],
       rules: {
-        roleName: [{required: true, message: '此项为必填项，请确认', trigger: 'change'}],
-        orderNum: [{required: true, message: '此项为必填项，请确认', trigger: 'change'}],
-        roleCode: [{required: true, message: '此项为必填项，请确认', trigger: 'change'}],
+        roleName: [{required: true, message: '此项为必填项，请确认', trigger: 'change'},],
+        orderNum: [{required: true, message: '此项为必填项，请确认', trigger: 'change'},
+          {validator: validateNum, message: '请输入合法的数字', trigger: 'change'}
+        ],
+        roleCode: [{required: true, message: '此项为必填项，请确认', trigger: 'change'},
+          {validator: validateNum, message: '请输入合法的数字', trigger: 'change'}
+
+        ],
         permission: [
           {required: true, message: '此项为必填项，请确认', trigger: 'change'}
         ],

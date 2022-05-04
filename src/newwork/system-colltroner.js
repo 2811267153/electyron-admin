@@ -1,5 +1,4 @@
 import {request} from "@/newwork/axios";
-import {stringify, parse} from 'qs';
 
 /*
 *
@@ -8,7 +7,6 @@ import {stringify, parse} from 'qs';
 * */
 //添加字典类型
 export function addDictionaryTYpe(data) {
-    console.log(data)
     return request({
         url: '/system/dict/type/add',
         method: 'post',
@@ -28,7 +26,6 @@ export function addDictionaryList(data) {
 
 //修改字典类型
 export function upDateDictionaryList(data) {
-    console.log(data)
     return request({
         url: '/system/dict/type/update',
         method: 'put',
@@ -37,7 +34,6 @@ export function upDateDictionaryList(data) {
 }
 //删除字典类型
 export function removeDateDictionaryList(data) {
-    console.log(data)
     return request({
         url: '/system/dict/type/delete/' + data,
         method: 'delete',
@@ -60,7 +56,6 @@ export function addDictionary(data){
 
 //通过类型查找字典（默认 可为空）
 export function getDictionaryAll(code) {
-    console.log(code)
     return request({
         url: '/system/dict/item/list/type',
         method: 'get',

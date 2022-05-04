@@ -49,7 +49,7 @@
           <el-input class="input" v-model="addForm.code" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="显示顺序" :label-width="formLabelWidth" prop="orderNum">
-          <el-input type="number" class="input" v-model="addForm.orderNum" autocomplete="off"></el-input>
+          <el-input class="input" v-model="addForm.orderNum" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="上级部门" :label-width="formLabelWidth" prop="parentId">
           <el-input ref="input" class="input" v-model="parentName" autocomplete="off"></el-input>
@@ -85,10 +85,18 @@
 <script>
 import {addOrganize, delOrganizeList, getOrganizeId, getOrganizeList} from "@/newwork/system-colltroner";
 import { fn, getNowFormatDate} from "@/uti";
+import {isValidNumber} from "@/util/validate";
 
 export default {
   name: "serve-manage",
   data: function () {
+    const validateNum = (rule, value, callback) => {
+      if(!isValidNumber(value)){
+        callback(new Error('ip地址输入有误,请确认'))
+      }else {
+        callback()
+      }
+    }
     return {
       title: '新增',
       dialogFormVisible: false,
@@ -125,9 +133,11 @@ export default {
         ],
         code: [
           { required: true, message: '此项为必填项， 请确认', trigger: 'blur' },
+          {validator: validateNum, message: '请输入合法的数字', trigger: 'blur'}
         ],
         orderNum: [
           { required: true, message: '此项为必填项， 请确认', trigger: 'blur' },
+          {validator: validateNum, message: '请输入合法的数字', trigger: 'blur'}
         ],
         ancestors: [
           { required: true, message: '此项为必填项， 请确认', trigger: 'blur' },

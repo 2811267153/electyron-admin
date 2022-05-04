@@ -36,7 +36,7 @@
           label="网卡名称">
       </el-table-column>
       <el-table-column
-          prop="profileRtpIp"
+          prop="profileSipIp"
           label="IP">
       </el-table-column>
       <el-table-column
@@ -76,13 +76,20 @@
           <el-input v-model="addForm.profileName" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="网卡名称" :label-width="formLabelWidth" prop="netName">
-          <el-input v-model="addForm.netName" autocomplete="off"></el-input>
+          <el-select @change="change" v-model="addForm.netName" placeholder="请选择">
+            <el-option
+                v-for="item in netNameList"
+                :key="item.value"
+                :label="item.netName"
+                :value="item.netName">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="网卡地址" :label-width="formLabelWidth" prop="netMac">
-          <el-input v-model="addForm.netMac" autocomplete="off"></el-input>
+          <el-input v-model="addForm.netMac" disabled autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="IP" :label-width="formLabelWidth" prop="profileSipIp">
-          <el-input v-model="addForm.profileSipIp" autocomplete="off"></el-input>
+          <el-input v-model="addForm.profileSipIp" disabled autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="端口" :label-width="formLabelWidth" prop="profileSipPort">
           <el-input v-model="addForm.profileSipPort" autocomplete="off"></el-input>
@@ -109,16 +116,26 @@
 
 <script>
 import {addFroFile, delProFile, getProfile, getProfileInfo, upDataProFile} from "@/newwork/ground-colltroner";
+import {isValidPost} from "@/util/validate";
+
 
 export default {
   name: "configure",
   data(){
+    const validatePost =  (rule, value, callback) => {
+      if(!isValidPost(value)){
+        callback(new Error('ip地址输入有误,请确认'))
+      }else {
+        callback()
+      }
+    }
     return{
       form: { },
       list: [],
       dialogFormVisible: false,
       title: '新增',
       formLabelWidth: "120px",
+      currentNetName: {},
       addForm: {
         netMac: '', //网卡地址
         netName: '' ,//网卡名称
@@ -128,6 +145,7 @@ export default {
         status: 0,
         template: '' , //配置文件模板:internal/external(internal为内部注册，external为对外中继通道接口)
       },
+      netNameList: [],
       templateType: [
         {label: '内部注册', value: 'internal'},
         {label: '对外中继通道接口', value: 'external'}
@@ -140,13 +158,15 @@ export default {
           { required: true, message: '该选项为必填项，请确认', trigger: 'change' }
         ],
         profileName: [
-          { required: true, message: '该选项为必填项，请确认', trigger: 'change' }
+          { required: false, message: '该选项为必填项，请确认', trigger: 'change' }
         ],
         profileSipIp: [
-          { required: true, message: '该选项为必填项，请确认', trigger: 'change' }
+          { required: false, message: '该选项为必填项，请确认', trigger: 'change' },
+
         ],
         profileSipPort: [
-          { required: true, message: '该选项为必填项，请确认', trigger: 'change' }
+          { required: true, message: '该选项为必填项，请确认', trigger: 'change' },
+          {validator: validatePost, message: 'IP输入有误, 请确认', trigger: 'blur'}
         ],
         template: [
           { required: true, message: '该选项为必填项，请确认', trigger: 'change' }
@@ -165,16 +185,28 @@ export default {
       }
     }
   },
+
   methods: {
     find(){
-      this.getProfile(this.form)
+      this.getProfileInfo(this.form)
     },
+    change(e){
+      console.log(e)
+      this.netNameList.forEach(item => {
+        if(item.netName === e){
+          this.currentNetName = item
+        }
+      })
+      this.addForm.netMac = this.currentNetName.netMac
+      this.addForm.profileSipIp = this.currentNetName.profileSipIp
+    },
+
     getProfileInfo(form){
       getProfileInfo(form).then(res => {
-        console.log(res)
         this.$store.dispatch('total', res.data.data.total)
         if(res.data.code === 200) {
           this.list = res.data.data.records
+          console.log(this.list)
         }else {
           this.$message.error(res.data.msg)
         }
@@ -214,9 +246,14 @@ export default {
         }
       })
     },
+    getProfile(){
+      getProfile().then(res => {
+        console.log(res)
+        this.netNameList = res.data.data
+      })
+    },
     upDataForm(){
       upDataProFile(this.addForm).then(res => {
-        console.log(res)
         if(res.data.code === 200){
           this.getProfileInfo(this.form)
           this.$message.success('提交完成')
@@ -230,11 +267,12 @@ export default {
   created() {
     this.form = this.$store.state.formPage
     this.getProfileInfo(this.form)
+    this.getProfile()
   },
   watch: {
-    dialogFormVisible(){
+    dialogFormVisible(val){
       this.resetForm()
-      this.getProfile(this.form)
+      this.getProfileInfo(this.form)
     }
   },
   mounted() {

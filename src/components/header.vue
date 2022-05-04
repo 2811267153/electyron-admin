@@ -37,7 +37,7 @@
                     v-for="path in item.children"
                 >
                   <div v-if="path.meta">
-                    <el-menu-item class="menu-item"  :index="path.path + ''">{{ path.meta.title   }} </el-menu-item>
+                    <el-menu-item class="menu-item"  :index="path.path + ''">{{ path.meta.title}} </el-menu-item>
                   </div>
                 </el-menu-item-group>
               </el-submenu>
@@ -45,7 +45,8 @@
           </el-col>
         </div>
       </div>
-      <div class="content">
+      <div class="content" v-if="home">
+        {{routes.path}}
         <div class="content-nav">
           <el-breadcrumb class="nav-bar" separator="/">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
@@ -59,7 +60,7 @@
           <div class="total">共查询到:  <span> {{$store.state.total}} </span> 条相关数据</div>
           <el-pagination
               background
-              :page-size="14"
+              :page-size="10"
               layout="prev, pager, next"
               @next-click="next"
               @current-change="pageChange"
@@ -68,7 +69,9 @@
           </el-pagination>
         </div>
       </div>
-
+      <div class="" v-else>
+        <router-view/>
+      </div>
     </div>
   </div>
 </template>
@@ -80,7 +83,9 @@ import jsCookie from "js-cookie";
 export default {
   name: 'headers',
   data() {
-    return {}
+    return {
+      home: false,
+    }
   },
   methods: {
     currentChange() {
@@ -108,7 +113,7 @@ export default {
     pageChange(e){
       const formPage = {}
       formPage.pageNum = e
-      formPage.pageSize = 14
+      formPage.pageSize = 10
       this.$store.dispatch('formPage', formPage)
       this.$bus.$emit('pageChange',)
     }
@@ -117,6 +122,7 @@ export default {
 
   computed: {
     routes() {
+      console.log(this.$router.options.routes[1])
       return this.$router.options.routes[1]
     },
     userInfo() {
@@ -187,7 +193,6 @@ export default {
   padding-right: 20px;
   overflow: scroll;
   height: calc(100vh - 80px);
-
 }
 
 .container-header {

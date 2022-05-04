@@ -66,6 +66,7 @@ import {getLog} from "@/newwork/system-colltroner";
 export default {
   name: 'record-mange',
   data(){
+
     return {
       form: {
         realName: '',

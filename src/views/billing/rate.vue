@@ -127,7 +127,7 @@
                 <el-input style="margin-right: 20px" v-model="addListFrom.rate" placeholder="请输入费率"></el-input>
               </el-form-item>
               <el-form-item style="margin-left: 20px" prop="billingPeriod">
-                <el-input v-model="addListFrom.billingPeriod" placeholder="请输入计费单位"></el-input>
+                <el-input v-model="addListFrom.billingPeriod" placeholder="请输入计费周期"></el-input>
               </el-form-item>
             </div>
           </el-form-item>
@@ -183,6 +183,7 @@ import {
   getRateList, putRateList, upDaterateItem
 } from "@/newwork/ground-colltroner";
 import myEmpty from "@/newwork/myEmpty";
+import {isValidNumber} from "@/util/validate";
 
 export default {
   name: 'rate',
@@ -191,6 +192,13 @@ export default {
   },
 
   data() {
+    const validateNum = (rule, value, callback) => {
+      if(!isValidNumber(value)){
+        callback(new Error('ip地址输入有误,请确认'))
+      }else {
+        callback()
+      }
+    }
     return {
       title: '添加费率组',
       form: {
@@ -241,10 +249,13 @@ export default {
           {required: true, message: '该选项为必填项，请曲确认', trigger: 'blur'}
         ],
         rate: [
-          {required: true, message: '该选项为必填项，请曲确认', trigger: 'blur'}
+          {required: true, message: '该选项为必填项，请曲确认', trigger: 'blur'},
+          {validator: validateNum, message: '请输入合法的数字', trigger: 'blur'}
         ],
         billingPeriod: [
-          {required: true, message: '该选项为必填项，请曲确认', trigger: 'blur'}
+          {required: true, message: '该选项为必填项，请曲确认', trigger: 'blur'},
+          {validator: validateNum, message: '请输入合法的数字', trigger: 'blur'}
+
         ],
       },
       addFroms: {
@@ -483,6 +494,7 @@ export default {
 
 .width {
   display: flex;
+  width: 100%;
 }
 
 .width .input {

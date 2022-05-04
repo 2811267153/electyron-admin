@@ -39,6 +39,7 @@ import user from "@/views/user/user";
 import menu from "@/views/layout/manage/menu";
 import jsCookie from "js-cookie";
 import queue from "@/views/configure/conmonters/queue";
+import home from "@/views/home";
 Vue.use(VueRouter)
 
 const routes = [
@@ -51,6 +52,20 @@ const routes = [
     component: headers,
     redirect: 'layout',
     children: [
+      {
+        name: 'home',
+        path: '/index',
+        component: home,
+        meta: {title: '首页'},
+        children: [
+          {
+            meta: { title: '欢迎页' },
+            path: '/index',
+            component: home,
+            name: 'index'
+          },
+        ]
+      },
       {
         path: '/layout',
         name: 'layout',
@@ -260,18 +275,17 @@ const router = new VueRouter({
   routes
 })
 router.beforeEach((to, form, next) => {
+
   store.state.total = 0
   const formPage = {
     pageNum: 1,
-    pageSize: 14
+    pageSize: 10
   }
   store.state.formPage = formPage
   next()
-  if(to.path !== '/user'){
-
-    if(jsCookie.get('JSESSIONID') === undefined){
-      next('/user')
-      window.localStorage.setItem('userInfo', '')
+  if(to.path !== '/user' && jsCookie.get('JSESSIONID') !== undefined  ){
+    if(to.path === '/index'){
+      next('/index')
     }else {
       store.dispatch('userInfo', JSON.parse(window.localStorage.getItem('userInfo'))).catch()
       let flag = false
@@ -292,7 +306,6 @@ router.beforeEach((to, form, next) => {
   }else {
     next('/user')
     window.localStorage.setItem('userInfo', '')
-
   }
 })
 

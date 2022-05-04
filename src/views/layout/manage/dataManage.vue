@@ -113,7 +113,7 @@ export default {
       resultList: [],
       addForm: {
         name: '',
-        status: 1, // 状态
+        status: '0', // 状态
         code: '',    //字典编码
         pageNum: 1, //pageNum
         pageSize: 10,  //分页大小
@@ -147,7 +147,6 @@ export default {
 
       this.$refs['addForm'].validate((valid) => {
         if (valid) {
-
           this.title === '新增' ? addDictionaryTYpe(this.addForm).then(res => {
             this.dictionaryList()
               }) :      //当前打开的是新增的弹框吗 是就执行第一个不然就执行第二个
@@ -211,6 +210,7 @@ export default {
       type === '修改' ? (this.addForm = row) : (this.addForm = {})
     },
     dictionaryList(addForm) {
+      console.log(addForm)
       addDictionaryList(addForm).then(res => {
         this.resultList = res.data.data['records']
         this.$store.dispatch('total', res.data.data.total)
