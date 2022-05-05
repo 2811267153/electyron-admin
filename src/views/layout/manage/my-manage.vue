@@ -27,40 +27,36 @@
           </el-form>
           <el-button type="primary" @click="show(null, '新增')">新增</el-button>
         </div>
-
         <el-table
-          :row-class-name="tableRowClassName"
-          @row-click="rowClick"
-          ref="multipleTable"
-          :data="resultList"
-          tooltip-effect="dark"
-          style="width: 100%"
-          v-if="resultList.length !== 0"
-        >
-          <el-table-column type="selection" width="55"></el-table-column>
-          <el-table-column label="序号" width="120">
+            :data="resultList"  v-if="resultList.length !== 0"  @row-click="rowClick"
+            :row-class-name="tableRowClassName"
+            border
+            style="width: 100%; margin-top: 20px">
+          <el-table-column align="center" label="序号" width="120">
             <template scope="scope">{{ scope.$index + 1 }}</template>
           </el-table-column>
-          <el-table-column prop="nickName" label="姓名" width="120">
+          <el-table-column align="center" prop="nickName" label="姓名" width="120">
           </el-table-column>
-          <el-table-column prop="email" label="email" show-overflow-tooltip>
+          <el-table-column  align="center" prop="email" label="email" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column prop="phone" label="手机号" show-overflow-tooltip>
+          <el-table-column align="center" prop="phone" label="手机号" show-overflow-tooltip>
           </el-table-column>
           <el-table-column
-            prop="department"
-            label="所属部门"
-            show-overflow-tooltip
+              align="center"
+              prop="department"
+              label="所属部门"
+              show-overflow-tooltip
           >
             <template scope="scope">{{scope.row.sysDept.deptName}}</template>
           </el-table-column>
           <el-table-column
-            prop="createTime"
-            label="创建时间"
-            show-overflow-tooltip
+              align="center"
+              prop="createTime"
+              label="创建时间"
+              show-overflow-tooltip
           >
           </el-table-column>
-          <el-table-column prop="starts" label="状态" show-overflow-tooltip>
+          <el-table-column prop="starts" label="状态" show-overflow-tooltip align="center">
             <template scope="scope">
               <p>
                 <el-tag v-if="scope.row.status === 0" type="success">启用</el-tag>
@@ -68,7 +64,7 @@
               </p>
             </template>
           </el-table-column>
-          <el-table-column prop="starts" label="操作" show-overflow-tooltip>
+          <el-table-column prop="starts" label="操作" show-overflow-tooltip align="center">
             <template scope="scope" class="link">
               <a @click="show(scope.row, '修改')" class="link-item">修改</a>
               <a @click="show(scope.row, '删除')" class="link-item err">删除</a>
