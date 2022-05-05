@@ -191,10 +191,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="部门名称" :label-width="formLabelWidth" prop="deptId">
-            <el-cascader
-                v-model="deptId"
-                :options="getterDeptIdList"
-                :props="defaultProps"></el-cascader>
+            <my-tree ref="myTree" :options="deptIdList" @getValue="getSelectedValue"></my-tree>
           </el-form-item>
         </div>
         <div class="width">
@@ -285,22 +282,16 @@ import {fn} from "@/uti";
 import {addDirectory, deleteDirectory, getDirectory, recharge, upDateDirectory} from "@/newwork/directory";
 import myEmpty from "@/newwork/myEmpty";
 import {isValidIP, isValidNumber} from "@/util/validate";
+import myTree from "@/components/myTree";
 
 export default {
   name: 'phoneConfig',
   components: {
     eTree,
-    myEmpty
+    myEmpty,
+    myTree
   },
   computed: {
-    defaultProps() {
-      return {
-        children: 'children',
-        label: 'deptName',
-        value: 'deptId',
-        expandTrigger: 'hover'
-      }
-    },
     getterDeptIdList(){
       return fn(this.deptIdList)
     },
@@ -434,6 +425,9 @@ export default {
     find(){
       this.getDirectory(this.form)
     },
+    getSelectedValue(value){
+      this.addForm.deptId = value.deptId
+    },
     clear(){
       this.resetForm()
       this.getDirectory(this.form)
@@ -536,7 +530,7 @@ export default {
     dialogFormVisible(val){
       if(val){
         getOrganizeList().then(res => {
-          this.deptIdList = res.data.data
+          this.deptIdList = fn( res.data.data)
         }).catch(e => this.$message.error(e))
 
         /**

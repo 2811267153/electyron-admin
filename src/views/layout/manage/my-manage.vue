@@ -130,11 +130,7 @@
               required
               :label-width="formLabelWidth"
             >
-              <el-cascader
-                v-model="deptId"
-                :getCheckedNodes="true"
-                :options="treeArr"
-                :props="defaultProps"></el-cascader>
+              <my-tree ref="myTree" :options="treeArr" @getValue="getSelectedValue"></my-tree>
             </el-form-item>
             <el-form-item
               class="form-item"
@@ -202,13 +198,6 @@
           </el-form>
           <div slot="footer" class="dialog-footer">
             <el-button @click="isShow = false">取 消</el-button>
-            <!--            <el-button-->
-            <!--                v-if="type"-->
-            <!--                type="primary"-->
-            <!--                @click="upDataAddForms('addForm')"-->
-            <!--            >确 定-->
-            <!--            </el-button-->
-            <!--            >-->
             <el-button type="primary" @click="addForms('addForm')"
             >确 定
             </el-button
@@ -233,12 +222,14 @@ import {
 import { fn } from "@/uti";
 import myEmpty from "@/newwork/myEmpty";
 import {isValidEmail, isValidNumber, isValidPhone} from "@/util/validate";
+import myTree from "@/components/myTree";
 
 export default {
   name: "serve-manage",
   components: {
     eTree,
-    myEmpty
+    myEmpty,
+    myTree
   },
   data() {
     const validatePhone = (rule, value, callback) => {
@@ -298,7 +289,7 @@ export default {
         ],
         email: [
           { required: false, message: "此项为必填项，请确认", trigger: "change" },
-          {validator: validatePhone, message: '手机号格式输入有误,请确认', trigger: 'change'}
+          {validator: validateEmail, message: '邮箱格式输入有误,请确认', trigger: 'change'}
         ],
         deptId: [
           { required: false, message: "此项为必填项，请确认", trigger: "change" }
@@ -311,7 +302,7 @@ export default {
         ],
         phone: [
           { required: true, message: "此项为必填项，请确认", trigger: "change" },
-          {validator: validateEmail, message: '邮箱格式输入有误,请确认', trigger: 'change'}
+          {validator: validatePhone, message: '手机号格式输入有误,请确认', trigger: 'change'}
         ],
         status: [
           { required: false, message: "此项为必填项，请确认", trigger: "change" }
@@ -324,6 +315,9 @@ export default {
   },
 
   methods: {
+    getSelectedValue(value){
+      this.addForm.deptId = value.deptId
+    },
     onSubmit() {
       this.getUserAll(this.form);
     },
@@ -445,18 +439,17 @@ export default {
 
 
   watch: {
-    deptId() {
-      this.addForm.deptId = this.deptId[this.deptId.length - 1];
-    },
+
     timer(val) {
       this.addForm.createTime = val[0];
       this.addForm.endTime = val[1];
     },
-    isShow(val){
-      if(!val){
+    isShow(val) {
+      if (!val) {
         this.addForm = this.$options.data().addForm
+        // this.$refs.myTree.valueName = this.$options.data().valueName
       }
-    }
+    },
   },
   mounted() {
     this.$bus.$on("pageChange", () => {

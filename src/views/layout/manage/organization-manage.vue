@@ -6,12 +6,11 @@
         <el-input v-model="form.name"></el-input>
       </el-form-item>
       <el-form-item label="组织状态" >
-        <el-select v-model="form.region" placeholder="请选择活动区域">
+        <el-select v-model="form.region">
           <el-option :label="item.label" :value="item.value" v-for="item in stats"></el-option>
         </el-select>
       </el-form-item>
       <el-button type="primary">搜索</el-button>
-      <el-button type="primary" @click="addForms(null, '新增')">新增</el-button>
     </el-form>
 
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
