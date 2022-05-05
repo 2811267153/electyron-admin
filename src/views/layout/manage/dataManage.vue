@@ -113,7 +113,7 @@ export default {
       resultList: [],
       addForm: {
         name: '',
-        status: '0', // 状态
+        status: 0, // 状态
         code: '',    //字典编码
         pageNum: 1, //pageNum
         pageSize: 10,  //分页大小
@@ -139,11 +139,9 @@ export default {
   },
   methods: {
     submitForm(){
-      this.form.pageNum = this.$store.state.formPage.pageNum
-      this.form.pageSize = this.$store.state.formPage.pageSize
       this.dictionaryList(this.form)
     },
-    submitAddForm(addForm) {
+    submitAddForm() {
 
       this.$refs['addForm'].validate((valid) => {
         if (valid) {
@@ -169,7 +167,7 @@ export default {
 
     resetForm(string) {
       string === 'form' ? this.$refs.form.resetFields() : this.$refs.addForm.resetFields();
-      this.dictionaryList(this.$store.state.formPage)
+      this.dictionaryList(this.form)
     },
     toPath(row){
       this.$router.push({path: '/layout/dicManage', query: {
@@ -180,25 +178,23 @@ export default {
       this.$store.dispatch('dictionaryData', row)
     },
     aa(form) {
-      console.log(form)
       const data = {}
       data.id = form.id
       data.code = form.code
       data.name = form.name
       data.status = form.status
       upDateDictionaryList(data).then(res => {
-        console.log(data)
-        console.log(res)
       }).catch(e => {
-        console.log(e)
         this.$message.error(e)
       })
     },
     removeIt(row){
-      console.log(row.id)
       removeDateDictionaryList(row.id).then(res => {
-
-        this.dictionaryList(this.addForm)
+        if(res.data.code === 200){
+          this.dictionaryList(this.form)
+        }else {
+          this.$message.error(res.data.msg)
+        }
       }).catch(e => {
         this.$message.error(e)
       })
@@ -220,11 +216,13 @@ export default {
     },
   },
   created() {
-    this.dictionaryList(this.$store.state.formPage)
+    this.form = this.$store.state.formPage
+    this.dictionaryList(this.form)
   },
   mounted() {
     this.$bus.$on('pageChange', () => {
-      this.dictionaryList(this.$store.state.formPage)
+      this.form = this.$store.state.formPage
+      this.dictionaryList(this.form)
     })
   },
   computed: {
