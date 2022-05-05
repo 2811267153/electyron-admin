@@ -35,10 +35,24 @@
         </div>
         <div class="width">
           <el-form-item label="入路由号码" :label-width="formLabelWidth" prop="fifoRouterIn">
-            <el-input v-model="addForm.fifoRouterIn" autocomplete="off"></el-input>
+            <el-select v-model="addForm.fifoRouterIn" placeholder="请选择">
+              <el-option
+                  v-for="item in fifoRouterInList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.name">
+              </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="出路由号码" :label-width="formLabelWidth" prop="fifoRouterOut">
-            <el-input v-model="addForm.fifoRouterOut" autocomplete="off"></el-input>
+            <el-select v-model="addForm.fifoRouterOut" placeholder="请选择">
+              <el-option
+                  v-for="item in fifoRouterOutList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.name">
+              </el-option>
+            </el-select>
           </el-form-item>
         </div>
         <div class="width">
@@ -56,6 +70,22 @@
           <el-form-item label="接听电话间隔" :label-width="formLabelWidth" prop="wrapupTime">
             <el-input v-model="addForm.wrapupTime" autocomplete="off"></el-input>
           </el-form-item>
+        </div>
+        <div class="width">
+          <el-form-item label="紧急号码" :label-width="formLabelWidth" prop="fifoEmergency">
+            <el-select v-model="addForm.fifoEmergency" placeholder="请选择">
+              <el-option
+                  v-for="item in fifoEmergencyList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.name">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="域地址" :label-width="formLabelWidth" prop="fifoEmergency">
+            <el-input v-model="addForm.domain"></el-input>
+          </el-form-item>
+
         </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -133,6 +163,7 @@
 <script>
 import {addFifo, delFifo, getFifo, upDataFifo} from "@/newwork/directory";
 import myEmpty from "@/newwork/myEmpty";
+import {getDictionaryAll} from "@/newwork/system-colltroner";
 
 export default {
   name: "queue",
@@ -154,7 +185,12 @@ export default {
         memberSimultaneous: '', //agent最大同时注册数量至少为1
         memberTimeout: '', //agent等待时间
         wrapupTime : '', //接听下一路电话的间隔
+        fifoEmergency: '', //紧急呼叫号码
       },
+      fifoRouterInList: [],  //入路由号码列表
+      fifoRouterOutList: [], //出路由号码列表
+      fifoEmergencyList: [], //紧急呼叫号码
+
       list: [],
       dialogFormVisible: false,
       title: '新增',
@@ -182,6 +218,12 @@ export default {
           { required: true, message: '该选项不可为空,请确认', trigger: 'blur' },
         ],
         wrapupTime: [
+          { required: true, message: '该选项不可为空,请确认', trigger: 'blur' },
+        ],
+        fifoEmergency: [
+          { required: true, message: '该选项不可为空,请确认', trigger: 'blur' },
+        ],
+      domain: [
           { required: true, message: '该选项不可为空,请确认', trigger: 'blur' },
         ],
       },
@@ -258,6 +300,21 @@ export default {
           this.$message.error(res.data.msg)
         }
       }).catch(e => this.$message.error(e))
+    },
+    //查找字典
+    getDictionaryAll(code){
+      const data = {}
+      data.code = code
+      getDictionaryAll(data).then(res => {
+        console.log(res, '--------------')
+        if(data.code === 'outRoute'){
+          this.fifoRouterOutList = res.data.data
+        }else if(data.code === 'incomingRoute'){
+          this.fifoRouterInList = res.data.data
+        }else {
+          this.fifoEmergencyList = res.data.data
+        }
+      }).catch(e => this.$message.error(e))
     }
   },
   created() {
@@ -275,10 +332,14 @@ export default {
   },
   watch: {
     dialogFormVisible (val){
+
       if(!val){
         this.addForm = this.$options.data().addForm
       }else {
-
+        //查找字典
+        this.getDictionaryAll('incomingRoute')
+        this.getDictionaryAll('outRoute')
+        this.getDictionaryAll('emergencyNumber')
       }
     }
   }

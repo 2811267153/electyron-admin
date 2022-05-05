@@ -55,7 +55,7 @@ export function getGwgroup(data) {
 }
 export function upDateGwgroup(data) {
     return request({
-        url: '/pbx/gwgroup/list',
+        url: '/pbx/gwgroup/update',
         data: data,
         method: 'put'
     })

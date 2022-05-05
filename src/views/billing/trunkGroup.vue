@@ -82,23 +82,41 @@
           </el-form-item>
         </div>
 
-        <el-form-item  style="margin-top: 20px" label="中继数组" :label-width="formLabelWidth">
-          <ul>
-            <li v-for="(item, i) in tableData">
-              <el-select v-model="tableData[i].gatewayId">
-                <el-option
-                    v-for="item in pbxList"
-                    :key="item.value"
-                    :label="item.gatewayName"
-                    :value="item.id">
-                </el-option>
-              </el-select>
-              <el-input class="li-input" v-model="tableData[i].weight"></el-input>
+        <el-form-item style="margin-top: 20px" :label="'中继组' + (index + 1)" :label-width="formLabelWidth"
+                      :key="addFrom.pbxGwgroupGatewayList.key"
+                      v-for="(pbxGwgroupGatewayList, index) in addFrom.pbxGwgroupGatewayList"
+                      :prop="'pbxGwgroupGatewayList.' + index + '.gatewayId'"
+                      :rules="{
+                      required: true, message: '该项为必填项,请确认', trigger: 'blur'
+            }">
+          <div class="width">
+            <el-select v-model="pbxGwgroupGatewayList.gatewayId" placeholder="请选择">
+              <el-option
+                  v-for="item in pbxList"
+                  :key="item.id"
+                  :label="item.gatewayName"
+                  :value="item.id">
+              </el-option>
+            </el-select>
+            <div style="padding: 0 20px">
+              <el-input class="el-input" v-model="pbxGwgroupGatewayList.weight"></el-input>
+            </div>
+            <div>
+              <!--              <el-button @click="addGateway"></el-button>-->
+              <!--              <el-button style="margin-left: 20px; vertical-align: top" @click="removeClick(pbxGwgroupGatewayList)"></el-button>-->
 
-              <el-button @click="removeClick">删除</el-button>
-            </li>
-          </ul>
-          <el-button @click="addGateway">添加中继</el-button>
+              <el-tooltip style="margin-left: 20px; vertical-align: top" @click.native="addGateway" class="item"
+                          effect="dark" content="添加中继" placement="bottom">
+                <el-button><i class="icon iconfont icon-jia"></i></el-button>
+              </el-tooltip>
+              <el-tooltip style="margin-left: 20px; vertical-align: top"
+                          @click.native="removeClick(pbxGwgroupGatewayList)" class="item" effect="dark" content="删除中继"
+                          placement="bottom">
+                <el-button><i class="icon iconfont icon-shanchu2"></i></el-button>
+              </el-tooltip>
+
+            </div>
+          </div>
         </el-form-item>
 
         <el-form-item
@@ -121,7 +139,7 @@
       </div>
     </el-dialog>
 
-    <el-table border :data="list" style="width: 100%" v-if="list.length !== 0">
+    <el-table border :data="list" style="width: 100%" v-if="list.length !== 0" >
       <el-table-column align="center" prop="index" label="序号" width="50">
         <template scope="scope">{{ scope.$index + 1 }}</template>
       </el-table-column>
@@ -142,12 +160,12 @@
           <span v-else>强制重试</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="retryStrategy" label="关联网关" width="300px">
+      <el-table-column align="center" prop="retryStrategy" label="关联网关">
         <template scope="scope">
-          <div class="table" v-for="(item, i) in scope.row.pbxGatewayList">
+          <div class="table" v-for="(item, i) in scope.row.pbxGwgroupGatewayList">
             <p>
-              <span>{{ scope.row.pbxGatewayList[i].gatewayName }}</span>
-              --<span>{{ scope.row.pbxGwgroupGatewayList[i].createTime }}</span>
+              <span>{{ scope.row.pbxGwgroupGatewayList[i].gatewayName }}</span>
+              --<span>{{ scope.row.pbxGwgroupGatewayList[i].weight }}</span>
             </p>
           </div>
         </template>
@@ -175,7 +193,7 @@
 </template>
 
 <script>
-import {addGwgroup, deleteGwgroup, getGwgroup, getPbxAll} from "@/newwork/ground-colltroner";
+import {addGwgroup, deleteGwgroup, getGwgroup, getPbxAll, upDateGwgroup} from "@/newwork/ground-colltroner";
 import myEmpty from "@/newwork/myEmpty";
 import {isValidNumber} from "@/util/validate";
 
@@ -246,7 +264,6 @@ export default {
     getGwgroup(form) {
       getGwgroup(form).then(res => {
         this.$store.dispatch('total', res.data.data.total)
-        console.log(res)
         this.list = res.data.data.records
       }).catch(e => {
         this.$message.error(e)
@@ -261,18 +278,6 @@ export default {
       this.title = title
       if (title === '编辑') {
         this.addFrom = row
-        // this.tableData.push(this.gateway)
-        console.log(row.pbxGatewayList)
-        row.pbxGatewayList.forEach((item, i) => {
-          this.tableData.push(this.gateway)
-          this.tableData[i].gatewayId = item.id
-          console.log(i)
-          console.log(item, '----------------')
-        })
-        row.pbxGwgroupGatewayList.forEach((item, i) => {
-          this.tableData[i].weight = item.gatewayId
-          console.log(item, '***********')
-        })
       } else {
         this.addFrom = this.$options.data().addFrom
         //添加中继
@@ -288,43 +293,41 @@ export default {
       this.getGwgroup(this.form)
     },
     removeClick(i) {
-      this.tableData.splice(i, 1)
+      let index = this.addFrom.pbxGwgroupGatewayList.indexOf(i)
+      if (index !== -1) {
+        this.addFrom.pbxGwgroupGatewayList.splice(index, 1)
+      }
     },
     addGateway() {
-      this.tableData.push(this.gateway)
+      this.addFrom.pbxGwgroupGatewayList.push({
+        gatewayId: '',
+        weight: '',
+        key: Date.now()
+      })
     },
     submitForm() {
       this.$refs['addForm'].validate((valid) => {
         if (valid) {
-          const totalWeight = []
-          this.tableData.forEach(item => {
-            if (item.gatewayId.length !== 0 && parseInt(item.weight) !== 0) {
-              totalWeight.push(parseInt(item.weight))
-              this.dialogFormVisible = false
-            } else {
-              this.$message.error('请确保中继数组内已填写')
-            }
-          })
-          let s = 0
-          totalWeight.forEach((item) => {
-            s += parseInt(item)
-            this.addFrom.totalWeight = s
-          })
-          if (this.addFrom.totalWeight.length !== 0) {
-            //添加中继数组
-            this.title === '添加中继组' ? addGwgroup(this.addFrom).then(res => {
-                  console.log(res)
-                  if (res.data.code === 200) {
-                    this.$message.success('提交完成')
-                    this.getGwgroup(this.form)
-                  } else {
-                    this.$message.error(res.data.msg)
-                  }
-                }).catch(e => {
-                  this.$message.error(e)
-                }) :
-                console.log('bb')
-          }
+          this.title === '添加中继组' ? addGwgroup(this.addFrom).then(res => {
+                console.log(res)
+                if (res.data.code === 200) {
+                  this.$message.success('提交完成')
+                  this.dialogFormVisible = false
+                  this.getGwgroup(this.form)
+                } else {
+                  this.$message.error(res.data.msg)
+                }
+              }).catch(e => {
+                this.$message.error(e)
+              }) :
+              upDateGwgroup(this.addFrom).then(res => {
+                if (res.data.code === 200) {
+                  this.$message.success('提交完成')
+                  this.dialogFormVisible = false
+                } else {
+                  this.$message.error(res.data.msg)
+                }
+              })
         } else {
           this.$message.error('提交失败， 请重试')
           return false
@@ -348,9 +351,7 @@ export default {
     },
     upEdit() {
       this.edit = !this.edit
-      console.log('aa')
-      console.log(this.addFrom.pbxGatewayList)
-      this.tableData.gatewayId = this.addFrom.pbxGatewayList
+      // this.tableData.gatewayId = this.addFrom.pbxGatewayList
     }
 
   },
@@ -381,7 +382,6 @@ export default {
     tableData: {
       handler: function (val) {
         this.addFrom.pbxGwgroupGatewayList = val
-        console.log(val)
       },
       deep: true
     },
@@ -412,6 +412,10 @@ export default {
   display: flex;
   width: 100%;
   justify-content: space-between;
+}
+
+.el-input {
+  display: inline-block;
 }
 
 .width > * {

@@ -24,9 +24,9 @@ export function request(config) {
         // }
         return config
     }, error => {
-        // removeCookie()
-        // location.reload()
-        // Message.error('登录状态超时')
+        removeCookie()
+        location.reload()
+        Message.error('登录状态超时')
     })
 
     return instance(config)
