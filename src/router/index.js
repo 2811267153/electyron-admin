@@ -284,8 +284,8 @@ router.beforeEach((to, form, next) => {
   store.state.formPage = formPage
   next()
   if(to.path !== '/user' && jsCookie.get('JSESSIONID') !== undefined  ){
-    if(to.path === '/index'){
-      next('/index')
+    if(to.path === '/layout/serveStarts'){
+      next('/layout/serveStarts')
     }else {
       store.dispatch('userInfo', JSON.parse(window.localStorage.getItem('userInfo'))).catch()
       let flag = false
