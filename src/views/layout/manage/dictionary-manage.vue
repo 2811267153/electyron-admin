@@ -34,13 +34,13 @@
           </el-form-item>
           <el-form-item label="是否启用" :label-width="formLabelWidth">
             <el-radio-group v-model="addForm.status">
-              <el-radio :label="1">启用</el-radio>
-              <el-radio :label="2">停用</el-radio>
+              <el-radio :label="0">启用</el-radio>
+              <el-radio :label="1">停用</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="black">取 消</el-button>
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
           <el-button type="primary" @click="submitAddForm('addForm')"
           >确 定
           </el-button
@@ -56,7 +56,7 @@
         <el-table-column  align="center"  prop="createBy" label="创建人"></el-table-column>
         <el-table-column  align="center"  prop="status" label="标示码">
           <template scope="scope">
-            <div v-if="scope.row.status === 1"> <el-tag type="success">启用</el-tag></div>
+            <div v-if="scope.row.status === 0"> <el-tag type="success">启用</el-tag></div>
             <div v-else> <el-tag type="success">禁用</el-tag></div>
           </template>
         </el-table-column>
@@ -94,10 +94,6 @@ export default {
       from: {
         searchInp: '',
       },
-      showDataList: [
-        {label: '1', value: '字典类型'},
-        {label: '2', value: '字典ID'}
-      ],
       formLabelWidth: '120px',
       dialogFormVisible: false,
       resultList: [],
@@ -105,12 +101,12 @@ export default {
       addForm: {
         name: '',  //字典名称
         creatTime: '',  //创建时间
-        status: '1', // 状态
         code: '',    //字典编码
         pageNum: 1,  //分页
         pageSize: 10,  //大小
         orderNum: '', //排序
         typeId: '',  // typeId
+        status: 0, // 状态
       },
       codeList: [],
       riles: {
@@ -120,10 +116,6 @@ export default {
         orderNum:  [{required: true, message: '此项为必填项，请确认', trigger: 'blur'}],
         code:  [{required: true, message: '此项为必填项，请确认', trigger: 'blur'}]
       },
-      status: [
-        {label: '1', value: '开启'},
-        {label: '0', value: '关闭'},
-      ]
     }
   },
   computed: {
@@ -186,7 +178,7 @@ export default {
     showAddForm(row, type) {
       this.title = type
       this.dialogFormVisible = true
-      type === '修改' ? (this.addForm = row) : (this.addForm = {})
+      type === '修改' ? (this.addForm = row) : ''
     },
     black() {
       this.$router.go(-1)
@@ -215,6 +207,13 @@ export default {
   created() {
     this.addForm.code = this.$route.query.code
     this.getDictionaryAll(this.addForm )
+  },
+  watch: {
+    dialogFormVisible(val){
+      if(!val) {
+        this.addForm = this.$options.data().addForm
+      }
+    }
   }
 }
 </script>

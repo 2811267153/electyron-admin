@@ -275,7 +275,6 @@ const router = new VueRouter({
   routes
 })
 router.beforeEach((to, form, next) => {
-
   store.state.total = 0
   const formPage = {
     pageNum: 1,
@@ -287,7 +286,7 @@ router.beforeEach((to, form, next) => {
     if(to.path === '/layout/serveStarts'){
       next('/layout/serveStarts')
     }else {
-      store.dispatch('userInfo', JSON.parse(window.localStorage.getItem('userInfo'))).catch()
+      store.commit('userInfo', JSON.parse(window.localStorage.getItem('userInfo')))
       let flag = false
       if(!flag){
         store.state.userInfo.sysMenuList.forEach(item => {
@@ -305,7 +304,6 @@ router.beforeEach((to, form, next) => {
     }
   }else {
     next('/user')
-    window.localStorage.setItem('userInfo', '')
   }
 })
 

@@ -67,8 +67,8 @@
         <el-table-column prop="createTime" label="更新时间"></el-table-column>
         <el-table-column prop="sort" label="状态">
           <template scope="scope">
-            <el-tag v-if="scope.row.status === 1">启用</el-tag>
-            <el-tag v-else type="danger">停用</el-tag>
+            <a v-if="scope.row.status === 1">启用</a>
+            <a v-else>停用</a>
           </template>
         </el-table-column>
         <el-table-column prop="sort" label="操作">
@@ -113,7 +113,7 @@ export default {
       resultList: [],
       addForm: {
         name: '',
-        status: 0, // 状态
+        status: 1, // 状态
         code: '',    //字典编码
         pageNum: 1, //pageNum
         pageSize: 10,  //分页大小
@@ -203,10 +203,9 @@ export default {
       this.title = type
       this.dialogFormVisible = true
       this.addForm = row
-      type === '修改' ? (this.addForm = row) : (this.addForm = {})
+      type === '修改' ? (this.addForm = row) : this.addForm =this.$options.data().addForm
     },
     dictionaryList(addForm) {
-      console.log(addForm)
       addDictionaryList(addForm).then(res => {
         this.resultList = res.data.data['records']
         this.$store.dispatch('total', res.data.data.total)

@@ -1,7 +1,7 @@
 <template>
   <div id="trunk">
     <div class="nav-form">
-      <el-form :inline="true"  ref="addForm" :model="form" class="demo-form-inline">
+      <el-form :inline="true" ref="addForm" :model="form" class="demo-form-inline">
         <el-form-item label="中继名称" prop="groupName">
           <el-input v-model="form.groupName" placeholder="审网管名称批人"></el-input>
         </el-form-item>
@@ -24,8 +24,8 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-                    <el-button type="primary" @click="find">查询</el-button>
-                    <el-button @click="clear">重置</el-button>
+          <el-button type="primary" @click="find">查询</el-button>
+          <el-button @click="clear">重置</el-button>
         </el-form-item><!---->
       </el-form>
       <el-button type="primary" @click="showAddForm(null, '添加中继组')"
@@ -82,7 +82,7 @@
           </el-form-item>
         </div>
 
-        <el-form-item v-if="title === '添加中继组'" style="margin-top: 20px" label="中继数组" :label-width="formLabelWidth">
+        <el-form-item  style="margin-top: 20px" label="中继数组" :label-width="formLabelWidth">
           <ul>
             <li v-for="(item, i) in tableData">
               <el-select v-model="tableData[i].gatewayId">
@@ -93,52 +93,14 @@
                     :value="item.id">
                 </el-option>
               </el-select>
-              <el-input class="li-input" v-model="tableData[i].weight" ></el-input>
+              <el-input class="li-input" v-model="tableData[i].weight"></el-input>
 
               <el-button @click="removeClick">删除</el-button>
             </li>
           </ul>
           <el-button @click="addGateway">添加中继</el-button>
         </el-form-item>
-        <el-form-item v-else style="margin-top: 20px" label="中继数组" :label-width="formLabelWidth" required>
-          <template v-if="!edit">
-            <div class="tables">
-              <div>
-                <span>绑定中继</span>
-                <div class="table-l" v-for="item in addFrom.pbxGatewayList">
-                  <p>{{item.gatewayName}}</p>
-                </div>
-              </div>
-                <div>
-                  <span>权重值</span>
-                  <div class="table-c" v-for="item in addFrom.pbxGwgroupGatewayList">
-                    <p>{{item.weight}}</p>
-                  </div>
-                </div>
-              <div class="table-r">
-                <el-button @click="upEdit">编辑中继组</el-button>
-              </div>
-            </div>
-          </template>
 
-          <template v-else>
-            <ul>
-              <li v-for="(item, i) in tableData">
-                <el-select v-model="tableData[i].gatewayId">
-                  <el-option
-                      v-for="item in pbxList"
-                      :key="item.value"
-                      :label="item.gatewayName"
-                      :value="item.id">
-                  </el-option>
-                </el-select>
-                <el-input class="li-input" v-model="tableData[i].weight" ></el-input>
-                <el-button @click='removeClick(i)'>删除</el-button>
-              </li>
-            </ul>
-            <el-button @click="addGateway">添加中继</el-button>
-          </template>
-        </el-form-item>
         <el-form-item
             label="备注"
             :label-width="formLabelWidth"
@@ -224,9 +186,9 @@ export default {
   },
   data() {
     const validateNum = (rule, value, callback) => {
-      if(!isValidNumber(value)){
+      if (!isValidNumber(value)) {
         callback(new Error('ip地址输入有误,请确认'))
-      }else {
+      } else {
         callback()
       }
     }
@@ -276,14 +238,15 @@ export default {
         ],
       },
       value: '',
-      tableData: [{gatewayId: '', weight: ''}]
+      tableData: [],
+      gateway: {gatewayId: '', weight: ''},
     }
   },
   methods: {
     getGwgroup(form) {
       getGwgroup(form).then(res => {
         this.$store.dispatch('total', res.data.data.total)
-        console.log(res )
+        console.log(res)
         this.list = res.data.data.records
       }).catch(e => {
         this.$message.error(e)
@@ -298,30 +261,43 @@ export default {
       this.title = title
       if (title === '编辑') {
         this.addFrom = row
+        // this.tableData.push(this.gateway)
+        console.log(row.pbxGatewayList)
+        row.pbxGatewayList.forEach((item, i) => {
+          this.tableData.push(this.gateway)
+          this.tableData[i].gatewayId = item.id
+          console.log(i)
+          console.log(item, '----------------')
+        })
+        row.pbxGwgroupGatewayList.forEach((item, i) => {
+          this.tableData[i].weight = item.gatewayId
+          console.log(item, '***********')
+        })
       } else {
         this.addFrom = this.$options.data().addFrom
+        //添加中继
+        this.gateway = this.$options.data().gateway
+        this.tableData.push(this.gateway)
       }
     },
-    find(){
+    find() {
       this.getGwgroup(this.form)
     },
-    clear(){
+    clear() {
       this.resetForm()
       this.getGwgroup(this.form)
     },
-    removeClick(i){
+    removeClick(i) {
       this.tableData.splice(i, 1)
     },
-    addGateway(){
-      const Gateway ={gatewayId: '', weight: ''}
-      this.tableData.push(Gateway)
+    addGateway() {
+      this.tableData.push(this.gateway)
     },
     submitForm() {
       this.$refs['addForm'].validate((valid) => {
         if (valid) {
           const totalWeight = []
           this.tableData.forEach(item => {
-            console.log(item)
             if (item.gatewayId.length !== 0 && parseInt(item.weight) !== 0) {
               totalWeight.push(parseInt(item.weight))
               this.dialogFormVisible = false
@@ -330,22 +306,24 @@ export default {
             }
           })
           let s = 0
-          totalWeight.forEach((item, i) => {
+          totalWeight.forEach((item) => {
             s += parseInt(item)
             this.addFrom.totalWeight = s
           })
           if (this.addFrom.totalWeight.length !== 0) {
             //添加中继数组
-            addGwgroup(this.addFrom).then(res => {
-              if (res.data.code === 200) {
-                this.$message.success('提交完成')
-                this.getGwgroup(this.form)
-              } else {
-                this.$message.error(res.data.msg)
-              }
-            }).catch(e => {
-              this.$message.error(e)
-            })
+            this.title === '添加中继组' ? addGwgroup(this.addFrom).then(res => {
+                  console.log(res)
+                  if (res.data.code === 200) {
+                    this.$message.success('提交完成')
+                    this.getGwgroup(this.form)
+                  } else {
+                    this.$message.error(res.data.msg)
+                  }
+                }).catch(e => {
+                  this.$message.error(e)
+                }) :
+                console.log('bb')
           }
         } else {
           this.$message.error('提交失败， 请重试')
@@ -368,8 +346,11 @@ export default {
         this.$message.error(e)
       })
     },
-    upEdit(){
-      this.edit  = !this.edit
+    upEdit() {
+      this.edit = !this.edit
+      console.log('aa')
+      console.log(this.addFrom.pbxGatewayList)
+      this.tableData.gatewayId = this.addFrom.pbxGatewayList
     }
 
   },
@@ -386,13 +367,13 @@ export default {
   },
   watch: {
     dialogFormVisible(val) {
-      if (val === true  ) {
+      console.log(val)
+      if (val === true) {
         getPbxAll().then(res => {
-          console.log(res)
           this.pbxList = res.data.data.records
         })
-      }else {
-        this.tableData = [{gatewayId: '', weight: ''}]
+      } else {
+        this.tableData = this.$options.data().tableData
         this.edit = false
         this.getGwgroup(this.form)
       }
@@ -456,23 +437,28 @@ ul li {
 .table p {
   background-color: transparent;
 }
+
 .tables {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.tables p{
+
+.tables p {
   width: 100%;
 }
-.tables > div{
+
+.tables > div {
   text-align: center;
   flex: 1;
 }
+
 .tables p {
   border: 1px solid #f3f3f3;
 }
+
 .li-input {
-  margin: 0 10px  ;
+  margin: 0 10px;
 }
 
 </style>

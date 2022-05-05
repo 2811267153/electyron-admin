@@ -277,6 +277,8 @@ export default {
     dialogFormVisible (val){
       if(!val){
         this.addForm = this.$options.data().addForm
+      }else {
+
       }
     }
   }

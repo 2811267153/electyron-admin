@@ -544,12 +544,10 @@ export default {
          * 拨号方案
          */
         diaPlanList().then(res => {
-          console.log(res)
           this.diaPlanList = res.data.data.records
         }).catch(e => this.$message.error(e))
       }else {
         this.resetForm()
-
         this.deptIdList = []
         this.getDirectory(this.form)
       }
