@@ -39,33 +39,18 @@ import user from "@/views/user/user";
 import menu from "@/views/layout/manage/menu";
 import jsCookie from "js-cookie";
 import queue from "@/views/configure/conmonters/queue";
-import home from "@/views/home";
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    redirect: 'home'
+    redirect: 'layout'
   },
   {
     path: '/home',
     component: headers,
     redirect: 'layout',
     children: [
-      {
-        name: 'home',
-        path: '/index',
-        component: home,
-        meta: {title: '首页'},
-        children: [
-          {
-            meta: { title: '欢迎页' },
-            path: '/index',
-            component: home,
-            name: 'index'
-          },
-        ]
-      },
       {
         path: '/layout',
         name: 'layout',
