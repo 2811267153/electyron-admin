@@ -49,14 +49,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="呼出前缀" :label-width="formLabelWidth" prop="diaplanPrefix">
-            <el-select v-model="addForm.diaplanPrefix" placeholder="请选择">
-              <el-option
-                  v-for="item in rateItemList"
-                  :key="item.id"
-                  :label="item.ratePrefix"
-                  :value="item.ratePrefix">
-              </el-option>
-            </el-select>
+            <el-input :disabled="true" v-model="addForm.diaplanPrefix"></el-input>
           </el-form-item>
         </div>
       </el-form>
@@ -240,9 +233,10 @@ export default {
       const data = {}
       data.rateGroupId = e
       getRateItemList(data).then(res => {
-        console.log(res)
         if (res.data.code === 200) {
-          this.rateItemList = res.data.data.records
+          res.data.data.records.forEach((item, i) => {
+            this.addForm.diaplanPrefix = item.ratePrefix + ','
+          })
         } else {
           this.$message.error(res.data.msg)
         }

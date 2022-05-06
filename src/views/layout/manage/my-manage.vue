@@ -377,10 +377,15 @@ export default {
         this.isShow = true;
         this.addForm = this.$options.data().addForm;
         this.$refs.addForm.clearValidate();
-
+        this.$nextTick(() => {
+          this.$refs.myTree.valueName = this.addForm.deptId
+        })
       } else if (title === "修改") {
         this.addForm = row;
         this.isShow = true;
+        this.$nextTick(() => {
+          this.$refs.myTree.valueName = this.addForm.sysDept.deptName
+        })
       } else if (title === "删除") {
         deleteUser(row.userId).then(res => {
           if (res.data.code === 200) {
@@ -440,10 +445,10 @@ export default {
       this.addForm.createTime = val[0];
       this.addForm.endTime = val[1];
     },
-    isShow(val) {
+    isShow(val, newVal) {
       if (!val) {
         this.addForm = this.$options.data().addForm
-        // this.$refs.myTree.valueName = this.$options.data().valueName
+
       }
     },
   },

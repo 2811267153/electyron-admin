@@ -43,9 +43,20 @@
           >
             <el-input v-model="addFrom.gatewayName" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item prop="accountUser" label="计费账号" :label-width="formLabelWidth">
-            <el-input v-model="addFrom.accountUser"></el-input>
+          <el-form-item
+            label="中继类型"
+            :label-width="formLabelWidth"
+            prop="gatewayType"
+          >
+            <el-select v-model="addFrom.gatewayType" placeholder="中继类型">
+              <el-option
+                :label="item.label"
+                :value="item.value"
+                v-for="item in relayType"
+              ></el-option>
+            </el-select>
           </el-form-item>
+
         </div>
         <div class="width">
           <el-form-item
@@ -153,19 +164,7 @@
           </el-form-item>
         </div>
         <div class="width">
-          <el-form-item
-              label="中继类型"
-              :label-width="formLabelWidth"
-              prop="gatewayType"
-          >
-            <el-select v-model="addFrom.gatewayType" placeholder="中继类型">
-              <el-option
-                  :label="item.label"
-                  :value="item.value"
-                  v-for="item in relayType"
-              ></el-option>
-            </el-select>
-          </el-form-item>
+
           <el-form-item
               label="最大并发数"
               :label-width="formLabelWidth"
@@ -173,7 +172,27 @@
           >
             <el-input v-model="addFrom.maxCall"/>
           </el-form-item>
+          <el-form-item  prop="accountUser" label="计费账号" :label-width="formLabelWidth">
+            <el-input :disabled="addFrom.gatewayType === 1" v-model="addFrom.accountUser"></el-input>
+          </el-form-item>
         </div>
+        <div class="width">
+          <el-form-item
+            label="注册用户"
+            :label-width="formLabelWidth"
+            prop="username"
+          >
+            <el-input v-model="addFrom.username"/>
+          </el-form-item>
+          <el-form-item
+            label="密码"
+            :label-width="formLabelWidth"
+            prop="password"
+          >
+            <el-input v-model="addFrom.password"/>
+          </el-form-item>
+        </div>
+
         <div class="width">
           <el-form-item
               label="是否注册"
@@ -184,22 +203,6 @@
               <el-radio :label="1">注册</el-radio>
               <el-radio :label="0">不注册</el-radio>
             </el-radio-group>
-          </el-form-item>
-        </div>
-        <div class="width" v-if="addFrom.register === 1">
-          <el-form-item
-              label="注册用户"
-              :label-width="formLabelWidth"
-              prop="username"
-          >
-            <el-input v-model="addFrom.username"/>
-          </el-form-item>
-          <el-form-item
-              label="密码"
-              :label-width="formLabelWidth"
-              prop="password"
-          >
-            <el-input v-model="addFrom.password"/>
           </el-form-item>
         </div>
       </el-form>
@@ -352,7 +355,7 @@ export default {
         {label: '不注册', value: 0},
       ],
       rules: {
-        accountUser: [{required: true, message: '该选项为必填项， 请确认', trigger: 'blur'}],
+        accountUser: [{required: false, message: '该选项为必填项， 请确认', trigger: 'blur'}],
         codecs: [
           {required: true, message: '该选项为必填项， 请确认', trigger: 'blur'}
         ],
@@ -376,7 +379,7 @@ export default {
         gatewayType: [
           {required: true, message: '该选项为必填项， 请确认', trigger: 'blur'}
         ],
-        maxCall: [{required: false, message: '该选项为必填项， 请确认', trigger: 'blur'}],
+        maxCall: [{required: true, message: '该选项为必填项， 请确认', trigger: 'blur'}],
         password: [
           {required: true, message: '该选项为必填项， 请确认', trigger: 'blur'}
         ],

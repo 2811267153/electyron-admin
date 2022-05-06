@@ -39,8 +39,8 @@
               <el-option
                   v-for="item in fifoRouterInList"
                   :key="item.id"
-                  :label="item.name"
-                  :value="item.name">
+                  :label="item.directoryNumber"
+                  :value="item.directoryNumber">
               </el-option>
             </el-select>
           </el-form-item>
@@ -49,8 +49,8 @@
               <el-option
                   v-for="item in fifoRouterOutList"
                   :key="item.id"
-                  :label="item.name"
-                  :value="item.name">
+                  :label="item.directoryNumber"
+                  :value="item.directoryNumber">
               </el-option>
             </el-select>
           </el-form-item>
@@ -161,7 +161,7 @@
 </template>
 
 <script>
-import {addFifo, delFifo, getFifo, upDataFifo} from "@/newwork/directory";
+import { addFifo, delFifo, getDirectory, getFifo, upDataFifo } from "@/newwork/directory";
 import myEmpty from "@/newwork/myEmpty";
 import {getDictionaryAll} from "@/newwork/system-colltroner";
 
@@ -301,21 +301,30 @@ export default {
         }
       }).catch(e => this.$message.error(e))
     },
-    //查找字典
-    getDictionaryAll(code){
+    //出 入 队列
+    getDirectory(type){
       const data = {}
-      data.code = code
+      data.type = type
+      if(type === 4 ){
+        getDirectory(data).then(res => {
+          this.fifoRouterInList = res.data.data.records
+        })
+      }else {
+        getDirectory(data).then(res => {
+          this.fifoRouterOutList = res.data.data.records
+        })
+      }
+    },
+    //紧急呼叫
+    getDictionaryAll(type){
+      const data = {}
+      data.code = type
       getDictionaryAll(data).then(res => {
-        console.log(res, '--------------')
-        if(data.code === 'outRoute'){
-          this.fifoRouterOutList = res.data.data
-        }else if(data.code === 'incomingRoute'){
-          this.fifoRouterInList = res.data.data
-        }else {
-          this.fifoEmergencyList = res.data.data
-        }
-      }).catch(e => this.$message.error(e))
+        console.log(res);
+        this.fifoEmergencyList = res.data.data
+      })
     }
+
   },
   created() {
     this.form = this.$store.state.formPage
@@ -336,9 +345,10 @@ export default {
       if(!val){
         this.addForm = this.$options.data().addForm
       }else {
+        //出, 入队列
+        this.getDirectory(4)
+        this.getDirectory(5)
         //查找字典
-        this.getDictionaryAll('incomingRoute')
-        this.getDictionaryAll('outRoute')
         this.getDictionaryAll('emergencyNumber')
       }
     }
