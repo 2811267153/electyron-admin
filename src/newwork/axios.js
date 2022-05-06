@@ -1,7 +1,7 @@
 import axios from 'axios'
 import store from "@/store";
 import {getCookie, removeCookie} from "@/auth";
-import { Message } from 'element-ui'
+import { MessageBox } from 'element-ui'
 
 export function request(config) {
     const instance = axios.create({
@@ -22,11 +22,21 @@ export function request(config) {
         // if(config.data.code !== 200){
         //     removeCookie()
         // }
+        // axios.get('http://123.60.212.9:9528/dispatch/unauth').then(res => {
+        //     console.log(res, '________________');
+        // })
         return config
     }, error => {
-        removeCookie()
-        location.reload()
-        Message.error('登录状态超时')
+        MessageBox.alert('登录状态异常,请重新登录', '权限异常', {
+            confirmButtonText: '确定',
+            callback: action => {
+                removeCookie()
+                location.reload()
+            }
+        }).then(res => console.log(res));
+
+
+
     })
 
     return instance(config)

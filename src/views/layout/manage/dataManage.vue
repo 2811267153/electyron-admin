@@ -8,7 +8,7 @@
             <el-form-item label="字典类型名称" prop="name" label-width="180">
               <el-input v-model="form.name"></el-input>
             </el-form-item>
-            <el-form-item label="字典编码" prop="mark">
+            <el-form-item label="字典编码" prop="code">
               <el-input v-model="form.code"></el-input>
             </el-form-item>
             <el-form-item label="字典状态" prop="status">
@@ -113,7 +113,7 @@ export default {
       resultList: [],
       addForm: {
         name: '',
-        status: 1, // 状态
+        status: "", // 状态
         code: '',    //字典编码
         pageNum: 1, //pageNum
         pageSize: 10,  //分页大小
@@ -128,7 +128,7 @@ export default {
       },
       rule: {
         name: [{required: false, message: '请输入字典类型名称', trigger: 'blur'}],
-        mark: [{required: false, message: '请输入标示码', trigger: 'blur'}],
+        code: [{required: false, message: '请输入标示码', trigger: 'blur'}],
         status: [{required: false, message: '请输入字典类型编码', trigger: 'blur'}],
       },
       status: [

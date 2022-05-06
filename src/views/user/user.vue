@@ -63,9 +63,7 @@ export default {
             this.form.isPadShow = false
       }
     },
-    settingShows() {
-      this.settingShow = !this.settingShow
-    },
+
     onSubmit(){
       this.index  = 4
       getLogin(this.username, this.password).then(res => {
@@ -105,7 +103,6 @@ export default {
 .login-info {
   background: linear-gradient(to bottom right, #FAFCB1, #3f86f2);
   height: 100%;
-  padding-top: 200px;
   line-height: 100%;
   display: flex;
   justify-content: center;
@@ -114,14 +111,17 @@ export default {
   align-items: center;
 }
 .width{
-  height: 100%;
   width: 50%;
 }
 .login-other{
   padding-left: 50px;
   flex: 1;
+  text-align: left;
 }
-
+.login-other h2{
+  margin: 20px 0;
+  font-size: 27px;
+}
 .el-from{
   width: 60%;
 }

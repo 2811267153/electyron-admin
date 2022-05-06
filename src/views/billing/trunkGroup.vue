@@ -1,7 +1,7 @@
 <template>
   <div id="trunk">
     <div class="nav-form">
-      <el-form :inline="true" ref="addForm" :model="form" class="demo-form-inline">
+      <el-form :inline="true" ref="form" :rules="rule" :model="form" class="demo-form-inline">
         <el-form-item label="中继名称" prop="groupName">
           <el-input v-model="form.groupName" placeholder="审网管名称批人"></el-input>
         </el-form-item>
@@ -211,7 +211,11 @@ export default {
       }
     }
     return {
-      form: {},
+      form: {
+        groupName: '',
+        strategyRetry: '',
+        strategyType: ''
+      },
       title: '添加中继组',
       dialogFormVisible: false,
       edit: false,
@@ -255,6 +259,17 @@ export default {
           {required: true, message: '该项为必填项,请确认', trigger: 'blur'}
         ],
       },
+      rule: {
+        groupName: [
+          {required: false, message: '该项为必填项,请确认', trigger: 'blur'}
+        ],
+        strategyRetry: [
+          {required: false, message: '该项为必填项,请确认', trigger: 'blur'}
+        ],
+        strategyType: [
+          {required: false, message: '该项为必填项,请确认', trigger: 'blur'}
+        ],
+      },
       value: '',
       tableData: [],
       gateway: {gatewayId: '', weight: ''},
@@ -289,7 +304,7 @@ export default {
       this.getGwgroup(this.form)
     },
     clear() {
-      this.resetForm()
+      this.resetForm('form')
       this.getGwgroup(this.form)
     },
     removeClick(i) {
@@ -334,8 +349,8 @@ export default {
         }
       })
     },
-    resetForm() {
-      this.$refs['addForm'].resetFields()
+    resetForm(type) {
+      type = 'form' ? this.$refs['form'].resetFields() : this.$refs['addForm'].resetFields()
     },
     removeIt(row) {
       deleteGwgroup(row.id).then(res => {

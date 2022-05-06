@@ -130,7 +130,11 @@ export default {
       }
     }
     return{
-      form: { },
+      form: {
+        profileName: '',
+        profileSipPort: '',
+        netName: ''
+      },
       list: [],
       dialogFormVisible: false,
       title: '新增',
@@ -174,13 +178,13 @@ export default {
       },
       rule: {
         profileName: [
-          { required: true, message: '该选项为必填项，请确认', trigger: 'change' }
+          { required: false, message: '该选项为必填项，请确认', trigger: 'change' }
         ],
         profileSipPort: [
-          { required: true, message: '该选项为必填项，请确认', trigger: 'change' }
+          { required: false, message: '该选项为必填项，请确认', trigger: 'change' }
         ],
         netName: [
-          { required: true, message: '该选项为必填项，请确认', trigger: 'change' }
+          { required: false, message: '该选项为必填项，请确认', trigger: 'change' }
         ],
       }
     }
@@ -188,6 +192,7 @@ export default {
 
   methods: {
     find(){
+      console.log(this.form);
       this.getProfileInfo(this.form)
     },
     change(e){

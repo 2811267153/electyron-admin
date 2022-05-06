@@ -3,13 +3,13 @@
     <div class="rate-true" v-if="toggle">
       <p>{{ this.$route.meta.title }}</p>
       <div class="container">
-        <el-form :inline="true" :model="form" class="demo-form-inline" ref="addForm">
+        <el-form :inline="true" :model="form" class="demo-form-inline" :rules="addFroms" ref="form">
           <el-form-item label="费率组" prop="diaplanRateGroup">
             <el-input v-model="form.diaplanRateGroup"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="find">查询</el-button>
-            <el-button @click="clearSubmit">查询</el-button>
+            <el-button @click="clear">重置</el-button>
           </el-form-item>
         </el-form>
         <el-button type="primary" @click="showAddForm(null, '添加费率组')"
@@ -278,8 +278,8 @@ export default {
     black() {
       this.toggle = true
     },
-    clearSubmit() {
-      this.resetForm()
+    clear() {
+      this.resetForm('form')
       this.getRateList(this.form)
     },
     getRateList(form) {
@@ -424,8 +424,8 @@ export default {
     },
 
     //  清除表单
-    resetForm() {
-      this.$refs.formName.resetFields();
+    resetForm(type) {
+     type ==='form' ?  this.$refs.form.resetFields() : this.$refs.formName.resetFields();
     }
   },
   watch: {

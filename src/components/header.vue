@@ -45,12 +45,11 @@
           </el-col>
         </div>
       </div>
-      <div class="content" v-if="$route.path !== '/index'">
-
+      <div class="content" >
         <div class="content-nav">
           <el-breadcrumb class="nav-bar" separator="/">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item><a :href="this.$route.path">{{ $route.meta.title }}</a></el-breadcrumb-item>
+            <el-breadcrumb-item><a>{{ $route.meta.title }}</a></el-breadcrumb-item>
           </el-breadcrumb>
         </div>
         <div class="container-header" style="text-align: left">
@@ -68,9 +67,6 @@
               :total="total">
           </el-pagination>
         </div>
-      </div>
-      <div v-else>
-        <router-view></router-view>
       </div>
     </div>
   </div>

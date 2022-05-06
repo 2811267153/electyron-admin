@@ -4,11 +4,11 @@
     <div class="container">
       <div class="nav">
         <div class="nav-l">
-          <el-form ref="form" label-width="80px" :inline="true" :model="navForm">
+          <el-form ref="form" label-width="80px" :inline="true" :rules="form_rules"  :model="navForm">
             <el-form-item label="角色名称" prop="roleName">
               <el-input v-model="navForm.roleName"></el-input>
             </el-form-item>
-            <el-form-item label="权限" prop="roleCode">
+            <el-form-item label="权限" prop="status">
               <el-select v-model="navForm.status" placeholder="请选择">
                 <el-option
                     v-for="item in status"
@@ -233,6 +233,12 @@ export default {
         ],
         status: [
           {required: true, message: '此项为必填项，请确认', trigger: 'change'}
+        ]
+      },
+      form_rules:{
+        roleName: [{required: false, message: '此项为必填项，请确认', trigger: 'change'},],
+        status: [
+          {required: false, message: '此项为必填项，请确认', trigger: 'change'}
         ]
       },
       isVacancy: true,

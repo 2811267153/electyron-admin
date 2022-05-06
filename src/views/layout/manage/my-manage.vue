@@ -7,22 +7,22 @@
     <div id="container-main">
       <div class="container-nav">
         <div class="container-form">
-          <el-form :inline="true" ref="addForm" :model="form" :rules="rules" class="demo-form-inline">
-            <el-form-item label="用户名称">
-              <el-input v-model="form.nickName" placeholder="审批人"></el-input>
+          <el-form :inline="true" ref="form" :model="form" :rules="form_rules" class="demo-form-inline">
+            <el-form-item label="用户名称" prop="nickName">
+              <el-input v-model="form.nickName"></el-input>
             </el-form-item>
-            <el-form-item label="手机号">
-              <el-input v-model="form.phone" placeholder="审批人"></el-input>
+            <el-form-item label="手机号" prop="phone">
+              <el-input v-model="form.phone"></el-input>
             </el-form-item>
-            <el-form-item label="用户状态">
-              <el-select v-model="form.status" placeholder="活动区域">
+            <el-form-item label="用户状态" prop="status">
+              <el-select v-model="form.status">
                 <el-option label="开启" :value=0></el-option>
                 <el-option label="关闭" :value=1></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="onSubmit">查询</el-button>
-              <el-button @click="onClear">重置</el-button>
+              <el-button @click="resetForm('form')">重置</el-button>
             </el-form-item>
           </el-form>
           <el-button type="primary" @click="show(null, '新增')">新增</el-button>
@@ -245,7 +245,8 @@ export default {
     return {
       form: {
         nickName: "",
-        phone: ""
+        phone: "",
+        status: '',
       },
       addForm: {
         deptId: "",//部门
@@ -306,7 +307,20 @@ export default {
         sex: [
           { required: false, message: "此项为必填项，请确认", trigger: "change" }
         ]
+      },
+      form_rules: {
+        nickName: [
+          { required: false, message: "此项为必填项，请确认", trigger: "change" }
+        ],
+        phone: [
+          { required: false, message: "此项为必填项，请确认", trigger: "change" },
+          {validator: validatePhone, message: '手机号格式输入有误,请确认', trigger: 'change'}
+        ],
+        status: [
+          { required: false, message: "此项为必填项，请确认", trigger: "change" }
+        ],
       }
+
     };
   },
 
@@ -399,8 +413,9 @@ export default {
         });
       }
     },
-    resetForm() {
-      this.$refs.addForm.resetFields();
+    resetForm(form) {
+      form === 'form' ?  this.$refs.form.resetFields() : this.$refs.addForm.resetFields();
+      this.getUserAll(this.form)
     },
 
     rowClick(row) {

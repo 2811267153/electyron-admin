@@ -540,8 +540,9 @@ export default {
     },
     getDirectory(form) {
       getDirectory(form).then(res => {
-        this.$store.dispatch("total", res.data.data.total);
+        console.log(res);
         if (res.data.code === 200) {
+          this.$store.dispatch("total", res.data.data.total);
           this.list = res.data.data.records;
         }
       }).catch(e => this.$message.error(e));

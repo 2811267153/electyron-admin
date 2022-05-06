@@ -1,18 +1,12 @@
 <template>
   <div id="networkManagement">
     <div class="nav-form">
-      <el-form :model="form" :hide-required-asterisk="true" :show-message="false" :inline="true" class="demo-form-inline" ref="formName" :rules="rules" >
-        <el-form-item label="网关名称" prop="gatewayName">
+      <el-form  :model="form" :hide-required-asterisk="true" :show-message="false" :inline="true" class="demo-form-inline" ref="form" :rules="rule" >
+        <el-form-item :span="5" label="网关名称" prop="gatewayName">
           <el-input v-model="form.gatewayName"></el-input>
         </el-form-item>
-        <el-form-item label="注册用户名" prop="gatewayName">
-          <el-input v-model="form.username" ></el-input>
-        </el-form-item>
-        <el-form-item label="代理IP" prop="proxyIp">
-          <el-input v-model="form.proxyIp" ></el-input>
-        </el-form-item>
-        <el-form-item label="域地址" prop="realm">
-          <el-input v-model="form.realm" placeholder="物理地址"></el-input>
+        <el-form-item :span="1000000" label="中继IP" prop="gatewayIp">
+          <el-input v-model="form.gatewayIp" ></el-input>
         </el-form-item>
         <el-form-item label="中继类型" prop="gatewayType">
           <el-select v-model="form.gatewayType" placeholder="协议类型">
@@ -25,7 +19,7 @@
         </el-form-item>
         <el-form-item>
                     <el-button type="primary" @click="find">查询</el-button>
-                    <el-button @click="clear">重置</el-button>
+                    <el-button @click="clear(form)">重置</el-button>
         </el-form-item>
       </el-form>
       <el-button type="primary" @click="showAddForm(null, '添加网关')"
@@ -309,12 +303,9 @@ export default {
       formLabelWidth: '120px',
       title: '添加网关',
       form: {
-        user: '',
-        address: '',
-        protocol: '',
-        relay: '',
-        recording: '',
-        networkStat: '',
+        gatewayName: '',
+        gatewayIp: '',
+        gatewayType: '',
         pageNum: 1,
         pageSize: 10,
       },
@@ -354,6 +345,17 @@ export default {
         {label: '注册', value: 1},
         {label: '不注册', value: 0},
       ],
+      rule: {
+        gatewayName: [
+          {required: false, message: '该选项为必填项， 请确认', trigger: 'blur'}
+        ],
+        gatewayIp: [
+          {required: false, message: '该选项为必填项， 请确认', trigger: 'blur'},
+        ],
+        gatewayType: [
+          {required: false, message: '该选项为必填项， 请确认', trigger: 'blur'},
+        ],
+      },
       rules: {
         accountUser: [{required: false, message: '该选项为必填项， 请确认', trigger: 'blur'}],
         codecs: [
@@ -396,7 +398,7 @@ export default {
   },
   methods: {
     clear(){
-      this.resetForm()
+      this.resetForm('form')
       this.getPbxAll(this.form)
     },
     find(){
@@ -443,8 +445,8 @@ export default {
         }
       })
     },
-    resetForm() {
-      this.$refs['formName'].resetFields();
+    resetForm(type) {
+     type ==='form' ?  this.$refs['form'].resetFields() : this.$refs['formName'].resetFields();
     },
     showAddForm(row, title) {
       this.dialogFormVisible = true
