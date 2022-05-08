@@ -27,7 +27,7 @@
             <el-input v-model="addForm.diaplanName" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="中继组" :label-width="formLabelWidth" prop="diaplanGatewayGroup">
-            <el-select v-model="addForm.diaplanGatewayGroup">
+            <el-select v-model="addForm.diaplanGatewayGroup"  placeholder="请选择"  style="width: 100%">
               <el-option
                   :label="item.groupName"
                   v-for="item in trunkGroup"
@@ -39,7 +39,7 @@
         </div>
         <div class="width">
           <el-form-item label="费率组" :label-width="formLabelWidth" prop="diaplanRateGroup">
-            <el-select v-model="addForm.diaplanRateGroup" placeholder="请选择" @change="change">
+            <el-select v-model="addForm.diaplanRateGroup" placeholder="请选择" @change="change"  style="width: 100%">
               <el-option
                   v-for="item in rateList"
                   :key="item.id"

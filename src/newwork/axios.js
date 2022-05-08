@@ -27,13 +27,13 @@ export function request(config) {
         // })
         return config
     }, error => {
-        MessageBox.alert('登录状态异常,请重新登录', '权限异常', {
-            confirmButtonText: '确定',
-            callback: action => {
-                removeCookie()
-                location.reload()
-            }
-        }).then(res => console.log(res));
+        // MessageBox.alert('登录状态异常,请重新登录', '权限异常', {
+        //     confirmButtonText: '确定',
+        //     callback: action => {
+        //         removeCookie()
+        //         location.reload()
+        //     }
+        // }).then(res => console.log(res));
 
 
 

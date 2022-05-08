@@ -6,7 +6,7 @@
           <el-input v-model="form.groupName" placeholder="审网管名称批人"></el-input>
         </el-form-item>
         <el-form-item label="策略类型" prop="strategyRetry">
-          <el-select v-model="form.strategyRetry" placeholder="协议类型">
+          <el-select v-model="form.strategyRetry" placeholder="协议类型"  style="width: 100%">
             <el-option
                 :label="item.label"
                 :value="item.value"
@@ -15,7 +15,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="重试策略" prop="strategyType">
-          <el-select v-model="form.strategyType" placeholder="中继类型">
+          <el-select v-model="form.strategyType" placeholder="中继类型"  style="width: 100%">
             <el-option
                 :label="item.label"
                 :value="item.value"
@@ -55,7 +55,7 @@
               :label-width="formLabelWidth"
               prop="strategyRetry"
           >
-            <el-select v-model="addFrom.strategyRetry" placeholder="请选择">
+            <el-select v-model="addFrom.strategyRetry" placeholder="请选择"   style="width: 100%">
               <el-option
                   v-for="item in retryStrategyType"
                   :key="item.value"
@@ -70,7 +70,7 @@
               :label-width="formLabelWidth"
               prop="strategyType"
           >
-            <el-select v-model="addFrom.strategyType" placeholder="请选择">
+            <el-select v-model="addFrom.strategyType" placeholder="请选择"  style="width: 100%"  >
               <el-option
                   v-for="item in policyType"
                   :key="item.value"

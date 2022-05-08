@@ -35,7 +35,7 @@
         </div>
         <div class="width">
           <el-form-item label="入路由号码" :label-width="formLabelWidth" prop="fifoRouterIn">
-            <el-select v-model="addForm.fifoRouterIn" placeholder="请选择">
+            <el-select v-model="addForm.fifoRouterIn" placeholder="请选择" style="width: 100%" >
               <el-option
                   v-for="item in fifoRouterInList"
                   :key="item.id"
@@ -45,7 +45,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="出路由号码" :label-width="formLabelWidth" prop="fifoRouterOut">
-            <el-select v-model="addForm.fifoRouterOut" placeholder="请选择">
+            <el-select v-model="addForm.fifoRouterOut" placeholder="请选择" style="width: 100%" >
               <el-option
                   v-for="item in fifoRouterOutList"
                   :key="item.id"
@@ -73,7 +73,7 @@
         </div>
         <div class="width">
           <el-form-item label="紧急号码" :label-width="formLabelWidth" prop="fifoEmergency">
-            <el-select v-model="addForm.fifoEmergency" placeholder="请选择">
+            <el-select v-model="addForm.fifoEmergency" placeholder="请选择" style="width: 100%" >
               <el-option
                   v-for="item in fifoEmergencyList"
                   :key="item.id"

@@ -121,7 +121,7 @@
             :label-width="formLabelWidth"
             prop="billingType"
           >
-            <el-select v-model="addForm.billingType">
+            <el-select v-model="addForm.billingType" style="width: 100%" >
               <el-option
                 v-for="item in billingType"
                 :key="item.id"
@@ -142,6 +142,7 @@
               v-model="bussinessList"
               multiple
               @change="change"
+              style="width: 100%"
               collapse-tags
               placeholder="请选择">
               <el-option
@@ -188,7 +189,7 @@
         </div>
         <div class="width">
           <el-form-item label="使能状态" :label-width="formLabelWidth" prop="disable">
-            <el-select v-model="addForm.disable" placeholder="请选择">
+            <el-select v-model="addForm.disable" placeholder="请选择" style="width: 100%" >
               <el-option
                 v-for="item in disable"
                 :key="item.value"
@@ -199,12 +200,12 @@
             </el-select>
           </el-form-item>
           <el-form-item label="部门名称" :label-width="formLabelWidth" prop="deptId">
-            <my-tree ref="myTree" :options="deptIdList" @getValue="getSelectedValue"></my-tree>
+            <my-tree ref="myTree" style="width: 100%"  :options="deptIdList" @getValue="getSelectedValue"></my-tree>
           </el-form-item>
         </div>
         <div class="width">
           <el-form-item label="拨号方案" :label-width="formLabelWidth" prop="diaplan">
-            <el-select v-model="addForm.diaplan" placeholder="请选择">
+            <el-select v-model="addForm.diaplan" placeholder="请选择" style="width: 100%" >
               <el-option
                 v-for="item in diaPlanList"
                 :key="item.value"
@@ -214,7 +215,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="费率组" :label-width="formLabelWidth" prop="rateGroup">
-            <el-select v-model="addForm.rateGroup" placeholder="请选择">
+            <el-select v-model="addForm.rateGroup" placeholder="请选择" style="width: 100%" >
               <el-option
                 v-for="item in rateGroup"
                 :key="item.value"
@@ -227,12 +228,12 @@
         <div class="width">
           <el-form-item label="超时时长" :label-width="formLabelWidth" prop="expire">
             <el-input
-              style="display: inline-block; width: 40%; margin-right: 10px"
+              style="display: inline-block; margin-right: 10px"
               v-model="addForm.expire"
             ></el-input>
           </el-form-item>
           <el-form-item label="资源类型" :label-width="formLabelWidth" prop="type">
-            <el-select v-model="addForm.type" placeholder="请选择">
+            <el-select v-model="addForm.type" placeholder="请选择" style="width: 100%" >
               <el-option
                 v-for="item in typeList"
                 :key="item.value"

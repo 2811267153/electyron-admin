@@ -39,6 +39,7 @@ import user from "@/views/user/user";
 import menu from "@/views/layout/manage/menu";
 import jsCookie from "js-cookie";
 import queue from "@/views/configure/conmonters/queue";
+import meetingMinutes from "@/views/call/meetingMinutes";
 Vue.use(VueRouter)
 
 const routes = [
@@ -214,6 +215,12 @@ const routes = [
             path: '/call/calls',
             name: 'calls',
             component: calls
+          },
+          {
+            meta: { title: '会议记录' },
+            path: '/call/meetingMinutes',
+            name: 'meetingMinutes',
+            component: meetingMinutes
           }
         ]
       },

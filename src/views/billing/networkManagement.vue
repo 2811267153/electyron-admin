@@ -42,7 +42,7 @@
             :label-width="formLabelWidth"
             prop="gatewayType"
           >
-            <el-select v-model="addFrom.gatewayType" placeholder="中继类型">
+            <el-select v-model="addFrom.gatewayType" placeholder="中继类型"style="width: 100%" >
               <el-option
                 :label="item.label"
                 :value="item.value"
@@ -84,6 +84,7 @@
             <el-select v-model="codecs"
                        @change="codecsBlur"
                        multiple
+                       style="width: 100%"
                        collapse-tags>
               <el-option
                   v-for="item in dictionaryList"
@@ -98,7 +99,7 @@
               :label-width="formLabelWidth"
               required
           >
-            <el-select v-model="addFrom.dtmfMode" >
+            <el-select v-model="addFrom.dtmfMode" style="width: 100%" >
               <el-option
                   v-for="item in dtmfModeData"
                   :key="item.id"
@@ -147,7 +148,7 @@
               :label-width="formLabelWidth"
               prop="profileId"
           >
-            <el-select v-model="addFrom.profileId" placeholder="请选择">
+            <el-select v-model="addFrom.profileId" placeholder="请选择" style="width: 100%">
               <el-option
                   v-for="item in profileIdList"
                   :key="item.id"

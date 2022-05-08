@@ -2,7 +2,7 @@
   <!--  用户管理-->
   <div id="my-manage">
     <div class="container-l">
-      <e-tree @treeClick="treeClick" :data="treeArr" />
+      <e-tree @treeClick="treeClick" :data="treeArr"/>
     </div>
     <div id="container-main">
       <div class="container-nav">
@@ -28,7 +28,7 @@
           <el-button type="primary" @click="show(null, '新增')">新增</el-button>
         </div>
         <el-table
-            :data="resultList"  v-if="resultList.length !== 0"  @row-click="rowClick"
+            :data="resultList" v-if="resultList.length !== 0" @row-click="rowClick"
             :row-class-name="tableRowClassName"
             border
             style="width: 100%; margin-top: 20px">
@@ -37,7 +37,7 @@
           </el-table-column>
           <el-table-column align="center" prop="nickName" label="姓名" width="120">
           </el-table-column>
-          <el-table-column  align="center" prop="email" label="email" show-overflow-tooltip>
+          <el-table-column align="center" prop="email" label="email" show-overflow-tooltip>
           </el-table-column>
           <el-table-column align="center" prop="phone" label="手机号" show-overflow-tooltip>
           </el-table-column>
@@ -47,7 +47,7 @@
               label="所属部门"
               show-overflow-tooltip
           >
-            <template scope="scope">{{scope.row.sysDept.deptName}}</template>
+            <template scope="scope">{{ scope.row.sysDept.deptName }}</template>
           </el-table-column>
           <el-table-column
               align="center"
@@ -71,83 +71,84 @@
             </template>
           </el-table-column>
         </el-table>
-        <my-empty v-else />
+        <my-empty v-else/>
         <!--
               新增悬浮窗
           -->
         <el-dialog
-          :title="title"
-          :visible.sync="isShow"
-          width="40%"
+            :title="title"
+            :visible.sync="isShow"
+            width="40%"
         >
           <el-form ref="addForm" :model="addForm" id="form" :rules="rules">
             <el-form-item
-              class="form-item"
-              label="用户名称"
-              :label-width="formLabelWidth"
-              prop="nickName"
+                class="form-item"
+                label="用户名称"
+                :label-width="formLabelWidth"
+                prop="nickName"
             >
               <el-input v-model="addForm.nickName" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item
-              class="form-item"
-              label="用户角色"
-              :label-width="formLabelWidth"
-              prop="roleId"
+                class="form-item"
+                label="用户角色"
+                :label-width="formLabelWidth"
+                prop="roleId"
             >
               <el-select
-                v-if="title === '新增'"
-                class="form-item"
-                v-model="addForm.roleId "
-                placeholder="请选择用户角色"
+                  v-if="title === '新增'"
+                  style="width: 100%"
+                  v-model="addForm.roleId "
+                  placeholder="请选择用户角色"
               >
                 <el-option
-                  :label="item.roleName"
-                  :value="item.roleId"
-                  v-for="item in roleList"
+                    :label="item.roleName"
+                    :value="item.roleId"
+                    v-for="item in roleList"
                 ></el-option>
               </el-select>
               <el-select
-                v-else
-                class="form-item"
-                v-model="addForm.roleId "
-                :placeholder="addForm.department"
+                  v-else
+                  style="width: 100%"
+                  class="form-item"
+                  v-model="addForm.roleId "
+                  :placeholder="addForm.department"
               >
                 <el-option
-                  :label="item.roleName"
-                  :value="item.roleId"
-                  v-for="item in roleList"
+                    :label="item.roleName"
+                    :value="item.roleId"
+                    v-for="item in roleList"
                 ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item
-              class="form-item"
-              label="所属部门"
-              required
-              :label-width="formLabelWidth"
+                class="form-item"
+                label="所属部门"
+                required
+                :label-width="formLabelWidth"
             >
-              <my-tree ref="myTree" :options="treeArr" @getValue="getSelectedValue"></my-tree>
+              <my-tree ref="myTree" style="width: 100%" :options="treeArr" @getValue="getSelectedValue"></my-tree>
             </el-form-item>
             <el-form-item
-              class="form-item"
-              label="用户性别"
-              :label-width="formLabelWidth"
-              prop="sex"
+                class="form-item"
+                label="用户性别"
+                :label-width="formLabelWidth"
+                prop="sex"
             >
-              <el-select v-model="addForm.sex" placeholder="请选择用户性别">
+              <el-select v-model="addForm.sex" placeholder="请选择用户性别" style="width: 100%" >
                 <el-option
-                  :label="item.label"
-                  :value="item.value"
-                  v-for="item in sexList"
+                    :label="item.label"
+                    :value="item.value"
+                    v-for="item in sexList"
                 ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item
-              class="form-item"
-              label="账号"
-              type="email"
-              :label-width="formLabelWidth"
-              prop="username"
+                class="form-item"
+                label="账号"
+                type="email"
+                :label-width="formLabelWidth"
+                prop="username"
             >
               <el-input v-model="addForm.username" autocomplete="off">
               </el-input>
@@ -160,35 +161,35 @@
             </el-form-item>
 
             <el-form-item
-              class="form-item"
-              label="手机号"
-              prop="phone"
-              :label-width="formLabelWidth"
+                class="form-item"
+                label="手机号"
+                prop="phone"
+                :label-width="formLabelWidth"
             >
               <el-input v-model="addForm.phone" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item
-              v-if="title !== '修改'"
-              class="form-item"
-              label="密码"
-              :label-width="formLabelWidth"
-              prop="password"
+                v-if="title !== '修改'"
+                class="form-item"
+                label="密码"
+                :label-width="formLabelWidth"
+                prop="password"
             >
               <el-input
-                v-model="addForm.password"
-                autocomplete="off"
+                  v-model="addForm.password"
+                  autocomplete="off"
               ></el-input>
             </el-form-item>
             <el-form-item
-              class="form-item"
-              label="邮箱"
-              :label-width="formLabelWidth"
-              prop="email"
+                class="form-item"
+                label="邮箱"
+                :label-width="formLabelWidth"
+                prop="email"
             >
               <el-input
-                type="email"
-                v-model="addForm.email"
-                autocomplete="off"
+                  type="email"
+                  v-model="addForm.email"
+                  autocomplete="off"
               ></el-input>
             </el-form-item>
           </el-form>
@@ -215,7 +216,7 @@ import {
   upDataRoleList,
   getOrganizeId, deleteUser, upDataUser, getRoleList
 } from "@/newwork/system-colltroner";
-import { fn } from "@/uti";
+import {fn} from "@/uti";
 import myEmpty from "@/newwork/myEmpty";
 import {isValidEmail, isValidNumber, isValidPhone} from "@/util/validate";
 import myTree from "@/components/myTree";
@@ -229,16 +230,16 @@ export default {
   },
   data() {
     const validatePhone = (rule, value, callback) => {
-      if(!isValidPhone(value)){
+      if (!isValidPhone(value)) {
         callback(new Error('手机号格式输入有误,请确认'))
-      }else {
+      } else {
         callback()
       }
     }
     const validateEmail = (rule, value, callback) => {
-      if(!isValidEmail(value)){
+      if (!isValidEmail(value)) {
         callback(new Error('邮箱地址输入格式有误,请确认'))
-      }else {
+      } else {
         callback()
       }
     }
@@ -274,50 +275,50 @@ export default {
       timer: {},
       treeArr: [],
       sexList: [
-        { label: "男", value: 0 },
-        { label: "女", value: 1 }
+        {label: "男", value: 0},
+        {label: "女", value: 1}
       ],
       rules: {
         nickName: [
-          { required: true, message: "此项为必填项，请确认", trigger: "change" }
+          {required: true, message: "此项为必填项，请确认", trigger: "change"}
         ],
         roleId: [
-          { required: true, message: "此项为必填项，请确认", trigger: "change" }
+          {required: true, message: "此项为必填项，请确认", trigger: "change"}
         ],
         email: [
-          { required: false, message: "此项为必填项，请确认", trigger: "change" },
+          {required: false, message: "此项为必填项，请确认", trigger: "change"},
           {validator: validateEmail, message: '邮箱格式输入有误,请确认', trigger: 'change'}
         ],
         deptId: [
-          { required: false, message: "此项为必填项，请确认", trigger: "change" }
+          {required: false, message: "此项为必填项，请确认", trigger: "change"}
         ],
         username: [
-          { required: true, message: "此项为必填项，请确认", trigger: "change" }
+          {required: true, message: "此项为必填项，请确认", trigger: "change"}
         ],
         password: [
-          { required: true, message: "此项为必填项，请确认", trigger: "change" }
+          {required: true, message: "此项为必填项，请确认", trigger: "change"}
         ],
         phone: [
-          { required: true, message: "此项为必填项，请确认", trigger: "change" },
+          {required: true, message: "此项为必填项，请确认", trigger: "change"},
           {validator: validatePhone, message: '手机号格式输入有误,请确认', trigger: 'change'}
         ],
         status: [
-          { required: false, message: "此项为必填项，请确认", trigger: "change" }
+          {required: false, message: "此项为必填项，请确认", trigger: "change"}
         ],
         sex: [
-          { required: false, message: "此项为必填项，请确认", trigger: "change" }
+          {required: false, message: "此项为必填项，请确认", trigger: "change"}
         ]
       },
       form_rules: {
         nickName: [
-          { required: false, message: "此项为必填项，请确认", trigger: "change" }
+          {required: false, message: "此项为必填项，请确认", trigger: "change"}
         ],
         phone: [
-          { required: false, message: "此项为必填项，请确认", trigger: "change" },
+          {required: false, message: "此项为必填项，请确认", trigger: "change"},
           {validator: validatePhone, message: '手机号格式输入有误,请确认', trigger: 'change'}
         ],
         status: [
-          { required: false, message: "此项为必填项，请确认", trigger: "change" }
+          {required: false, message: "此项为必填项，请确认", trigger: "change"}
         ],
       }
 
@@ -325,7 +326,7 @@ export default {
   },
 
   methods: {
-    getSelectedValue(value){
+    getSelectedValue(value) {
       this.addForm.deptId = value.deptId
     },
     onSubmit() {
@@ -381,8 +382,8 @@ export default {
         this.$message.error(e);
       });
       getRoleList().then(res => {
-        console.log(res )
-        if(res.data.code === 200){
+        console.log(res)
+        if (res.data.code === 200) {
           this.roleList = res.data.data.records
         }
       })
@@ -414,14 +415,14 @@ export default {
       }
     },
     resetForm(form) {
-      form === 'form' ?  this.$refs.form.resetFields() : this.$refs.addForm.resetFields();
+      form === 'form' ? this.$refs.form.resetFields() : this.$refs.addForm.resetFields();
       this.getUserAll(this.form)
     },
 
     rowClick(row) {
       this.row = row;
     },
-    tableRowClassName({ row, rowIndex }) {
+    tableRowClassName({row, rowIndex}) {
       //把每一行的索引放进row
       row.index = rowIndex;
     },
@@ -501,13 +502,12 @@ export default {
   flex-wrap: wrap;
 }
 
-#form > .form-item {
-  width: 48%;
-}
-
 .link-item {
   margin: 0 10px;
   cursor: pointer;
+}
+.form-item  {
+  width: 48%;
 }
 
 .err {
