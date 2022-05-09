@@ -16,6 +16,6 @@ export function getRecord(data) {
 export function getRecordDetail(data) {
     return request({
         url: '/pbx/conference/record/detail',
-        params: data
+        params:  data
     })
 }

@@ -216,12 +216,6 @@ const routes = [
             name: 'calls',
             component: calls
           },
-          {
-            meta: { title: '会议记录' },
-            path: '/call/meetingMinutes',
-            name: 'meetingMinutes',
-            component: meetingMinutes
-          }
         ]
       },
       {
@@ -245,7 +239,14 @@ const routes = [
             path: '/bill/intercept',
             name: 'intercept',
             component: intercept
-          }
+          },
+          {
+            meta: { title: '会议记录' },
+            path: '/call/meetingMinutes',
+            name: 'meetingMinutes',
+            component: meetingMinutes
+          },
+
         ]
       },
     ]
@@ -276,6 +277,7 @@ router.beforeEach((to, form, next) => {
   next()
   if(to.path !== '/user' && jsCookie.get('JSESSIONID') !== undefined  ){
     if(to.path === '/layout/serveStarts'){
+      store.commit('userInfo', JSON.parse(window.localStorage.getItem('userInfo')))
       next('/layout/serveStarts')
     }else {
       store.commit('userInfo', JSON.parse(window.localStorage.getItem('userInfo')))

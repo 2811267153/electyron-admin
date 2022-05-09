@@ -19,7 +19,7 @@
       </div>
       <div class="warp" style="border: none; border-radius: 5px; background-color: #f2f2f2;">
         <h2>磁盘状态</h2>
-        <el-table
+        <el-table :row-style="{background: '#f2f2f2'}" :header-cell-style="{background:'#f2f2f2', }"
             class="table"
             :data="serveData.sysFiles"
             style="width: 100%">
@@ -175,10 +175,5 @@ export default {
   display: inline-block;
   padding-right: 20px;
 }
-.overview .table  .el-table__row, .el-table_1_column_1{
-  background-color: #f2f2f2 !important  ;
-}
- .overview .el-table th.el-table__cell{
-  background-color: #f2f2f2 !important  ;
-}
+
 </style>
