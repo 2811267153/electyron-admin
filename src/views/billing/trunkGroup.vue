@@ -3,7 +3,7 @@
     <div class="nav-form">
       <el-form :inline="true" ref="form" :rules="rule" :model="form" class="demo-form-inline">
         <el-form-item label="中继名称" prop="groupName">
-          <el-input v-model="form.groupName" placeholder="审网管名称批人"></el-input>
+          <el-input v-model="form.groupName" placeholder="请输入内容"></el-input>
         </el-form-item>
         <el-form-item label="策略类型" prop="strategyRetry">
           <el-select v-model="form.strategyRetry" placeholder="协议类型"  style="width: 100%">
@@ -42,11 +42,11 @@
               :label-width="formLabelWidth"
               prop="groupName"
           >
-            <el-input v-model="addFrom.groupName" autocomplete="off"></el-input>
+            <el-input v-model="addFrom.groupName" autocomplete="off"  placeholder="请输入内容"></el-input>
           </el-form-item>
 
-          <el-form-item label="前缀" :label-width="formLabelWidth" prop="groupPrefix">
-            <el-input v-model="addFrom.groupPrefix"></el-input>
+          <el-form-item label="前缀" :label-width="formLabelWidth" prop="groupPrefix" placeholder="请输入内容">
+            <el-input v-model="addFrom.groupPrefix" placeholder="请输入内容"></el-input>
           </el-form-item>
         </div>
         <div class="width">
@@ -99,7 +99,7 @@
               </el-option>
             </el-select>
             <div style="padding: 0 20px">
-              <el-input class="el-input" v-model="pbxGwgroupGatewayList.weight"></el-input>
+              <el-input class="el-input" v-model="pbxGwgroupGatewayList.weight"  placeholder="请输入内容"></el-input>
             </div>
             <div>
               <!--              <el-button @click="addGateway"></el-button>-->
@@ -139,7 +139,7 @@
       </div>
     </el-dialog>
 
-    <el-table border :data="list" style="width: 100%" v-if="list.length !== 0" >
+    <el-table border :header-cell-style="{background:'#ccc', color: '#fff',}" :data="list" style="width: 100%" v-if="list.length !== 0" >
       <el-table-column align="center" prop="index" label="序号" width="50">
         <template scope="scope">{{ scope.$index + 1 }}</template>
       </el-table-column>

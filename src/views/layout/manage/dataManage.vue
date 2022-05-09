@@ -6,10 +6,10 @@
 
           <el-form :model="form" inline :rules="rule" ref="form" label-width="100px" class="demo-ruleForm">
             <el-form-item label="字典类型名称" prop="name" label-width="180">
-              <el-input v-model="form.name"></el-input>
+              <el-input placeholder="请输入内容" v-model="form.name"></el-input>
             </el-form-item>
             <el-form-item label="字典编码" prop="code">
-              <el-input v-model="form.code"></el-input>
+              <el-input placeholder="请输入内容" v-model="form.code"></el-input>
             </el-form-item>
             <el-form-item label="字典状态" prop="status">
               <el-select v-model="form.status">
@@ -35,11 +35,11 @@
       <el-dialog :title="title" :visible.sync="dialogFormVisible">
         <el-form ref="addForm" :model="addForm" :rules="rules">
           <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
-            <el-input v-model="addForm.name" autocomplete="off"></el-input>
+            <el-input placeholder="请输入内容" v-model="addForm.name" autocomplete="off"></el-input>
           </el-form-item>
 
           <el-form-item label="字典类型编码" :label-width="formLabelWidth" prop="code">
-            <el-input v-model="addForm.code" autocomplete="off"></el-input>
+            <el-input placeholder="请输入内容" v-model="addForm.code" autocomplete="off"></el-input>
           </el-form-item>
 
           <el-form-item label="状态" :label-width="formLabelWidth">
@@ -58,20 +58,20 @@
         </div>
       </el-dialog>
 
-      <el-table :data="resultList" style="width: 100%"  v-if="resultList.length !== 0">
-        <el-table-column prop="id" label="序号" width="50">
+      <el-table :header-cell-style="{background:'#ccc', color: '#fff',}" border :data="resultList" style="width: 100%"  v-if="resultList.length !== 0">
+        <el-table-column align="center"  prop="id" label="序号" width="50">
           <template scope="scope">{{ scope.$index + 1 }}</template>
         </el-table-column>
-        <el-table-column prop="name" label="字典类型名称" width="300"></el-table-column>
-        <el-table-column prop="code" label="字典类型编码" width="300"></el-table-column>
-        <el-table-column prop="createTime" label="更新时间"></el-table-column>
-        <el-table-column prop="sort" label="状态">
+        <el-table-column align="center" prop="name" label="字典类型名称" width="300"></el-table-column>
+        <el-table-column align="center" prop="code" label="字典类型编码" width="300"></el-table-column>
+        <el-table-column align="center" prop="createTime" label="更新时间"></el-table-column>
+        <el-table-column align="center" prop="sort" label="状态">
           <template scope="scope">
             <a v-if="scope.row.status === 1">启用</a>
             <a v-else>停用</a>
           </template>
         </el-table-column>
-        <el-table-column prop="sort" label="操作">
+        <el-table-column align="center"  prop="sort" label="操作">
           <template scope="scope">
             <div class="operate">
               <el-link type="info" @click="showAddForm(scope.row, '修改')">修改</el-link>

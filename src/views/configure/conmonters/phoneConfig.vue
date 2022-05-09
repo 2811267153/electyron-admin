@@ -4,10 +4,10 @@
       <div class="nav-form">
         <el-form :inline="true" :model="form" ref="form" class="demo-form-inline">
           <el-form-item label="分机名称" prop="directoryName">
-            <el-input v-model="form.directoryName"></el-input>
+            <el-input v-model="form.directoryName" placeholder="请输入内容"></el-input>
           </el-form-item>
           <el-form-item label="域地址" prop="domain">
-            <el-input v-model="form.domain"></el-input>
+            <el-input v-model="form.domain" placeholder="请输入内容"></el-input>
           </el-form-item>
           <el-form-item label="计费方式" prop="billingType">
             <el-select v-model="form.billingType" placeholder="中继类型">
@@ -31,11 +31,12 @@
 
       <el-table
         :row-class-name="tableRowClassName"
+        :header-cell-style="{background:'#ccc', color: '#fff',}"
         :data="list"
         style="width: 100%"
         v-if="list.length !== 0"
       >
-        <el-table-column prop="date" label="序号" width="100">
+        <el-table-column prop="date" label="序号">
           <template scope="scope">
             {{ scope.$index + 1 }}
           </template>
@@ -95,6 +96,7 @@
             prop="directoryName"
           >
             <el-input
+              placeholder="请输入内容"
               v-model="addForm.directoryName"
               autocomplete="off"
             >
@@ -106,6 +108,7 @@
             prop="accountUser"
           >
             <el-input
+              placeholder="请输入内容"
               @change="accountUserChange"
               v-model="addForm.accountUser"
               autocomplete="off"
@@ -172,6 +175,7 @@
             prop="password"
           >
             <el-input
+              placeholder="请输入内容"
               v-model="addForm.password"
               clearable
             >
@@ -180,11 +184,11 @@
         </div>
         <div class="width">
           <el-form-item label="账户余额" :label-width="formLabelWidth" prop="balance">
-            <el-input v-model="addForm.balance"></el-input>
+            <el-input v-model="addForm.balance" placeholder="请输入内容"></el-input>
           </el-form-item>
 
           <el-form-item label="域地址" :label-width="formLabelWidth" prop="domain">
-            <el-input v-model="addForm.domain"></el-input>
+            <el-input v-model="addForm.domain" placeholder="请输入内容"></el-input>
           </el-form-item>
         </div>
         <div class="width">
@@ -229,6 +233,7 @@
           <el-form-item label="超时时长" :label-width="formLabelWidth" prop="expire">
             <el-input
               style="display: inline-block; margin-right: 10px"
+              placeholder="请输入内容"
               v-model="addForm.expire"
             ></el-input>
           </el-form-item>
@@ -246,11 +251,12 @@
         <div class="width">
           <el-form-item label="经度" :label-width="formLabelWidth" prop="latitude">
             <el-input
+              placeholder="请输入内容"
               v-model="addForm.latitude"
             ></el-input>
           </el-form-item>
           <el-form-item label="纬度" :label-width="formLabelWidth" prop="longitude">
-            <el-input v-model="addForm.longitude"></el-input>
+            <el-input v-model="addForm.longitude" placeholder="请输入内容"></el-input>
           </el-form-item>
         </div>
       </el-form>

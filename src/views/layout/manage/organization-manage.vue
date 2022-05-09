@@ -3,7 +3,7 @@
   <div id="management">
     <el-form ref="form" :model="form" label-width="80px"  :inline="true">
       <el-form-item label="组织名称">
-        <el-input v-model="form.name"></el-input>
+        <el-input placeholder="请输入内容" v-model="form.name"></el-input>
       </el-form-item>
       <el-form-item label="组织状态" >
         <el-select v-model="form.region">
@@ -16,16 +16,16 @@
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form ref="addForm" :model="addForm" :rules="rules">
         <el-form-item label="部门名称" :label-width="formLabelWidth" prop="deptName">
-          <el-input class="input" v-model="addForm.deptName" autocomplete="off"></el-input>
+          <el-input class="input" v-model="addForm.deptName" autocomplete="off" placeholder="请输入内容"></el-input>
         </el-form-item>
         <el-form-item label="字典编码" :label-width="formLabelWidth" prop="code">
-          <el-input class="input" v-model="addForm.code" autocomplete="off"></el-input>
+          <el-input class="input" v-model="addForm.code" autocomplete="off" placeholder="请输入内容"></el-input>
         </el-form-item>
         <el-form-item label="显示顺序" :label-width="formLabelWidth" prop="orderNum">
-          <el-input type="number" class="input" v-model="addForm.orderNum" autocomplete="off"></el-input>
+          <el-input type="number" class="input" v-model="addForm.orderNum" autocomplete="off" placeholder="请输入内容"></el-input>
         </el-form-item>
         <el-form-item label="上级部门" :label-width="formLabelWidth" prop="parentId">
-          <el-input ref="input" class="input" v-model="addForm.parentId" autocomplete="off"></el-input>
+          <el-input ref="input" class="input" v-model="addForm.parentId" autocomplete="off" placeholder="请输入内容"></el-input>
         </el-form-item>
         <el-form-item label="状态" :label-width="formLabelWidth">
           <el-radio-group v-model="addForm.status">
@@ -42,19 +42,19 @@
     <el-dialog :title="title" :visible.sync="dialogFormVisibles">
       <el-form ref="addForm" :model="addForm" :rules="rules">
         <el-form-item label="部门名称" :label-width="formLabelWidth" prop="deptName">
-          <el-input class="input" v-model="addForm.deptName" autocomplete="off"></el-input>
+          <el-input class="input" v-model="addForm.deptName" autocomplete="off" placeholder="请输入内容"></el-input>
         </el-form-item>
         <el-form-item label="字典编码" :label-width="formLabelWidth" prop="code">
-          <el-input class="input" v-model="addForm.code" autocomplete="off"></el-input>
+          <el-input class="input" v-model="addForm.code" autocomplete="off" placeholder="请输入内容"></el-input>
         </el-form-item>
         <el-form-item label="显示顺序" :label-width="formLabelWidth" prop="orderNum">
-          <el-input class="input" v-model="addForm.orderNum" autocomplete="off"></el-input>
+          <el-input class="input" v-model="addForm.orderNum" autocomplete="off" placeholder="请输入内容"></el-input>
         </el-form-item>
         <el-form-item label="上级部门" :label-width="formLabelWidth" prop="parentId">
-          <el-input ref="input" class="input" v-model="parentName" autocomplete="off"></el-input>
+          <el-input ref="input" class="input" v-model="parentName" autocomplete="off" placeholder="请输入内容"></el-input>
         </el-form-item>
         <el-form-item style="display: none" label="上级部门" :label-width="formLabelWidth" prop="parentId">
-          <el-input ref="input" class="input" v-model="addForm.parentId" autocomplete="off"></el-input>
+          <el-input ref="input" class="input" v-model="addForm.parentId" autocomplete="off" placeholder="请输入内容"></el-input>
         </el-form-item>
         <el-form-item label="状态" :label-width="formLabelWidth">
           <el-radio-group v-model="addForm.status">

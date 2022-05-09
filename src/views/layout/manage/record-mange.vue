@@ -4,11 +4,11 @@
     <el-form :inline="true" :model="form" ref="form" class="demo-form-inline">
     <el-form-item label="名称" prop="realName">
       <el-input
-          v-model="form.realName"
+          v-model="form.realName" placeholder="请输入内容"
       ></el-input>
     </el-form-item>
     <el-form-item label="操作" prop="operation">
-      <el-input v-model="form.operation" ></el-input>
+      <el-input v-model="form.operation" placeholder="请输入内容" ></el-input>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="submit">查询</el-button>
@@ -19,6 +19,7 @@
 
     <el-table
         border
+        :header-cell-style="{background:'#ccc', color: '#fff'}"
         :data="tableData"
         style="width: 100%">
       <el-table-column

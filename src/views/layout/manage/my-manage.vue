@@ -9,10 +9,10 @@
         <div class="container-form">
           <el-form :inline="true" ref="form" :model="form" :rules="form_rules" class="demo-form-inline">
             <el-form-item label="用户名称" prop="nickName">
-              <el-input v-model="form.nickName"></el-input>
+              <el-input placeholder="请输入内容" v-model="form.nickName"></el-input>
             </el-form-item>
             <el-form-item label="手机号" prop="phone">
-              <el-input v-model="form.phone"></el-input>
+              <el-input placeholder="请输入内容" v-model="form.phone"></el-input>
             </el-form-item>
             <el-form-item label="用户状态" prop="status">
               <el-select v-model="form.status">
@@ -30,9 +30,10 @@
         <el-table
             :data="resultList" v-if="resultList.length !== 0" @row-click="rowClick"
             :row-class-name="tableRowClassName"
+            :header-cell-style="{background:'#ccc', color: '#fff'}"
             border
             style="width: 100%; margin-top: 20px">
-          <el-table-column align="center" label="序号" width="120">
+          <el-table-column  align="center" label="序号" width="120">
             <template scope="scope">{{ scope.$index + 1 }}</template>
           </el-table-column>
           <el-table-column align="center" prop="nickName" label="姓名" width="120">
@@ -87,7 +88,7 @@
                 :label-width="formLabelWidth"
                 prop="nickName"
             >
-              <el-input v-model="addForm.nickName" autocomplete="off"></el-input>
+              <el-input placeholder="请输入内容" v-model="addForm.nickName" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item
                 class="form-item"
@@ -147,6 +148,7 @@
                 class="form-item"
                 label="账号"
                 type="email"
+                placeholder="请输入内容"
                 :label-width="formLabelWidth"
                 prop="username"
             >
@@ -166,7 +168,7 @@
                 prop="phone"
                 :label-width="formLabelWidth"
             >
-              <el-input v-model="addForm.phone" autocomplete="off"></el-input>
+              <el-input placeholder="请输入内容" v-model="addForm.phone" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item
                 v-if="title !== '修改'"
@@ -176,6 +178,7 @@
                 prop="password"
             >
               <el-input
+                placeholder="请输入内容"
                   v-model="addForm.password"
                   autocomplete="off"
               ></el-input>
@@ -187,6 +190,7 @@
                 prop="email"
             >
               <el-input
+                placeholder="请输入内容"
                   type="email"
                   v-model="addForm.email"
                   autocomplete="off"
@@ -480,6 +484,9 @@ export default {
 <style scoped>
 #my-manage {
   display: flex;
+}
+.table-title{
+  background-color: #f2f2f2;
 }
 
 .container-l {

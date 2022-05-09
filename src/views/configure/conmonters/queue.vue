@@ -3,16 +3,16 @@
     <div class="form-nav">
       <el-form :inline="true" :model="form" ref="form" class="demo-form-inline" :rules="rule">
         <el-form-item label="队列名称" prop="fifoName">
-          <el-input v-model="form.fifoName"></el-input>
+          <el-input v-model="form.fifoName" placeholder="请输入内容"></el-input>
         </el-form-item>
         <el-form-item label="队列号码" prop="fifoAgent">
-          <el-input v-model="form.fifoAgent"></el-input>
+          <el-input v-model="form.fifoAgent" placeholder="请输入内容"></el-input>
         </el-form-item>
         <el-form-item label="入路由号码" prop="fifoRouterIn">
-          <el-input v-model="form.fifoRouterIn"></el-input>
+          <el-input v-model="form.fifoRouterIn" placeholder="请输入内容"></el-input>
         </el-form-item>
         <el-form-item label="agent等待时间" prop="memberTimeout">
-          <el-input v-model="form.memberTimeout"></el-input>
+          <el-input v-model="form.memberTimeout" placeholder="请输入内容"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="find">查询</el-button>
@@ -27,10 +27,10 @@
       <el-form :model="addForm" ref="addForm" :rules="rules">
         <div class="width">
           <el-form-item label="队列名称" :label-width="formLabelWidth" prop="fifoName">
-            <el-input v-model="addForm.fifoName" autocomplete="off"></el-input>
+            <el-input v-model="addForm.fifoName" autocomplete="off" placeholder="请输入内容"></el-input>
           </el-form-item>
           <el-form-item label="队列号码" :label-width="formLabelWidth" prop="fifoAgent">
-            <el-input v-model="addForm.fifoAgent" autocomplete="off"></el-input>
+            <el-input v-model="addForm.fifoAgent" autocomplete="off" placeholder="请输入内容"></el-input>
           </el-form-item>
         </div>
         <div class="width">
@@ -57,18 +57,18 @@
         </div>
         <div class="width">
           <el-form-item label="队列等待音" :label-width="formLabelWidth" prop="fifoWaitMusic">
-            <el-input v-model="addForm.fifoWaitMusic" autocomplete="off"></el-input>
+            <el-input v-model="addForm.fifoWaitMusic" autocomplete="off" placeholder="请输入内容"></el-input>
           </el-form-item>
           <el-form-item label="最大注册数" :label-width="formLabelWidth" prop="memberSimultaneous">
-            <el-input v-model="addForm.memberSimultaneous" autocomplete="off"></el-input>
+            <el-input v-model="addForm.memberSimultaneous" autocomplete="off" placeholder="请输入内容"></el-input>
           </el-form-item>
         </div>
         <div class="width">
           <el-form-item label="等待时间" :label-width="formLabelWidth" prop="memberTimeout">
-            <el-input v-model="addForm.memberTimeout" autocomplete="off"></el-input>
+            <el-input v-model="addForm.memberTimeout" autocomplete="off" placeholder="请输入内容"></el-input>
           </el-form-item>
           <el-form-item label="接听电话间隔" :label-width="formLabelWidth" prop="wrapupTime">
-            <el-input v-model="addForm.wrapupTime" autocomplete="off"></el-input>
+            <el-input v-model="addForm.wrapupTime" autocomplete="off" placeholder="请输入内容"></el-input>
           </el-form-item>
         </div>
         <div class="width">
@@ -83,7 +83,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="域地址" :label-width="formLabelWidth" prop="fifoEmergency">
-            <el-input v-model="addForm.domain"></el-input>
+            <el-input v-model="addForm.domain" placeholder="请输入内容"></el-input>
           </el-form-item>
 
         </div>
@@ -94,6 +94,7 @@
       </div>
     </el-dialog>
     <el-table
+      :header-cell-style="{background:'#ccc', color: '#fff',}"
         class="table"
         :data="list"
         border

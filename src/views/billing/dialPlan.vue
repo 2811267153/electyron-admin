@@ -3,7 +3,7 @@
     <div class="container">
       <el-form :inline="true" :model="form" class="demo-form-inline" ref="form" rules="rules">
         <el-form-item label="方案名称" prop="diaplanName">
-          <el-input v-model="form.diaplanName" placeholder="审批人"></el-input>
+          <el-input v-model="form.diaplanName"  placeholder="请输入内容"></el-input>
         </el-form-item>
 
         <el-form-item>
@@ -24,7 +24,7 @@
               :label-width="formLabelWidth"
               prop="diaplanName"
           >
-            <el-input v-model="addForm.diaplanName" autocomplete="off"></el-input>
+            <el-input v-model="addForm.diaplanName" autocomplete="off"  placeholder="请输入内容"></el-input>
           </el-form-item>
           <el-form-item label="中继组" :label-width="formLabelWidth" prop="diaplanGatewayGroup">
             <el-select v-model="addForm.diaplanGatewayGroup"  placeholder="请选择"  style="width: 100%">
@@ -61,7 +61,7 @@
         >
       </div>
     </el-dialog>
-    <el-table :data="list" border style="width: 100%; margin-top: 20px"  v-if="list.length !==0">
+    <el-table  :header-cell-style="{background:'#ccc', color: '#fff',}":data="list" border style="width: 100%; margin-top: 20px"  v-if="list.length !==0">
       <el-table-column prop="date" align="center" label="序号" width="180">
         <template scope="scope">
           {{ scope.$index + 1 }}

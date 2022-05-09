@@ -5,7 +5,7 @@
       <div class="container">
         <el-form :inline="true" :model="form" class="demo-form-inline" :rules="addFroms" ref="form">
           <el-form-item label="费率组" prop="diaplanRateGroup">
-            <el-input v-model="form.diaplanRateGroup"></el-input>
+            <el-input v-model="form.diaplanRateGroup" placeholder="请输入内容"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="find">查询</el-button>
@@ -24,11 +24,11 @@
               :label-width="formLabelWidth"
               prop="groupName"
           >
-            <el-input v-model="addForm.groupName" autocomplete="off"></el-input>
+            <el-input v-model="addForm.groupName" autocomplete="off" placeholder="请输入内容"></el-input>
           </el-form-item>
 
           <el-form-item label="备注" :label-width="formLabelWidth">
-            <el-input v-model="addForm.remark" autocomplete="off"></el-input>
+            <el-input v-model="addForm.remark" autocomplete="off" placeholder="请输入内容"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -37,7 +37,7 @@
         </div>
       </el-dialog>
 
-      <el-table :data="list" stripe style="width: 100%" border v-if="list.length !== 0">
+      <el-table :data="list" :header-cell-style="{background:'#ccc', color: '#fff',}" style="width: 100%" border v-if="list.length !== 0">
         <el-table-column align="center" prop="date" label="序号" width="180">
           <template scope="scope">
             {{ scope.$index + 1 }}

@@ -3,10 +3,10 @@
     <div class="nav-form">
       <el-form  :model="form" :hide-required-asterisk="true" :show-message="false" :inline="true" class="demo-form-inline" ref="form" :rules="rule" >
         <el-form-item :span="5" label="网关名称" prop="gatewayName">
-          <el-input v-model="form.gatewayName"></el-input>
+          <el-input placeholder="请输入内容" v-model="form.gatewayName"></el-input>
         </el-form-item>
         <el-form-item :span="1000000" label="中继IP" prop="gatewayIp">
-          <el-input v-model="form.gatewayIp" ></el-input>
+          <el-input placeholder="请输入内容" v-model="form.gatewayIp" ></el-input>
         </el-form-item>
         <el-form-item label="中继类型" prop="gatewayType">
           <el-select v-model="form.gatewayType" placeholder="协议类型">
@@ -35,7 +35,7 @@
               :label-width="formLabelWidth"
               prop="gatewayName"
           >
-            <el-input v-model="addFrom.gatewayName" autocomplete="off"></el-input>
+            <el-input placeholder="请输入内容" v-model="addFrom.gatewayName" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item
             label="中继类型"
@@ -58,7 +58,7 @@
               :label-width="formLabelWidth"
               prop="realm"
           >
-            <el-input
+            <el-input placeholder="请输入内容"
                 v-model="addFrom.realm"
                 autocomplete="off"
             ></el-input>
@@ -68,7 +68,7 @@
               :label-width="formLabelWidth"
               prop="proxyIp"
           >
-            <el-input
+            <el-input placeholder="请输入内容"
                 v-model="addFrom.proxyIp"
                 autocomplete="off"
             ></el-input>
@@ -116,7 +116,7 @@
               :label-width="formLabelWidth"
               prop="expires"
           >
-            <el-input
+            <el-input placeholder="请输入内容"
                 v-model="addFrom.expires"
                 autocomplete="off"
             ></el-input>
@@ -126,7 +126,7 @@
               :label-width="formLabelWidth"
               prop="gatewayIp"
           >
-            <el-input
+            <el-input placeholder="请输入内容"
                 v-model="addFrom.gatewayIp"
                 autocomplete="off"
             ></el-input>
@@ -138,7 +138,7 @@
               :label-width="formLabelWidth"
               prop="gatewayPort"
           >
-            <el-input
+            <el-input placeholder="请输入内容"
                 v-model="addFrom.gatewayPort"
                 autocomplete="off"
             ></el-input>
@@ -165,10 +165,10 @@
               :label-width="formLabelWidth"
               prop="maxCall"
           >
-            <el-input v-model="addFrom.maxCall"/>
+            <el-input placeholder="请输入内容" v-model="addFrom.maxCall"/>
           </el-form-item>
           <el-form-item  prop="accountUser" label="计费账号" :label-width="formLabelWidth">
-            <el-input :disabled="addFrom.gatewayType === 1" v-model="addFrom.accountUser"></el-input>
+            <el-input :disabled="addFrom.gatewayType === 1" placeholder="请输入内容" v-model="addFrom.accountUser"></el-input>
           </el-form-item>
         </div>
         <div class="width">
@@ -177,14 +177,14 @@
             :label-width="formLabelWidth"
             prop="username"
           >
-            <el-input v-model="addFrom.username"/>
+            <el-input v-model="addFrom.username" placeholder="请输入内容"/>
           </el-form-item>
           <el-form-item
             label="密码"
             :label-width="formLabelWidth"
             prop="password"
           >
-            <el-input v-model="addFrom.password"/>
+            <el-input v-model="addFrom.password" placeholder="请输入内容"/>
           </el-form-item>
         </div>
 
@@ -210,20 +210,16 @@
       </div>
     </el-dialog>
 
-    <el-table :data="list" style="width: 100%" border>
+    <el-table :header-cell-style="{background:'#ccc', color: '#fff',}"  :data="list" style="width: 100%" border>
       <el-table-column align="center" prop="date" label="序号" width="50px">
         <template scope="scope">{{ scope.$index + 1 }}</template>
       </el-table-column>
       <el-table-column align="center" prop="gatewayName" label="网关名称"></el-table-column>
       <el-table-column align="center" prop="accountUser" label="计费账号"></el-table-column>
-<!--      <el-table-column align="center" prop="realm" label="域地址"></el-table-column>-->
-<!--      <el-table-column align="center" prop="proxyIp" label="代理地址"></el-table-column>-->
       <el-table-column align="center" prop="codecs" label="支持编码"></el-table-column>
-<!--      <el-table-column align="center" prop="dtmfMode" label="dtmfMode"></el-table-column>-->
       <el-table-column align="center" prop="expires" label="超时时长(s)"></el-table-column>
       <el-table-column align="center" prop="gatewayIp" label="中继IP"></el-table-column>
       <el-table-column align="center" prop="gatewayPort" label="中继端口"></el-table-column>
-<!--      <el-table-column align="center" prop="profileId" label="服务端口ID"></el-table-column>-->
       <el-table-column align="center" prop="gatewayType" label="中继类型">
         <template scope="scope" >
           <a v-if="scope.row.gatewayType === 0">入中继</a>
@@ -234,7 +230,7 @@
       </el-table-column>
       <el-table-column align="center" prop="maxCall" label="最大并发数"></el-table-column>
       <el-table-column align="center" prop="username" label="注册用户"></el-table-column>
-      <el-table-column align="register" prop="username" label="是否注册">
+      <el-table-column align="center" prop="username" label="是否注册">
         <template scope="scope">
           <div v-if="scope.row.register === 1"> 注册</div>
           <div v-else> 不注册</div>

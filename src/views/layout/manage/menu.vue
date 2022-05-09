@@ -27,24 +27,24 @@
       <el-dialog :title="title" :visible.sync="dialogFormVisible">
         <el-form :model="addForm" ref="addForm" :rules="rules">
           <el-form-item label="菜单名称" :label-width="formLabelWidth" prop="menuName">
-            <el-input v-model="addForm.menuName" autocomplete="off"></el-input>
+            <el-input v-model="addForm.menuName" autocomplete="off" placeholder="请输入内容"></el-input>
           </el-form-item>
           <el-form-item label="菜单类型" :label-width="formLabelWidth" prop="menuType">
             <el-select v-model="addForm.menuType">
-              <el-option v-for="item in menuType" :value="item.value" :label="item.label"></el-option>
+              <el-option v-for="item in menuType" :value="item.value" placeholder="请输入内容" :label="item.label"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="显示顺序" :label-width="formLabelWidth" prop="orderNum">
-            <el-input v-model="addForm.orderNum"/>
+            <el-input v-model="addForm.orderNum" placeholder="请输入内容"/>
           </el-form-item>
           <el-form-item label="父菜单ID" :label-width="formLabelWidth" prop="parentId">
-            <el-input v-model="addForm.parentId"/>
+            <el-input v-model="addForm.parentId" placeholder="请输入内容"/>
           </el-form-item>
           <el-form-item label="路由地址" :label-width="formLabelWidth" prop="path">
-            <el-input v-model="addForm.path"/>
+            <el-input v-model="addForm.path" placeholder="请输入内容"/>
           </el-form-item>
           <el-form-item label="权限标识" :label-width="formLabelWidth" prop="perms">
-            <el-input v-model="addForm.perms"/>
+            <el-input v-model="addForm.perms" placeholder="请输入内容"/>
           </el-form-item>
           <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
             <el-radio-group v-model="addForm.status">

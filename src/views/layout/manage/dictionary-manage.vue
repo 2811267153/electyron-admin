@@ -20,17 +20,17 @@
       <el-dialog :title="title" :visible.sync="dialogFormVisible">
         <el-form ref="addForm" :model="addForm" :rules="riles">
           <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
-            <el-input v-model="addForm.name" autocomplete="off"></el-input>
+            <el-input placeholder="请输入内容" v-model="addForm.name" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="排序" :label-width="formLabelWidth" prop="orderNum">
-            <el-input v-model="addForm.orderNum" autocomplete="off"></el-input>
+            <el-input placeholder="请输入内容" v-model="addForm.orderNum" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item
               label="字典类型"
               prop="code"
               :label-width="formLabelWidth"
           >
-            <el-input v-model="addForm.code">aqa</el-input>
+            <el-input placeholder="请输入内容" v-model="addForm.code">aqa</el-input>
           </el-form-item>
           <el-form-item label="是否启用" :label-width="formLabelWidth">
             <el-radio-group v-model="addForm.status">
@@ -48,7 +48,7 @@
         </div>
       </el-dialog>
 
-      <el-table :data="resultList" border style="width: 100%">
+      <el-table :data="resultList" border style="width: 100%"  :header-cell-style="{background:'#f2f2f2'}">
         <el-table-column  align="center"  prop="name" label='序号' width="50">
           <template scope="scope">{{scope.$index + 1}}</template>
         </el-table-column>

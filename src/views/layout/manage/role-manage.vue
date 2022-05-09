@@ -6,7 +6,7 @@
         <div class="nav-l">
           <el-form ref="form" label-width="80px" :inline="true" :rules="form_rules"  :model="navForm">
             <el-form-item label="角色名称" prop="roleName">
-              <el-input v-model="navForm.roleName"></el-input>
+              <el-input v-model="navForm.roleName" placeholder="请输入内容"></el-input>
             </el-form-item>
             <el-form-item label="权限" prop="status">
               <el-select v-model="navForm.status" placeholder="请选择">
@@ -30,7 +30,7 @@
       <el-dialog title="数据权限" :visible.sync="dialogFormVisibles">
         <el-form :model="dataScopeForm">
           <el-form-item label="角色ID" :label-width="formLabelWidth">
-            <el-input v-model="dataScopeForm.roleId"/>
+            <el-input v-model="dataScopeForm.roleId" placeholder="请输入内容"/>
           </el-form-item>
           <el-form-item label="数据权限" :label-width="formLabelWidth">
             <el-select v-model="dataScopeForm.dataScope">
@@ -52,21 +52,21 @@
               :label-width="formLabelWidth"
               prop="roleName"
           >
-            <el-input v-model="addForm.roleName" autocomplete="off"></el-input>
+            <el-input v-model="addForm.roleName" autocomplete="off" placeholder="请输入内容"></el-input>
           </el-form-item>
           <el-form-item
               label="显示顺序"
               :label-width="formLabelWidth"
               prop="orderNum"
           >
-            <el-input v-model="addForm.orderNum" autocomplete="off"></el-input>
+            <el-input v-model="addForm.orderNum" autocomplete="off" placeholder="请输入内容"></el-input>
           </el-form-item>
           <el-form-item
               label="角色编码"
               :label-width="formLabelWidth"
               prop="roleCode"
           >
-            <el-input v-model="addForm.roleCode" autocomplete="off"></el-input>
+            <el-input v-model="addForm.roleCode" autocomplete="off" placeholder="请输入内容"></el-input>
           </el-form-item>
 
           <el-form-item label="菜单权限" :label-width="formLabelWidth" required>
@@ -88,7 +88,7 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item label="备注" :label-width="formLabelWidth">
-            <el-input v-model="addForm.desc" autocomplete="off"></el-input>
+            <el-input v-model="addForm.desc" autocomplete="off" placeholder="请输入内容"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -104,6 +104,7 @@
           v-if="list.length !== 0"
           :data="list"
           border
+          :header-cell-style="{background:'#f2f2f2'}"
           style="width: 100%; margin-top: 20px">
         <el-table-column
             prop="date"

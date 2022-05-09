@@ -34,9 +34,6 @@ export function request(config) {
                 location.reload()
             }
         }).then(res => console.log(res));
-
-
-
     })
 
     return instance(config)
