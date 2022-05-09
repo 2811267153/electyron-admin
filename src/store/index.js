@@ -9,7 +9,7 @@ export default new Vuex.Store({
     dictionaryData: {},
     formPage: {
       pageNum: 1,
-      pageSize: 10
+      pageSize: 10,
     },
     total: 0  // 获取数据的总长度
   },

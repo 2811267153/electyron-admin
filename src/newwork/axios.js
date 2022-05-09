@@ -20,7 +20,7 @@ export function request(config) {
     })
     instance.interceptors.response.use(config => {
         if(config.data.code === 40000){
-            MessageBox.alert('登录状态异常,请重新登录', '权限异常', {
+            MessageBox.alert('登录过期,请重新登录', '权限异常', {
                 confirmButtonText: '确定',
                 callback: action => {
                     removeCookie()

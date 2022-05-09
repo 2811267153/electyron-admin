@@ -34,35 +34,34 @@
         :header-cell-style="{background:'#ccc', color: '#fff',}"
         :data="list"
         style="width: 100%"
+        border
         v-if="list.length !== 0"
       >
-        <el-table-column prop="date" label="序号">
+        <el-table-column prop="date" align="center" label="序号">
           <template scope="scope">
             {{ scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column prop="directoryName" label="分机名称"></el-table-column>
-        <el-table-column prop="directoryNumber" label="鉴权号码">
+        <el-table-column align="center" prop="directoryName" label="分机名称"></el-table-column>
+        <el-table-column align="center" prop="directoryNumber" label="鉴权号码">
         </el-table-column>
-        <el-table-column prop="diaplan" label="拨号地址">
+        <el-table-column align="center" prop="diaplan" label="拨号地址">
         </el-table-column>
-        <el-table-column prop="deptName" label="部门">
-
+        <el-table-column align="center" prop="deptName" label="部门">
         </el-table-column>
-        <el-table-column prop="groupName" label="中继组">
-
+        <el-table-column align="center" prop="groupName" label="中继组">
         </el-table-column>
-        <el-table-column prop="domain" label="域地址"></el-table-column>
-        <el-table-column prop="balance" label="余额"></el-table-column>
-        <el-table-column prop="expire" label="超时时长"></el-table-column>
-        <el-table-column prop="overdraft" label="计费方式">
+        <el-table-column align="center" prop="domain" label="域地址"></el-table-column>
+        <el-table-column align="center" prop="balance" label="余额"></el-table-column>
+        <el-table-column align="center" prop="expire" label="超时时长"></el-table-column>
+        <el-table-column align="center" prop="overdraft" label="计费方式">
           <template scope="scope">
             <div v-if="scope.row.billingType === 1">后付费</div>
             <div v-else>先付费</div>
           </template>
         </el-table-column>
-        <el-table-column prop="bussiness" label="业务类型"> </el-table-column>
-        <el-table-column prop="address" label="操作">
+        <el-table-column align="center" prop="bussiness" label="业务类型"> </el-table-column>
+        <el-table-column align="center" prop="address" label="操作">
           <template scope="scope">
             <el-link
               class="a-link"

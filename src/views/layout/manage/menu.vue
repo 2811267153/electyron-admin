@@ -99,13 +99,13 @@ export default {
         {label: '关闭', value: 1},
       ],
       rules: {
-        menuName: [  { required: true, message: '该选项不可为空, 请确认', trigger: 'change' },],
-        menuType: [  { required: true, message: '该选项不可为空, 请确认', trigger: 'change' },],
-        orderNum: [  { required: true, message: '该选项不可为空, 请确认', trigger: 'change' },],
-        parentId: [  { required: true, message: '该选项不可为空, 请确认', trigger: 'change' },],
-        path: [  { required: true, message: '改选行不可为空, 请确认'},],
-        perms: [  { required: true, message: '改选行不可为空, 请确认'},],
-        status: [  { required: false, message: '改选行不可为空, 请确认'},],
+        menuName: [  { required: true, message: '该选项不可为空, 请确认', trigger: 'blur' },],
+        menuType: [  { required: true, message: '该选项不可为空, 请确认', trigger: 'blur' },],
+        orderNum: [  { required: true, message: '该选项不可为空, 请确认', trigger: 'blur' },],
+        parentId: [  { required: true, message: '该选项不可为空, 请确认', trigger: 'blur' },],
+        path: [  { required: true, message: '改选行不可为空, 请确认', trigger: 'blur' }, ],
+        perms: [  { required: true, message: '改选行不可为空, 请确认', trigger: 'blur' },],
+        status: [  { required: false, message: '改选行不可为空, 请确认', trigger: 'blur' },],
       }
     }
   },
@@ -152,18 +152,23 @@ export default {
     },
     meunClick(a) {
       this.row = a
+      console.log(this.row);
+      this.showForm()
     },
     showForm(type) {
-      this.title = type
-      console.log(type)
-      this.dialogFormVisible = true
-      if (type === '新增') {
-        this.addForm = this.$options.data().addForm
-        this.addForm.parentId = this.row.menuId
+      if(type === null) {
+        this.dialogFormVisible = false
       }else {
-        this.addForm = this.row
-      }
-    }
+        this.dialogFormVisible = true
+        this.title = type
+        console.log(this.row);
+        if (this.title === '编辑') {
+          this.addForm = this.row
+        }else {
+          this.addForm = this.$options.data().addForm
+          this.addForm.parentId = this.row.menuId
+        }
+      }}
   },
   computed: {
     // pathRes(){

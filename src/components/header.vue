@@ -85,7 +85,7 @@ export default {
   },
   methods: {
     currentChange() {
-      this.$bus.$emit('pageChange', this.pageSize,)
+      this.$bus.$emit('pageChange',)
     },
 
     loginOut() {

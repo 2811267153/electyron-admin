@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="feDetail" v-if="!isDetail">
-      <div class="">
-        <el-form :inline="true" :model="form" ref="form" class="demo-form-inline">
+      <div class="form-nav">
+        <el-form  :inline="true" :model="form" ref="form" class="demo-form-inline">
           <el-form-item label="审批人">
             <el-input v-model="form.user" placeholder="请输入内容"></el-input>
           </el-form-item>

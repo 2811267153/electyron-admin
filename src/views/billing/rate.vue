@@ -1,7 +1,6 @@
 <template>
   <div id="rate">
     <div class="rate-true" v-if="toggle">
-      <p>{{ this.$route.meta.title }}</p>
       <div class="container">
         <el-form :inline="true" :model="form" class="demo-form-inline" :rules="addFroms" ref="form">
           <el-form-item label="费率组" prop="diaplanRateGroup">
@@ -466,8 +465,8 @@ export default {
 .container {
   display: flex;
   justify-content: space-between;
-  margin: 20px 0;
   height: 40px;
+  margin-bottom: 20px;
   background-color: #fff;
 }
 

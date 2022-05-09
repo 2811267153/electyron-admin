@@ -271,7 +271,7 @@ router.beforeEach((to, form, next) => {
   store.state.total = 0
   const formPage = {
     pageNum: 1,
-    pageSize: 10
+    pageSize: 10,
   }
   store.state.formPage = formPage
   next()

@@ -57,7 +57,18 @@
         </div>
         <div class="width">
           <el-form-item label="队列等待音" :label-width="formLabelWidth" prop="fifoWaitMusic">
-            <el-input v-model="addForm.fifoWaitMusic" autocomplete="off" placeholder="请输入内容"></el-input>
+            <el-upload
+              class="upload-demo"
+              action="http://123.60.212.9:9528/dispatch/file/upload"
+              :before-remove="beforeRemove"
+              :with-credentials="true"
+              multiple
+              :limit="1"
+              :on-error="error"
+              :on-success="success">
+              <el-button size="small" type="primary" style="margin-right: 20px">点击上传</el-button>
+              <span slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</span>
+            </el-upload>
           </el-form-item>
           <el-form-item label="最大注册数" :label-width="formLabelWidth" prop="memberSimultaneous">
             <el-input v-model="addForm.memberSimultaneous" autocomplete="off" placeholder="请输入内容"></el-input>
@@ -77,13 +88,23 @@
               <el-option
                   v-for="item in fifoEmergencyList"
                   :key="item.id"
-                  :label="item.name"
-                  :value="item.name">
+                  :label="item.directoryNumber"
+                  :value="item.directoryNumber">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="域地址" :label-width="formLabelWidth" prop="fifoEmergency">
             <el-input v-model="addForm.domain" placeholder="请输入内容"></el-input>
+          </el-form-item>
+
+        </div>
+        <div class="width">
+          <el-form-item label="夜服号码" :label-width="formLabelWidth" prop="fifoEmergency">
+            <el-input v-model="addForm.fifoNight" placeholder="请输入内容"></el-input>
+          </el-form-item>
+          <el-form-item label="夜服号码" :label-width="formLabelWidth" prop="fifoEmergency">
+            <my-tree ref="myTree" style="width: 100%" :options="treeArr" @getValue="getSelectedValue"></my-tree>
+
           </el-form-item>
 
         </div>
@@ -164,7 +185,9 @@
 <script>
 import { addFifo, delFifo, getDirectory, getFifo, upDataFifo } from "@/newwork/directory";
 import myEmpty from "@/newwork/myEmpty";
-import {getDictionaryAll} from "@/newwork/system-colltroner";
+import { getDictionaryAll, getOrganizeList } from "@/newwork/system-colltroner";
+import { fn } from "@/uti";
+import myTree from "@/components/myTree";
 
 export default {
   name: "queue",
@@ -176,6 +199,7 @@ export default {
         fifoRouterIn: '',  //fifoRouterIn
         memberTimeout: '', //	agent等待时间
       },
+      treeArr: [],
       addForm: {
         domain: '', //域
         fifoAgent: '', //号码
@@ -187,6 +211,7 @@ export default {
         memberTimeout: '', //agent等待时间
         wrapupTime : '', //接听下一路电话的间隔
         fifoEmergency: '', //紧急呼叫号码
+        fifoNight: ''
       },
       fifoRouterInList: [],  //入路由号码列表
       fifoRouterOutList: [], //出路由号码列表
@@ -245,11 +270,34 @@ export default {
     }
   },
   methods: {
+    getSelectedValue(value) {
+      this.addForm.deptId = value.deptId
+    },
+    beforeRemove(){
+      console.log('开始');
+    },
+    error(){
+      this.$message.error('上传失败, 请重试')
+    },
+    success(){
+      this.$message.success('上传完成!!!')
+    },
     addForms(row, type){
       this.title = type
       type !== '新增' ?  this.addForm = row : ''
       this.getFifo(this.form)
       this.dialogFormVisible = true
+      if(type === '新增'){
+        this.addForm = this.$options.data().addForm
+        this.$nextTick(() => {
+          this.$refs.myTree.valueName = this.addForm.deptId
+        })
+      }else {
+        this.addForm = row
+        this.$nextTick(() => {
+          this.$refs.myTree.valueName = this.addForm.deptId
+        })
+      }
     },
     resetForm(type) {
      type === 'clear' ? this.$refs.form.resetFields(): this.$refs.addForm.resetFields();
@@ -303,6 +351,11 @@ export default {
       }).catch(e => this.$message.error(e))
     },
     //出 入 队列
+
+    /**
+     * @param type === 1 为 紧急呼叫的结果 === 4 为入路由的结果 === 5 为出路由的结果
+     */
+
     getDirectory(type){
       const data = {}
       data.type = type
@@ -310,29 +363,33 @@ export default {
         getDirectory(data).then(res => {
           this.fifoRouterInList = res.data.data.records
         })
-      }else {
+      }else if(type === 5) {
         getDirectory(data).then(res => {
           this.fifoRouterOutList = res.data.data.records
         })
+      }else {
+        getDirectory(data).then(res => {
+          this.fifoEmergencyList = res.data.data.records
+        })
       }
     },
-    //紧急呼叫
-    getDictionaryAll(type){
-      const data = {}
-      data.code = type
-      getDictionaryAll(data).then(res => {
-        console.log(res);
-        this.fifoEmergencyList = res.data.data
-      })
+
+    getOrganizeList(){
+      getOrganizeList().then(res => {
+        this.treeArr = fn(res.data.data);
+      });
     }
+
 
   },
   created() {
     this.form = this.$store.state.formPage
     this.getFifo(this.form)
+    this.getOrganizeList()
   },
   components: {
-    myEmpty
+    myEmpty,
+    myTree
   },
   mounted() {
     this.$bus.$on('pageChange', () => {
@@ -349,8 +406,8 @@ export default {
         //出, 入队列
         this.getDirectory(4)
         this.getDirectory(5)
+        this.getDirectory(0)
         //查找字典
-        this.getDictionaryAll('emergencyNumber')
       }
     }
   }

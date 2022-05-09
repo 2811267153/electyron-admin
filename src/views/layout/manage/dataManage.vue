@@ -4,28 +4,31 @@
       <div class="nav">
         <div class="nav-l">
 
-          <el-form :model="form" inline :rules="rule" ref="form" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="字典类型名称" prop="name" label-width="180">
-              <el-input placeholder="请输入内容" v-model="form.name"></el-input>
-            </el-form-item>
-            <el-form-item label="字典编码" prop="code">
-              <el-input placeholder="请输入内容" v-model="form.code"></el-input>
-            </el-form-item>
-            <el-form-item label="字典状态" prop="status">
-              <el-select v-model="form.status">
-                <el-option
-                    v-for="item in status"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="submitForm">查找</el-button>
-              <el-button @click="resetForm('form')">重置</el-button>
-            </el-form-item>
-          </el-form>
+          <div class="form-nav">
+            <el-form :model="form" inline :rules="rule" ref="form" label-width="68px" class="demo-ruleForm">
+              <el-form-item label="字典类型名称" prop="name" label-width="180">
+                <el-input placeholder="请输入内容" v-model="form.name"></el-input>
+              </el-form-item>
+              <el-form-item label="字典编码" prop="code">
+                <el-input placeholder="请输入内容" v-model="form.code"></el-input>
+              </el-form-item>
+              <el-form-item label="字典状态" prop="status">
+                <el-select v-model="form.status">
+                  <el-option
+                      v-for="item in status"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="submitForm">查找</el-button>
+                <el-button @click="resetForm('form')">重置</el-button>
+              </el-form-item>
+            </el-form>
+
+          </div>
 
         </div>
         <div class="nav-l">
