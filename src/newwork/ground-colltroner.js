@@ -220,3 +220,15 @@ export function addFroFile(data) {
         data
     })
 }
+//上传文件
+export  function upDataFile(formData){
+    return request({
+        url: '/file/upload',
+        method: 'post',
+        data: formData,
+        isFormData: true,
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+}

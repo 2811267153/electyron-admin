@@ -59,10 +59,10 @@
           <el-form-item label="队列等待音" :label-width="formLabelWidth" prop="fifoWaitMusic">
             <el-upload
               class="upload-demo"
-              action="http://123.60.212.9:9528/dispatch/file/upload"
+              action= ""
               :before-remove="beforeRemove"
               :with-credentials="true"
-              multiple
+              :http-request="httpRequest"
               :limit="1"
               :on-error="error"
               :on-success="success">
@@ -275,6 +275,12 @@ export default {
     },
     beforeRemove(){
       console.log('开始');
+    },
+    //上传文件
+    httpRequest(param){
+      let File = param.file
+      let FileName = File.name
+      let formData = new FormData()
     },
     error(){
       this.$message.error('上传失败, 请重试')

@@ -3,7 +3,7 @@
     <div class="header app-header">
       <div class="logo-info">
         <div class="logo"></div>
-        <h1 v-if="$route.path !== '/index'">金数GDP1000  融合通信管理平台</h1>
+        <h1 v-if="$route.path !== '/index'">金数GDP1000 融合通信管理平台</h1>
       </div>
       <p><span @click="loginOut">当前用户:</span> {{ userInfo.nickName }}</p>
       <!--      <p>  <span>用户</span>: {{userInfo.data.user.username || ''}} <el-button @click="loginOut" class="login-out">退出</el-button></p>-->
@@ -37,7 +37,7 @@
                     v-for="path in item.children"
                 >
                   <div v-if="path.meta">
-                    <el-menu-item class="menu-item"  :index="path.path + ''">{{ path.meta.title}} </el-menu-item>
+                    <el-menu-item class="menu-item" :index="path.path + ''">{{ path.meta.title }}</el-menu-item>
                   </div>
                 </el-menu-item-group>
               </el-submenu>
@@ -45,7 +45,7 @@
           </el-col>
         </div>
       </div>
-      <div class="content" >
+      <div class="content">
         <div class="content-nav">
           <el-breadcrumb class="nav-bar" separator="/">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
@@ -56,7 +56,7 @@
           <router-view/>
         </div>
         <div class="footer">
-          <div class="total">共查询到:  <span> {{$store.state.total}} </span> 条相关数据</div>
+          <div class="total">共查询到: <span> {{ $store.state.total }} </span> 条相关数据</div>
           <el-pagination
               background
               :page-size="10"
@@ -81,17 +81,13 @@ export default {
   data() {
     return {
       home: false,
+      formPage: {}
     }
   },
   methods: {
-    currentChange() {
-      this.$bus.$emit('pageChange',)
-    },
-
     loginOut() {
       delLogin().then(res => {
-        console.log(res)
-        if(res.data.code === 200){
+        if (res.data.code === 200) {
           this.$message.success('正在跳转登录页面')
           jsCookie.remove('JSESSIONID')
           this.$router.push('/user')
@@ -100,23 +96,22 @@ export default {
         this.$message.error(e)
       })
     },
-    prev(){
-      return this.$store.state.formPage.pageNum --
+    prev() {
+      return this.$store.state.formPage.pageNum--
     },
-    next(){
-      return this.$store.state.formPage.pageNum ++
+    next() {
+      return this.$store.state.formPage.pageNum++
     },
-    pageChange(e){
-      const formPage = {}
-      formPage.pageNum = e
-      formPage.pageSize = 10
-      this.$store.dispatch('formPage', formPage)
+    pageChange(e) {
+      this.formPage.pageNum = e
+      this.formPage.pageSize = 10
       this.$bus.$emit('pageChange',)
+      this.$store.dispatch('formPage', this.formPage)
     },
 
   },
-  created(){
-    console.log(this.$route, '--------------')
+  created() {
+    console.log(this.$route)
   },
   computed: {
     routes() {
@@ -140,7 +135,8 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.el-submenu li{
+
+.el-submenu li {
   background-color: rgb(67, 74, 80) !important;
 }
 
@@ -149,24 +145,28 @@ export default {
   overflow: hidden;
   width: 200px;
 }
-.logo{
+
+.logo {
   height: 80px;
   width: 200px;
   background: no-repeat center/80% url("/src/assets/logo.png");;
 }
+
 .header-nav {
   background-color: #545c64;
 }
 
-.header h1{
+.header h1 {
   font-weight: 600;
   font-size: 30px;
 }
-.logo-info{
+
+.logo-info {
   flex: 1;
   display: flex;
   align-items: center;
 }
+
 .app-header {
   height: 80px;
 }
@@ -215,6 +215,7 @@ export default {
   margin-left: 20px;
   margin-top: 20px;
 }
+
 .total {
   height: 28px;
   background-color: #f4f4f5;
@@ -223,7 +224,8 @@ export default {
   text-align: center;
   font-size: 13px;
 }
-.total span{
+
+.total span {
   display: inline-block;
   background-color: #409EFF;
   padding: 5px;

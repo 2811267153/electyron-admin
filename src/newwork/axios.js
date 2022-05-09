@@ -2,6 +2,7 @@ import axios from 'axios'
 import store from "@/store";
 import {getCookie, removeCookie} from "@/auth";
 import { MessageBox } from 'element-ui'
+import Vue from "vue";
 
 export function request(config) {
     const instance = axios.create({
@@ -14,6 +15,8 @@ export function request(config) {
         if(store.state.userInfo){
             config.headers.Authorization= getCookie()
         }
+        Vue.prototype.$bus = new Vue()
+        this.$bus.$emit('isLoading')
         return config;
     }, error => {
 
