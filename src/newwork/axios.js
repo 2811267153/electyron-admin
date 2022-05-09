@@ -19,21 +19,18 @@ export function request(config) {
 
     })
     instance.interceptors.response.use(config => {
-        // if(config.data.code !== 200){
-        //     removeCookie()
-        // }
-        // axios.get('http://123.60.212.9:9528/dispatch/unauth').then(res => {
-        //     console.log(res, '________________');
-        // })
+        if(config.data.code === 40000){
+            MessageBox.alert('登录状态异常,请重新登录', '权限异常', {
+                confirmButtonText: '确定',
+                callback: action => {
+                    removeCookie()
+                    location.reload()
+                }
+            }).then(res => console.log(res));
+        }
         return config
     }, error => {
-        MessageBox.alert('登录状态异常,请重新登录', '权限异常', {
-            confirmButtonText: '确定',
-            callback: action => {
-                removeCookie()
-                location.reload()
-            }
-        }).then(res => console.log(res));
+
     })
 
     return instance(config)
