@@ -15,8 +15,6 @@ export function request(config) {
         if(store.state.userInfo){
             config.headers.Authorization= getCookie()
         }
-        Vue.prototype.$bus = new Vue()
-        this.$bus.$emit('isLoading')
         return config;
     }, error => {
 

@@ -119,6 +119,13 @@ export function getOrganizeId(data){
         url: '/system/dept/detail/' + data,
     })
 }
+export function upDataOrganize(data) {
+    return request({
+        url: '/system/dept/edit',
+        method: 'put',
+        data
+    })
+}
 
 /*
 *
@@ -234,7 +241,7 @@ export function upDataMenu(data){
 }
 export function delMenu(data) {
     return request({
-        url: '/system/menu/update' + data,
+        url: '/system/menu/delete/' + data,
         method: 'delete'
     })
 }

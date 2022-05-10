@@ -14,9 +14,8 @@
             {{ data.menuName }}
           </el-link>
           <div class="item-r">
-            <el-link class="link" @click="showForm('新增')">新增</el-link>
-            <el-link class="link" @click="showForm('编辑')">编辑</el-link>
-            <el-link>删除</el-link>
+            <el-link type="primary" class="link" @click="currentShow(0)">新增</el-link>
+            <el-link type="primary" class="link" @click="currentShow(1)">编辑</el-link>
           </div>
         </div>
       </div>
@@ -30,7 +29,7 @@
             <el-input v-model="addForm.menuName" autocomplete="off" placeholder="请输入内容"></el-input>
           </el-form-item>
           <el-form-item label="菜单类型" :label-width="formLabelWidth" prop="menuType">
-            <el-select v-model="addForm.menuType">
+            <el-select v-model="addForm.menuType"  style="width: 100%;">
               <el-option v-for="item in menuType" :value="item.value" placeholder="请输入内容" :label="item.label"></el-option>
             </el-select>
           </el-form-item>
@@ -54,8 +53,13 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="submitForm">确 定</el-button>
+          <div class="form-bottom">
+            <el-button @click="removeIt">删除</el-button>
+            <div>
+              <el-button @click="dialogFormVisible = false">取 消</el-button>
+              <el-button type="primary" @click="submitForm">确 定</el-button>
+            </div>
+          </div>
         </div>
       </el-dialog>
     </div>
@@ -63,7 +67,7 @@
 </template>
 
 <script>
-import {addMenuAll, getMenuAll, upDataMenu} from "@/newwork/system-colltroner";
+import { addMenuAll, delMenu, getMenuAll, upDataMenu } from "@/newwork/system-colltroner";
 import {fn, menuToTree} from "@/uti";
 
 export default {
@@ -88,6 +92,8 @@ export default {
         perms: '',
         status: 0,
       },
+      showTitle: ['新增','编辑'],
+      showIndex: '',
       row: {},
       defaultShowNodes: [],
       menuType: [
@@ -115,6 +121,7 @@ export default {
   methods: {
     getMenuAll(form) {
       getMenuAll(form).then(res => {
+        this.list = res.data.data
         this.path = menuToTree(res.data.data)
       }).catch(e => {
         console.log(e)
@@ -150,25 +157,37 @@ export default {
         }
       })
     },
-    meunClick(a) {
-      this.row = a
-      console.log(this.row);
-      this.showForm()
+    meunClick(data) {
+      this.row = data
+      this.showForm(this.showTitle[this.showIndex])
     },
     showForm(type) {
-      if(type === null) {
-        this.dialogFormVisible = false
+      this.dialogFormVisible = true
+      this.title = type
+      if (type === '编辑') {
+        console.log('aa');
+        this.addForm = this.row
       }else {
-        this.dialogFormVisible = true
-        this.title = type
-        console.log(this.row);
-        if (this.title === '编辑') {
-          this.addForm = this.row
+        this.addForm = this.$options.data().addForm
+        this.addForm.parentId = this.row.menuId
+      }
+    },
+    currentShow(index){
+      this.showIndex = index
+    },
+    removeIt(e){
+      console.log(e);
+      e.stopPropagation()
+      delMenu(this.row.menuId).then(res => {
+        if(res.data.code === 200){
+          this.getMenuAll(this.form)
+          this.dialogFormVisible = false
+          this.$message.success('提交完成')
         }else {
-          this.addForm = this.$options.data().addForm
-          this.addForm.parentId = this.row.menuId
+          this.$message.error(res.data.msg)
         }
-      }}
+      })
+    }
   },
   computed: {
     // pathRes(){
@@ -202,5 +221,10 @@ export default {
 
 .tree .link {
   margin-right: 20px;
+}
+.form-bottom{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>

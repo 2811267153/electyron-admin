@@ -16,8 +16,8 @@
             </el-form-item>
             <el-form-item label="用户状态" prop="status">
               <el-select v-model="form.status">
-                <el-option label="开启" :value=0></el-option>
-                <el-option label="关闭" :value=1></el-option>
+                <el-option label="启用" :value=0></el-option>
+                <el-option label="停用" :value=1></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
@@ -214,15 +214,12 @@
 import eTree from "@/components/eTree";
 import {
   addUser,
-  deleteRoleList,
   getUserAll,
-  getOrganizeList,
-  upDataRoleList,
-  getOrganizeId, deleteUser, upDataUser, getRoleList
+  getOrganizeList, deleteUser, upDataUser, getRoleList
 } from "@/newwork/system-colltroner";
 import {fn} from "@/uti";
 import myEmpty from "@/newwork/myEmpty";
-import {isValidEmail, isValidNumber, isValidPhone} from "@/util/validate";
+import {isValidEmail, isValidPhone} from "@/util/validate";
 import myTree from "@/components/myTree";
 
 export default {
@@ -291,7 +288,7 @@ export default {
         ],
         email: [
           {required: false, message: "此项为必填项，请确认", trigger: "change"},
-          {validator: validateEmail, message: '邮箱格式输入有误,请确认', trigger: 'change'}
+          // {validator: validateEmail, message: '邮箱格式输入有误,请确认', trigger: 'change'}
         ],
         deptId: [
           {required: false, message: "此项为必填项，请确认", trigger: "change"}
@@ -304,7 +301,7 @@ export default {
         ],
         phone: [
           {required: true, message: "此项为必填项，请确认", trigger: "change"},
-          {validator: validatePhone, message: '手机号格式输入有误,请确认', trigger: 'change'}
+          // {validator: validatePhone, message: '手机号格式输入有误,请确认', trigger: 'change'}
         ],
         status: [
           {required: false, message: "此项为必填项，请确认", trigger: "change"}
@@ -419,7 +416,12 @@ export default {
       }
     },
     resetForm(form) {
-      form === 'form' ? this.$refs.form.resetFields() : this.$refs.addForm.resetFields();
+      if(form === 'form'){
+        this.$refs.form.resetFields()
+        this.form.deptId = ''
+      }else {
+        this.$refs.addForm.resetFields();
+      }
       this.getUserAll(this.form)
     },
 
@@ -432,6 +434,7 @@ export default {
     },
     getUserAll(formPage) {
       getUserAll(formPage).then(res => {
+        this.$store.dispatch('total', res.data.data.total)
         this.resultList = res.data.data.records;
         console.log(res.data);
       });

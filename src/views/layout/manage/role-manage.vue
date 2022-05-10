@@ -73,8 +73,9 @@
             <el-tree
                 props="permission"
                 :data="menuIds"
+                :default-checked-keys="defaultMenuIds"
                 :props="defaultProps"
-                node-key="id"
+                node-key="menuId"
                 accordion
                 :check-on-click-node="true"
                 show-checkbox
@@ -196,7 +197,6 @@ export default {
       dialogFormVisibles: false,
       title: '新增',
       navForm: {
-        menuIds: [],
         pageSize: 14,
         pageNum: 1,
         orderNum: '', //显示顺序
@@ -204,6 +204,7 @@ export default {
         roleName: '', //角色名称
         status: '',
       },
+      defaultMenuIds: [], // '默认选中的ID'
       timer: {},
       addForm: {
         menuIds: [],
@@ -221,25 +222,22 @@ export default {
       },
       list: [],
       rules: {
-        roleName: [{required: true, message: '此项为必填项，请确认', trigger: 'change'},],
-        orderNum: [{required: true, message: '此项为必填项，请确认', trigger: 'change'},
-          {validator: validateNum, message: '请输入合法的数字', trigger: 'change'}
+        roleName: [{required: true, message: '此项为必填项，请确认', trigger: 'blur'},],
+        orderNum: [{required: true, message: '此项为必填项，请确认', trigger: 'blur'},
+          {validator: validateNum, message: '请输入合法的数字', trigger: 'blur'}
         ],
-        roleCode: [{required: true, message: '此项为必填项，请确认', trigger: 'change'},
-          {validator: validateNum, message: '请输入合法的数字', trigger: 'change'}
-
-        ],
+        roleCode: [{required: true, message: '此项为必填项，请确认', trigger: 'blur'},],
         permission: [
-          {required: true, message: '此项为必填项，请确认', trigger: 'change'}
+          {required: true, message: '此项为必填项，请确认', trigger: 'blur'}
         ],
         status: [
-          {required: true, message: '此项为必填项，请确认', trigger: 'change'}
+          {required: true, message: '此项为必填项，请确认', trigger: 'blur'}
         ]
       },
       form_rules:{
-        roleName: [{required: false, message: '此项为必填项，请确认', trigger: 'change'},],
+        roleName: [{required: false, message: '此项为必填项，请确认', trigger: 'blur'},],
         status: [
-          {required: false, message: '此项为必填项，请确认', trigger: 'change'}
+          {required: false, message: '此项为必填项，请确认', trigger: 'blur'}
         ]
       },
       isVacancy: true,
@@ -271,8 +269,20 @@ export default {
         }).catch(e => {
           this.$message.error(e)
         })
-      }
-    }
+
+        //判断 当前所处的位置是否为编辑
+        if(this.title === '编辑'){
+          // this.addForm.menuIds = this.sysMenuList
+
+          this.addForm.sysMenuList.forEach(item => {
+            this.defaultMenuIds.push(item.menuId)
+            console.log(this.defaultMenuIds);
+          })
+          this.addForm.menuIds = this.defaultMenuIds
+        }
+      }else {
+        this.defaultMenuIds = []
+      }}
   },
   methods: {
     distribution(row) {
@@ -329,6 +339,8 @@ export default {
             upDataRoleList(this.addForm).then((res => {
               if(res.data.code === 200){
                 this.$message.success('提交完成')
+                this.getRoleList(this.navForm)
+                this.dialogFormVisible = false
               }else {
                 this.$message.error(res.data.msg)
               }
@@ -363,7 +375,6 @@ export default {
         formPage.pageNum = 1;
         formPage.pageSize = 14
         this.$store.dispatch('formPage', formPage)
-
         this.list = res.data.data.records
       }).catch(e => {
         this.$message.error(e)
@@ -378,6 +389,7 @@ export default {
       this.getRoleList(this.$store.state.formPage)
     })
   },
+
   components: {
     myEmpty
   },

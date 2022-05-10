@@ -4,6 +4,7 @@
       :data="data"
       :props="defaultProps"
       default-expand-all
+      :expand-on-click-node="false"
       accordion
       @node-click="handleNodeClick"
       ref="tree"
