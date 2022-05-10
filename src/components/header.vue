@@ -5,7 +5,17 @@
         <div class="logo"></div>
         <h1 v-if="$route.path !== '/index'">金数GDP1000 融合通信管理平台</h1>
       </div>
-      <p><span @click="loginOut">当前用户:</span> {{ userInfo.nickName }}</p>
+      <div><span class="icon iconfont icon-yonghu-yuan"></span>
+        <el-dropdown trigger="click">
+      <span class="el-dropdown-link">
+         {{ userInfo.nickName }}<i class="el-icon-arrow-down el-icon--right"></i>
+      </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item @click.native="infoClick(i)" v-for="(item, i) in userInfoNav"><i :class="'icon iconfont ' + item.icon"></i><span>{{item.title}}</span></el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+<!--      <p><span @click="loginOut">当前用户:</span> {{ userInfo.nickName }}</p>-->
       <!--      <p>  <span>用户</span>: {{userInfo.data.user.username || ''}} <el-button @click="loginOut" class="login-out">退出</el-button></p>-->
     </div>
     <div class="header-nav">
@@ -81,14 +91,18 @@ export default {
   data() {
     return {
       home: false,
-      formPage: {}
+      formPage: {},
+      userInfoNav: [
+        {'icon': 'icon-tuichu', title: '退出'},
+        {'icon': 'icon-icon7', title: '个人中心'},
+      ]
     }
   },
   methods: {
     loginOut() {
       delLogin().then(res => {
         if (res.data.code === 200) {
-          this.$message.success('正在跳转登录页面')
+          this.$message.success('已成功退出')
           jsCookie.remove('JSESSIONID')
           this.$router.push('/user')
         }
@@ -108,7 +122,13 @@ export default {
       this.$bus.$emit('pageChange',)
       this.$store.dispatch('formPage', this.formPage)
     },
-
+    infoClick(i){
+      if(i === 0){
+        this.loginOut()
+      }else {
+        this.$router.push('/account')
+      }
+    }
   },
   created() {
     console.log(this.$route)
@@ -232,5 +252,14 @@ export default {
   border-radius: 5px;
   color: #fff;
 }
-
+.header .icon{
+  font-size: 29px;
+  background-color: #ccc;
+  color: white;
+  border-radius: 20px;
+  margin-right: 10px;
+}
+.header span{
+  vertical-align: middle;
+}
 </style>

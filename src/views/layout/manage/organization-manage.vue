@@ -134,7 +134,6 @@ export default {
       }
     };
   },
-
   methods: {
     getOrganizeList(form) {
       getOrganizeList(form).then(res => {
@@ -146,21 +145,20 @@ export default {
     },
     handleNodeClick(data) {
       this.row = data;
-      // this.currentNodeKey = this.$refs.tree.getCheckedNodes()
       this.showForm(this.showTitle[this.showIndex]);
-      // this.parentName = this.row.deptName;
-      // this.addForm.parentId = this.row.deptId;
     },
-
     showForm(type) {
       this.dialogFormVisible = true;
       this.title = type;
       if (type === "编辑") {
         this.addForm = this.row;
         const a = treeToArray(this.list);
-        this.$nextTick(() => {
-          // this.$refs.myTree.valueName = this.row.parentId
-          console.log(a)
+        a.forEach(item =>{
+          if(item.deptId === this.row.parentId){
+            this.$nextTick(() => {
+              this.$refs.myTree.valueName =item.deptName
+            })
+          }
         })
       } else {
         this.addForm = this.$options.data().addForm;
@@ -188,7 +186,6 @@ export default {
     getSelectedValue(value){
       this.addForm.parentId = value
     },
-
     submitForm(addForm) {
       this.$refs[addForm].validate((valid) => {
         if (valid) {
@@ -219,7 +216,6 @@ export default {
         }
       });
     }
-
   },
   components: {
     myTree

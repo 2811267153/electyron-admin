@@ -40,6 +40,7 @@ import menu from "@/views/layout/manage/menu";
 import jsCookie from "js-cookie";
 import queue from "@/views/configure/conmonters/queue";
 import meetingMinutes from "@/views/call/meetingMinutes";
+import account from "@/views/user/account";
 Vue.use(VueRouter)
 
 const routes = [
@@ -249,6 +250,11 @@ const routes = [
 
         ]
       },
+      {
+        path:'/account',
+        component: account,
+        meta: { title: '个人中心' },
+      }
     ]
   },
   ///----------系统配置-----------
@@ -276,9 +282,9 @@ router.beforeEach((to, form, next) => {
   store.state.formPage = formPage
   next()
   if(to.path !== '/user' && jsCookie.get('JSESSIONID') !== undefined  ){
-    if(to.path === '/layout/serveStarts'){
+    if(to.path === '/layout/serveStarts' || to.path === '/account'){
       store.commit('userInfo', JSON.parse(window.localStorage.getItem('userInfo')))
-      next('/layout/serveStarts')
+      next()
     }else {
       store.commit('userInfo', JSON.parse(window.localStorage.getItem('userInfo')))
       let flag = false
