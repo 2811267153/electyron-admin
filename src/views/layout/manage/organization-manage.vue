@@ -71,7 +71,7 @@ import {
   getOrganizeList,
   upDataOrganize
 } from "@/newwork/system-colltroner";
-import { fn, getNowFormatDate } from "@/uti";
+import {fn, getNowFormatDate, menuToTree, treeToArray} from "@/uti";
 import { isValidNumber } from "@/util/validate";
 import myTree from "@/components/myTree";
 
@@ -151,30 +151,16 @@ export default {
       // this.parentName = this.row.deptName;
       // this.addForm.parentId = this.row.deptId;
     },
-    filterDeptId(data){
-      console.log(data);
-      if(!data.children){
-        data.deptId = this.row.parentId
-        this.$refs.myTree.valueName = this.row.parentId
-        console.log('aa');
-      }else {
-        this.filterDeptId(data.children)
-      }
-    },
+
     showForm(type) {
       this.dialogFormVisible = true;
       this.title = type;
       if (type === "编辑") {
         this.addForm = this.row;
-        getOrganizeId(this.row.parentId).then(res => {
-        })
+        const a = treeToArray(this.list);
         this.$nextTick(() => {
           // this.$refs.myTree.valueName = this.row.parentId
-          this.list.forEach((item) => {
-            console.log(item);
-            this.filterDeptId(this.list[0])
-
-          })
+          console.log(a)
         })
       } else {
         this.addForm = this.$options.data().addForm;
