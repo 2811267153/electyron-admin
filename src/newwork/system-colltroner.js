@@ -209,6 +209,13 @@ export function upDataUser(data){
         data
     })
 }
+export function upDataPassword(data) {
+    return request({
+        url: '/system/user/password/update',
+        method: "post",
+        data
+    })
+}
 
 /**
  *

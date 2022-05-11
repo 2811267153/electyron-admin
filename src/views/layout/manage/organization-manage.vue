@@ -24,7 +24,7 @@
         </el-form-item>
         <el-form-item label="上级部门" :label-width="formLabelWidth" prop="parentId">
 
-          <my-tree ref="myTree" style="width: 100%" :options="formatList" @getValue="getSelectedValue"></my-tree>
+          <my-tree ref="myTree" style="width: 100%" :options="formList" @getValue="getSelectedValue"></my-tree>
         </el-form-item>
         <el-form-item label="状态" :label-width="formLabelWidth">
           <el-radio-group v-model="addForm.status">
@@ -41,10 +41,10 @@
 
     <el-tree
       @node-click="handleNodeClick"
-      :data="toTreeList"
+      :data="formList"
       ref="tree"
       :expand-on-click-node="false"
-      :node-key="formatList.deptId"
+      :node-key="formList.deptId"
       :props="defaultProps"
       accordion>
       <div class="custom-tree-node" slot-scope="{node, data}">
@@ -137,7 +137,6 @@ export default {
   methods: {
     getOrganizeList(form) {
       getOrganizeList(form).then(res => {
-        this.formatList = fn(res.data.data);
         this.list = res.data.data
       }).catch(e => {
         this.$message.error(e)
@@ -155,9 +154,7 @@ export default {
         const a = treeToArray(this.list);
         a.forEach(item =>{
           if(item.deptId === this.row.parentId){
-            this.$nextTick(() => {
-              this.$refs.myTree.valueName =item.deptName
-            })
+            this.$refs.myTree.valueName = item.deptName
           }
         })
       } else {
@@ -184,7 +181,7 @@ export default {
       });
     },
     getSelectedValue(value){
-      this.addForm.parentId = value
+      this.addForm.parentId = value.deptId
     },
     submitForm(addForm) {
       this.$refs[addForm].validate((valid) => {
@@ -227,9 +224,9 @@ export default {
     createTime() {
       return this.addForm.createTime = getNowFormatDate();
     },
-    toTreeList() {
-      return fn(this.formatList);
-    },
+    formList(){
+      return fn(this.list)
+    }
   },
 };
 </script>

@@ -17,7 +17,7 @@ export default {
 
 <style>
 @import url('./assets/css/index.css');
-@import url('https://at.alicdn.com/t/font_3197089_hkfb60nv3gn.css?spm=a313x.7781069.1998910419.111&file=font_3197089_hkfb60nv3gn.css');
+@import url('https://at.alicdn.com/t/font_3197089_hi7jh5w84ri.css?spm=a313x.7781069.1998910419.51&file=font_3197089_hi7jh5w84ri.css');
 * {
   margin: 0;
   padding: 0;
