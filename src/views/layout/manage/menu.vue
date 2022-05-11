@@ -215,7 +215,16 @@ export default {
 .custom-tree-node {
   width: 100%;
 }
-
+.menu{
+  width: 100%;
+  padding: 20px;
+  margin-left: 20px;
+  margin-top: 20px;
+  box-shadow: 0 0 15px #ccc;
+  background-color: #fff;
+  border-radius: 10px;
+  height: 78vh;
+}
 
 .tree {
   display: flex;

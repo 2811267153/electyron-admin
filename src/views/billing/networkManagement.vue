@@ -1,4 +1,5 @@
 <template>
+<div>
   <div id="networkManagement">
     <div class="nav-form">
       <el-form  :model="forms" :hide-required-asterisk="true" :show-message="false" :inline="true" class="demo-form-inline" ref="form" :rules="rule" >
@@ -11,15 +12,15 @@
         <el-form-item label="中继类型" prop="gatewayType">
           <el-select v-model="forms.gatewayType" placeholder="协议类型">
             <el-option
-                :label="item.label"
-                :value="item.value"
-                v-for="item in relayType"
+              :label="item.label"
+              :value="item.value"
+              v-for="item in relayType"
             ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-                    <el-button type="primary" @click="find">查询</el-button>
-                    <el-button @click="clear()">重置</el-button>
+          <el-button type="primary" @click="find">查询</el-button>
+          <el-button @click="clear()">重置</el-button>
         </el-form-item>
       </el-form>
       <el-button type="primary" @click="showAddForm(null, '添加网关')"
@@ -31,9 +32,9 @@
       <el-form :model="addFrom" ref="formName" :rules="rules">
         <div class="width">
           <el-form-item
-              label="网关名称"
-              :label-width="formLabelWidth"
-              prop="gatewayName"
+            label="网关名称"
+            :label-width="formLabelWidth"
+            prop="gatewayName"
           >
             <el-input placeholder="请输入内容" v-model="addFrom.gatewayName" autocomplete="off"></el-input>
           </el-form-item>
@@ -54,32 +55,32 @@
         </div>
         <div class="width">
           <el-form-item
-              label="域地址"
-              :label-width="formLabelWidth"
-              prop="realm"
+            label="域地址"
+            :label-width="formLabelWidth"
+            prop="realm"
           >
             <el-input placeholder="请输入内容"
-                v-model="addFrom.realm"
-                autocomplete="off"
+                      v-model="addFrom.realm"
+                      autocomplete="off"
             ></el-input>
           </el-form-item>
           <el-form-item
-              label="代理地址"
-              :label-width="formLabelWidth"
-              prop="proxyIp"
+            label="代理地址"
+            :label-width="formLabelWidth"
+            prop="proxyIp"
           >
             <el-input placeholder="请输入内容"
-                v-model="addFrom.proxyIp"
-                autocomplete="off"
+                      v-model="addFrom.proxyIp"
+                      autocomplete="off"
             ></el-input>
           </el-form-item>
         </div>
         <div class="width">
           <el-form-item
             v-if="title === '添加网关'"
-              label="支持编码"
-              :label-width="formLabelWidth"
-              prop="codecs"
+            label="支持编码"
+            :label-width="formLabelWidth"
+            prop="codecs"
           >
             <el-select v-model="codecs"
                        @change="codecsBlur"
@@ -87,24 +88,24 @@
                        style="width: 100%"
                        collapse-tags>
               <el-option
-                  v-for="item in dictionaryList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.name">
+                v-for="item in dictionaryList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.name">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item
-              label="二次拨号方式"
-              :label-width="formLabelWidth"
-              required
+            label="二次拨号方式"
+            :label-width="formLabelWidth"
+            required
           >
             <el-select v-model="addFrom.dtmfMode" style="width: 100%" >
               <el-option
-                  v-for="item in dtmfModeData"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id">
+                v-for="item in dtmfModeData"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
@@ -112,48 +113,48 @@
         <div class="width">
           <el-form-item
             v-if="title === '添加网关'"
-              label="超时时长"
-              :label-width="formLabelWidth"
-              prop="expires"
+            label="超时时长"
+            :label-width="formLabelWidth"
+            prop="expires"
           >
             <el-input placeholder="请输入内容"
-                v-model="addFrom.expires"
-                autocomplete="off"
+                      v-model="addFrom.expires"
+                      autocomplete="off"
             ></el-input>
           </el-form-item>
           <el-form-item
-              label="中继IP"
-              :label-width="formLabelWidth"
-              prop="gatewayIp"
+            label="中继IP"
+            :label-width="formLabelWidth"
+            prop="gatewayIp"
           >
             <el-input placeholder="请输入内容"
-                v-model="addFrom.gatewayIp"
-                autocomplete="off"
+                      v-model="addFrom.gatewayIp"
+                      autocomplete="off"
             ></el-input>
           </el-form-item>
         </div>
         <div class="width">
           <el-form-item
-              label="中继端口"
-              :label-width="formLabelWidth"
-              prop="gatewayPort"
+            label="中继端口"
+            :label-width="formLabelWidth"
+            prop="gatewayPort"
           >
             <el-input placeholder="请输入内容"
-                v-model="addFrom.gatewayPort"
-                autocomplete="off"
+                      v-model="addFrom.gatewayPort"
+                      autocomplete="off"
             ></el-input>
           </el-form-item>
           <el-form-item
-              label="服务接口"
-              :label-width="formLabelWidth"
-              prop="profileId"
+            label="服务接口"
+            :label-width="formLabelWidth"
+            prop="profileId"
           >
             <el-select v-model="addFrom.profileId" placeholder="请选择" style="width: 100%">
               <el-option
-                  v-for="item in profileIdList"
-                  :key="item.id"
-                  :label="item.netName"
-                  :value="item.id">
+                v-for="item in profileIdList"
+                :key="item.id"
+                :label="item.netName"
+                :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
@@ -161,9 +162,9 @@
         <div class="width">
 
           <el-form-item
-              label="最大并发数"
-              :label-width="formLabelWidth"
-              prop="maxCall"
+            label="最大并发数"
+            :label-width="formLabelWidth"
+            prop="maxCall"
           >
             <el-input placeholder="请输入内容" v-model="addFrom.maxCall"/>
           </el-form-item>
@@ -190,9 +191,9 @@
 
         <div class="width">
           <el-form-item
-              label="是否注册"
-              :label-width="formLabelWidth"
-              prop="register"
+            label="是否注册"
+            :label-width="formLabelWidth"
+            prop="register"
           >
             <el-radio-group v-model="addFrom.register">
               <el-radio :label="1">注册</el-radio>
@@ -240,9 +241,9 @@
         <template scope="scope">
           <div class="operate">
             <el-link
-                class="a-link"
-                @click="showAddForm(scope.row, '编辑')"
-                type="info"
+              class="a-link"
+              @click="showAddForm(scope.row, '编辑')"
+              type="info"
             >编辑
             </el-link
             >
@@ -254,13 +255,18 @@
         </template>
       </el-table-column>
     </el-table>
+
   </div>
+  <my-footer v-on:next = "next" @prev="prev" :form="form" @change="change"></my-footer>
+</div>
+
 </template>
 
 <script>
 import {deletePbx, getPbxAdd, getPbxAll, getProfileInfo, upDatePbx} from "@/newwork/ground-colltroner";
 import {addDictionaryList, getDictionaryAll} from "@/newwork/system-colltroner";
 import {isValidIP, isValidNumber, isValidPost} from "@/util/validate";
+import myFooter from "@/components/myFooter";
 
 
 export default {
@@ -387,7 +393,22 @@ export default {
       }
     }
   },
+  components: {
+    myFooter
+  },
   methods: {
+    next(){
+      this.form.pageNum ++
+      this.getPbxAll(this.form)
+    },
+    prev(){
+      this.form.pageNum --
+      this.getPbxAll(this.form)
+    },
+    change(e){
+      this.form.pageNum = e
+      this.getPbxAll(this.form)
+    },
     clear(){
       this.forms = this.$options.data().forms
       this.getPbxAll(this.form)
@@ -533,6 +554,16 @@ export default {
 </script>
 
 <style scoped>
+#networkManagement{
+  width: 100%;
+  padding: 20px;
+  margin-left: 20px;
+  margin-top: 20px;
+  box-shadow: 0 0 15px #ccc;
+  background-color: #fff;
+  border-radius: 10px;
+  height: 78vh;
+}
   .container p {
   background-color: #f2f2f2;
   padding: 10px 15px;

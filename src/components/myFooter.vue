@@ -1,13 +1,13 @@
 <template>
   <div class="footer">
-    <div class="total">共查询到: <span> {{ $store.state.total }} </span> 条相关数据</div>
+    <div class="total">共查询到: <span> {{ total }} </span> 条相关数据</div>
     <el-pagination
       background
       :page-size="10"
       layout="prev, pager, next"
       @next-click="next"
-      @current-change="pageChange"
       @prev-click="prev"
+      @current-change="change"
       :total="total">
     </el-pagination>
   </div>
@@ -16,26 +16,39 @@
 <script>
 export default {
   name: "myFooter",
-  methods: {
-    prev() {
-      return this.$store.state.formPage.pageNum--
-    },
-    next() {
-      return this.$store.state.formPage.pageNum++
-    },
-    pageChange(e) {
-      this.formPage.pageNum = e
-      this.formPage.pageSize = 10
-      this.$bus.$emit('pageChange',)
-      this.$store.dispatch('formPage', this.formPage)
-    },
-    infoClick(i){
-      if(i === 0){
-        this.loginOut()
-      }else {
-        this.$router.push('/account')
+  data(){
+    return {
+      total: 0,
+      pageNum: 0,
+    }
+  },
+  props: {
+    form: {
+      type: Object,
+      default(){
+        return {}
       }
     }
+  },
+  methods: {
+    prev() {
+      this.$emit('prev')
+    },
+    change(index){
+      this.$emit('change', index)
+    },
+    next() {
+      this.$emit('next')
+    },
+    pageChange(e) {
+      this.pageNum = e
+      this.pageSize = 10
+    },
+  },
+  mounted() {
+    this.$bus.$on('total', (data) => {
+      this.total = data
+    })
   }
 };
 </script>
@@ -51,6 +64,7 @@ export default {
   padding: 10px 15px;
   margin-left: 20px;
   margin-top: 20px;
+  width: 100%;
 }
 
 .total {

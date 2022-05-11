@@ -1,6 +1,6 @@
 <template>
   <!--  角色管理-->
-  <div>
+  <div class="role">
     <div class="container">
       <div class="nav">
         <div class="nav-l">
@@ -161,7 +161,7 @@
       </el-table>
       <my-empty v-else></my-empty>
     </div>
-
+    <my-footer v-on:next = "next" @prev="prev" :form="navForm" @change="change"></my-footer>
   </div>
 </template>
 
@@ -178,6 +178,7 @@ import {menuToTree, treeToArray} from "@/uti";
 import {deleteRate} from "@/newwork/ground-colltroner";
 import myEmpty from "@/newwork/myEmpty";
 import {isValidNumber} from "@/util/validate";
+import myFooter from "@/components/myFooter";
 
 
 export default {
@@ -285,6 +286,19 @@ export default {
       }}
   },
   methods: {
+    next(){
+      this.navForm.pageNum --
+      this.getRoleList(this.navForm)
+    },
+    prev(){
+      this.navForm.pageNum ++
+      this.getRoleList(this.navForm)
+    },
+    change(e){
+
+      this.navForm.pageNum = e
+      this.getRoleList(this.navForm)
+    },
     distribution(row) {
       this.dialogFormVisibles = true
       this.dataScopeForm.roleId = row
@@ -308,10 +322,11 @@ export default {
       this.getRoleList(this.navForm)
     },
     clearForm() {
-      this.resetForm('form')
+      // this.resetForm('form')
+      this.navForm = this.$options.data().navForm
+      this.getRoleList(this.navForm)
     },
     removeIt(row) {
-      console.log(row)
       deleteRoleList(row.roleId).then(res => {
         if (res.data.code === 200) {
           this.$message.success('提交完成')
@@ -368,6 +383,7 @@ export default {
     },
     getRoleList(form) {
       getRoleList(form).then(res => {
+        this.$bus.$emit('total', res.data.data.total)
         this.list = res.data.data.records
       }).catch(e => {
         this.$message.error(e)
@@ -380,7 +396,8 @@ export default {
 
 
   components: {
-    myEmpty
+    myEmpty,
+    myFooter
   },
   computed: {
     // defaultMenuId(){
@@ -407,5 +424,14 @@ export default {
   height: 40px;
   display: flex;
 }
-
+.container{
+  width: 100%;
+  padding: 20px;
+  margin-left: 20px;
+  margin-top: 20px;
+  box-shadow: 0 0 15px #ccc;
+  background-color: #fff;
+  border-radius: 10px;
+  height: 78vh;
+}
 </style>

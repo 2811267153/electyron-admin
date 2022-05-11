@@ -1,6 +1,6 @@
 <template>
   <!--  组织管理-->
-  <div id="management">
+  <div class="management">
     <div class="nav-form">
       <el-form ref="form" class="form" :model="form" label-width="80px" :inline="true">
         <el-form-item label="组织名称">
@@ -19,7 +19,6 @@
         <el-button type="primary" @click="showForm('新增')">新增</el-button>
       </div>
     </div>
-
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form ref="addForm" :model="addForm" :rules="rules">
         <el-form-item label="部门名称" :label-width="formLabelWidth" prop="deptName">
@@ -52,7 +51,6 @@
 
       </div>
     </el-dialog>
-
     <el-tree
       @node-click="handleNodeClick"
       :data="formList"
@@ -86,6 +84,7 @@ import {
 import {fn, getNowFormatDate, treeToArray} from "@/uti";
 import { isValidNumber } from "@/util/validate";
 import myTree from "@/components/myTree";
+import myFooter from "@/components/myFooter";
 
 export default {
   name: "serve-manage",
@@ -147,6 +146,8 @@ export default {
   methods: {
     getOrganizeList(form) {
       getOrganizeList(form).then(res => {
+        console.log(res);
+        this.$emit('total', res.data.data.total)
         this.list = res.data.data
       }).catch(e => {
         this.$message.error(e)
@@ -237,7 +238,8 @@ export default {
     }
   },
   components: {
-    myTree
+    myTree,
+    myFooter
   },
   created() {
     this.getOrganizeList(this.form);
@@ -254,6 +256,16 @@ export default {
 </script>
 
 <style>
+.management{
+  width: 100%;
+  padding: 20px;
+  margin-left: 20px;
+  margin-top: 20px;
+  box-shadow: 0 0 15px #ccc;
+  background-color: #fff;
+  border-radius: 10px;
+  height: 80vh;
+}
 .input {
   width: 30%;
 }

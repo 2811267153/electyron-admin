@@ -98,7 +98,13 @@ export default {
         this.$message.error(e)
       })
     },
-
+    infoClick(i){
+      if(i === 0){
+        this.loginOut()
+      }else {
+        this.$router.push('/account')
+      }
+    }
   },
   created() {
     console.log(this.$route)
@@ -185,14 +191,6 @@ export default {
 
 .container-header {
   width: calc(100vw - 240px);
-  padding: 20px;
-  margin-left: 20px;
-  margin-top: 20px;
-  box-shadow: 0 0 15px #ccc;
-  background-color: #fff;
-  border-radius: 10px;
-  height: 80%;
-  overflow: auto;
 }
 
 .total span {

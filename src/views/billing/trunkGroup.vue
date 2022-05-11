@@ -1,4 +1,5 @@
 <template>
+<div>
   <div id="trunk">
     <div class="nav-form">
       <el-form :inline="true" ref="form" :rules="rule" :model="form" class="demo-form-inline">
@@ -8,18 +9,18 @@
         <el-form-item label="策略类型" prop="strategyRetry">
           <el-select v-model="form.strategyRetry" placeholder="协议类型"  style="width: 100%">
             <el-option
-                :label="item.label"
-                :value="item.value"
-                v-for="item in policyType"
+              :label="item.label"
+              :value="item.value"
+              v-for="item in policyType"
             ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="重试策略" prop="strategyType">
           <el-select v-model="form.strategyType" placeholder="中继类型"  style="width: 100%">
             <el-option
-                :label="item.label"
-                :value="item.value"
-                v-for="item in retryStrategyType"
+              :label="item.label"
+              :value="item.value"
+              v-for="item in retryStrategyType"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -38,9 +39,9 @@
       <el-form :model="addFrom" ref="addForm" :rules="rules">
         <div class="width">
           <el-form-item
-              label="中继组名称"
-              :label-width="formLabelWidth"
-              prop="groupName"
+            label="中继组名称"
+            :label-width="formLabelWidth"
+            prop="groupName"
           >
             <el-input v-model="addFrom.groupName" autocomplete="off"  placeholder="请输入内容"></el-input>
           </el-form-item>
@@ -51,31 +52,31 @@
         </div>
         <div class="width">
           <el-form-item
-              label="重试策略"
-              :label-width="formLabelWidth"
-              prop="strategyRetry"
+            label="重试策略"
+            :label-width="formLabelWidth"
+            prop="strategyRetry"
           >
             <el-select v-model="addFrom.strategyRetry" placeholder="请选择"   style="width: 100%">
               <el-option
-                  v-for="item in retryStrategyType"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                v-for="item in retryStrategyType"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
               >
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item
-              label="策略类型"
-              :label-width="formLabelWidth"
-              prop="strategyType"
+            label="策略类型"
+            :label-width="formLabelWidth"
+            prop="strategyType"
           >
             <el-select v-model="addFrom.strategyType" placeholder="请选择"  style="width: 100%"  >
               <el-option
-                  v-for="item in policyType"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                v-for="item in policyType"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
               >
               </el-option>
             </el-select>
@@ -92,10 +93,10 @@
           <div class="width">
             <el-select v-model="pbxGwgroupGatewayList.gatewayId" placeholder="请选择">
               <el-option
-                  v-for="item in pbxList"
-                  :key="item.id"
-                  :label="item.gatewayName"
-                  :value="item.id">
+                v-for="item in pbxList"
+                :key="item.id"
+                :label="item.gatewayName"
+                :value="item.id">
               </el-option>
             </el-select>
             <div style="padding: 0 20px">
@@ -120,12 +121,12 @@
         </el-form-item>
 
         <el-form-item
-            label="备注"
-            :label-width="formLabelWidth"
+          label="备注"
+          :label-width="formLabelWidth"
         >
           <el-input
-              v-model="addFrom.remark"
-              placeholder="请输入内容"
+            v-model="addFrom.remark"
+            placeholder="请输入内容"
           ></el-input>
         </el-form-item>
       </el-form>
@@ -173,9 +174,9 @@
       <el-table-column align="center" prop="remark" label="操作">
         <template scope="scope">
           <el-link
-              style="margin-right: 20px"
-              @click="showAddForm(scope.row, '编辑')"
-              type="info"
+            style="margin-right: 20px"
+            @click="showAddForm(scope.row, '编辑')"
+            type="info"
           >编辑
           </el-link
           >
@@ -190,6 +191,8 @@
     </el-table>
     <my-empty v-else/>
   </div>
+  <my-footer v-on:next = "next" @prev="prev" :form="form" @change="change"></my-footer>
+</div>
 </template>
 
 <script>
@@ -349,6 +352,29 @@ export default {
         }
       })
     },
+
+    /**
+     *
+     * 范爷
+     * @param type
+     */
+
+
+    next(){
+      this.form.pageNum ++
+      console.log(this.form);
+      this.getUserAll(this.form)
+    },
+    prev(){
+      this.form.pageNum --
+      this.getUserAll(this.form)
+    },
+    change(e){
+      console.log(e);
+      this.form.pageNum = e
+      this.getUserAll(this.form)
+    },
+
     resetForm(type) {
       type = 'form' ? this.$refs['form'].resetFields() : this.$refs['addForm'].resetFields()
     },
