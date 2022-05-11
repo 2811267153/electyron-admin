@@ -1,17 +1,24 @@
 <template>
   <!--  组织管理-->
   <div id="management">
-    <el-form ref="form" :model="form" label-width="80px" :inline="true">
-      <el-form-item label="组织名称">
-        <el-input placeholder="请输入内容" v-model="form.name"></el-input>
-      </el-form-item>
-      <el-form-item label="组织状态">
-        <el-select v-model="form.region">
-          <el-option :label="item.label" :value="item.value" v-for="item in stats"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-button type="primary">搜索</el-button>
-    </el-form>
+    <div class="nav-form">
+      <el-form ref="form" class="form" :model="form" label-width="80px" :inline="true">
+        <el-form-item label="组织名称">
+          <el-input placeholder="请输入内容" v-model="form.deptName"></el-input>
+        </el-form-item>
+        <el-form-item label="组织状态">
+          <el-select v-model="form.region">
+            <el-option :label="item.label" :value="item.value" v-for="item in stats"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-button type="primary" @click="find()">搜索</el-button>
+        <el-button @click="clear()">重置</el-button>
+
+      </el-form>
+      <div class="add">
+        <el-button type="primary" @click="showForm('新增')">新增</el-button>
+      </div>
+    </div>
 
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form ref="addForm" :model="addForm" :rules="rules">
@@ -34,8 +41,15 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm('addForm')">确 定</el-button>
+        <div class="form-bottom">
+          <el-button @click="removeIt">删除</el-button>
+          <div>
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="submitForm('addForm')">确 定</el-button>
+          </div>
+        </div>
+
+
       </div>
     </el-dialog>
 
@@ -43,15 +57,15 @@
       @node-click="handleNodeClick"
       :data="formList"
       ref="tree"
+      :default-expanded-keys="defaulExpanded"
       :expand-on-click-node="false"
-      :node-key="formList.deptId"
+      node-key="deptId"
       :props="defaultProps"
       accordion>
       <div class="custom-tree-node" slot-scope="{node, data}">
         <div class="tree">
-          <el-link type="info">
-            {{ data.deptName }}
-          </el-link>
+          <a class="detpName">  {{ data.deptName }} </a>
+          <div>{{data.createTime}}</div>
           <div class="item-r">
             <el-link type="primary" class="link" @click="currentShow(0)">新增下一级</el-link>
             <el-link type="primary" class="link" @click="currentShow(1)">编辑</el-link>
@@ -65,13 +79,11 @@
 <script>
 import {
   addOrganize,
-  delMenu,
   delOrganizeList,
-  getOrganizeId,
   getOrganizeList,
   upDataOrganize
 } from "@/newwork/system-colltroner";
-import {fn, getNowFormatDate, menuToTree, treeToArray} from "@/uti";
+import {fn, getNowFormatDate, treeToArray} from "@/uti";
 import { isValidNumber } from "@/util/validate";
 import myTree from "@/components/myTree";
 
@@ -90,10 +102,8 @@ export default {
       dialogFormVisible: false,
       dialogFormVisibles: false,
       formLabelWidth: "120px",
-      form: {
-        pageNum: 1,
-        pageSize: 10
-      },
+      form: {},
+      defaulExpanded: [],
       addForm: {
         deptName: "",  //部门名字
         orderNum: "", //显示顺序
@@ -142,6 +152,15 @@ export default {
         this.$message.error(e)
       });
     },
+    find(){
+      this.getOrganizeList(this.form)
+    },
+    clear(){
+      if(Object.keys(this.form).length !==0){
+        this.form = this.$options.data().form
+        this.getOrganizeList(this.form)
+      }
+    },
     handleNodeClick(data) {
       this.row = data;
       this.showForm(this.showTitle[this.showIndex]);
@@ -150,8 +169,10 @@ export default {
       this.dialogFormVisible = true;
       this.title = type;
       if (type === "编辑") {
+        this.defaulExpanded.push(this.row.deptId)
         this.addForm = this.row;
         const a = treeToArray(this.list);
+
         a.forEach(item =>{
           if(item.deptId === this.row.parentId){
             this.$refs.myTree.valueName = item.deptName
@@ -170,9 +191,10 @@ export default {
     },
     removeIt(e) {
       e.stopPropagation();
-      delMenu(this.row.menuId).then(res => {
+      delOrganizeList(this.row.deptId).then(res => {
         if (res.data.code === 200) {
-          this.delOrganizeList(this.form);
+          this.defaulExpanded.push(this.row.deptId)
+          this.getOrganizeList(this.form);
           this.dialogFormVisible = false;
           this.$message.success("提交完成");
         } else {
@@ -258,5 +280,22 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.tree .detpName {
+  width: 200px;
+}
+.nav-form{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px;
+  margin: 10px 0;
+  min-width: 900px;
+}
+.form {
+  height: 40px;
+}
+.add{
+  text-align: right;
 }
 </style>

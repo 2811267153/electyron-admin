@@ -1,15 +1,15 @@
 <template>
   <div id="networkManagement">
     <div class="nav-form">
-      <el-form  :model="form" :hide-required-asterisk="true" :show-message="false" :inline="true" class="demo-form-inline" ref="form" :rules="rule" >
+      <el-form  :model="forms" :hide-required-asterisk="true" :show-message="false" :inline="true" class="demo-form-inline" ref="form" :rules="rule" >
         <el-form-item :span="5" label="网关名称" prop="gatewayName">
-          <el-input placeholder="请输入内容" v-model="form.gatewayName"></el-input>
+          <el-input placeholder="请输入内容" v-model="forms.gatewayName"></el-input>
         </el-form-item>
         <el-form-item :span="1000000" label="中继IP" prop="gatewayIp">
-          <el-input placeholder="请输入内容" v-model="form.gatewayIp" ></el-input>
+          <el-input placeholder="请输入内容" v-model="forms.gatewayIp" ></el-input>
         </el-form-item>
         <el-form-item label="中继类型" prop="gatewayType">
-          <el-select v-model="form.gatewayType" placeholder="协议类型">
+          <el-select v-model="forms.gatewayType" placeholder="协议类型">
             <el-option
                 :label="item.label"
                 :value="item.value"
@@ -19,7 +19,7 @@
         </el-form-item>
         <el-form-item>
                     <el-button type="primary" @click="find">查询</el-button>
-                    <el-button @click="clear(form)">重置</el-button>
+                    <el-button @click="clear()">重置</el-button>
         </el-form-item>
       </el-form>
       <el-button type="primary" @click="showAddForm(null, '添加网关')"
@@ -171,7 +171,7 @@
             <el-input :disabled="addFrom.gatewayType === 1" placeholder="请输入内容" v-model="addFrom.accountUser"></el-input>
           </el-form-item>
         </div>
-        <div class="width">
+        <div v-if="addFrom.register === 1" class="width">
           <el-form-item
             label="注册用户"
             :label-width="formLabelWidth"
@@ -299,13 +299,7 @@ export default {
       dialogFormVisible: false,
       formLabelWidth: '120px',
       title: '添加网关',
-      form: {
-        gatewayName: '',
-        gatewayIp: '',
-        gatewayType: '',
-        pageNum: 1,
-        pageSize: 10,
-      },
+      forms: { },
       list: [],
       dtmfModeData: [],
       dictionaryList: [],//'字典列表'
@@ -395,7 +389,7 @@ export default {
   },
   methods: {
     clear(){
-      this.resetForm('form')
+      this.forms = this.$options.data().forms
       this.getPbxAll(this.form)
     },
     find(){
@@ -406,7 +400,7 @@ export default {
       getPbxAll(form).then(res => {
         if(res.data.code === 200 ){
           this.$store.dispatch('total', res.data.data.total)
-          this.list = res.data.data.records
+          this.list = res.data.data.records.reverse()
         }
       }).catch(e => {
         this.$message.error(e)
@@ -517,7 +511,7 @@ export default {
   watch: {
     dialogFormVisible(val) {
       if (val === false) {
-        this.addFrom = this.$options.data().form;
+        this.addFrom = this.$options.data().addFrom;
       }else {
         let  dictionaryTypeList = []
         addDictionaryList().then(res => {

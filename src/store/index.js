@@ -7,10 +7,10 @@ export default new Vuex.Store({
   state: {
     userInfo: {},
     dictionaryData: {},
-    formPage: {
-      pageNum: 1,
-      pageSize: 10,
-    },
+    // formPage: {
+    //   pageNum: 1,
+    //   pageSize: 10,
+    // },
     total: 0  // 获取数据的总长度
   },
   getters: {},

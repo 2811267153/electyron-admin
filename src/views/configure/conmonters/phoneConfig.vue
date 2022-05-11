@@ -557,7 +557,6 @@ export default {
   },
 
   created() {
-    this.form = this.$store.state.formPage;
     this.getDirectory(this.form);
   },
   watch: {

@@ -274,12 +274,6 @@ const router = new VueRouter({
   routes
 })
 router.beforeEach((to, form, next) => {
-  store.state.total = 0
-  const formPage = {
-    pageNum: 1,
-    pageSize: 10,
-  }
-  store.state.formPage = formPage
   next()
   if(to.path !== '/user' && jsCookie.get('JSESSIONID') !== undefined  ){
     if(to.path === '/layout/serveStarts' || to.path === '/account'){

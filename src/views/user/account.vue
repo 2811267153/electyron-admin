@@ -186,10 +186,14 @@ export default {
   font-weight: 400;
   font-size: 16px;
 }
+.arco-card-body{
+  min-width: 1044px;
+}
 
 .body-l {
   padding: 20px;
-  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 5px #cccccc;
 }
 
 .user-info li {
@@ -218,10 +222,9 @@ export default {
 .info-row {
   display: flex;
   line-height: 40px;
-  border-radius: 5px;
   margin: 10px 0;
   padding: 0 10px;
-  background-color: #f2f2f2;
+  border-bottom: 1px solid #ccc;
   justify-content: space-between;
 }
 
@@ -235,10 +238,11 @@ export default {
 }
 
 .body-r {
-  padding: 0 20px;
-  border: 1px solid #ccc;
+  padding: 20px;
   margin-left: 30px;
   height: 100%;
+  border-radius: 5px;
+  box-shadow: 0 0 5px #cccccc;
 }
 
 .body-r span {
@@ -259,6 +263,6 @@ export default {
 }
 
 .operate {
-  padding: 45px;
+  padding: 30px;
 }
 </style>

@@ -8,7 +8,7 @@
             <el-form-item label="角色名称" prop="roleName">
               <el-input v-model="navForm.roleName" placeholder="请输入内容"></el-input>
             </el-form-item>
-            <el-form-item label="权限" prop="status">
+            <el-form-item label="状态" prop="status">
               <el-select v-model="navForm.status" placeholder="请选择">
                 <el-option
                     v-for="item in status"
@@ -368,13 +368,6 @@ export default {
     },
     getRoleList(form) {
       getRoleList(form).then(res => {
-        console.log(res)
-        this.total = res.data.data.total
-        this.$store.dispatch('total', this.total)
-        const formPage = {}
-        formPage.pageNum = 1;
-        formPage.pageSize = 14
-        this.$store.dispatch('formPage', formPage)
         this.list = res.data.data.records
       }).catch(e => {
         this.$message.error(e)
@@ -384,11 +377,7 @@ export default {
   created() {
     this.getRoleList(this.navForm)
   },
-  mounted() {
-    this.$bus.$on('pageChange', () => {
-      this.getRoleList(this.$store.state.formPage)
-    })
-  },
+
 
   components: {
     myEmpty

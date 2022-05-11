@@ -89,7 +89,6 @@ export default {
 
   },
   created() {
-    this.form = this.$store.state.formPage
     this.getLog(this.form)
   },
   methods: {
@@ -120,7 +119,6 @@ export default {
   },
   mounted() {
     this.$bus.$on('pageChange',() => {
-      this.form = this.$store.state.formPage
       this.getLog(this.form)
     })
   }

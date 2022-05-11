@@ -145,7 +145,6 @@ export default {
     }
   },
   created() {
-    this.form = this.$store.state.formPage
     this.getRecord(this.form)
   },
   mounted() {

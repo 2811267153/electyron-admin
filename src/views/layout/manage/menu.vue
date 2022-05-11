@@ -10,9 +10,12 @@
         accordion>
       <div class="custom-tree-node" slot-scope="{node, data}">
         <div class="tree">
-          <el-link type="info">
+          <a>
             {{ data.menuName }}
-          </el-link>
+          </a>
+          <p class="tree-path">
+            {{ data.path }}
+          </p>
           <div class="item-r">
             <el-link type="primary" class="link" @click="currentShow(0)">新增</el-link>
             <el-link type="primary" class="link" @click="currentShow(1)">编辑</el-link>
@@ -97,8 +100,8 @@ export default {
       row: {},
       defaultShowNodes: [],
       menuType: [
-        {label: '菜单(M)', value: 0},
-        {label: '按钮(F)', value: 1}
+        {label: '菜单', value: 'M'},
+        {label: '按钮', value: 'F'}
       ],
       statusType: [
         {label: '开启', value: 0},
@@ -208,10 +211,11 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .custom-tree-node {
   width: 100%;
 }
+
 
 .tree {
   display: flex;
@@ -226,5 +230,8 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.tree-path{
+  width: 20%;
 }
 </style>

@@ -40,6 +40,8 @@
           </el-table-column>
           <el-table-column align="center" prop="email" label="email" show-overflow-tooltip>
           </el-table-column>
+          <el-table-column align="center" prop="username" label="账号" show-overflow-tooltip>
+          </el-table-column>
           <el-table-column align="center" prop="phone" label="手机号" show-overflow-tooltip>
           </el-table-column>
           <el-table-column
@@ -68,6 +70,7 @@
           <el-table-column prop="starts" label="操作" show-overflow-tooltip align="center">
             <template scope="scope" class="link">
               <a @click="show(scope.row, '修改')" class="link-item">修改</a>
+              <a @click="reset(scope.row)" class="link-item">重置</a>
               <a @click="show(scope.row, '删除')" class="link-item err">删除</a>
             </template>
           </el-table-column>
@@ -215,7 +218,7 @@ import eTree from "@/components/eTree";
 import {
   addUser,
   getUserAll,
-  getOrganizeList, deleteUser, upDataUser, getRoleList
+  getOrganizeList, deleteUser, upDataUser, getRoleList, upDataPassword
 } from "@/newwork/system-colltroner";
 import {fn} from "@/uti";
 import myEmpty from "@/newwork/myEmpty";
@@ -281,45 +284,45 @@ export default {
       ],
       rules: {
         nickName: [
-          {required: true, message: "此项为必填项，请确认", trigger: "change"}
+          {required: true, message: "此项为必填项，请确认", trigger: "blur"}
         ],
         roleId: [
-          {required: true, message: "此项为必填项，请确认", trigger: "change"}
+          {required: true, message: "此项为必填项，请确认", trigger: "blur"}
         ],
         email: [
-          {required: false, message: "此项为必填项，请确认", trigger: "change"},
+          {required: false, message: "此项为必填项，请确认", trigger: "blur"},
           // {validator: validateEmail, message: '邮箱格式输入有误,请确认', trigger: 'change'}
         ],
         deptId: [
-          {required: false, message: "此项为必填项，请确认", trigger: "change"}
+          {required: false, message: "此项为必填项，请确认", trigger: "blur"}
         ],
         username: [
-          {required: true, message: "此项为必填项，请确认", trigger: "change"}
+          {required: true, message: "此项为必填项，请确认", trigger: "blur"}
         ],
         password: [
-          {required: true, message: "此项为必填项，请确认", trigger: "change"}
+          {required: true, message: "此项为必填项，请确认", trigger: "blur"}
         ],
         phone: [
-          {required: true, message: "此项为必填项，请确认", trigger: "change"},
+          {required: true, message: "此项为必填项，请确认", trigger: "blur"},
           // {validator: validatePhone, message: '手机号格式输入有误,请确认', trigger: 'change'}
         ],
         status: [
-          {required: false, message: "此项为必填项，请确认", trigger: "change"}
+          {required: false, message: "此项为必填项，请确认", trigger: "blur"}
         ],
         sex: [
-          {required: false, message: "此项为必填项，请确认", trigger: "change"}
+          {required: false, message: "此项为必填项，请确认", trigger: "blur"}
         ]
       },
       form_rules: {
         nickName: [
-          {required: false, message: "此项为必填项，请确认", trigger: "change"}
+          {required: false, message: "此项为必填项，请确认", trigger: "blur"}
         ],
         phone: [
-          {required: false, message: "此项为必填项，请确认", trigger: "change"},
-          {validator: validatePhone, message: '手机号格式输入有误,请确认', trigger: 'change'}
+          {required: false, message: "此项为必填项，请确认", trigger: "blur"},
+          {validator: validatePhone, message: '手机号格式输入有误,请确认', trigger: 'blur'}
         ],
         status: [
-          {required: false, message: "此项为必填项，请确认", trigger: "change"}
+          {required: false, message: "此项为必填项，请确认", trigger: "blur"}
         ],
       }
 
@@ -335,11 +338,26 @@ export default {
     },
     treeClick(a) {
       this.form = this.$store.state.formPage;
-      this.form.deptId = a.deptId;
+      console.log(a);
+      a.deptId === '100' ? this.form.deptId = '' :   this.form.deptId = a.deptId;
+
 
       console.log(this.form)
       this.getUserAll(this.form);
     },
+    reset(row){
+      const  data = {}
+      data.password = '123456';
+      data.userId = row.userId
+      upDataPassword(data).then(res=> {
+        if(res.data.code === 200){
+          this.$message.success('提交完成')
+        }else {
+          this.$message.error(res.data.msg)
+        }
+      })
+    },
+
     addForms() {
       //点击确定之后 遍历数据 确保必填项不为空
       this.$refs.addForm.validate((valid) => {
@@ -441,11 +459,10 @@ export default {
     }
   },
   created() {
-    this.getUserAll(this.$store.state.formPage);
+    this.getUserAll(this.form);
     getOrganizeList().then(res => {
       this.treeArr = fn(res.data.data);
     });
-    this.form = this.$store.state.formPage;
   },
   computed: {
     getterDeptIdList() {

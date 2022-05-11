@@ -281,7 +281,6 @@ export default {
     }
   },
   created() {
-    this.form = this.$store.state.formPage;
     this.getProfileInfo(this.form);
     this.getProfile();
   },

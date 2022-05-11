@@ -448,7 +448,6 @@ export default {
     }
   },
   created() {
-    this.form = this.$store.state.formPage
     this.getRateList(this.form)
     this.getRateItemList(this.form)
   }

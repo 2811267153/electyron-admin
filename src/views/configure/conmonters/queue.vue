@@ -389,7 +389,6 @@ export default {
 
   },
   created() {
-    this.form = this.$store.state.formPage
     this.getFifo(this.form)
     this.getOrganizeList()
   },

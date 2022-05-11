@@ -218,7 +218,6 @@ export default {
     },
   },
   created() {
-    this.form = this.$store.state.formPage
     this.dictionaryList(this.form)
   },
   mounted() {

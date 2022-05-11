@@ -372,7 +372,6 @@ export default {
   },
 
   created() {
-    this.form = this.$store.state.formPage
     this.getGwgroup(this.form)
   },
   mounted() {

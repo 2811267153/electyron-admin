@@ -103,7 +103,7 @@ export function addOrganize(data) {
 export function getOrganizeList(data){
     return request({
         url: '/system/dept/list',
-        data: data
+        params: data
     })
 }//删除组织
 export function delOrganizeList(data){
