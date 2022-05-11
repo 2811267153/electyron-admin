@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div id="trunk">
+  <div class="trunk-group">
     <div class="nav-form">
       <el-form :inline="true" ref="form" :rules="rule" :model="form" class="demo-form-inline">
         <el-form-item label="中继名称" prop="groupName">
@@ -199,11 +199,13 @@
 import {addGwgroup, deleteGwgroup, getGwgroup, getPbxAll, upDateGwgroup} from "@/newwork/ground-colltroner";
 import myEmpty from "@/newwork/myEmpty";
 import {isValidNumber} from "@/util/validate";
+import myFooter from "@/components/myFooter";
 
 export default {
   name: 'trunkGroup',
   components: {
-    myEmpty
+    myEmpty,
+    myFooter
   },
   data() {
     const validateNum = (rule, value, callback) => {
@@ -281,12 +283,14 @@ export default {
   methods: {
     getGwgroup(form) {
       getGwgroup(form).then(res => {
-        this.$store.dispatch('total', res.data.data.total)
+        if(res.data.data.total){
+          this.$bus.$emit('total', res.data.data.total)
+        }
         this.list = res.data.data.records
       }).catch(e => {
-        this.$message.error(e)
       })
     },
+
     tableRowClassName({row, rowIndex}) {
       row.index = rowIndex
     },
@@ -363,16 +367,16 @@ export default {
     next(){
       this.form.pageNum ++
       console.log(this.form);
-      this.getUserAll(this.form)
+      this.getGwgroup(this.form)
     },
     prev(){
       this.form.pageNum --
-      this.getUserAll(this.form)
+      this.getGwgroup(this.form)
     },
     change(e){
       console.log(e);
       this.form.pageNum = e
-      this.getUserAll(this.form)
+      this.getGwgroup(this.form)
     },
 
     resetForm(type) {
@@ -430,7 +434,17 @@ export default {
 </script>
 
 <style scoped>
-
+.trunk-group{
+  width: 100%;
+  padding: 20px;
+  margin-left: 20px;
+  margin-top: 20px;
+  box-shadow: 0 0 15px #ccc;
+  background-color: #fff;
+  border-radius: 10px;
+  height: 71vh;
+  overflow: auto;
+}
 .container p {
   background-color: #f2f2f2;
   padding: 10px 15px;

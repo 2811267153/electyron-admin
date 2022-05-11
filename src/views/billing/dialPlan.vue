@@ -1,100 +1,102 @@
 <template>
-  <div id="dialPlan">
-    <div class="container">
-      <el-form :inline="true" :model="form" class="demo-form-inline" ref="form" rules="rules">
-        <el-form-item label="方案名称" prop="diaplanName">
-          <el-input v-model="form.diaplanName"  placeholder="请输入内容"></el-input>
-        </el-form-item>
-
-        <el-form-item>
-          <el-button type="primary" @click="find">查询</el-button>
-          <el-button @click="clearSubmit">重置</el-button>
-        </el-form-item>
-      </el-form>
-      <el-button type="primary" @click="showAddForm(null, '添加方案')"
-      >添加
-      </el-button
-      >
-    </div>
-    <el-dialog :title="title" :visible.sync="dialogFormVisible">
-      <el-form :model="addForm" ref="formName" :rules="rules">
-        <div class="width">
-          <el-form-item
-              label="拨号方案名称"
-              :label-width="formLabelWidth"
-              prop="diaplanName"
-          >
-            <el-input v-model="addForm.diaplanName" autocomplete="off"  placeholder="请输入内容"></el-input>
-          </el-form-item>
-          <el-form-item label="中继组" :label-width="formLabelWidth" prop="diaplanGatewayGroup">
-            <el-select v-model="addForm.diaplanGatewayGroup"  placeholder="请选择"  style="width: 100%">
-              <el-option
-                  :label="item.groupName"
-                  v-for="item in trunkGroup"
-                  :value="item.id"
-              ></el-option>
-            </el-select>
+  <div class="dial-plan">
+    <div class="dialPlan">
+      <div class="container">
+        <el-form :inline="true" :model="form" class="demo-form-inline" ref="form" rules="rules">
+          <el-form-item label="方案名称" prop="diaplanName">
+            <el-input v-model="form.diaplanName"  placeholder="请输入内容"></el-input>
           </el-form-item>
 
-        </div>
-        <div class="width">
-          <el-form-item label="费率组" :label-width="formLabelWidth" prop="diaplanRateGroup">
-            <el-select v-model="addForm.diaplanRateGroup" placeholder="请选择" @change="change"  style="width: 100%">
-              <el-option
-                  v-for="item in rateList"
-                  :key="item.id"
-                  :label="item.groupName"
-                  :value="item.id">
-              </el-option>
-            </el-select>
+          <el-form-item>
+            <el-button type="primary" @click="find">查询</el-button>
+            <el-button @click="clearSubmit">重置</el-button>
           </el-form-item>
-          <el-form-item label="呼出前缀" :label-width="formLabelWidth" prop="diaplanPrefix">
-            <el-input :disabled="true" v-model="addForm.diaplanPrefix"></el-input>
-          </el-form-item>
-        </div>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm('formName')"
-        >确 定
+        </el-form>
+        <el-button type="primary" @click="showAddForm(null, '添加方案')"
+        >添加
         </el-button
         >
       </div>
-    </el-dialog>
-    <el-table  :header-cell-style="{background:'#ccc', color: '#fff',}":data="list" border style="width: 100%; margin-top: 20px"  v-if="list.length !==0">
-      <el-table-column prop="date" align="center" label="序号" width="180">
-        <template scope="scope">
-          {{ scope.$index + 1 }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="diaplanName" align="center" label="方案名称">
-      </el-table-column>
-      <el-table-column prop="trunk" align="center" label="中继组">
-        <template scope="scope">
-          {{ scope.row.pbxGwgroup.groupName }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="diaplanPrefix" align="center" label="呼出前缀">
-      </el-table-column>
-      <el-table-column prop="createTime" align="center" label="更新时间">
-      </el-table-column>
-      <el-table-column align="center" prop="stauts" label="操作">
-        <template scope="scope">
-          <el-link
-              style="margin-right: 20px"
-              @click="showAddForm(scope.row, '编辑')"
-              type="info"
-          >编辑
-          </el-link
-          >
-          <el-link style="margin-right: 20px" @click="removeIt(scope.row)" type="info">删除</el-link>
-        </template>
-      </el-table-column>
-      <el-table-column prop="remark" label="备注" align="center">
-      </el-table-column>
-    </el-table>
+      <el-dialog :title="title" :visible.sync="dialogFormVisible">
+        <el-form :model="addForm" ref="formName" :rules="rules">
+          <div class="width">
+            <el-form-item
+                label="拨号方案名称"
+                :label-width="formLabelWidth"
+                prop="diaplanName"
+            >
+              <el-input v-model="addForm.diaplanName" autocomplete="off"  placeholder="请输入内容"></el-input>
+            </el-form-item>
+            <el-form-item label="中继组" :label-width="formLabelWidth" prop="diaplanGatewayGroup">
+              <el-select v-model="addForm.diaplanGatewayGroup"  placeholder="请选择"  style="width: 100%">
+                <el-option
+                    :label="item.groupName"
+                    v-for="item in trunkGroup"
+                    :value="item.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
 
-    <my-empty v-else/>
+          </div>
+          <div class="width">
+            <el-form-item label="费率组" :label-width="formLabelWidth" prop="diaplanRateGroup">
+              <el-select v-model="addForm.diaplanRateGroup" placeholder="请选择" @change="change"  style="width: 100%">
+                <el-option
+                    v-for="item in rateList"
+                    :key="item.id"
+                    :label="item.groupName"
+                    :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="呼出前缀" :label-width="formLabelWidth" prop="diaplanPrefix">
+              <el-input :disabled="true" v-model="addForm.diaplanPrefix"></el-input>
+            </el-form-item>
+          </div>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="submitForm('formName')"
+          >确 定
+          </el-button
+          >
+        </div>
+      </el-dialog>
+      <el-table  :header-cell-style="{background:'#ccc', color: '#fff',}":data="list" border style="width: 100%; margin-top: 20px"  v-if="list.length !==0">
+        <el-table-column prop="date" align="center" label="序号" width="180">
+          <template scope="scope">
+            {{ scope.$index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="diaplanName" align="center" label="方案名称">
+        </el-table-column>
+        <el-table-column prop="trunk" align="center" label="中继组">
+          <template scope="scope">
+            {{ scope.row.pbxGwgroup.groupName }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="diaplanPrefix" align="center" label="呼出前缀">
+        </el-table-column>
+        <el-table-column prop="createTime" align="center" label="更新时间">
+        </el-table-column>
+        <el-table-column align="center" prop="stauts" label="操作">
+          <template scope="scope">
+            <el-link
+                style="margin-right: 20px"
+                @click="showAddForm(scope.row, '编辑')"
+                type="info"
+            >编辑
+            </el-link
+            >
+            <el-link style="margin-right: 20px" @click="removeIt(scope.row)" type="info">删除</el-link>
+          </template>
+        </el-table-column>
+        <el-table-column prop="remark" label="备注" align="center">
+        </el-table-column>
+      </el-table>
+      <my-empty v-else/>
+    </div>
+    <my-footer v-on:next = "next" @prev="prev" :form="form" @change="formChange"></my-footer>
   </div>
 </template>
 
@@ -108,12 +110,14 @@ import {
   upDateDiaPlan
 } from "@/newwork/ground-colltroner";
 import myEmpty from "@/newwork/myEmpty";
+import myFooter from "@/components/myFooter";
 
 
 export default {
   name: 'dialPlan',
   components: {
-    myEmpty
+    myEmpty,
+    myFooter
   },
 
   data() {
@@ -151,7 +155,7 @@ export default {
     getDaiPlan(form) {
       diaPlanList(form).then(res => {
         console.log(res)
-        this.$store.dispatch('total', res.data.data.total)
+        this.$bus.$emit('total', res.data.data.total)
         this.list = res.data.data.records
       }).catch(e => {
         console.log(e)
@@ -164,7 +168,7 @@ export default {
     },
     //重置
     clearSubmit() {
-      this.resetForm()
+      this.form = this.$options.data().form
       this.getDaiPlan(this.form)
     },
     showAddForm(row, title) {
@@ -254,7 +258,19 @@ export default {
         this.$message.error(e)
       })
 
-    }
+    },
+    next(){
+      this.forms.pageNum ++
+      this.getDaiPlan(this.forms)
+    },
+    prev(){
+      this.forms.pageNum --
+      this.getDaiPlan(this.forms)
+    },
+    formChange(e){
+      this.forms.pageNum = e
+      this.getDaiPlan(this.forms)
+    },
   },
   created() {
     this.getDaiPlan(this.form)
@@ -298,13 +314,17 @@ export default {
 </script>
 
 <style scoped>
-#dialPlan > p {
-  border: 1px solid #ccc;
-  margin: 10px 0;
-  padding: 10px 15px;
-  background-color: #f2f2f2;
+.dialPlan{
+  width: 100%;
+  padding: 20px;
+  margin-left: 20px;
+  margin-top: 20px;
+  box-shadow: 0 0 15px #ccc;
+  background-color: #fff;
+  border-radius: 10px;
+  height: 71vh;
+  overflow: auto;
 }
-
 .container {
   display: flex;
   justify-content: space-between;

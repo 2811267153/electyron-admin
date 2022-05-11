@@ -160,7 +160,6 @@
           </el-form-item>
         </div>
         <div class="width">
-
           <el-form-item
             label="最大并发数"
             :label-width="formLabelWidth"
@@ -237,7 +236,7 @@
           <div v-else> 不注册</div>
         </template>
       </el-table-column>
-      <el-table-column prop="recording" align="center" label="操作">
+      <el-table-column prop="recording" align="center"  fixed="right"  label="操作">
         <template scope="scope">
           <div class="operate">
             <el-link
@@ -257,7 +256,7 @@
     </el-table>
 
   </div>
-  <my-footer v-on:next = "next" @prev="prev" :form="form" @change="change"></my-footer>
+  <my-footer v-on:next = "next" @prev="prev" :form="forms" @change="change"></my-footer>
 </div>
 
 </template>
@@ -398,29 +397,29 @@ export default {
   },
   methods: {
     next(){
-      this.form.pageNum ++
-      this.getPbxAll(this.form)
+      this.forms.pageNum ++
+      this.getPbxAll(this.forms)
     },
     prev(){
-      this.form.pageNum --
-      this.getPbxAll(this.form)
+      this.forms.pageNum --
+      this.getPbxAll(this.forms)
     },
     change(e){
-      this.form.pageNum = e
-      this.getPbxAll(this.form)
+      this.forms.pageNum = e
+      this.getPbxAll(this.forms)
     },
     clear(){
       this.forms = this.$options.data().forms
-      this.getPbxAll(this.form)
+      this.getPbxAll(this.forms)
     },
     find(){
-      this.getPbxAll(this.form)
+      this.getPbxAll(this.forms)
     },
 
     getPbxAll(form) {
       getPbxAll(form).then(res => {
         if(res.data.code === 200 ){
-          this.$store.dispatch('total', res.data.data.total)
+          this.$bus.$emit('total', res.data.data.total)
           this.list = res.data.data.records.reverse()
         }
       }).catch(e => {
@@ -525,7 +524,7 @@ export default {
     }
   },
   created() {
-    this.form = this.$store.state.formPage
+
     this.getPbxAll(this.form)
     this.getProfileInfo()
   },
@@ -543,13 +542,6 @@ export default {
       }
     }
   },
-  mounted() {
-    this.$bus.$on('pageChange', () => {
-      this.form = this.$store.state.formPage
-      this.getPbxAll(this.form)
-    })
-  }
-
 }
 </script>
 
@@ -562,7 +554,8 @@ export default {
   box-shadow: 0 0 15px #ccc;
   background-color: #fff;
   border-radius: 10px;
-  height: 78vh;
+  height: 71vh;
+  overflow: auto;
 }
   .container p {
   background-color: #f2f2f2;
@@ -573,9 +566,12 @@ export default {
   margin: 15px;
   height: 40px;
   display: flex;
+  overflow: hidden;
   justify-content: space-between;
 }
-
+.nav-form form{
+  height: 40px;
+}
 #networkManagement .width {
   display: flex;
   width: 100%;

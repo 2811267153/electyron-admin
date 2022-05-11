@@ -1,6 +1,5 @@
 <template>
-  <!--  用户管理-->
-  <div>
+  <div id="my-manage">
     <div class="my-manage">
       <div class="container-l">
         <e-tree @treeClick="treeClick" :data="treeArr"/>
@@ -17,8 +16,8 @@
               </el-form-item>
               <el-form-item label="用户状态" prop="status">
                 <el-select v-model="form.status">
-                  <el-option label="启用" :value=0></el-option>
-                  <el-option label="停用" :value=1></el-option>
+                  <el-option label="开启" :value=0></el-option>
+                  <el-option label="关闭" :value=1></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item>
@@ -29,35 +28,33 @@
             <el-button type="primary" @click="show(null, '新增')">新增</el-button>
           </div>
           <el-table
-            :data="resultList" v-if="resultList.length !== 0" @row-click="rowClick"
-            :row-class-name="tableRowClassName"
-            :header-cell-style="{background:'#ccc', color: '#fff'}"
-            border
-            style="width: 100%; margin-top: 20px">
-            <el-table-column  align="center" label="序号" fixed width="120">
+              :data="resultList" v-if="resultList.length !== 0" @row-click="rowClick"
+              :row-class-name="tableRowClassName"
+              :header-cell-style="{background:'#ccc', color: '#fff'}"
+              border
+              style="width: 100%; margin-top: 20px">
+            <el-table-column  align="center" label="序号" width="120">
               <template scope="scope">{{ scope.$index + 1 }}</template>
             </el-table-column>
             <el-table-column align="center" prop="nickName" label="姓名" width="120">
             </el-table-column>
             <el-table-column align="center" prop="email" label="email" show-overflow-tooltip>
             </el-table-column>
-            <el-table-column align="center" prop="username" label="账号" show-overflow-tooltip>
-            </el-table-column>
             <el-table-column align="center" prop="phone" label="手机号" show-overflow-tooltip>
             </el-table-column>
             <el-table-column
-              align="center"
-              prop="department"
-              label="所属部门"
-              show-overflow-tooltip
+                align="center"
+                prop="department"
+                label="所属部门"
+                show-overflow-tooltip
             >
               <template scope="scope">{{ scope.row.sysDept.deptName }}</template>
             </el-table-column>
             <el-table-column
-              align="center"
-              prop="createTime"
-              label="创建时间"
-              show-overflow-tooltip
+                align="center"
+                prop="createTime"
+                label="创建时间"
+                show-overflow-tooltip
             >
             </el-table-column>
             <el-table-column prop="starts" label="状态" show-overflow-tooltip align="center">
@@ -71,13 +68,7 @@
             <el-table-column prop="starts" label="操作" show-overflow-tooltip align="center">
               <template scope="scope" class="link">
                 <a @click="show(scope.row, '修改')" class="link-item">修改</a>
-                <a @click="reset(scope.row)" class="link-item">重置</a>
-<!--                <a @click="show(scope.row, '删除')" class="link-item err">删除</a>-->
-                <el-popconfirm
-                  title="确定删除吗？"
-                >
-                  <a class="link-item" slot="reference">删除</a>
-                </el-popconfirm>
+                <a @click="show(scope.row, '删除')" class="link-item err">删除</a>
               </template>
             </el-table-column>
           </el-table>
@@ -86,80 +77,80 @@
                 新增悬浮窗
             -->
           <el-dialog
-            :title="title"
-            :visible.sync="isShow"
-            width="40%"
+              :title="title"
+              :visible.sync="isShow"
+              width="40%"
           >
             <el-form ref="addForm" :model="addForm" id="form" :rules="rules">
               <el-form-item
-                class="form-item"
-                label="用户名称"
-                :label-width="formLabelWidth"
-                prop="nickName"
+                  class="form-item"
+                  label="用户名称"
+                  :label-width="formLabelWidth"
+                  prop="nickName"
               >
                 <el-input placeholder="请输入内容" v-model="addForm.nickName" autocomplete="off"></el-input>
               </el-form-item>
               <el-form-item
-                class="form-item"
-                label="用户角色"
-                :label-width="formLabelWidth"
-                prop="roleId"
+                  class="form-item"
+                  label="用户角色"
+                  :label-width="formLabelWidth"
+                  prop="roleId"
               >
                 <el-select
-                  v-if="title === '新增'"
-                  style="width: 100%"
-                  v-model="addForm.roleId "
-                  placeholder="请选择用户角色"
+                    v-if="title === '新增'"
+                    style="width: 100%"
+                    v-model="addForm.roleId "
+                    placeholder="请选择用户角色"
                 >
                   <el-option
-                    :label="item.roleName"
-                    :value="item.roleId"
-                    v-for="item in roleList"
+                      :label="item.roleName"
+                      :value="item.roleId"
+                      v-for="item in roleList"
                   ></el-option>
                 </el-select>
                 <el-select
-                  v-else
-                  style="width: 100%"
-                  class="form-item"
-                  v-model="addForm.roleId "
-                  :placeholder="addForm.department"
+                    v-else
+                    style="width: 100%"
+                    class="form-item"
+                    v-model="addForm.roleId "
+                    :placeholder="addForm.department"
                 >
                   <el-option
-                    :label="item.roleName"
-                    :value="item.roleId"
-                    v-for="item in roleList"
+                      :label="item.roleName"
+                      :value="item.roleId"
+                      v-for="item in roleList"
                   ></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item
-                class="form-item"
-                label="所属部门"
-                required
-                :label-width="formLabelWidth"
+                  class="form-item"
+                  label="所属部门"
+                  required
+                  :label-width="formLabelWidth"
               >
                 <my-tree ref="myTree" style="width: 100%" :options="treeArr" @getValue="getSelectedValue"></my-tree>
               </el-form-item>
               <el-form-item
-                class="form-item"
-                label="用户性别"
-                :label-width="formLabelWidth"
-                prop="sex"
+                  class="form-item"
+                  label="用户性别"
+                  :label-width="formLabelWidth"
+                  prop="sex"
               >
                 <el-select v-model="addForm.sex" placeholder="请选择用户性别" style="width: 100%" >
                   <el-option
-                    :label="item.label"
-                    :value="item.value"
-                    v-for="item in sexList"
+                      :label="item.label"
+                      :value="item.value"
+                      v-for="item in sexList"
                   ></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item
-                class="form-item"
-                label="账号"
-                type="email"
-                placeholder="请输入内容"
-                :label-width="formLabelWidth"
-                prop="username"
+                  class="form-item"
+                  label="账号"
+                  type="email"
+                  placeholder="请输入内容"
+                  :label-width="formLabelWidth"
+                  prop="username"
               >
                 <el-input v-model="addForm.username" autocomplete="off">
                 </el-input>
@@ -170,39 +161,38 @@
                   <el-radio :label="1">停用</el-radio>
                 </el-radio-group>
               </el-form-item>
-
               <el-form-item
-                class="form-item"
-                label="手机号"
-                prop="phone"
-                :label-width="formLabelWidth"
+                  class="form-item"
+                  label="手机号"
+                  prop="phone"
+                  :label-width="formLabelWidth"
               >
                 <el-input placeholder="请输入内容" v-model="addForm.phone" autocomplete="off"></el-input>
               </el-form-item>
               <el-form-item
-                v-if="title !== '修改'"
-                class="form-item"
-                label="密码"
-                :label-width="formLabelWidth"
-                prop="password"
+                  v-if="title !== '修改'"
+                  class="form-item"
+                  label="密码"
+                  :label-width="formLabelWidth"
+                  prop="password"
               >
                 <el-input
-                  placeholder="请输入内容"
-                  v-model="addForm.password"
-                  autocomplete="off"
+                    placeholder="请输入内容"
+                    v-model="addForm.password"
+                    autocomplete="off"
                 ></el-input>
               </el-form-item>
               <el-form-item
-                class="form-item"
-                label="邮箱"
-                :label-width="formLabelWidth"
-                prop="email"
+                  class="form-item"
+                  label="邮箱"
+                  :label-width="formLabelWidth"
+                  prop="email"
               >
                 <el-input
-                  placeholder="请输入内容"
-                  type="email"
-                  v-model="addForm.email"
-                  autocomplete="off"
+                    placeholder="请输入内容"
+                    type="email"
+                    v-model="addForm.email"
+                    autocomplete="off"
                 ></el-input>
               </el-form-item>
             </el-form>
@@ -217,8 +207,10 @@
         </div>
       </div>
     </div>
-    <my-footer v-on:next = "next" @prev="prev" :form="form" @change="change"></my-footer>
+    <my-footer v-on:next = "next" @prev="prev" :form="navForm" @change="change"></my-footer>
+
   </div>
+
 </template>
 
 <script>
@@ -526,39 +518,39 @@ export default {
 </script>
 
 <style scoped>
-#my-manage {
+#my-manage{
+
 }
-.my-manage{
-  width: 100%;
+.my-manage {
   display: flex;
+  width: 100%;
   padding: 20px;
   margin-left: 20px;
   margin-top: 20px;
   box-shadow: 0 0 15px #ccc;
   background-color: #fff;
   border-radius: 10px;
-  height: 78vh;
+  height: 70vh;
 }
-
+.table-title{
+  background-color: #f2f2f2;
+}
 .container-l {
   width: 200px;
 }
-
 .container-form {
   display: flex;
   height: 40px;
   justify-content: space-between;
 }
-
 #container-main {
   padding-left: 30px;
   flex: 1;
 }
-
 #form {
   display: flex;
+  flex-wrap: wrap;
 }
-
 .link-item {
   margin: 0 10px;
   cursor: pointer;
@@ -566,5 +558,10 @@ export default {
 .form-item  {
   width: 48%;
 }
-
+.err {
+  color: red;
+}
+.warning {
+  color: gold;
+}
 </style>

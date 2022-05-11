@@ -131,23 +131,19 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-
 .el-submenu li {
   background-color: rgb(67, 74, 80) !important;
 }
-
 .main-sub {
   height: calc(100vh - 80px);
   overflow: hidden;
   width: 200px;
 }
-
 .logo {
   height: 80px;
   width: 200px;
   background: no-repeat center/80% url("/src/assets/logo.png");;
 }
-
 .header-nav {
   background-color: #545c64;
 }

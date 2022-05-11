@@ -119,6 +119,17 @@ export default {
 </script>
 
 <style >
+#serve-stauts{
+  width: 100%;
+  padding: 20px;
+  margin-left: 20px;
+  margin-top: 20px;
+  box-shadow: 0 0 15px #ccc;
+  background-color: #fff;
+  border-radius: 10px;
+  height: 80vh;
+  overflow: auto;
+}
 .overview {
   display: flex;
   justify-content: space-between;
