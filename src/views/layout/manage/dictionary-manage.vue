@@ -1,7 +1,7 @@
 <template>
   <!--  字典管理-->
   <div>
-    <div >
+    <div class="dictionary">
       <div class="nav-form">
         <el-form :inline="true" :model="from" class="demo-form-inline">
           <el-form-item>
@@ -16,7 +16,6 @@
           </el-button
           ></a>
       </div>
-
       <el-dialog :title="title" :visible.sync="dialogFormVisible">
         <el-form ref="addForm" :model="addForm" :rules="riles">
           <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
@@ -47,7 +46,6 @@
           >
         </div>
       </el-dialog>
-
       <el-table :data="resultList" border style="width: 100%"  :header-cell-style="{background:'#f2f2f2'}">
         <el-table-column  align="center"  prop="name" label='序号' width="50">
           <template scope="scope">{{scope.$index + 1}}</template>
@@ -71,8 +69,6 @@
         </el-table-column>
       </el-table>
     </div>
-
-
   </div>
 </template>
 
@@ -219,6 +215,17 @@ export default {
 </script>
 
 <style scoped>
+.dictionary{
+  width: 100%;
+  padding: 20px;
+  margin-left: 20px;
+  margin-top: 20px;
+  box-shadow: 0 0 15px #ccc;
+  background-color: #fff;
+  border-radius: 10px;
+  height: 71vh;
+  overflow: auto;
+}
 .container {
   border: 1px solid #ccc;
   margin: 0 20px;

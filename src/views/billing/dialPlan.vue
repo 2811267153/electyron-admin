@@ -62,7 +62,7 @@
           >
         </div>
       </el-dialog>
-      <el-table  :header-cell-style="{background:'#ccc', color: '#fff',}":data="list" border style="width: 100%; margin-top: 20px"  v-if="list.length !==0">
+      <el-table  :header-cell-style="{background:'#ccc', color: '#fff',}":data="list"  style="width: 100%; margin-top: 20px"  v-if="list.length !==0">
         <el-table-column prop="date" align="center" label="序号" width="180">
           <template scope="scope">
             {{ scope.$index + 1 }}

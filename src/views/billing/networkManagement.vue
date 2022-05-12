@@ -210,7 +210,7 @@
       </div>
     </el-dialog>
 
-    <el-table :header-cell-style="{background:'#ccc', color: '#fff',}"  :data="list" style="width: 100%" border>
+    <el-table :header-cell-style="{background:'#ccc', color: '#fff',}"  :data="list" style="width: 100%" >
       <el-table-column align="center" prop="date" label="序号" width="50px">
         <template scope="scope">{{ scope.$index + 1 }}</template>
       </el-table-column>

@@ -23,7 +23,6 @@
       <el-table
           :data="list"
           :header-cell-style="{background:'#ccc', color: '#fff',}"
-          border
           style="width: 100%;margin-top: 20px">
         <el-table-column
             align="center"

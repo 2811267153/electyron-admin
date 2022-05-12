@@ -35,7 +35,6 @@
           :header-cell-style="{background:'#ccc', color: '#fff',}"
           :data="list"
           style="width: 100%"
-          border
           v-if="list.length !== 0"
         >
           <el-table-column prop="date" align="center" label="序号">

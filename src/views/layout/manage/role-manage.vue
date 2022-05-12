@@ -104,7 +104,6 @@
       <el-table
           v-if="list.length !== 0"
           :data="list"
-          border
           :header-cell-style="{background:'#f2f2f2'}"
           style="width: 100%; margin-top: 20px">
         <el-table-column

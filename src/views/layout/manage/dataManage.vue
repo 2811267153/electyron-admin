@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div v-if="$route.path == '/layout/dataManage'">
+  <div >
+    <div class="data-manage"v-if="$route.path == '/layout/dataManage'">
       <div class="nav">
         <div class="nav-l">
 
@@ -61,7 +61,7 @@
         </div>
       </el-dialog>
 
-      <el-table :header-cell-style="{background:'#ccc', color: '#fff',}" border :data="resultList" style="width: 100%"  v-if="resultList.length !== 0">
+      <el-table :header-cell-style="{background:'#ccc', color: '#fff',}"  :data="resultList" style="width: 100%"  v-if="resultList.length !== 0">
         <el-table-column align="center"  prop="id" label="序号" width="50">
           <template scope="scope">{{ scope.$index + 1 }}</template>
         </el-table-column>
@@ -78,8 +78,8 @@
           <template scope="scope">
             <div class="operate">
               <el-link type="info" @click="showAddForm(scope.row, '修改')">修改</el-link>
-              <el-link type="info" @click="removeIt(scope.row)">删除</el-link >
               <el-link type="info" @click="toPath(scope.row)">查看字典</el-link >
+              <el-link type="info" @click="removeIt(scope.row)">删除</el-link >
             </div>
           </template>
         </el-table-column>
@@ -87,7 +87,7 @@
       <my-empty v-else/>
     </div>
     <router-view/>
-
+    <my-footer v-on:next = "next" @prev="prev" :form="form" @change="change"></my-footer>
   </div>
 </template>
 
@@ -101,11 +101,13 @@ import {
   upDateDictionaryList
 } from "@/newwork/system-colltroner";
 import myEmpty from "@/newwork/myEmpty";
+import myFooter from "@/components/myFooter";
 
 export default {
   name: 'dataManage',
   components: {
-    myEmpty
+    myEmpty,
+    myFooter
   },
 
   data() {
@@ -144,6 +146,21 @@ export default {
     submitForm(){
       this.dictionaryList(this.form)
     },
+    next(){
+      this.form.pageNum ++
+      console.log(this.form);
+      this.dictionaryList(this.form)
+    },
+    prev(){
+      this.form.pageNum --
+      this.dictionaryList(this.form)
+    },
+    change(e){
+      console.log(e);
+      this.form.pageNum = e
+      this.dictionaryList(this.form)
+    },
+
     submitAddForm() {
 
       this.$refs['addForm'].validate((valid) => {
@@ -211,12 +228,13 @@ export default {
     dictionaryList(addForm) {
       addDictionaryList(addForm).then(res => {
         this.resultList = res.data.data['records']
-        this.$store.dispatch('total', res.data.data.total)
+        this.$bus.$emit('total', res.data.data.total)
       }).catch(e => {
         this.$message.error(e)
       })
     },
   },
+
   created() {
     this.dictionaryList(this.form)
   },
@@ -236,6 +254,17 @@ export default {
 </script>
 
 <style scoped>
+.data-manage{
+  width: 100%;
+  padding: 20px;
+  margin-left: 20px;
+  margin-top: 20px;
+  box-shadow: 0 0 15px #ccc;
+  background-color: #fff;
+  border-radius: 10px;
+  height: 71vh;
+  overflow: auto;
+}
 .nav {
   display: flex;
   justify-content: space-between;

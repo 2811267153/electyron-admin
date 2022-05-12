@@ -140,7 +140,7 @@
       </div>
     </el-dialog>
 
-    <el-table border :header-cell-style="{background:'#ccc', color: '#fff',}" :data="list" style="width: 100%" v-if="list.length !== 0" >
+    <el-table  :header-cell-style="{background:'#ccc', color: '#fff',}" :data="list" style="width: 100%" v-if="list.length !== 0" >
       <el-table-column align="center" prop="index" label="序号" width="50">
         <template scope="scope">{{ scope.$index + 1 }}</template>
       </el-table-column>

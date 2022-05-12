@@ -74,15 +74,15 @@ export default {
     }
   },
   mounted() {
-    console.log(this.value.name, '------------------')
-    this.resultValue = this.value.name;   // 初始值
+    console.log(this.value.deptName, '------------------')
+    this.resultValue = this.value;   // 初始值
     this.initHandle();
   },
   methods: {
     // 初始化值
     initHandle() {
       if (this.resultValue) {
-        this.valueName = this.resultValue.name;     // 初始化显示
+        this.valueName = this.resultValue.parentId;     // 初始化显示
         this.$refs.selectTree.setCurrentKey(this.resultValue)       // 设置默认选中
         this.defaultExpandedKey = [this.resultValue]      // 设置默认展开
       }

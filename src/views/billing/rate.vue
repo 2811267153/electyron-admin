@@ -145,7 +145,7 @@
             </div>
           </div>
         </el-dialog>
-        <el-table :data="rateItemList" border style="width: 100%; margin-top: 20px" v-if="list.length !== 0">
+        <el-table :data="rateItemList"  style="width: 100%; margin-top: 20px" v-if="list.length !== 0">
           <el-table-column align="center" prop="date" label="序号">
             <template scope="scope">{{ scope.$index + 1 }}</template>
           </el-table-column>

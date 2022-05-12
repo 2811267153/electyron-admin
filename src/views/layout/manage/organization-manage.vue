@@ -30,7 +30,8 @@
         </el-form-item>
         <el-form-item label="上级部门" :label-width="formLabelWidth" prop="parentId">
 
-          <my-tree ref="myTree" style="width: 100%" :options="formList" @getValue="getSelectedValue"></my-tree>
+<!--          <my-tree style="width: 100%" :options="formList" @getValue="getSelectedValue"></my-tree>-->
+          <my-el-tree  style="width: 100%" :options="formList" :value=row.parentId  :accordion="true" @getValue="getSelectedValue"/>
         </el-form-item>
         <el-form-item label="状态" :label-width="formLabelWidth">
           <el-radio-group v-model="addForm.status">
@@ -40,15 +41,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <div class="form-bottom">
-          <el-button @click="removeIt">删除</el-button>
-          <div>
-            <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="submitForm('addForm')">确 定</el-button>
-          </div>
-        </div>
-
-
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm('addForm')">确 定</el-button>
       </div>
     </el-dialog>
     <el-tree
@@ -67,6 +61,7 @@
           <div class="item-r">
             <el-link type="primary" class="link" @click="currentShow(0)">新增下一级</el-link>
             <el-link type="primary" class="link" @click="currentShow(1)">编辑</el-link>
+            <el-link type="primary" class="link" @click="currentShow(2)">删除</el-link>
           </div>
         </div>
       </div>
@@ -85,6 +80,7 @@ import {fn, getNowFormatDate, treeToArray} from "@/uti";
 import { isValidNumber } from "@/util/validate";
 import myTree from "@/components/myTree";
 import myFooter from "@/components/myFooter";
+import myElTree from "@/components/my-el-tree";
 
 export default {
   name: "serve-manage",
@@ -112,7 +108,7 @@ export default {
       clickCount: 0,
 
       parentName: "", //父级单位
-      row: [],  //获取当前 点击的那一行
+      row: {},  //获取当前 点击的那一行
       formatList: [],
       stats: [
         { label: "启用", value: "启用" },
@@ -123,7 +119,7 @@ export default {
         label: "deptName"
       },
       currentNodeKey: '',
-      showTitle: ['新增','编辑'],
+      showTitle: ['新增','编辑', '删除'],
       showIndex: 0,
       list: [], //未被格式化 以前的列表
       rules: {
@@ -167,36 +163,35 @@ export default {
       this.showForm(this.showTitle[this.showIndex]);
     },
     showForm(type) {
-      this.dialogFormVisible = true;
-      this.title = type;
       if (type === "编辑") {
-        this.defaulExpanded.push(this.row.deptId)
-        this.addForm = this.row;
-        const a = treeToArray(this.list);
 
-        a.forEach(item =>{
-          if(item.deptId === this.row.parentId){
-            this.$refs.myTree.valueName = item.deptName
-          }
-        })
-      } else {
+        this.dialogFormVisible = true;
+        this.title = type;
+        // this.addForm = this.$options.data().addForm;
+        this.addForm = this.row;
+      } else if(type === '新增') {
+        this.dialogFormVisible = true;
+        this.title = type;
         this.addForm = this.$options.data().addForm;
         this.addForm.parentId = this.row.deptId;
         this.$nextTick(() => {
           this.$refs.myTree.valueName = this.row.deptName
         })
+      }else {
+        this.removeIt()
+        this.showIndex = 0
+        console.log('--------');
       }
     },
     currentShow(index) {
       this.showIndex = index;
     },
-    removeIt(e) {
-      e.stopPropagation();
+    removeIt() {
       delOrganizeList(this.row.deptId).then(res => {
         if (res.data.code === 200) {
-          this.defaulExpanded.push(this.row.deptId)
+
+          this.defaulExpanded.push(this.row.parentId)
           this.getOrganizeList(this.form);
-          this.dialogFormVisible = false;
           this.$message.success("提交完成");
         } else {
           this.$message.error(res.data.msg);
@@ -204,7 +199,7 @@ export default {
       });
     },
     getSelectedValue(value){
-      this.addForm.parentId = value.deptId
+      this.addForm.parentId = value
     },
     submitForm(addForm) {
       this.$refs[addForm].validate((valid) => {
@@ -212,8 +207,9 @@ export default {
          this.title === '新增' ? addOrganize(this.addForm).then(res => {
             if(res.data.code === 200){
               this.dialogFormVisible = false
-              this.$message.success('提交完成')
               this.getOrganizeList(this.form)
+              this.$message.success('提交完成')
+              // this.getOrganizeList(this.form)
             }else {
               this.$message.error(res.data.msg)
             }
@@ -223,6 +219,7 @@ export default {
            if(res.data.code === 200){
              this.dialogFormVisible = false
              this.getOrganizeList(this.form)
+             this.defaulExpanded.push(this.row.deptId)
              this.$message.success('提交完成')
            }else {
              this.$message.error(res.data.msg)
@@ -239,7 +236,8 @@ export default {
   },
   components: {
     myTree,
-    myFooter
+    myFooter,
+    myElTree
   },
   created() {
     this.getOrganizeList(this.form);
@@ -250,6 +248,9 @@ export default {
     },
     formList(){
       return fn(this.list)
+    },
+    parentId(){
+      return parseInt(this.row.parentId)
     }
   },
 };

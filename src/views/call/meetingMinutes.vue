@@ -53,7 +53,6 @@
       <div class="nav-form"><el-button @click="black" type="primary">返回</el-button></div>
       <el-table
           :data="detailList"
-          border
           :header-cell-style="{background:'#ccc', color: '#fff',}"
           style="width: 100%">
         <el-table-column

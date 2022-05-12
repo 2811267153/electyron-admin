@@ -119,7 +119,6 @@
         :header-cell-style="{background:'#ccc', color: '#fff',}"
         class="table"
         :data="list"
-        border
         v-if="list.length !== 0"
         style="width: 100%">
         <el-table-column
