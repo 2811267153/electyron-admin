@@ -31,7 +31,6 @@
               :data="resultList" v-if="resultList.length !== 0" @row-click="rowClick"
               :row-class-name="tableRowClassName"
               :header-cell-style="{background:'#ccc', color: '#fff'}"
-              border
               style="width: 100%; margin-top: 20px">
             <el-table-column  align="center" label="序号" width="120">
               <template scope="scope">{{ scope.$index + 1 }}</template>
@@ -77,6 +76,7 @@
                 新增悬浮窗
             -->
           <el-dialog
+            :destroy-on-close="true"
               :title="title"
               :visible.sync="isShow"
               width="40%"
@@ -125,7 +125,7 @@
               <el-form-item
                   class="form-item"
                   label="所属部门"
-                  required
+                  prop="deptId"
                   :label-width="formLabelWidth"
               >
                 <my-tree ref="myTree" style="width: 100%" :options="treeArr" @getValue="getSelectedValue"></my-tree>
@@ -298,7 +298,7 @@ export default {
           // {validator: validateEmail, message: '邮箱格式输入有误,请确认', trigger: 'change'}
         ],
         deptId: [
-          {required: false, message: "此项为必填项，请确认", trigger: "blur"}
+          {required: true, message: "此项为必填项，请确认", trigger: "blur"}
         ],
         username: [
           {required: true, message: "此项为必填项，请确认", trigger: "blur"}
@@ -306,6 +306,7 @@ export default {
         password: [
           {required: true, message: "此项为必填项，请确认", trigger: "blur"}
         ],
+
         phone: [
           {required: true, message: "此项为必填项，请确认", trigger: "blur"},
           // {validator: validatePhone, message: '手机号格式输入有误,请确认', trigger: 'change'}
@@ -505,7 +506,6 @@ export default {
     isShow(val, newVal) {
       if (!val) {
         this.addForm = this.$options.data().addForm
-
       }
     },
   },

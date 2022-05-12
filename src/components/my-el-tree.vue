@@ -1,160 +1,223 @@
+<!-- 树状选择器 -->
 <template>
-  <el-select :value="valueTitle" :clearable="clearable" @clear="clearHandle"  ref="treeSelect">
-    <el-option :value="valueTitle" :label="valueTitle" class="options">
-      <el-tree  id="tree-option"
-                ref="selectTree"
-                :accordion="accordion"
-                :data="options"
-                :props="props"
-                :node-key= props.value
-                :default-expanded-keys="defaultExpandedKey"
-                :filter-node-method="filterNode"
-                @node-click="handleNodeClick">
-      </el-tree>
-    </el-option>
-  </el-select>
+  <el-popover
+    ref="popover"
+    placement="bottom-start"
+    trigger="click"
+    @show="onShowPopover"
+    @hide="onHidePopover">
+    <el-tree
+      ref="tree"
+      class="select-tree"
+      highlight-current
+      :style="`min-width: ${treeWidth}`"
+      :data="data"
+      :props="props"
+      :expand-on-click-node="false"
+      :filter-node-method="filterNode"
+      :default-expand-all="false"
+      @node-click="onClickNode">
+    </el-tree>
+    <el-input
+      slot="reference"
+      ref="input"
+      v-model="labelModel"
+      clearable
+      :style="`width: ${width}px`"
+      :class="{ 'rotate': showStatus }"
+      suffix-icon="el-icon-arrow-down"
+      :placeholder="placeholder">
+    </el-input>
+  </el-popover>
 </template>
 
 <script>
 export default {
-  name: "el-tree-select",
-  props:{
-    /* 配置项 */
-    props:{
-      type: Object,
-      default:()=>{
-        return {
-          value:'deptId',             // ID字段名
-          label: 'deptName',         // 显示名称
-          children: 'children'    // 子级字段名
-        }
-      }
-    },
-    /* 选项列表数据(树形结构的对象数组) */
-    options:{
+  name: 'Pagination',
+  props: {
+    // 接收绑定参数
+    value: String,
+    // 输入框宽度
+    width: String,
+    // 选项数据
+    options: {
       type: Array,
-      default: ()=>{ return [] }
+      required: true,
     },
-    /* 初始值 */
-    value:{
-      type: Number || String,
-      default: ()=>{ return null }
+    // 输入框占位符
+    placeholder: {
+      type: String,
+      required: false,
+      default: '请选择',
     },
-    /* 可清空选项 */
-    clearable:{
-      type:Boolean,
-      default:()=>{ return true }
+    // 树节点配置选项
+    props: {
+      type: Object,
+      required: false,
+      default: () => ({
+        parent: 'parentId',
+        value: 'deptId',
+        label: 'deptName',
+        children: 'children',
+      }),
     },
-    /* 自动收起 */
-    accordion:{
-      type:Boolean,
-      default:()=>{ return false }
+  },
+  // 设置绑定参数
+  model: {
+    prop: 'value',
+    event: 'selected',
+  },
+  computed: {
+    // 是否为树状结构数据
+    dataType() {
+      const jsonStr = JSON.stringify(this.options);
+      return jsonStr.indexOf(this.props.children) !== -1;
     },
-    placeholder:{
-      type:String,
-      default:()=>{return "检索关键字"}
-    }
+    // 若非树状结构，则转化为树状结构数据
+    data() {
+      return this.dataType ? this.options : this.switchTree();
+    },
+  },
+  watch: {
+    labelModel(val) {
+      if (!val) {
+        this.valueModel = '';
+      }
+      this.$refs.tree.filter(val);
+    },
+    value(val) {
+      this.labelModel = this.queryTree(this.data, val);
+    },
   },
   data() {
     return {
-      filterText: '',
-      valueId:this.value,    // 初始值
-      valueTitle:'',
-      defaultExpandedKey:[]
-    }
+      // 树状菜单显示状态
+      showStatus: false,
+      // 菜单宽度
+      treeWidth: 'auto',
+      // 输入框显示值
+      labelModel: '',
+      // 实际请求传值
+      valueModel: '0',
+    };
   },
-  mounted(){
-    this.initHandle()
+  created() {
+    // 检测输入框原有值并显示对应 label
+    if (this.value) {
+      this.labelModel = this.queryTree(this.data, this.value);
+    }
+    // 获取输入框宽度同步至树状菜单宽度
+    this.$nextTick(() => {
+      this.treeWidth = `${(this.width || this.$refs.input.$refs.input.clientWidth) - 24}px`;
+    });
   },
   methods: {
-    // 初始化值
-    initHandle(){
-      if(this.valueId){
-        this.valueTitle = this.$refs.selectTree.getNode(this.valueId).data[this.props.label]     // 初始化显示
-        this.$refs.selectTree.setCurrentKey(this.valueId)       // 设置默认选中
-        this.defaultExpandedKey = [this.valueId]      // 设置默认展开
+    // 单击节点
+    onClickNode(node) {
+      this.labelModel = node[this.props.label];
+      this.valueModel = node[this.props.value];
+      this.onCloseTree();
+    },
+    // 偏平数组转化为树状层级结构
+    switchTree() {
+      return this.cleanChildren(this.buildTree(this.options, '0'));
+    },
+    // 隐藏树状菜单
+    onCloseTree() {
+      this.$refs.popover.showPopper = false;
+    },
+    // 显示时触发
+    onShowPopover() {
+      this.showStatus = true;
+      this.$refs.tree.filter(false);
+    },
+    // 隐藏时触发
+    onHidePopover() {
+      this.showStatus = false;
+      this.$emit('selected', this.valueModel);
+    },
+    // 树节点过滤方法
+    filterNode(query, data) {
+      if (!query) return true;
+      return data[this.props.label].indexOf(query) !== -1;
+    },
+    // 搜索树状数据中的 ID
+    queryTree(tree, id) {
+      let stark = [];
+      stark = stark.concat(tree);
+      while (stark.length) {
+        const temp = stark.shift();
+        if (temp[this.props.children]) {
+          stark = stark.concat(temp[this.props.children]);
+        }
+        if (temp[this.props.value] === id) {
+          return temp[this.props.label];
+        }
       }
-      this.initScroll()
+      return '';
     },
-    // 初始化滚动条
-    initScroll(){
-      this.$nextTick(()=>{
-        let scrollWrap = document.querySelectorAll('.el-scrollbar .el-select-dropdown__wrap')[0]
-        let scrollBar = document.querySelectorAll('.el-scrollbar .el-scrollbar__bar')
-        scrollWrap.style.cssText = 'margin: 0px; max-height: none; overflow: hidden;'
-        scrollBar.forEach(ele => ele.style.width = 0)
-      })
+    // 将一维的扁平数组转换为多层级对象
+    buildTree(data, id = '0') {
+      const fa = (parentId) => {
+        const temp = [];
+        for (let i = 0; i < data.length; i++) {
+          const n = data[i];
+          if (n[this.props.parent] === parentId) {
+            n.children = fa(n.rowGuid);
+            temp.push(n);
+          }
+        }
+        return temp;
+      };
+      return fa(id);
     },
-    // 切换选项
-    handleNodeClick(node){
-      this.valueTitle = node[this.props.label]
-      this.valueId = node[this.props.value]
-      this.$emit('getValue',this.valueId)
-      this.defaultExpandedKey = []
-      if(!node.children || !node.children.length) { //补录选择完选项弹框不能收起
-        this.$refs.treeSelect.blur()
-      }
+    // 清除空 children项
+    cleanChildren(data) {
+      const fa = (list) => {
+        list.map((e) => {
+          if (e.children.length) {
+            fa(e.children);
+          } else {
+            delete e.children;
+          }
+          return e;
+        });
+        return list;
+      };
+      return fa(data);
     },
-    // 清除选中
-    clearHandle(){
-      this.valueTitle = ''
-      this.valueId = null
-      this.defaultExpandedKey = []
-      this.clearSelected()
-      this.$emit('getValue',null)
-    },
-    /* 清空选中样式 */
-    clearSelected(){
-      let allNode = document.querySelectorAll('#tree-option .el-tree-node')
-      allNode.forEach((element)=>element.classList.remove('is-current'))
-    },
-    filterNode(value, data) {
-      if (!value) return true;
-      return data.name.indexOf(value) !== -1;
-    }
-  },
-  watch: {
-    value(){
-      this.valueId = this.value
-      this.initHandle()
-    },
-    filterText(val) {
-      this.$refs.selectTree.filter(val);
-    }
   },
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-.el-scrollbar .el-scrollbar__view .el-select-dropdown__item{
-  height: auto;
-  max-height: 274px;
-  padding: 0;
+<style>
+.el-input.el-input--suffix {
+  cursor: pointer;
   overflow: hidden;
-  overflow-y: auto;
 }
-.el-select-dropdown__item.selected{
-  font-weight: normal;
+.el-input.el-input--suffix.rotate .el-input__suffix {
+  transform: rotate(180deg);
 }
-ul li >>>.el-tree .el-tree-node__content{
-  height:auto;
-  padding: 0 20px;
+.select-tree {
+  max-height: 350px;
+  overflow-y: scroll;
 }
-.el-tree-node__label{
-  font-weight: normal;
+/* 菜单滚动条 */
+.select-tree::-webkit-scrollbar {
+  z-index: 11;
+  width: 6px;
 }
-.el-tree >>>.is-current .el-tree-node__label{
-  color: #409EFF;
-  font-weight: 700;
+.select-tree::-webkit-scrollbar-track,
+.select-tree::-webkit-scrollbar-corner {
+  background: #fff;
 }
-.el-tree >>>.is-current .el-tree-node__children .el-tree-node__label{
-  color:#606266;
-  font-weight: normal;
+.select-tree::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  width: 6px;
+  background: #b4bccc;
 }
-.selectInput{
-  padding: 0 5px;
-  box-sizing: border-box;
+.select-tree::-webkit-scrollbar-track-piece {
+  background: #fff;
+  width: 6px;
 }
 </style>
-

@@ -7,7 +7,9 @@
       :expand-on-click-node="false"
       accordion
       @node-click="handleNodeClick"
+      node-key="data.deptId"
       ref="tree"
+      :default-expanded-keys="['1524594032656699393',101]"
   >
   </el-tree>
 </template>

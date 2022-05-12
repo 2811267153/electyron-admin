@@ -6,11 +6,6 @@
         <el-form-item label="组织名称">
           <el-input placeholder="请输入内容" v-model="form.deptName"></el-input>
         </el-form-item>
-        <el-form-item label="组织状态">
-          <el-select v-model="form.region">
-            <el-option :label="item.label" :value="item.value" v-for="item in stats"></el-option>
-          </el-select>
-        </el-form-item>
         <el-button type="primary" @click="find()">搜索</el-button>
         <el-button @click="clear()">重置</el-button>
 
@@ -31,7 +26,8 @@
         <el-form-item label="上级部门" :label-width="formLabelWidth" prop="parentId">
 
 <!--          <my-tree style="width: 100%" :options="formList" @getValue="getSelectedValue"></my-tree>-->
-          <my-el-tree  style="width: 100%" :options="formList" :value=row.parentId  :accordion="true" @getValue="getSelectedValue"/>
+<!--          <my-el-tree v-model="addForm.parentId" :options="formList" :value='row.parentId' :props="defaultProps"/>-->
+          <treeselect v-model="addForm.parentId" :multiple="false" :options="formList" :normalizer="normalizer" />
         </el-form-item>
         <el-form-item label="状态" :label-width="formLabelWidth">
           <el-radio-group v-model="addForm.status">
@@ -52,6 +48,7 @@
       :default-expanded-keys="defaulExpanded"
       :expand-on-click-node="false"
       node-key="deptId"
+      :filter-node-method="filterNode"
       :props="defaultProps"
       accordion>
       <div class="custom-tree-node" slot-scope="{node, data}">
@@ -81,6 +78,9 @@ import { isValidNumber } from "@/util/validate";
 import myTree from "@/components/myTree";
 import myFooter from "@/components/myFooter";
 import myElTree from "@/components/my-el-tree";
+import treeselect from '@riophae/vue-treeselect'
+// import the styles
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
 export default {
   name: "serve-manage",
@@ -93,6 +93,16 @@ export default {
       }
     };
     return {
+      normalizer(node){
+        if (node.children && !node.children.length) {
+          delete node.children
+        }
+        return {
+          id: node.deptId,
+          children: node.children,
+          label: node.deptName
+        }
+      },
       title: "新增",
       dialogFormVisible: false,
       dialogFormVisibles: false,
@@ -120,7 +130,7 @@ export default {
       },
       currentNodeKey: '',
       showTitle: ['新增','编辑', '删除'],
-      showIndex: 0,
+      showIndex: null,
       list: [], //未被格式化 以前的列表
       rules: {
         deptName: [
@@ -149,8 +159,13 @@ export default {
         this.$message.error(e)
       });
     },
+    filterNode(value, data) {
+      console.log(value, data);
+      if (!value) return true;
+      return data.deptName.indexOf(value) !== -1;
+    },
     find(){
-      this.getOrganizeList(this.form)
+      this.$refs.tree.filter(this.form.deptName);
     },
     clear(){
       if(Object.keys(this.form).length !==0){
@@ -160,23 +175,24 @@ export default {
     },
     handleNodeClick(data) {
       this.row = data;
-      this.showForm(this.showTitle[this.showIndex]);
+      this.showIndex === null ? console.log('1') : this.showForm(this.showTitle[this.showIndex]);
     },
     showForm(type) {
       if (type === "编辑") {
-
         this.dialogFormVisible = true;
         this.title = type;
-        // this.addForm = this.$options.data().addForm;
-        this.addForm = this.row;
+        this.addForm.deptId = this.row.deptId;
+        this.addForm.deptName = this.row.deptName;
+        this.addForm.orderNum = this.row.orderNum;
+        this.addForm.parentId = this.row.parentId
       } else if(type === '新增') {
         this.dialogFormVisible = true;
         this.title = type;
         this.addForm = this.$options.data().addForm;
         this.addForm.parentId = this.row.deptId;
-        this.$nextTick(() => {
-          this.$refs.myTree.valueName = this.row.deptName
-        })
+        // this.$nextTick(() => {
+        //   this.$refs.myTree.valueName = this.row.deptName
+        // })
       }else {
         this.removeIt()
         this.showIndex = 0
@@ -237,7 +253,8 @@ export default {
   components: {
     myTree,
     myFooter,
-    myElTree
+    myElTree,
+    treeselect
   },
   created() {
     this.getOrganizeList(this.form);
