@@ -16,7 +16,7 @@
           </el-button
           ></a>
       </div>
-      <el-dialog :title="title" :visible.sync="dialogFormVisible">
+      <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close>
         <el-form ref="addForm" :model="addForm" :rules="riles">
           <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
             <el-input placeholder="请输入内容" v-model="addForm.name" autocomplete="off"></el-input>
@@ -54,8 +54,8 @@
         <el-table-column  align="center"  prop="createBy" label="创建人"></el-table-column>
         <el-table-column  align="center"  prop="status" label="标示码">
           <template scope="scope">
-            <div v-if="scope.row.status === 0"> <el-tag type="success">启用</el-tag></div>
-            <div v-else> <el-tag type="success">禁用</el-tag></div>
+            <div v-if="scope.row.status === 0"> 启用</div>
+            <div v-else>禁用</div>
           </template>
         </el-table-column>
         <el-table-column  align="center"  prop="createTime" label="创建时间"></el-table-column>

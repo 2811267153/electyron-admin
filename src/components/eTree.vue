@@ -7,10 +7,9 @@
       :expand-on-click-node="false"
       accordion
       @node-click="handleNodeClick"
-      node-key="data.deptId"
+      :node-key="data.deptId"
       ref="tree"
-      :default-expanded-keys="['1524594032656699393',101]"
-  >
+      :default-expanded-keys="['1524594032656699393',101]">
   </el-tree>
 </template>
 
@@ -30,13 +29,18 @@ export default {
       defaultProps: {
         children: 'children',
         label: 'deptName'
-      }
-
+      },
+      isStatus: true,
     }
   },
   watch: {
     filterText(val) {
       this.$refs.tree.filter(val)
+    },
+    isStatus(val){
+      if(val){
+
+      }
     }
   },
 
@@ -44,8 +48,9 @@ export default {
     handleNodeClick(a, b){
       console.log(a, )
       this.$emit('treeClick', a)
+      a.status === 0 ? this.isStatus = true : this.isStatus = false
     }
-  }
+  },
 }
 </script>
 

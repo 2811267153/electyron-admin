@@ -28,7 +28,7 @@
       </el-button
       >
     </div>
-    <el-dialog :title="title" :visible.sync="dialogFormVisible">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close>
       <el-form :model="addFrom" ref="formName" :rules="rules">
         <div class="width">
           <el-form-item

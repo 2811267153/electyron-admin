@@ -17,8 +17,8 @@
           </el-button
           >
         </div>
-        <el-dialog :title="title" :visible.sync="dialogFormVisible">
-          <el-form :model="addForm" :rules="addFroms" ref="formName">
+        <el-dialog destroy-on-close :title="title" :visible.sync="dialogFormVisible">
+          <el-form ref="addForm" :model="addForm" :rules="addFroms">
             <el-form-item
                 label="添加费率组名称"
                 :label-width="formLabelWidth"
@@ -87,14 +87,14 @@
         </div>
 
 
-        <el-dialog :title="listTitle" :visible.sync="listDialogFormVisible">
+        <el-dialog destroy-on-close :title="listTitle" :visible.sync="listDialogFormVisible">
           <el-form :model="addListFrom" ref="formName" :rules="addRules">
             <el-form-item
                 label="费率名称"
                 :label-width="formLabelWidth"
                 prop="rateName"
             >
-              <el-input v-model="addListFrom.rateName" autocomplete="off"></el-input>
+              <el-input v-model="addListFrom.rateName"  placeholder="请输入内容" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item
                 label="费率组"
@@ -102,18 +102,19 @@
                 name="rateGroup"
                 required
             >
-              <el-input v-model="row.groupName" disabled></el-input>
+              <el-input v-model="row.groupName"  placeholder="请输入内容" disabled></el-input>
             </el-form-item>
             <div class="width">
               <el-form-item
                   label="费率前缀"
                   :label-width="formLabelWidth"
                   prop="ratePrefix"
+
               >
                 <el-input
                     class="input"
                     v-model="addListFrom.ratePrefix"
-                    autocomplete="off"
+                    autocomplete="off" placeholder="请输入内容"
                 ></el-input>
               </el-form-item>
             </div>
@@ -396,10 +397,6 @@ export default {
             })
           }
         } else {
-          this.$message({
-            message: '提交失败， 请重试',
-            type: 'error'
-          })
           return false
         }
       })

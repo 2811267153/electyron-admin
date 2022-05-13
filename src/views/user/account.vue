@@ -181,6 +181,16 @@ export default {
 </script>
 
 <style scoped>
+#account{
+  width: 100%;
+  padding: 20px;
+  margin-left: 20px;
+  margin-top: 20px;
+  box-shadow: 0 0 15px #ccc;
+  background-color: #fff;
+  border-radius: 10px;
+  height: 80vh;
+}
 .body-l h2 {
   /*display: flex;*/
   font-weight: 400;

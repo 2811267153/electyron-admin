@@ -35,7 +35,7 @@
       >
     </div>
 
-    <el-dialog :title="title" :visible.sync="dialogFormVisible">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close>
       <el-form :model="addFrom" ref="addForm" :rules="rules">
         <div class="width">
           <el-form-item
@@ -316,7 +316,7 @@ export default {
     },
     removeClick(i) {
       let index = this.addFrom.pbxGwgroupGatewayList.indexOf(i)
-      if (index !== -1) {
+      if (index !== -1 && this.addFrom.pbxGwgroupGatewayList.length > 1) {
         this.addFrom.pbxGwgroupGatewayList.splice(index, 1)
       }
     },
@@ -351,7 +351,6 @@ export default {
                 }
               })
         } else {
-          this.$message.error('提交失败， 请重试')
           return false
         }
       })
@@ -461,7 +460,9 @@ export default {
   display: flex;
   justify-content: space-between;
 }
-
+.demo-form-inline{
+  height: 40px;
+}
 .width {
   display: flex;
   width: 100%;

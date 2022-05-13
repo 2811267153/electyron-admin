@@ -81,7 +81,7 @@
       </el-table>
 
 
-      <el-dialog :title="title" :visible.sync="dialogFormVisible">
+      <el-dialog destroy-on-close :title="title" :visible.sync="dialogFormVisible">
         <el-form :model="addForm" ref="addForm" :rules="rules">
           <el-form-item label="服务接口名称" :label-width="formLabelWidth" prop="profileName">
             <el-input v-model="addForm.profileName" autocomplete="off" placeholder="请输入内容"></el-input>
@@ -171,13 +171,13 @@ export default {
       ],
       rules: {
         netMac: [
-          { required: true, message: "该选项为必填项，请确认", trigger: "change" }
+          { required: false, message: "该选项为必填项，请确认", trigger: "change" }
         ],
         netName: [
           { required: true, message: "该选项为必填项，请确认", trigger: "change" }
         ],
         profileName: [
-          { required: false, message: "该选项为必填项，请确认", trigger: "change" }
+          { required: true, message: "该选项为必填项，请确认", trigger: "change" }
         ],
         profileSipIp: [
           { required: false, message: "该选项为必填项，请确认", trigger: "change" }
@@ -269,7 +269,14 @@ export default {
       }).catch(e => this.$message.error(e));
     },
     submitForm() {
-      this.title === "新增" ? this.addDataForm() : this.upDataForm();
+      this.$refs.addForm.validate((valid) => {
+        if (valid) {
+          this.title === "新增" ? this.addDataForm() : this.upDataForm();
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
     },
     addDataForm() {
       addFroFile(this.addForm).then(res => {

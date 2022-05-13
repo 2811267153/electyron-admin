@@ -45,7 +45,7 @@
       </el-dialog>
 
 
-      <el-dialog :title="title" :visible.sync="dialogFormVisible">
+      <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close>
         <el-form :model="addForm" ref="addForm" :rules="rules">
           <el-form-item
               label="角色名称"
@@ -126,10 +126,10 @@
             width="180">
           <template scope="scope">
             <p v-if="scope.row.status === 0">
-              <el-tag type="success">启用</el-tag>
+              启用
             </p>
             <p v-else>
-              <el-tag type="error">禁用</el-tag>
+              禁用
             </p>
           </template>
         </el-table-column>

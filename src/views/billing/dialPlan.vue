@@ -17,7 +17,7 @@
         </el-button
         >
       </div>
-      <el-dialog :title="title" :visible.sync="dialogFormVisible">
+      <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close>
         <el-form :model="addForm" ref="formName" :rules="rules">
           <div class="width">
             <el-form-item
@@ -189,8 +189,6 @@ export default {
     resetForm(formName) {
       this.$refs.form.resetFields();
     },
-
-
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -223,10 +221,6 @@ export default {
             }).catch(e => this.$message.error(e))
           }
         } else {
-          this.$message({
-            message: '提交失败， 请重试',
-            type: 'error'
-          })
           return false
         }
       })

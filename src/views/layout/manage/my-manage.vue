@@ -67,6 +67,9 @@
             <el-table-column prop="starts" label="操作" show-overflow-tooltip align="center">
               <template scope="scope" class="link">
                 <a @click="show(scope.row, '修改')" class="link-item">修改</a>
+                <el-tooltip class="item" effect="dark" content="重置后默认密码为123456" placement="top">
+                <a @click="resetPad(scope.row)" class="link-item">重置</a>
+                </el-tooltip>
                 <a @click="show(scope.row, '删除')" class="link-item err">删除</a>
               </template>
             </el-table-column>
@@ -207,7 +210,7 @@
         </div>
       </div>
     </div>
-    <my-footer v-on:next = "next" @prev="prev" :form="navForm" @change="change"></my-footer>
+    <my-footer v-on:next = "next" @prev="prev" :form="form" @change="change"></my-footer>
 
   </div>
 
@@ -342,11 +345,9 @@ export default {
       this.getUserAll(this.form);
     },
     treeClick(a) {
-      this.form = this.$store.state.formPage;
+      this.form =this.$options.data().form
       console.log(a);
       a.deptId === '100' ? this.form.deptId = '' :   this.form.deptId = a.deptId;
-
-
       console.log(this.form)
       this.getUserAll(this.form);
     },
@@ -407,6 +408,20 @@ export default {
           return false;
         }
       });
+    },
+    resetPad(row){
+        const data = {}
+        data.userId = row.userId
+      console.log(row);
+        data.password = '123456'
+      upDataPassword(data).then(res => {
+        console.log(res);
+        if(res.data.code === 200){
+          this.$message.success('提交完成')
+        }else {
+          this.$message.error(res.data.msg)
+        }
+      }).catch(e => this.$message.error(e))
     },
     onClear() {
       this.form.deptId = ''

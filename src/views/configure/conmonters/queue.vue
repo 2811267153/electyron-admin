@@ -24,7 +24,7 @@
       </div>
 
 
-      <el-dialog :title="title" :visible.sync="dialogFormVisible">
+      <el-dialog :title="title"  destroy-on-close ref="addForm" :visible.sync="dialogFormVisible">
         <el-form :model="addForm" ref="addForm" :rules="rules">
           <div class="width">
             <el-form-item label="队列名称" :label-width="formLabelWidth" prop="fifoName">
@@ -65,6 +65,7 @@
                 :with-credentials="true"
                 :http-request="httpRequest"
                 :limit="1"
+                :show-file-list="false"
                 :on-error="error"
                 :on-success="success">
                 <el-button size="small" type="primary" style="margin-right: 20px">点击上传</el-button>
@@ -103,9 +104,8 @@
             <el-form-item label="夜服号码" :label-width="formLabelWidth" prop="fifoEmergency">
               <el-input v-model="addForm.fifoNight" placeholder="请输入内容"></el-input>
             </el-form-item>
-            <el-form-item label="夜服号码" :label-width="formLabelWidth" prop="fifoEmergency">
+            <el-form-item label="所属部门" :label-width="formLabelWidth" prop="fifoEmergency">
               <my-tree ref="myTree" style="width: 100%" :options="treeArr" @getValue="getSelectedValue"></my-tree>
-
             </el-form-item>
 
           </div>
@@ -191,6 +191,7 @@ import { getDictionaryAll, getOrganizeList } from "@/newwork/system-colltroner";
 import { fn } from "@/uti";
 import myTree from "@/components/myTree";
 import myFooter from "@/components/myFooter";
+import { upDataFile } from "@/newwork/ground-colltroner";
 
 export default {
   name: "queue",
@@ -298,7 +299,17 @@ export default {
     httpRequest(param){
       let File = param.file
       let FileName = File.name
+      this.addForm.fifoWaitMusic = FileName
       let formData = new FormData()
+      upDataFile(File).then(res => {
+        if(res.data.code === 200){
+          alert('OK')
+        }else {
+          this.$message.error(res.datamsg)
+        }
+      }).catch(e => {
+        this.$message.error(e)
+      })
     },
     error(){
       this.$message.error('上传失败, 请重试')
@@ -331,26 +342,37 @@ export default {
       this.getFifo(this.form)
     },
     submitForm(){
-      this.title === '新增' ? addFifo(this.addForm).then(res => {
-        console.log(res)
-        if(res.data.code === 200){
-          this.getFifo(this.form)
-          this.$message.success('提交完成')
-          this.dialogFormVisible = false
-        }else {
-          this.$message.error(res.data.msg)
-        }
-      }) : upDataFifo(this.addForm).then(res => {
-        console.log(res )
-        if(res.data.code === 200){
-          this.getFifo(this.form)
-          this.$message.success('提交完成')
-          this.dialogFormVisible = false
 
-        }else {
-          this.$message.error(res.data.msg)
+
+      this.$refs.addForm.validate((valid) => {
+        if (valid) {
+      this.title === '新增' ? addFifo(this.addForm).then(res => {
+          alert('submit!');
+          console.log(res)
+          if(res.data.code === 200){
+            this.getFifo(this.form)
+            this.$message.success('提交完成')
+            this.dialogFormVisible = false
+          }else {
+            this.$message.error(res.data.msg)
+          }
+        }) : upDataFifo(this.addForm).then(res => {
+          console.log(res )
+          if(res.data.code === 200){
+            this.getFifo(this.form)
+            this.$message.success('提交完成')
+            this.dialogFormVisible = false
+
+          }else {
+            this.$message.error(res.data.msg)
+          }
+        })
+        } else {
+          console.log('error submit!!');
+          return false;
         }
-      })
+      });
+
     },
     del(row){
       delFifo(row.id).then(res => {

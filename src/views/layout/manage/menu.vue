@@ -19,6 +19,7 @@
           <div class="item-r">
             <el-link type="primary" class="link" @click="currentShow(0)">新增</el-link>
             <el-link type="primary" class="link" @click="currentShow(1)">编辑</el-link>
+            <el-link type="primary" class="link" @click="currentShow(2)">删除</el-link>
           </div>
         </div>
       </div>
@@ -26,7 +27,7 @@
 
 
     <div>
-      <el-dialog :title="title" :visible.sync="dialogFormVisible">
+      <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close>
         <el-form :model="addForm" ref="addForm" :rules="rules">
           <el-form-item label="菜单名称" :label-width="formLabelWidth" prop="menuName">
             <el-input v-model="addForm.menuName" autocomplete="off" placeholder="请输入内容"></el-input>
@@ -57,7 +58,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <div class="form-bottom">
-            <el-button @click="removeIt">删除</el-button>
+            <a href=""></a>
             <div>
               <el-button @click="dialogFormVisible = false">取 消</el-button>
               <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -95,8 +96,8 @@ export default {
         perms: '',
         status: 0,
       },
-      showTitle: ['新增','编辑'],
-      showIndex: '',
+      showTitle: ['新增','编辑','删除'],
+      showIndex: null,
       row: {},
       defaultShowNodes: [],
       menuType: [
@@ -162,7 +163,8 @@ export default {
     },
     meunClick(data) {
       this.row = data
-      this.showForm(this.showTitle[this.showIndex])
+      this.showIndex === null ? console.log('1') : this.showForm(this.showTitle[this.showIndex]);
+
     },
     showForm(type) {
       this.dialogFormVisible = true

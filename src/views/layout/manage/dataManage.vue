@@ -5,7 +5,7 @@
         <div class="nav-l">
 
           <div class="form-nav">
-            <el-form :model="form" inline :rules="rule" ref="form" label-width="68px" class="demo-ruleForm">
+            <el-form :model="form" destroy-on-close inline :rules="rule" ref="form" label-width="68px" class="demo-ruleForm">
               <el-form-item label="字典类型名称" prop="name" label-width="180">
                 <el-input placeholder="请输入内容" v-model="form.name"></el-input>
               </el-form-item>
@@ -176,11 +176,6 @@ export default {
             type: 'success'
           })
           this.dialogFormVisible = false
-        } else {
-          this.$message({
-            message: '提交失败',
-            type: 'error'
-          })
         }
       })
     },
