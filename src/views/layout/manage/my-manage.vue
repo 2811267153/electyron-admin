@@ -28,6 +28,7 @@
             <el-button type="primary" @click="show(null, '新增')">新增</el-button>
           </div>
           <el-table
+            height="100%"
               :data="resultList" v-if="resultList.length !== 0" @row-click="rowClick"
               :row-class-name="tableRowClassName"
               :header-cell-style="{background:'#ccc', color: '#fff'}"
@@ -37,7 +38,7 @@
             </el-table-column>
             <el-table-column align="center" prop="nickName" label="姓名" width="120">
             </el-table-column>
-            <el-table-column align="center" prop="email" label="email" show-overflow-tooltip>
+            <el-table-column align="center" prop="username" label="账号" show-overflow-tooltip>
             </el-table-column>
             <el-table-column align="center" prop="phone" label="手机号" show-overflow-tooltip>
             </el-table-column>
@@ -59,8 +60,8 @@
             <el-table-column prop="starts" label="状态" show-overflow-tooltip align="center">
               <template scope="scope">
                 <p>
-                  <el-tag v-if="scope.row.status === 0" type="success">启用</el-tag>
-                  <el-tag v-else type="error">停用</el-tag>
+                  <a v-if="scope.row.status === 0">启用</a>
+                  <a v-else>停用</a>
                 </p>
               </template>
             </el-table-column>
@@ -533,9 +534,7 @@ export default {
 </script>
 
 <style scoped>
-#my-manage{
 
-}
 .my-manage {
   display: flex;
   width: 100%;
@@ -546,12 +545,13 @@ export default {
   background-color: #fff;
   border-radius: 10px;
   height: 70vh;
+  overflow: hidden;
 }
 .table-title{
   background-color: #f2f2f2;
 }
 .container-l {
-  width: 200px;
+  width: 250px;
 }
 .container-form {
   display: flex;

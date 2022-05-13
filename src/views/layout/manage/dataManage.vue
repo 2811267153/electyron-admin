@@ -61,12 +61,12 @@
         </div>
       </el-dialog>
 
-      <el-table :header-cell-style="{background:'#ccc', color: '#fff',}"  :data="resultList" style="width: 100%"  v-if="resultList.length !== 0">
+      <el-table height="100%" :header-cell-style="{background:'#ccc', color: '#fff',}"  :data="resultList" style="width: 100%"  v-if="resultList.length !== 0">
         <el-table-column align="center"  prop="id" label="序号" width="50">
           <template scope="scope">{{ scope.$index + 1 }}</template>
         </el-table-column>
-        <el-table-column align="center" prop="name" label="字典类型名称" width="300"></el-table-column>
-        <el-table-column align="center" prop="code" label="字典类型编码" width="300"></el-table-column>
+        <el-table-column align="center" prop="name" label="字典类型名称"></el-table-column>
+        <el-table-column align="center" prop="code" label="字典类型编码"></el-table-column>
         <el-table-column align="center" prop="createTime" label="更新时间"></el-table-column>
         <el-table-column align="center" prop="sort" label="状态">
           <template scope="scope">
@@ -118,7 +118,7 @@ export default {
       resultList: [],
       addForm: {
         name: '',
-        status: "", // 状态
+        status: 1, // 状态
         code: '',    //字典编码
         pageNum: 1, //pageNum
         pageSize: 10,  //分页大小
@@ -267,6 +267,9 @@ export default {
 
 .operate a {
   margin: 0 10px;
+}
+.operate {
+  padding: 0;
 }
 
 </style>

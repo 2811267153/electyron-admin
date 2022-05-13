@@ -105,6 +105,7 @@
           v-if="list.length !== 0"
           :data="list"
           :header-cell-style="{background:'#f2f2f2'}"
+          height="500px"
           style="width: 100%; margin-top: 20px">
         <el-table-column
             prop="date"
@@ -337,6 +338,7 @@ export default {
     },
     submitForm() {
       this.$refs.addForm.validate((valid) => {
+        this.changeAddForm()
         if (valid && !this.isVacancy) {
           if (this.title === '新增') {
             addRole(this.addForm).then(res => {
@@ -361,7 +363,6 @@ export default {
             }))
           }
         } else {
-          this.$message.error('提交失败， 请重试')
           return false;
         }
       });
@@ -374,11 +375,17 @@ export default {
     checkChange(a, context) {
       this.addForm.menuIds = []
       const menuId = treeToArray(context.checkedNodes)
-      menuId.forEach((item, i) => {
-        this.addForm.menuIds.push(item.menuId)
-      })
+
+      //添加 角色权限列表
+      menuId.forEach(item =>  this.addForm.menuIds.push(item.menuId))
+    this.changeAddForm()
+    },
+    /**
+     *
+     * 查询 表单是否 添加菜单权限
+     */
+    changeAddForm(){
       this.addForm.menuIds.length === 0 ? this.isVacancy = true : this.isVacancy = false
-      console.log(this.addForm.menuIds)
     },
     getRoleList(form) {
       getRoleList(form).then(res => {

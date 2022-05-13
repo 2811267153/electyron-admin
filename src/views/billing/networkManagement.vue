@@ -210,50 +210,55 @@
       </div>
     </el-dialog>
 
-    <el-table :header-cell-style="{background:'#ccc', color: '#fff',}"  :data="list" style="width: 100%" >
-      <el-table-column align="center" prop="date" label="序号" width="50px">
-        <template scope="scope">{{ scope.$index + 1 }}</template>
-      </el-table-column>
-      <el-table-column align="center" prop="gatewayName" label="网关名称"></el-table-column>
-      <el-table-column align="center" prop="accountUser" label="计费账号"></el-table-column>
-      <el-table-column align="center" prop="codecs" label="支持编码"></el-table-column>
-      <el-table-column align="center" prop="expires" label="超时时长(s)"></el-table-column>
-      <el-table-column align="center" prop="gatewayIp" label="中继IP"></el-table-column>
-      <el-table-column align="center" prop="gatewayPort" label="中继端口"></el-table-column>
-      <el-table-column align="center" prop="gatewayType" label="中继类型">
-        <template scope="scope" >
-          <a v-if="scope.row.gatewayType === 0">入中继</a>
-          <a v-else-if="scope.row.gatewayType === 1">出中继</a>
-          <a v-else-if="scope.row.gatewayType === 2">双向中继</a>
-          <a v-else>未知</a>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" prop="maxCall" label="最大并发数"></el-table-column>
-      <el-table-column align="center" prop="username" label="注册用户"></el-table-column>
-      <el-table-column align="center" prop="username" label="是否注册">
-        <template scope="scope">
-          <div v-if="scope.row.register === 1"> 注册</div>
-          <div v-else> 不注册</div>
-        </template>
-      </el-table-column>
-      <el-table-column prop="recording" align="center"  fixed="right"  label="操作">
-        <template scope="scope">
-          <div class="operate">
-            <el-link
-              class="a-link"
-              @click="showAddForm(scope.row, '编辑')"
-              type="info"
-            >编辑
-            </el-link
-            >
-            <el-link class="a-link" @click="removeIt(scope.row)" type="info"
-            >删除
-            </el-link
-            >
-          </div>
-        </template>
-      </el-table-column>
-    </el-table>
+    <div class="table-warp">
+      <div class="table">
+        <el-table :header-cell-style="{background:'#ccc', color: '#fff',}"  :data="list" style="width: 100%" >
+          <el-table-column align="center" prop="date" label="序号" width="50px">
+            <template scope="scope">{{ scope.$index + 1 }}</template>
+          </el-table-column>
+          <el-table-column align="center" prop="gatewayName" label="网关名称"></el-table-column>
+          <el-table-column align="center" prop="accountUser" label="计费账号"></el-table-column>
+<!--          <el-table-column align="center" prop="codecs" label="支持编码"></el-table-column>-->
+          <el-table-column align="center" prop="expires" label="超时时长(s)"></el-table-column>
+          <el-table-column align="center" prop="gatewayIp" label="中继IP"></el-table-column>
+          <el-table-column align="center" prop="gatewayPort" label="中继端口"></el-table-column>
+          <el-table-column align="center" prop="gatewayType" label="中继类型">
+            <template scope="scope" >
+              <a v-if="scope.row.gatewayType === 0">入中继</a>
+              <a v-else-if="scope.row.gatewayType === 1">出中继</a>
+              <a v-else-if="scope.row.gatewayType === 2">双向中继</a>
+              <a v-else>未知</a>
+            </template>
+          </el-table-column>
+<!--          <el-table-column align="center" prop="maxCall" label="最大并发数"></el-table-column>-->
+<!--          <el-table-column align="center" prop="username" label="注册用户"></el-table-column>-->
+          <el-table-column align="center" prop="username" label="是否注册">
+            <template scope="scope">
+              <div v-if="scope.row.register === 1"> 注册</div>
+              <div v-else> 不注册</div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="recording" align="center"  fixed="right"  label="操作">
+            <template scope="scope">
+              <div class="operate">
+                <el-link
+                  class="a-link"
+                  @click="showAddForm(scope.row, '编辑')"
+                  type="info"
+                >编辑
+                </el-link
+                >
+                <el-link class="a-link" @click="removeIt(scope.row)" type="info"
+                >删除
+                </el-link
+                >
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+
+      </div>
+    </div>
 
   </div>
   <my-footer v-on:next = "next" @prev="prev" :form="forms" @change="change"></my-footer>
@@ -545,7 +550,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style >
 #networkManagement{
   width: 100%;
   padding: 20px;
@@ -557,7 +562,7 @@ export default {
   height: 71vh;
   overflow: auto;
 }
-  .container p {
+ #networkManagement .container p {
   background-color: #f2f2f2;
   padding: 10px 15px;
 }
@@ -578,7 +583,11 @@ export default {
   justify-content: space-between;
 }
 
-.width > * {
+#networkManagement.width > * {
   flex: 1;
+}
+
+#networkManagement .operate{
+  padding: 0;
 }
 </style>

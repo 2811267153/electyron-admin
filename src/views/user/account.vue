@@ -180,7 +180,8 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+
 #account{
   width: 100%;
   padding: 20px;

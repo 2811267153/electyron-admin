@@ -1,5 +1,10 @@
 <template>
   <div class="menu">
+    <el-row>
+      <el-col :span="3"><div class="grid-content bg-purple-dark">菜单名称</div></el-col>
+      <el-col :span="18"><div class="grid-content bg-purple-dark">组件路径</div></el-col>
+      <el-col :span="3"><div class="grid-content bg-purple-dark">操作</div></el-col>
+    </el-row>
     <el-tree
         :data="path"
         :props="defaultProps"
@@ -244,5 +249,8 @@ export default {
 }
 .tree-path{
   width: 20%;
+}
+.grid-content{
+  text-align: center;
 }
 </style>

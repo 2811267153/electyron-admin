@@ -163,11 +163,22 @@
       </el-table-column>
       <el-table-column align="center" prop="retryStrategy" label="关联网关">
         <template scope="scope">
-          <div class="table" v-for="(item, i) in scope.row.pbxGwgroupGatewayList">
-            <p>
-              <span>{{ scope.row.pbxGwgroupGatewayList[i].gatewayName }}</span>
-              --<span>{{ scope.row.pbxGwgroupGatewayList[i].weight }}</span>
-            </p>
+          <div v-if="scope.row.pbxGwgroupGatewayList.length > 2">
+            <div class="table" v-for="(item, i) in scope.row.pbxGwgroupGatewayList.slice(0, 1)">
+              <p>
+                <span>{{ scope.row.pbxGwgroupGatewayList[i].gatewayName }}</span>
+                --<span>{{ scope.row.pbxGwgroupGatewayList[i].weight }}</span>
+              </p>
+            </div>
+            <span>sjwkuys</span>
+          </div>
+          <div v-else>
+            <div class="table" v-for="(item, i) in scope.row.pbxGwgroupGatewayList">
+              <p>
+                <span>{{ scope.row.pbxGwgroupGatewayList[i].gatewayName }}</span>
+                --<span>{{ scope.row.pbxGwgroupGatewayList[i].weight }}</span>
+              </p>
+            </div>
           </div>
         </template>
       </el-table-column>
@@ -441,8 +452,7 @@ export default {
   box-shadow: 0 0 15px #ccc;
   background-color: #fff;
   border-radius: 10px;
-  height: 71vh;
-  overflow: auto;
+  height: 70vh;
 }
 .container p {
   background-color: #f2f2f2;

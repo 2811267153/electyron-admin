@@ -41,6 +41,8 @@
         <el-button type="primary" @click="submitForm('addForm')">确 定</el-button>
       </div>
     </el-dialog>
+    <div>
+    </div>
     <el-tree
       @node-click="handleNodeClick"
       :data="formList"
@@ -55,6 +57,8 @@
         <div class="tree">
           <a class="detpName">  {{ data.deptName }} </a>
           <div>{{data.createTime}}</div>
+          <div v-if="data.status === 0">启用</div>
+          <div v-else>停用</div>
           <div class="item-r">
             <el-link type="primary" class="link" @click="currentShow(0)">新增下一级</el-link>
             <el-link type="primary" class="link" @click="currentShow(1)">编辑</el-link>
@@ -73,7 +77,7 @@ import {
   getOrganizeList,
   upDataOrganize
 } from "@/newwork/system-colltroner";
-import {fn, getNowFormatDate, treeToArray} from "@/uti";
+import {fn, getNowFormatDate,} from "@/uti";
 import { isValidNumber } from "@/util/validate";
 import myTree from "@/components/myTree";
 import myFooter from "@/components/myFooter";

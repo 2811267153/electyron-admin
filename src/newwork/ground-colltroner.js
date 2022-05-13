@@ -232,3 +232,41 @@ export  function upDataFile(formData){
         }
     })
 }
+
+/**
+ * 调度台管理
+ */
+
+export function getDeskList(data) {
+    return request({
+        url: '/pbx/desk/list',
+        params: data
+    })
+}
+export function getDeskListUniqe(data) {
+    return request({
+        url: '/pbx/desk/user/unique',
+        params: data
+    })
+}
+
+export function addDeskList(data) {
+    return request({
+        url: '/pbx/desk/add',
+        data,
+        method: 'post'
+    })
+}
+
+export function putDeskList(data){
+    return request({
+        url: '/pbx/desk/update',
+        method: 'put',
+        data
+    })
+}
+export function deleteDeskList(data) {
+    return request({
+        url: '/pbx/desk/delete/' + data
+    })
+}
