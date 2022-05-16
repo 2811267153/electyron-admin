@@ -63,6 +63,8 @@ export default {
   border-radius: 10px;
   padding: 10px 15px;
   width: 100%;
+  height: 52px;
+  overflow: hidden;
   margin-top: 20px;
 }
 
@@ -73,6 +75,8 @@ export default {
   padding: 5px 10px;
   text-align: center;
   font-size: 13px;
+  width: 160px;
+  overflow: hidden;
 }
 
 

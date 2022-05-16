@@ -235,12 +235,12 @@ const routes = [
           //   name: 'did',
           //   component: did
           // },
-          {
-            meta: { title: '拦截通话' },
-            path: '/bill/intercept',
-            name: 'intercept',
-            component: intercept
-          },
+          // {
+          //   meta: { title: '拦截通话' },
+          //   path: '/bill/intercept',
+          //   name: 'intercept',
+          //   component: intercept
+          // },
           {
             meta: { title: '会议记录' },
             path: '/call/meetingMinutes',

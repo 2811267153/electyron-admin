@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <div class="queue">
+  <div class="warps">
+    <my-el-header/>
+    <div class="container">
       <div class="form-nav">
         <el-form :inline="true" :model="form" ref="form" class="demo-form-inline" :rules="rule">
           <el-form-item label="队列名称" prop="fifoName">
@@ -22,8 +23,6 @@
         </el-form>
         <el-button type="primary"  @click="addForms(null, '新增')">新增队列</el-button>
       </div>
-
-
       <el-dialog :title="title"  destroy-on-close ref="addForm" :visible.sync="dialogFormVisible">
         <el-form :model="addForm" ref="addForm" :rules="rules">
           <div class="width">
@@ -116,6 +115,7 @@
         </div>
       </el-dialog>
       <el-table
+        max-height="800px"
         :header-cell-style="{background:'#ccc', color: '#fff',}"
         class="table"
         :data="list"
@@ -178,7 +178,6 @@
         </el-table-column>
       </el-table>
       <my-empty v-else/>
-
     </div>
     <my-footer v-on:next = "next" @prev="prev" :form="form" @change="change"></my-footer>
   </div>
@@ -192,6 +191,7 @@ import { fn } from "@/uti";
 import myTree from "@/components/myTree";
 import myFooter from "@/components/myFooter";
 import { upDataFile } from "@/newwork/ground-colltroner";
+import myElHeader from "@/components/myElHeader";
 
 export default {
   name: "queue",
@@ -435,7 +435,8 @@ export default {
   components: {
     myEmpty,
     myTree,
-    myFooter
+    myFooter,
+    myElHeader
   },
   mounted() {
     this.$bus.$on('pageChange', () => {

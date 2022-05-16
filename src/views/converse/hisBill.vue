@@ -1,105 +1,107 @@
 <template>
-  <div id="history">
+  <div class="warps">
+    <my-el-header/>
     <div class="container">
-      <p>{{ $route.meta.title }}</p>
-    </div>
-    <div class="nav-form">
-      <el-form :inline="true" :model="form" class="demo-form-inline">
-        <el-form-item label="计费账户">
-          <el-input v-model="form.name" placeholder="审批人"></el-input>
-        </el-form-item>
-        <el-form-item label="被叫号码">
-          <el-input v-model="form.mobilePhone" placeholder="审批人"></el-input>
-        </el-form-item>
-        <el-form-item label="开始时间">
-          <el-input v-model="form.startingTime" placeholder="审批人"></el-input>
-        </el-form-item>
-        <el-form-item label="结束时间">
-          <el-input v-model="form.endTime" placeholder="审批人"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="onSubmit">查询</el-button>
-          <el-button type="primary" @click="onSubmit">重置</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
-
-    <el-table
-        :data="tableData"
+      <div class="nav-form">
+        <el-form :inline="true" :model="form" class="demo-form-inline">
+          <el-form-item label="计费账户">
+            <el-input v-model="form.name" placeholder="审批人"></el-input>
+          </el-form-item>
+          <el-form-item label="被叫号码">
+            <el-input v-model="form.mobilePhone" placeholder="审批人"></el-input>
+          </el-form-item>
+          <el-form-item label="开始时间">
+            <el-input v-model="form.startingTime" placeholder="审批人"></el-input>
+          </el-form-item>
+          <el-form-item label="结束时间">
+            <el-input v-model="form.endTime" placeholder="审批人"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="find">查询</el-button>
+            <el-button type="primary" @click="clear">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+      <el-table
+        max-height="800px"
+        :data="list"
         style="width: 100%">
-      <el-table-column
+        <el-table-column
           prop="date"
-          label="序号">
-        <template scope="scope">{{scope.$index}}</template>
-      </el-table-column>
-      <el-table-column
+          label="序号"
+        width="50px">
+          <template scope="scope">{{scope.$index}}</template>
+        </el-table-column>
+        <el-table-column
           prop="name"
-          label="计费账户"
-          width="180">
-      </el-table-column>
-      <el-table-column
+          label="计费账户">
+        </el-table-column>
+        <el-table-column
           prop="name"
-          label="被叫号码"
-          width="180">
-      </el-table-column>
-      <el-table-column
+          label="被叫号码">
+        </el-table-column>
+        <el-table-column
           prop="name"
-          label="计费账户"
-          width="180">
-      </el-table-column>
-      <el-table-column
+          label="计费账户">
+        </el-table-column>
+        <el-table-column
           prop="name"
-          label="呼出时间"
-          width="180">
-      </el-table-column>
-      <el-table-column
+          label="呼出时间">
+        </el-table-column>
+        <el-table-column
           prop="name"
-          label="应答时间"
-          width="180">
-      </el-table-column>
-      <el-table-column
+          label="应答时间">
+        </el-table-column>
+        <el-table-column
           prop="name"
-          label="呼出时长"
-          width="180">
-      </el-table-column>
-      <el-table-column
+          label="呼出时长">
+        </el-table-column>
+        <el-table-column
           prop="name"
-          label="计费时长"
-          width="180">
-      </el-table-column>
-      <el-table-column
+          label="计费时长">
+        </el-table-column>
+        <el-table-column
           prop="name"
-          label="挂机原因"
-          width="180">
-      </el-table-column>
-      <el-table-column
+          label="挂机原因">
+        </el-table-column>
+        <el-table-column
           prop="name"
-          label="网管"
-          width="180">
-      </el-table-column>
-      <el-table-column
+          label="网管">
+        </el-table-column>
+        <el-table-column
           prop="name"
           label="外呼前缀">
-      </el-table-column>
-      <el-table-column
+        </el-table-column>
+        <el-table-column
           prop="name"
           label="录音">
-      </el-table-column>
-      <el-table-column
+        </el-table-column>
+        <el-table-column
           prop="name"
           label="计费状态">
-      </el-table-column>
-      <el-table-column
+        </el-table-column>
+        <el-table-column
           prop="name"
           label="费用">
-      </el-table-column>
-    </el-table>
+        </el-table-column>
+      </el-table>
+    </div>
+    <my-footer v-on:next="next" @prev="prev" :form="form" @change="change"></my-footer>
   </div>
 </template>
 
 <script>
+import myElHeader from "@/components/myElHeader";
+import myFooter from "@/components/myFooter";
+import { getPbxList } from "@/newwork/conferencr";
+
 export default {
   name: "history",
+  components: {
+    myElHeader,
+    myFooter
+  },
+
   data() {
     return {
       form: {
@@ -107,39 +109,45 @@ export default {
         startingTime: '',
         endTime: ""
       },
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }]
+      list: []
     }
+
+  },
+  methods: {
+    find(){
+      this.getPbxList(this.form)
+    },
+    clear(){
+    },
+    getPbxList(form){
+      getPbxList(form).then(res => {
+        console.log(res);
+        if(res.data.code === 200){
+          this.$bus.$emit("total", res.data.data.total);
+          this.list = res.data.data.records
+        }
+      })
+    },
+    next() {
+      this.form.pageNum++;
+      this.getPbxList(this.form);
+    },
+    prev() {
+      this.form.pageNum--;
+      this.getPbxList(this.form);
+    },
+    change(e) {
+      this.form.pageNum = e;
+      this.getPbxList(this.form);
+    },
+  },
+  created() {
+    this.getPbxList(this.form)
   }
 }
 </script>
 
 <style scoped>
-.container {
-  border: 1px solid #ccc;
-  margin: 0 20px;
-}
-
-.container p {
-  background-color: #f2f2f2;
-  padding: 10px 15px;
-}
-
 .nav-form {
   margin: 15px;
   height: 40px;

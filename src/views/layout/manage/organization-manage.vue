@@ -1,72 +1,75 @@
 <template>
   <!--  组织管理-->
   <div class="management">
-    <div class="nav-form">
-      <el-form ref="form" class="form" :model="form" label-width="80px" :inline="true">
-        <el-form-item label="组织名称">
-          <el-input placeholder="请输入内容" v-model="form.deptName"></el-input>
-        </el-form-item>
-        <el-button type="primary" @click="find()">搜索</el-button>
-        <el-button @click="clear()">重置</el-button>
+    <my-el-header/>
+    <div class="container">
+      <div class="nav-form">
+        <el-form ref="form" class="form" :model="form" label-width="80px" :inline="true">
+          <el-form-item label="组织名称">
+            <el-input placeholder="请输入内容" v-model="form.deptName"></el-input>
+          </el-form-item>
+          <el-button type="primary" @click="find()">搜索</el-button>
+          <el-button @click="clear()">重置</el-button>
 
-      </el-form>
-      <div class="add">
-        <el-button type="primary" @click="showForm('新增')">新增</el-button>
-      </div>
-    </div>
-    <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close>
-      <el-form ref="addForm" :model="addForm" :rules="rules">
-        <el-form-item label="部门名称" :label-width="formLabelWidth" prop="deptName">
-          <el-input class="input" v-model="addForm.deptName" autocomplete="off" placeholder="请输入内容"></el-input>
-        </el-form-item>
-        <el-form-item label="显示顺序" :label-width="formLabelWidth" prop="orderNum">
-          <el-input type="number" class="input" v-model="addForm.orderNum" autocomplete="off"
-                    placeholder="请输入内容"></el-input>
-        </el-form-item>
-        <el-form-item label="上级部门" :label-width="formLabelWidth" prop="parentId">
-
-<!--          <my-tree style="width: 100%" :options="formList" @getValue="getSelectedValue"></my-tree>-->
-<!--          <my-el-tree v-model="addForm.parentId" :options="formList" :value='row.parentId' :props="defaultProps"/>-->
-          <treeselect v-model="addForm.parentId" :multiple="false" :options="formList" :normalizer="normalizer" />
-        </el-form-item>
-        <el-form-item label="状态" :label-width="formLabelWidth">
-          <el-radio-group v-model="addForm.status">
-            <el-radio :label="0">启用</el-radio>
-            <el-radio :label="1">停用</el-radio>
-          </el-radio-group>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm('addForm')">确 定</el-button>
-      </div>
-    </el-dialog>
-    <div>
-    </div>
-    <el-tree
-      @node-click="handleNodeClick"
-      :data="formList"
-      ref="tree"
-      :default-expanded-keys="defaulExpanded"
-      :expand-on-click-node="false"
-      node-key="deptId"
-      :filter-node-method="filterNode"
-      :props="defaultProps"
-      accordion>
-      <div class="custom-tree-node" slot-scope="{node, data}">
-        <div class="tree">
-          <a class="detpName">  {{ data.deptName }} </a>
-          <div>{{data.createTime}}</div>
-          <div v-if="data.status === 0">启用</div>
-          <div v-else>停用</div>
-          <div class="item-r">
-            <el-link type="primary" class="link" @click="currentShow(0)">新增下一级</el-link>
-            <el-link type="primary" class="link" @click="currentShow(1)">编辑</el-link>
-            <el-link type="primary" class="link" @click="currentShow(2)">删除</el-link>
-          </div>
+        </el-form>
+        <div class="add">
+          <el-button type="primary" @click="showForm('新增')">新增</el-button>
         </div>
       </div>
-    </el-tree>
+      <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close>
+        <el-form ref="addForm" :model="addForm" :rules="rules">
+          <el-form-item label="部门名称" :label-width="formLabelWidth" prop="deptName">
+            <el-input class="input" v-model="addForm.deptName" autocomplete="off" placeholder="请输入内容"></el-input>
+          </el-form-item>
+          <el-form-item label="显示顺序" :label-width="formLabelWidth" prop="orderNum">
+            <el-input type="number" class="input" v-model="addForm.orderNum" autocomplete="off"
+                      placeholder="请输入内容"></el-input>
+          </el-form-item>
+          <el-form-item label="上级部门" :label-width="formLabelWidth" prop="parentId">
+
+            <!--          <my-tree style="width: 100%" :options="formList" @getValue="getSelectedValue"></my-tree>-->
+            <!--          <my-el-tree v-model="addForm.parentId" :options="formList" :value='row.parentId' :props="defaultProps"/>-->
+            <treeselect v-model="addForm.parentId" :multiple="false" :options="formList" :normalizer="normalizer" />
+          </el-form-item>
+          <el-form-item label="状态" :label-width="formLabelWidth">
+            <el-radio-group v-model="addForm.status">
+              <el-radio :label="0">启用</el-radio>
+              <el-radio :label="1">停用</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="submitForm('addForm')">确 定</el-button>
+        </div>
+      </el-dialog>
+      <div>
+      </div>
+      <el-tree
+        @node-click="handleNodeClick"
+        :data="formList"
+        ref="tree"
+        :default-expanded-keys="defaulExpanded"
+        :expand-on-click-node="false"
+        node-key="deptId"
+        :filter-node-method="filterNode"
+        :props="defaultProps"
+        accordion>
+        <div class="custom-tree-node" slot-scope="{node, data}">
+          <div class="tree">
+            <a class="detpName">  {{ data.deptName }} </a>
+            <div>{{data.createTime}}</div>
+            <div v-if="data.status === 0">启用</div>
+            <div v-else>停用</div>
+            <div class="item-r">
+              <el-link type="primary" class="link" @click="currentShow(0)">新增下一级</el-link>
+              <el-link type="primary" class="link" @click="currentShow(1)">编辑</el-link>
+              <el-link type="primary" class="link" @click="currentShow(2)">删除</el-link>
+            </div>
+          </div>
+        </div>
+      </el-tree>
+    </div>
   </div>
 </template>
 
@@ -85,6 +88,7 @@ import myElTree from "@/components/my-el-tree";
 import treeselect from '@riophae/vue-treeselect'
 // import the styles
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+import myElHeader from "@/components/myElHeader";
 
 export default {
   name: "serve-manage",
@@ -253,7 +257,8 @@ export default {
     myTree,
     myFooter,
     myElTree,
-    treeselect
+    treeselect,
+    myElHeader
   },
   created() {
     this.getOrganizeList(this.form);
@@ -274,15 +279,12 @@ export default {
 
 <style>
 .management{
-  width: 100%;
-  padding: 20px;
-  margin-left: 20px;
-  margin-top: 20px;
-  box-shadow: 0 0 15px #ccc;
-  background-color: #fff;
-  border-radius: 10px;
-  height: 80vh;
+  display: flex;
+  height: calc(100vh - 160px);
+  justify-content: space-between;
+  flex-direction: column;
 }
+
 .input {
   width: 30%;
 }
@@ -305,11 +307,6 @@ export default {
   margin-right: 20px;
 }
 
-.form-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
 .tree .detpName {
   width: 200px;
 }

@@ -1,127 +1,127 @@
 <template>
-  <div id="rate">
-    <div class="rate">
-      <div class="rate-true" v-if="toggle">
+  <div>
+    <div  v-if="toggle">
+      <div class="warps">
+          <my-el-header/>
         <div class="container">
-          <el-form :inline="true" :model="form" class="demo-form-inline" :rules="addFroms" ref="form">
-            <el-form-item label="费率组" prop="diaplanRateGroup">
-              <el-input v-model="form.diaplanRateGroup" placeholder="请输入内容"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="find">查询</el-button>
-              <el-button @click="clear">重置</el-button>
-            </el-form-item>
-          </el-form>
-          <el-button type="primary" @click="showAddForm(null, '添加费率组')"
-          >添加费率组
-          </el-button
-          >
-        </div>
-        <el-dialog destroy-on-close :title="title" :visible.sync="dialogFormVisible">
-          <el-form ref="addForm" :model="addForm" :rules="addFroms">
-            <el-form-item
+          <div class="form-nav">
+            <el-form :inline="true" :model="form" class="demo-form-inline" :rules="addFroms" ref="form">
+              <el-form-item label="费率组" prop="diaplanRateGroup">
+                <el-input v-model="form.diaplanRateGroup" placeholder="请输入内容"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="find">查询</el-button>
+                <el-button @click="clear">重置</el-button>
+              </el-form-item>
+            </el-form>
+            <el-button type="primary" @click="showAddForm(null, '添加费率组')"
+            >添加费率组
+            </el-button
+            >
+          </div>
+          <el-dialog destroy-on-close :title="title" :visible.sync="dialogFormVisible">
+            <el-form ref="addForm" :model="addForm" :rules="addFroms">
+              <el-form-item
                 label="添加费率组名称"
                 :label-width="formLabelWidth"
                 prop="groupName"
-            >
-              <el-input v-model="addForm.groupName" autocomplete="off" placeholder="请输入内容"></el-input>
-            </el-form-item>
+              >
+                <el-input v-model="addForm.groupName" autocomplete="off" placeholder="请输入内容"></el-input>
+              </el-form-item>
 
-            <el-form-item label="备注" :label-width="formLabelWidth">
-              <el-input v-model="addForm.remark" autocomplete="off" placeholder="请输入内容"></el-input>
-            </el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="submitForm">确 定</el-button>
-          </div>
-        </el-dialog>
-
-        <el-table :data="list" :header-cell-style="{background:'#ccc', color: '#fff',}" style="width: 100%" border v-if="list.length !== 0">
-          <el-table-column align="center" prop="date" label="序号" width="180">
-            <template scope="scope">
-              {{ scope.$index + 1 }}
-            </template>
-          </el-table-column>
-          <el-table-column align="center" prop="groupName" label="费率组名称">
-          </el-table-column>
-          <el-table-column align="center" prop="address" label="操作">
-            <template scope="scope">
-              <el-link
+              <el-form-item label="备注" :label-width="formLabelWidth">
+                <el-input v-model="addForm.remark" autocomplete="off" placeholder="请输入内容"></el-input>
+              </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="dialogFormVisible = false">取 消</el-button>
+              <el-button type="primary" @click="submitForm">确 定</el-button>
+            </div>
+          </el-dialog>
+          <el-table max-height="800" :data="list" :header-cell-style="{background:'#ccc', color: '#fff',}" style="width: 100%" border v-if="list.length !== 0">
+            <el-table-column align="center" prop="date" label="序号" width="180">
+              <template scope="scope">
+                {{ scope.$index + 1 }}
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="groupName" label="费率组名称">
+            </el-table-column>
+            <el-table-column align="center" prop="address" label="操作">
+              <template scope="scope">
+                <el-link
                   class="a-link"
                   type="info"
                   @click="showAddForm(scope.row, '编辑')"
-              >编辑
-              </el-link
-              >
-              <el-link class="a-link" type="info" @click="removeIt(scope.row)"
-              >删除
-              </el-link
-              >
-              <el-link class="a-link" type="info" @click="isToggle(scope.row)"
-              >查看费率组列表
-              </el-link
-              >
-            </template>
-          </el-table-column>
-          <el-table-column align="center" prop="remark" label="备注"></el-table-column>
-        </el-table>
-        <el-empty v-else>
-        </el-empty>
-
+                >编辑
+                </el-link
+                >
+                <el-link class="a-link" type="info" @click="removeIt(scope.row)"
+                >删除
+                </el-link
+                >
+                <el-link class="a-link" type="info" @click="isToggle(scope.row)"
+                >查看费率组列表
+                </el-link
+                >
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="remark" label="备注"></el-table-column>
+          </el-table>
+          <el-empty v-else>
+          </el-empty>
+        </div>
       </div>
-
-      <!--    查看费率组列表-->
-      <!--      如果toggle == false 则显示  不然显示 首标题-->
-      <div class="rate-list" v-else>
-        <p>费率组列表</p>
-
-        <div class="container">
-          <div class="nav-form">
-            <div></div>
+      <my-footer v-on:next = "next" @prev="prev" :form="form" @change="change"></my-footer>
+    </div>
+    <div v-else>
+      <div class="warps">
+        <my-el-header/>
+      </div>
+      <div class="container">
+        <div>
+          <p>费率组列表</p>
+          <div class="form-nav">
             <div>
               <el-button type="primary" @click="onSubmits">添加费率</el-button>
               <el-button type="primary" @click="black">返回</el-button>
             </div>
           </div>
         </div>
-
-
         <el-dialog destroy-on-close :title="listTitle" :visible.sync="listDialogFormVisible">
           <el-form :model="addListFrom" ref="formName" :rules="addRules">
             <el-form-item
-                label="费率名称"
-                :label-width="formLabelWidth"
-                prop="rateName"
+              label="费率名称"
+              :label-width="formLabelWidth"
+              prop="rateName"
             >
               <el-input v-model="addListFrom.rateName"  placeholder="请输入内容" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item
-                label="费率组"
-                :label-width="formLabelWidth"
-                name="rateGroup"
-                required
+              label="费率组"
+              :label-width="formLabelWidth"
+              name="rateGroup"
+              required
             >
               <el-input v-model="row.groupName"  placeholder="请输入内容" disabled></el-input>
             </el-form-item>
             <div class="width">
               <el-form-item
-                  label="费率前缀"
-                  :label-width="formLabelWidth"
-                  prop="ratePrefix"
+                label="费率前缀"
+                :label-width="formLabelWidth"
+                prop="ratePrefix"
 
               >
                 <el-input
-                    class="input"
-                    v-model="addListFrom.ratePrefix"
-                    autocomplete="off" placeholder="请输入内容"
+                  class="input"
+                  v-model="addListFrom.ratePrefix"
+                  autocomplete="off" placeholder="请输入内容"
                 ></el-input>
               </el-form-item>
             </div>
             <el-form-item
-                label="计费方式"
-                :label-width="formLabelWidth"
-                required
+              label="计费方式"
+              :label-width="formLabelWidth"
+              required
             >
               <div class="width">
                 <el-form-item prop="rate">
@@ -146,7 +146,7 @@
             </div>
           </div>
         </el-dialog>
-        <el-table :data="rateItemList"  style="width: 100%; margin-top: 20px" v-if="list.length !== 0">
+        <el-table max-height="800" :data="rateItemList"  style="width: 100%; margin-top: 20px" v-if="list.length !== 0">
           <el-table-column align="center" prop="date" label="序号">
             <template scope="scope">{{ scope.$index + 1 }}</template>
           </el-table-column>
@@ -168,11 +168,9 @@
             </template>
           </el-table-column>
         </el-table>
-
         <my-empty v-else/>
       </div>
     </div>
-    <my-footer v-on:next = "next" @prev="prev" :form="form" @change="change"></my-footer>
   </div>
 </template>
 
@@ -188,12 +186,14 @@ import {
 import myEmpty from "@/newwork/myEmpty";
 import {isValidNumber} from "@/util/validate";
 import myFooter from "@/components/myFooter";
+import myElHeader from "@/components/myElHeader";
 
 export default {
   name: 'rate',
   components: {
     myEmpty,
-    myFooter
+    myFooter,
+    myElHeader
   },
 
   data() {
@@ -469,25 +469,6 @@ export default {
 </script>
 
 <style scoped>
-.rate{
-  width: 100%;
-  padding: 20px;
-  margin-left: 20px;
-  margin-top: 20px;
-  box-shadow: 0 0 15px #ccc;
-  background-color: #fff;
-  border-radius: 10px;
-  height: 71vh;
-  overflow: auto;
-}
-
-.container {
-  display: flex;
-  justify-content: space-between;
-  height: 40px;
-  margin-bottom: 20px;
-  background-color: #fff;
-}
 
 .a-link {
   margin-right: 20px;
@@ -499,11 +480,6 @@ export default {
 }
 .footers p{
   color: #cccccc;
-}
-.nav-form {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
 }
 
 .pagination {

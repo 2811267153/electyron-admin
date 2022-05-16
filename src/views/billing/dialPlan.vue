@@ -1,7 +1,8 @@
 <template>
-  <div class="dial-plan">
-    <div class="dialPlan">
-      <div class="container">
+  <div class="warps">
+    <my-el-header/>
+    <div class="container">
+      <div class="form-nav">
         <el-form :inline="true" :model="form" class="demo-form-inline" ref="form" rules="rules">
           <el-form-item label="方案名称" prop="diaplanName">
             <el-input v-model="form.diaplanName"  placeholder="请输入内容"></el-input>
@@ -62,7 +63,7 @@
           >
         </div>
       </el-dialog>
-      <el-table  :header-cell-style="{background:'#ccc', color: '#fff',}":data="list"  style="width: 100%; margin-top: 20px"  v-if="list.length !==0">
+      <el-table max-height="800px" :header-cell-style="{background:'#ccc', color: '#fff',}":data="list"  style="width: 100%; margin-top: 20px"  v-if="list.length !==0">
         <el-table-column prop="date" align="center" label="序号" width="180">
           <template scope="scope">
             {{ scope.$index + 1 }}
@@ -111,13 +112,15 @@ import {
 } from "@/newwork/ground-colltroner";
 import myEmpty from "@/newwork/myEmpty";
 import myFooter from "@/components/myFooter";
+import myElHeader from "@/components/myElHeader";
 
 
 export default {
   name: 'dialPlan',
   components: {
     myEmpty,
-    myFooter
+    myFooter,
+    myElHeader
   },
 
   data() {
@@ -308,22 +311,7 @@ export default {
 </script>
 
 <style scoped>
-.dialPlan{
-  width: 100%;
-  padding: 20px;
-  margin-left: 20px;
-  margin-top: 20px;
-  box-shadow: 0 0 15px #ccc;
-  background-color: #fff;
-  border-radius: 10px;
-  height: 71vh;
-  overflow: auto;
-}
-.container {
-  display: flex;
-  justify-content: space-between;
-  height: 40px;
-}
+
 
 .width {
   display: flex;

@@ -1,11 +1,8 @@
 <template>
-  <div id="camera">
-    <div class="camera-l">
-      <e-tree />
-    </div>
+  <div id="warp">
+    <my-el-header/>
     <div class="container">
-      <p class="title">摄像头管理</p>
-      <div class="nav-form">
+      <div class="form-nav">
         <el-form :inline="true" :model="form" class="demo-form-inline">
           <el-form-item label="序列号">
             <el-input
@@ -61,7 +58,6 @@
           <el-button type="primary">二维码打印</el-button>
         </div>
       </div>
-
       <el-dialog :title="title" :visible.sync="dialogTableVisible">
         <el-form :rules="rules" ref="ruleForm" :model="addForm">
           <div class="width">
@@ -269,13 +265,15 @@ import baiduMap from 'vue-baidu-map/components/map/Map'
 import Geolocation from 'vue-baidu-map/components/controls/Geolocation.vue'
 import bmView from 'vue-baidu-map/components/map/MapView.vue'
 import { getNowFormatDate } from '@/uti'
+import myElHeader from "@/components/myElHeader";
 export default {
   name: 'cameraView',
   components: {
     eTree,
     baiduMap,
     Geolocation,
-    bmView
+    bmView,
+    myElHeader
   },
   data() {
     return {
@@ -673,32 +671,6 @@ export default {
 </script>
 
 <style scoped>
-#camera {
-  display: flex;
-  justify-content: space-between;
-}
-
-.container {
-  flex: 1;
-  border: 1px solid #ccc;
-  margin: 0 20px;
-}
-
-.camera-l {
-  width: 300px;
-}
-
-.container p {
-  background-color: #f2f2f2;
-  padding: 10px 15px;
-}
-
-.nav-form {
-  margin: 15px;
-  display: flex;
-  justify-content: space-between;
-}
-
 .width {
   display: flex;
 }

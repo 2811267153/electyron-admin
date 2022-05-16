@@ -9,7 +9,6 @@
         </el-breadcrumb>
       </div>
     </el-header>
-
     <div class="container">
       <div class="nav">
         <div class="nav-l">
@@ -414,24 +413,12 @@ export default {
     myEmpty,
     myFooter
   },
-  computed: {
-    // defaultMenuId(){
-    //   if(this.addForm.sysMenuList.length !== 0){
-    //     this.addForm.sysMenuList.forEach((item, i) => {
-    //       this.addForm.menuIds.push(item.id)
-    //     })
-    //     return this.addForm.sysMenuList.menuIds.id
-    //   }else {
-    //     return  []
-    //   }
-    // }
-  }
 }
 </script>
 
 <style >
 .el-header{
-  padding: 0;
+  padding: 0 !important;
 }
 .role{
   display: flex;

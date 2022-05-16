@@ -46,7 +46,7 @@
           >
         </div>
       </el-dialog>
-      <el-table :data="resultList" border style="width: 100%"  :header-cell-style="{background:'#f2f2f2'}">
+      <el-table :data="resultList" border style="width: 100%" :header-cell-style="{background:'#ccc', color: '#fff',}">
         <el-table-column  align="center"  prop="name" label='序号' width="50">
           <template scope="scope">{{scope.$index + 1}}</template>
         </el-table-column>
@@ -215,30 +215,13 @@ export default {
 </script>
 
 <style scoped>
-.dictionary{
-  width: 100%;
-  padding: 20px;
-  margin-left: 20px;
-  margin-top: 20px;
-  box-shadow: 0 0 15px #ccc;
-  background-color: #fff;
-  border-radius: 10px;
-  height: 71vh;
-  overflow: auto;
-}
-.container {
-  border: 1px solid #ccc;
-  margin: 0 20px;
-}
-
 .container p {
   background-color: #f2f2f2;
   padding: 10px 15px;
 }
 
 .nav-form {
-  margin: 15px;
-  height: 40px;
+  margin: 0 0 20px;
   display: flex;
   justify-content: space-between;
 }

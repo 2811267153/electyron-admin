@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <div class="configure">
+  <div class="warps">
+    <my-el-header/>
+    <div class="container">
       <div class="form-nav">
         <el-form :inline="true" :model="form" ref="form" class="demo-form-inline" :rules="rule">
           <el-form-item label="网卡名称" prop="fifoName">
@@ -132,8 +133,7 @@
 import { addFroFile, delProFile, getProfile, getProfileInfo, upDataProFile } from "@/newwork/ground-colltroner";
 import { isValidPost } from "@/util/validate";
 import myFooter from "@/components/myFooter";
-
-
+import myElHeader from "@/components/myElHeader";
 export default {
   name: "configure",
   data() {
@@ -205,7 +205,8 @@ export default {
     };
   },
   components: {
-    myFooter
+    myFooter,
+    myElHeader
   },
   methods: {
     find() {

@@ -1,11 +1,9 @@
 <template>
-  <div id="terminal">
-    <div class="terminal-l">
-      <e-tree></e-tree>
-    </div>
+  <div class="warps">
+    <my-el-header/>
     <div class="container">
       <p>会议终端</p>
-      <div class="nav-form">
+      <div class="form-nav">
         <el-form :inline="true" :model="form" class="demo-form-inline">
           <el-form-item label="会议终端名称">
             <el-input v-model="form.user"></el-input>
@@ -123,11 +121,13 @@
 
 <script>
 import eTree from '../../../components/eTree.vue'
+import myElHeader from "@/components/myElHeader";
 
 export default {
   name: 'terminal',
   components: {
-    eTree
+    eTree,
+    myElHeader
   },
   data() {
     return {
@@ -216,32 +216,6 @@ export default {
 </script>
 
 <style scoped>
-#terminal {
-  display: flex;
-  justify-content: space-between;
-}
-
-.container {
-  flex: 1;
-  border: 1px solid #ccc;
-  margin: 0 20px;
-}
-
-.terminal-l {
-  width: 300px;
-}
-
-.nav-form {
-  padding: 10px 15px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.container p {
-  background-color: #f2f2f2;
-  padding: 10px 15px;
-}
-
 .width {
   width: 50%;
 }

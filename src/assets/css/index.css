@@ -52,3 +52,28 @@ html {
   padding: 10px 0;
   border-bottom: 1px solid #ccc;
 }
+.warps{
+  display: flex;
+  height: calc(100vh - 160px);
+  justify-content: space-between;
+  flex-direction: column;
+}
+.container{
+  overflow: hidden;
+}
+.container form{
+  text-align: left;
+}
+.form-nav{
+  height: 40px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.el-main{
+  background-color: #f2f2f2;
+}
+.vue-treeselect--single .vue-treeselect__input {
+  width: 100%;
+  line-height: 40px;
+  height: 40px;
+}

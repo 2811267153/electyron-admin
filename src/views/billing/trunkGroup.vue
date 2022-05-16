@@ -1,6 +1,7 @@
 <template>
-<div>
-  <div class="trunk-group">
+<div class="warps">
+  <my-el-header/>
+  <div class="container">
     <div class="nav-form">
       <el-form :inline="true" ref="form" :rules="rule" :model="form" class="demo-form-inline">
         <el-form-item label="中继名称" prop="groupName">
@@ -34,7 +35,6 @@
       </el-button
       >
     </div>
-
     <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close>
       <el-form :model="addFrom" ref="addForm" :rules="rules">
         <div class="width">
@@ -82,7 +82,6 @@
             </el-select>
           </el-form-item>
         </div>
-
         <el-form-item style="margin-top: 20px" :label="'中继组' + (index + 1)" :label-width="formLabelWidth"
                       :key="addFrom.pbxGwgroupGatewayList.key"
                       v-for="(pbxGwgroupGatewayList, index) in addFrom.pbxGwgroupGatewayList"
@@ -103,9 +102,6 @@
               <el-input class="el-input" v-model="pbxGwgroupGatewayList.weight"  placeholder="请输入内容"></el-input>
             </div>
             <div>
-              <!--              <el-button @click="addGateway"></el-button>-->
-              <!--              <el-button style="margin-left: 20px; vertical-align: top" @click="removeClick(pbxGwgroupGatewayList)"></el-button>-->
-
               <el-tooltip style="margin-left: 20px; vertical-align: top" @click.native="addGateway" class="item"
                           effect="dark" content="添加中继" placement="bottom">
                 <el-button><i class="icon iconfont icon-jia"></i></el-button>
@@ -130,7 +126,6 @@
           ></el-input>
         </el-form-item>
       </el-form>
-
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="submitForm()"
@@ -139,8 +134,7 @@
         >
       </div>
     </el-dialog>
-
-    <el-table  :header-cell-style="{background:'#ccc', color: '#fff',}" :data="list" style="width: 100%" v-if="list.length !== 0" >
+    <el-table max-height="800px" :header-cell-style="{background:'#ccc', color: '#fff',}" :data="list" style="width: 100%" v-if="list.length !== 0" >
       <el-table-column align="center" prop="index" label="序号" width="50">
         <template scope="scope">{{ scope.$index + 1 }}</template>
       </el-table-column>
@@ -211,12 +205,14 @@ import {addGwgroup, deleteGwgroup, getGwgroup, getPbxAll, upDateGwgroup} from "@
 import myEmpty from "@/newwork/myEmpty";
 import {isValidNumber} from "@/util/validate";
 import myFooter from "@/components/myFooter";
+import myElHeader from "@/components/myElHeader";
 
 export default {
   name: 'trunkGroup',
   components: {
     myEmpty,
-    myFooter
+    myFooter,
+    myElHeader
   },
   data() {
     const validateNum = (rule, value, callback) => {
@@ -444,16 +440,7 @@ export default {
 </script>
 
 <style scoped>
-.trunk-group{
-  width: 100%;
-  padding: 20px;
-  margin-left: 20px;
-  margin-top: 20px;
-  box-shadow: 0 0 15px #ccc;
-  background-color: #fff;
-  border-radius: 10px;
-  height: 70vh;
-}
+
 .container p {
   background-color: #f2f2f2;
   padding: 10px 15px;

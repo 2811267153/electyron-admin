@@ -1,11 +1,13 @@
 <template>
   <div class="menu">
-    <el-row>
-      <el-col :span="3"><div class="grid-content bg-purple-dark">菜单名称</div></el-col>
-      <el-col :span="18"><div class="grid-content bg-purple-dark">组件路径</div></el-col>
-      <el-col :span="3"><div class="grid-content bg-purple-dark">操作</div></el-col>
-    </el-row>
-    <el-tree
+    <my-el-header/>
+    <div class="container">
+      <el-row>
+        <el-col :span="3"><div class="grid-content bg-purple-dark">菜单名称</div></el-col>
+        <el-col :span="18"><div class="grid-content bg-purple-dark">组件路径</div></el-col>
+        <el-col :span="3"><div class="grid-content bg-purple-dark">操作</div></el-col>
+      </el-row>
+      <el-tree
         :data="path"
         :props="defaultProps"
         node-key="menuId"
@@ -13,64 +15,63 @@
         :expand-on-click-node="false"
         :default-expanded-keys="defaultShowNodes"
         accordion>
-      <div class="custom-tree-node" slot-scope="{node, data}">
-        <div class="tree">
-          <a>
-            {{ data.menuName }}
-          </a>
-          <p class="tree-path">
-            {{ data.path }}
-          </p>
-          <div class="item-r">
-            <el-link type="primary" class="link" @click="currentShow(0)">新增</el-link>
-            <el-link type="primary" class="link" @click="currentShow(1)">编辑</el-link>
-            <el-link type="primary" class="link" @click="currentShow(2)">删除</el-link>
-          </div>
-        </div>
-      </div>
-    </el-tree>
-
-
-    <div>
-      <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close>
-        <el-form :model="addForm" ref="addForm" :rules="rules">
-          <el-form-item label="菜单名称" :label-width="formLabelWidth" prop="menuName">
-            <el-input v-model="addForm.menuName" autocomplete="off" placeholder="请输入内容"></el-input>
-          </el-form-item>
-          <el-form-item label="菜单类型" :label-width="formLabelWidth" prop="menuType">
-            <el-select v-model="addForm.menuType"  style="width: 100%;">
-              <el-option v-for="item in menuType" :value="item.value" placeholder="请输入内容" :label="item.label"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="显示顺序" :label-width="formLabelWidth" prop="orderNum">
-            <el-input v-model="addForm.orderNum" placeholder="请输入内容"/>
-          </el-form-item>
-          <el-form-item label="父菜单ID" :label-width="formLabelWidth" prop="parentId">
-            <el-input v-model="addForm.parentId" placeholder="请输入内容"/>
-          </el-form-item>
-          <el-form-item label="路由地址" :label-width="formLabelWidth" prop="path">
-            <el-input v-model="addForm.path" placeholder="请输入内容"/>
-          </el-form-item>
-          <el-form-item label="权限标识" :label-width="formLabelWidth" prop="perms">
-            <el-input v-model="addForm.perms" placeholder="请输入内容"/>
-          </el-form-item>
-          <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
-            <el-radio-group v-model="addForm.status">
-              <el-radio :label="0">开启</el-radio>
-              <el-radio :label="1">关闭</el-radio>
-            </el-radio-group>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <div class="form-bottom">
-            <a href=""></a>
-            <div>
-              <el-button @click="dialogFormVisible = false">取 消</el-button>
-              <el-button type="primary" @click="submitForm">确 定</el-button>
+        <div class="custom-tree-node" slot-scope="{node, data}">
+          <div class="tree">
+            <a>
+              {{ data.menuName }}
+            </a>
+            <p class="tree-path">
+              {{ data.path }}
+            </p>
+            <div class="item-r">
+              <el-link type="primary" class="link" @click="currentShow(0)">新增</el-link>
+              <el-link type="primary" class="link" @click="currentShow(1)">编辑</el-link>
+              <el-link type="primary" class="link" @click="currentShow(2)">删除</el-link>
             </div>
           </div>
         </div>
-      </el-dialog>
+      </el-tree>
+      <div>
+        <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close>
+          <el-form :model="addForm" ref="addForm" :rules="rules">
+            <el-form-item label="菜单名称" :label-width="formLabelWidth" prop="menuName">
+              <el-input v-model="addForm.menuName" autocomplete="off" placeholder="请输入内容"></el-input>
+            </el-form-item>
+            <el-form-item label="菜单类型" :label-width="formLabelWidth" prop="menuType">
+              <el-select v-model="addForm.menuType"  style="width: 100%;">
+                <el-option v-for="item in menuType" :value="item.value" placeholder="请输入内容" :label="item.label"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="显示顺序" :label-width="formLabelWidth" prop="orderNum">
+              <el-input v-model="addForm.orderNum" placeholder="请输入内容"/>
+            </el-form-item>
+            <el-form-item label="父菜单ID" :label-width="formLabelWidth" prop="parentId">
+              <el-input v-model="addForm.parentId" placeholder="请输入内容"/>
+            </el-form-item>
+            <el-form-item label="路由地址" :label-width="formLabelWidth" prop="path">
+              <el-input v-model="addForm.path" placeholder="请输入内容"/>
+            </el-form-item>
+            <el-form-item label="权限标识" :label-width="formLabelWidth" prop="perms">
+              <el-input v-model="addForm.perms" placeholder="请输入内容"/>
+            </el-form-item>
+            <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
+              <el-radio-group v-model="addForm.status">
+                <el-radio :label="0">开启</el-radio>
+                <el-radio :label="1">关闭</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <div class="form-bottom">
+              <a href=""></a>
+              <div>
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="submitForm">确 定</el-button>
+              </div>
+            </div>
+          </div>
+        </el-dialog>
+      </div>
     </div>
   </div>
 </template>
@@ -78,9 +79,14 @@
 <script>
 import { addMenuAll, delMenu, getMenuAll, upDataMenu } from "@/newwork/system-colltroner";
 import {fn, menuToTree} from "@/uti";
+import myElHeader from "@/components/myElHeader";
 
 export default {
   name: "menu-path",
+  components: {
+    myElHeader
+  },
+
   data() {
     return {
       title: '新增',
@@ -223,14 +229,10 @@ export default {
   width: 100%;
 }
 .menu{
-  width: 100%;
-  padding: 20px;
-  margin-left: 20px;
-  margin-top: 20px;
-  box-shadow: 0 0 15px #ccc;
-  background-color: #fff;
-  border-radius: 10px;
-  height: 78vh;
+  display: flex;
+  height: calc(100vh - 160px);
+  justify-content: space-between;
+  flex-direction: column;
 }
 
 .tree {

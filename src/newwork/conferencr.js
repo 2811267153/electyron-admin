@@ -19,3 +19,10 @@ export function getRecordDetail(data) {
         params:  data
     })
 }
+
+export function getPbxList(data) {
+    return request({
+        url: '/pbx/cdr/list',
+        params: data
+    })
+}

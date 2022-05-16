@@ -1,6 +1,7 @@
 <template>
-<div>
-  <div id="networkManagement">
+<div class="warps">
+  <my-el-header/>
+  <div class="container" id="networkManagement">
     <div class="nav-form">
       <el-form  :model="forms" :hide-required-asterisk="true" :show-message="false" :inline="true" class="demo-form-inline" ref="form" :rules="rule" >
         <el-form-item :span="5" label="网关名称" prop="gatewayName">
@@ -271,6 +272,7 @@ import {deletePbx, getPbxAdd, getPbxAll, getProfileInfo, upDatePbx} from "@/neww
 import {addDictionaryList, getDictionaryAll} from "@/newwork/system-colltroner";
 import {isValidIP, isValidNumber, isValidPost} from "@/util/validate";
 import myFooter from "@/components/myFooter";
+import myElHeader from "@/components/myElHeader";
 
 
 export default {
@@ -398,7 +400,8 @@ export default {
     }
   },
   components: {
-    myFooter
+    myFooter,
+    myElHeader
   },
   methods: {
     next(){
@@ -551,17 +554,7 @@ export default {
 </script>
 
 <style >
-#networkManagement{
-  width: 100%;
-  padding: 20px;
-  margin-left: 20px;
-  margin-top: 20px;
-  box-shadow: 0 0 15px #ccc;
-  background-color: #fff;
-  border-radius: 10px;
-  height: 71vh;
-  overflow: auto;
-}
+
  #networkManagement .container p {
   background-color: #f2f2f2;
   padding: 10px 15px;

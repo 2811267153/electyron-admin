@@ -1,93 +1,97 @@
 <template>
-  <div >
-    <div class="data-manage"v-if="$route.path == '/layout/dataManage'">
-      <div class="nav">
-        <div class="nav-l">
+  <div id="data-manage">
+    <my-el-header/>
+    <div class="container">
+      <div class="data-manage" v-if="$route.path == '/layout/dataManage'">
+        <div class="nav">
+          <div class="nav-l">
 
-          <div class="form-nav">
-            <el-form :model="form" destroy-on-close inline :rules="rule" ref="form" label-width="68px" class="demo-ruleForm">
-              <el-form-item label="字典类型名称" prop="name" label-width="180">
-                <el-input placeholder="请输入内容" v-model="form.name"></el-input>
-              </el-form-item>
-              <el-form-item label="字典编码" prop="code">
-                <el-input placeholder="请输入内容" v-model="form.code"></el-input>
-              </el-form-item>
-              <el-form-item label="字典状态" prop="status">
-                <el-select v-model="form.status">
-                  <el-option
+            <div class="form-nav">
+              <el-form :model="form" destroy-on-close inline :rules="rule" ref="form" label-width="68px" class="demo-ruleForm">
+                <el-form-item label="字典类型名称" prop="name" label-width="180">
+                  <el-input placeholder="请输入内容" v-model="form.name"></el-input>
+                </el-form-item>
+                <el-form-item label="字典编码" prop="code">
+                  <el-input placeholder="请输入内容" v-model="form.code"></el-input>
+                </el-form-item>
+                <el-form-item label="字典状态" prop="status">
+                  <el-select v-model="form.status">
+                    <el-option
                       v-for="item in status"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item>
-                <el-button type="primary" @click="submitForm">查找</el-button>
-                <el-button @click="resetForm('form')">重置</el-button>
-              </el-form-item>
-            </el-form>
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" @click="submitForm">查找</el-button>
+                  <el-button @click="resetForm('form')">重置</el-button>
+                </el-form-item>
+              </el-form>
+
+            </div>
 
           </div>
+          <div class="nav-l">
+            <el-button type="primary"  @click="showAddForm(null, '新增')">新增</el-button>
+          </div>
+        </div>
+        <el-dialog :title="title" :visible.sync="dialogFormVisible">
+          <el-form ref="addForm" :model="addForm" :rules="rules">
+            <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
+              <el-input placeholder="请输入内容" v-model="addForm.name" autocomplete="off"></el-input>
+            </el-form-item>
 
-        </div>
-        <div class="nav-l">
-          <el-button type="primary"  @click="showAddForm(null, '新增')">新增</el-button>
-        </div>
+            <el-form-item label="字典类型编码" :label-width="formLabelWidth" prop="code">
+              <el-input placeholder="请输入内容" v-model="addForm.code" autocomplete="off"></el-input>
+            </el-form-item>
+
+            <el-form-item label="状态" :label-width="formLabelWidth">
+              <el-radio-group v-model="addForm.status">
+                <el-radio :label="1">启用</el-radio>
+                <el-radio :label="2">停用</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="submitAddForm('addForm')"
+            >确 定
+            </el-button
+            >
+          </div>
+        </el-dialog>
+
+        <el-table height="100%" :header-cell-style="{background:'#ccc', color: '#fff',}"  :data="resultList" style="width: 100%"  v-if="resultList.length !== 0">
+          <el-table-column align="center"  prop="id" label="序号" width="50">
+            <template scope="scope">{{ scope.$index + 1 }}</template>
+          </el-table-column>
+          <el-table-column align="center" prop="name" label="字典类型名称"></el-table-column>
+          <el-table-column align="center" prop="code" label="字典类型编码"></el-table-column>
+          <el-table-column align="center" prop="createTime" label="更新时间"></el-table-column>
+          <el-table-column align="center" prop="sort" label="状态">
+            <template scope="scope">
+              <a v-if="scope.row.status === 1">启用</a>
+              <a v-else>停用</a>
+            </template>
+          </el-table-column>
+          <el-table-column align="center"  prop="sort" label="操作">
+            <template scope="scope">
+              <div class="operate">
+                <el-link type="info" @click="showAddForm(scope.row, '修改')">修改</el-link>
+                <el-link type="info" @click="toPath(scope.row)">查看字典</el-link >
+                <el-link type="info" @click="removeIt(scope.row)">删除</el-link >
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+        <my-empty v-else/>
       </div>
-      <el-dialog :title="title" :visible.sync="dialogFormVisible">
-        <el-form ref="addForm" :model="addForm" :rules="rules">
-          <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
-            <el-input placeholder="请输入内容" v-model="addForm.name" autocomplete="off"></el-input>
-          </el-form-item>
-
-          <el-form-item label="字典类型编码" :label-width="formLabelWidth" prop="code">
-            <el-input placeholder="请输入内容" v-model="addForm.code" autocomplete="off"></el-input>
-          </el-form-item>
-
-          <el-form-item label="状态" :label-width="formLabelWidth">
-            <el-radio-group v-model="addForm.status">
-              <el-radio :label="1">启用</el-radio>
-              <el-radio :label="2">停用</el-radio>
-            </el-radio-group>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="submitAddForm('addForm')"
-          >确 定
-          </el-button
-          >
-        </div>
-      </el-dialog>
-
-      <el-table height="100%" :header-cell-style="{background:'#ccc', color: '#fff',}"  :data="resultList" style="width: 100%"  v-if="resultList.length !== 0">
-        <el-table-column align="center"  prop="id" label="序号" width="50">
-          <template scope="scope">{{ scope.$index + 1 }}</template>
-        </el-table-column>
-        <el-table-column align="center" prop="name" label="字典类型名称"></el-table-column>
-        <el-table-column align="center" prop="code" label="字典类型编码"></el-table-column>
-        <el-table-column align="center" prop="createTime" label="更新时间"></el-table-column>
-        <el-table-column align="center" prop="sort" label="状态">
-          <template scope="scope">
-            <a v-if="scope.row.status === 1">启用</a>
-            <a v-else>停用</a>
-          </template>
-        </el-table-column>
-        <el-table-column align="center"  prop="sort" label="操作">
-          <template scope="scope">
-            <div class="operate">
-              <el-link type="info" @click="showAddForm(scope.row, '修改')">修改</el-link>
-              <el-link type="info" @click="toPath(scope.row)">查看字典</el-link >
-              <el-link type="info" @click="removeIt(scope.row)">删除</el-link >
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
-      <my-empty v-else/>
+      <router-view/>
     </div>
-    <router-view/>
-    <my-footer v-on:next = "next" @prev="prev" :form="form" @change="change"></my-footer>
+    <my-footer v-if="$route.path == '/layout/dataManage'" v-on:next = "next" @prev="prev" :form="form" @change="change"></my-footer>
+
   </div>
 </template>
 
@@ -102,12 +106,14 @@ import {
 } from "@/newwork/system-colltroner";
 import myEmpty from "@/newwork/myEmpty";
 import myFooter from "@/components/myFooter";
+import myElHeader from "@/components/myElHeader";
 
 export default {
   name: 'dataManage',
   components: {
     myEmpty,
-    myFooter
+    myFooter,
+    myElHeader
   },
 
   data() {
@@ -249,19 +255,18 @@ export default {
 </script>
 
 <style scoped>
-.data-manage{
-  width: 100%;
-  padding: 20px;
-  margin-left: 20px;
-  margin-top: 20px;
-  box-shadow: 0 0 15px #ccc;
-  background-color: #fff;
-  border-radius: 10px;
-  height: 71vh;
-  overflow: auto;
-}
-.nav {
+#data-manage{
   display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  height: calc(100vh - 160px);
+}
+
+.nav {
+  margin-bottom: 20px;
+  display: flex;
+  height: 40px;
+  overflow: hidden;
   justify-content: space-between;
 }
 

@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <div class="record">
+  <div class="warps">
+    <my-el-header/>
+    <div class="container">
       <el-form :inline="true" :model="form" ref="form" class="demo-form-inline">
         <el-form-item label="名称" prop="realName">
           <el-input
@@ -15,8 +16,6 @@
           <el-button  @click="clear">重置</el-button>
         </el-form-item>
       </el-form>
-
-
       <el-table
         :header-cell-style="{background:'#ccc', color: '#fff'}"
         :data="tableData"
@@ -61,11 +60,13 @@
     </div>
     <my-footer v-on:next = "next" @prev="prev" :form="form" @change="change"></my-footer>
   </div>
+
 </template>
 
 <script>
 import {getLog} from "@/newwork/system-colltroner";
 import myFooter from "@/components/myFooter";
+import myElHeader from "@/components/myElHeader";
 export default {
   name: 'record-mange',
   data(){
@@ -94,7 +95,8 @@ export default {
     this.getLog(this.form)
   },
   components: {
-    myFooter
+    myFooter,
+    myElHeader
   },
   methods: {
     next(){
@@ -144,14 +146,4 @@ export default {
 
 <style scoped>
 
-.record{
-  width: 100%;
-  padding: 20px;
-  margin-left: 20px;
-  margin-top: 20px;
-  box-shadow: 0 0 15px #ccc;
-  background-color: #fff;
-  border-radius: 10px;
-  height: 78vh;
-}
 </style>
