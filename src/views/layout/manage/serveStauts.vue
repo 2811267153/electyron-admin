@@ -129,6 +129,7 @@ export default {
   border-radius: 10px;
   height: 80vh;
   overflow: auto;
+  color: #2c3e50;
 }
 .overview {
   display: flex;

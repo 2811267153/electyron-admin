@@ -62,9 +62,8 @@ export default {
   background-color: #fff;
   border-radius: 10px;
   padding: 10px 15px;
-  margin-left: 20px;
-  margin-top: 20px;
   width: 100%;
+  margin-top: 20px;
 }
 
 .total {

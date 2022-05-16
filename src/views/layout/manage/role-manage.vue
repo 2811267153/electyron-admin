@@ -1,6 +1,15 @@
 <template>
   <!--  角色管理-->
   <div class="role">
+    <el-header>
+      <div class="content-nav">
+        <el-breadcrumb class="nav-bar" separator="/">
+          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+          <el-breadcrumb-item><a>{{ $route.meta.title }}</a></el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
+    </el-header>
+
     <div class="container">
       <div class="nav">
         <div class="nav-l">
@@ -420,10 +429,33 @@ export default {
 }
 </script>
 
-<style scoped>
+<style >
+.el-header{
+  padding: 0;
+}
+.role{
+  display: flex;
+  height: calc(100vh - 160px);
+  justify-content: space-between;
+  flex-direction: column;
+}
+.content-nav {
+  padding: 20px;
+  box-shadow: 0 0 15px #ccc;
+  border-radius: 10px;
+  background-color: #fff;
+}
+.el-table::before{
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 0;
+}
 .nav {
   display: flex;
   justify-content: space-between;
+  height: 40px;
+  overflow: hidden;
 }
 
 .nav-l {
@@ -431,13 +463,12 @@ export default {
   display: flex;
 }
 .container{
+  margin-top: 20px;
   width: 100%;
   padding: 20px;
-  margin-left: 20px;
-  margin-top: 20px;
   box-shadow: 0 0 15px #ccc;
   background-color: #fff;
   border-radius: 10px;
-  height: 78vh;
+  flex: 1;
 }
 </style>
