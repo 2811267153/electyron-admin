@@ -1,7 +1,9 @@
 <template>
   <!--  组织管理-->
   <div class="management">
-    <my-el-header/>
+    <my-el-header>
+      <el-link slot>aaa</el-link>
+    </my-el-header>
     <div class="container">
       <div class="nav-form">
         <el-form ref="form" class="form" :model="form" label-width="80px" :inline="true">
@@ -45,9 +47,13 @@
       </el-dialog>
       <div>
       </div>
+      <div class="tree-menu"><p>部门名称</p>
+        <p>创建时间</p>
+        <p>状态</p>
+        <p>操作</p></div>
       <el-tree
         @node-click="handleNodeClick"
-        :data="formList"
+        :data="formatList"
         ref="tree"
         :default-expanded-keys="defaulExpanded"
         :expand-on-click-node="false"
@@ -57,8 +63,8 @@
         accordion>
         <div class="custom-tree-node" slot-scope="{node, data}">
           <div class="tree">
-            <a class="detpName">  {{ data.deptName }} </a>
-            <div>{{data.createTime}}</div>
+            <div class="detpName"> {{ data.deptName }}</div>
+            <div>{{ data.createTime }}</div>
             <div v-if="data.status === 0">启用</div>
             <div v-else>停用</div>
             <div class="item-r">
@@ -80,14 +86,14 @@ import {
   getOrganizeList,
   upDataOrganize
 } from "@/newwork/system-colltroner";
-import {fn, getNowFormatDate,} from "@/uti";
+import { fn, getNowFormatDate } from "@/uti";
 import { isValidNumber } from "@/util/validate";
 import myTree from "@/components/myTree";
 import myFooter from "@/components/myFooter";
 import myElTree from "@/components/my-el-tree";
-import treeselect from '@riophae/vue-treeselect'
+import treeselect from "@riophae/vue-treeselect";
 // import the styles
-import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import myElHeader from "@/components/myElHeader";
 
 export default {
@@ -101,26 +107,27 @@ export default {
       }
     };
     return {
-      normalizer(node){
+      normalizer(node) {
         if (node.children && !node.children.length) {
-          delete node.children
+          delete node.children;
         }
         return {
           id: node.deptId,
           children: node.children,
           label: node.deptName
-        }
+        };
       },
       title: "新增",
       dialogFormVisible: false,
       dialogFormVisibles: false,
+      defaultShowNodes: [], //默认展开
       formLabelWidth: "120px",
       form: {},
       defaulExpanded: [],
       addForm: {
         deptName: "",  //部门名字
         orderNum: "", //显示顺序
-        parentId: "", //父级单位
+        parentId: undefined, //父级单位
         status: 0 //状态
       },
       clickCount: 0,
@@ -136,8 +143,8 @@ export default {
         children: "children",
         label: "deptName"
       },
-      currentNodeKey: '',
-      showTitle: ['新增','编辑', '删除'],
+      currentNodeKey: "",
+      showTitle: ["新增", "编辑", "删除"],
       showIndex: null,
       list: [], //未被格式化 以前的列表
       rules: {
@@ -161,10 +168,15 @@ export default {
     getOrganizeList(form) {
       getOrganizeList(form).then(res => {
         console.log(res);
-        this.$emit('total', res.data.data.total)
-        this.list = res.data.data
+        this.$emit("total", res.data.data.total);
+        // this.list = res.data.data;
+        this.formatList = fn(res.data.data);
+        // this.formatList
+        this.formatList.forEach(item => {
+          this.defaulExpanded.push(item.deptId)
+        })
       }).catch(e => {
-        this.$message.error(e)
+        this.$message.error(e);
       });
     },
     filterNode(value, data) {
@@ -172,18 +184,18 @@ export default {
       if (!value) return true;
       return data.deptName.indexOf(value) !== -1;
     },
-    find(){
+    find() {
       this.$refs.tree.filter(this.form.deptName);
     },
-    clear(){
-      if(Object.keys(this.form).length !==0){
-        this.form = this.$options.data().form
-        this.getOrganizeList(this.form)
+    clear() {
+      if (Object.keys(this.form).length !== 0) {
+        this.form = this.$options.data().form;
+        this.getOrganizeList(this.form);
       }
     },
     handleNodeClick(data) {
       this.row = data;
-      this.showIndex === null ? console.log('1') : this.showForm(this.showTitle[this.showIndex]);
+      this.showIndex === null ? console.log("1") : this.showForm(this.showTitle[this.showIndex]);
     },
     showForm(type) {
       if (type === "编辑") {
@@ -192,8 +204,8 @@ export default {
         this.addForm.deptId = this.row.deptId;
         this.addForm.deptName = this.row.deptName;
         this.addForm.orderNum = this.row.orderNum;
-        this.addForm.parentId = this.row.parentId
-      } else if(type === '新增') {
+        this.addForm.parentId = this.row.parentId;
+      } else if (type === "新增") {
         this.dialogFormVisible = true;
         this.title = type;
         this.addForm = this.$options.data().addForm;
@@ -201,10 +213,10 @@ export default {
         // this.$nextTick(() => {
         //   this.$refs.myTree.valueName = this.row.deptName
         // })
-      }else {
-        this.removeIt()
-        this.showIndex = 0
-        console.log('--------');
+      } else {
+        this.removeIt();
+        this.showIndex = 0;
+        console.log("--------");
       }
     },
     currentShow(index) {
@@ -213,8 +225,7 @@ export default {
     removeIt() {
       delOrganizeList(this.row.deptId).then(res => {
         if (res.data.code === 200) {
-
-          this.defaulExpanded.push(this.row.parentId)
+          this.defaulExpanded.push(this.row.parentId);
           this.getOrganizeList(this.form);
           this.$message.success("提交完成");
         } else {
@@ -222,33 +233,33 @@ export default {
         }
       });
     },
-    getSelectedValue(value){
-      this.addForm.parentId = value
+    getSelectedValue(value) {
+      this.addForm.parentId = value;
     },
     submitForm(addForm) {
       this.$refs[addForm].validate((valid) => {
         if (valid) {
-         this.title === '新增' ? addOrganize(this.addForm).then(res => {
-            if(res.data.code === 200){
-              this.dialogFormVisible = false
-              this.getOrganizeList(this.form)
-              this.$message.success('提交完成')
+          this.title === "新增" ? addOrganize(this.addForm).then(res => {
+            if (res.data.code === 200) {
+              this.dialogFormVisible = false;
+              this.getOrganizeList(this.form);
+              this.$message.success("提交完成");
               // this.getOrganizeList(this.form)
-            }else {
-              this.$message.error(res.data.msg)
+            } else {
+              this.$message.error(res.data.msg);
             }
           }).catch(e => {
-            this.$message.error(e)
+            this.$message.error(e);
           }) : upDataOrganize(this.addForm).then(res => {
-           if(res.data.code === 200){
-             this.dialogFormVisible = false
-             this.getOrganizeList(this.form)
-             this.defaulExpanded.push(this.row.deptId)
-             this.$message.success('提交完成')
-           }else {
-             this.$message.error(res.data.msg)
-           }
-         })
+            if (res.data.code === 200) {
+              this.dialogFormVisible = false;
+              this.getOrganizeList(this.form);
+              this.defaulExpanded.push(this.row.deptId);
+              this.$message.success("提交完成");
+            } else {
+              this.$message.error(res.data.msg);
+            }
+          });
         }
       });
     }
@@ -267,18 +278,18 @@ export default {
     createTime() {
       return this.addForm.createTime = getNowFormatDate();
     },
-    formList(){
-      return fn(this.list)
+    formList() {
+      return fn(this.list);
     },
-    parentId(){
-      return parseInt(this.row.parentId)
+    parentId() {
+      return parseInt(this.row.parentId);
     }
-  },
+  }
 };
 </script>
 
 <style>
-.management{
+.management {
   display: flex;
   height: calc(100vh - 160px);
   justify-content: space-between;
@@ -303,14 +314,27 @@ export default {
   align-items: center;
 }
 
+.tree-menu {
+  padding: 10px 20px;
+  background-color: #f2f2f2;
+  display: flex;
+  justify-content: space-between;
+}
+
+.tree-menu p {
+  width: 200px;
+  text-align: center;
+}
+
 .tree .link {
   margin-right: 20px;
 }
 
-.tree .detpName {
+.tree div {
   width: 200px;
 }
-.nav-form{
+
+.nav-form {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -318,10 +342,12 @@ export default {
   margin: 10px 0;
   min-width: 900px;
 }
+
 .form {
   height: 40px;
 }
-.add{
+
+.add {
   text-align: right;
 }
 </style>

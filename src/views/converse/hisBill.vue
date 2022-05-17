@@ -30,19 +30,19 @@
           prop="date"
           label="序号"
         width="50px">
-          <template scope="scope">{{scope.$index}}</template>
+          <template scope="scope">{{scope.$index + 1}}</template>
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="blegCallerIdName"
           label="计费账户">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="blegCalleeIdNumber"
           label="被叫号码">
         </el-table-column>
         <el-table-column
-          prop="name"
-          label="计费账户">
+          prop="blegContext"
+          label="服务接口">
         </el-table-column>
         <el-table-column
           prop="name"
@@ -65,7 +65,7 @@
           label="挂机原因">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="blegReadCodec"
           label="网管">
         </el-table-column>
         <el-table-column

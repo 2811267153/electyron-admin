@@ -36,10 +36,10 @@
             :header-cell-style="{background:'#ccc', color: '#fff',}"
             :data="list"
             style="width: 100%"
-            max-height="800px"
+            height="calc(100vh - 100px - 100px - 100px - 100px)"
             v-if="list.length !== 0"
           >
-            <el-table-column prop="date" align="center" label="序号">
+            <el-table-column prop="date" align="center" label="序号" width="50px">
               <template scope="scope">
                 {{ scope.$index + 1 }}
               </template>
@@ -72,14 +72,23 @@
                 >编辑
                 </el-link
                 >
-                <el-link class="a-link" type="info" @click="removeIt(scope.row)"
-                >删除
-                </el-link
-                >
+
                 <el-link class="a-link" type="info" @click="recharge(scope.row)"
                 >充值
                 </el-link
                 >
+
+                <template>
+                  <el-popconfirm
+                    title="确认要删除吗？"
+                    @confirm="removeIt(scope.row)"
+                  >
+                    <el-link class="a-link" type="info"  slot='reference'
+                    >删除
+                    </el-link
+                    >
+                  </el-popconfirm>
+                </template>
               </template>
             </el-table-column>
           </el-table>

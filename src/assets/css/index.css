@@ -77,3 +77,6 @@ html {
   line-height: 40px;
   height: 40px;
 }
+.el-popconfirm__main{
+  padding-bottom: 10px;
+}

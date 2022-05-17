@@ -1,13 +1,14 @@
 <template>
   <div id="data-manage">
-    <my-el-header/>
+    <my-el-header />
     <div class="container">
       <div class="data-manage" v-if="$route.path == '/layout/dataManage'">
         <div class="nav">
           <div class="nav-l">
 
             <div class="form-nav">
-              <el-form :model="form" destroy-on-close inline :rules="rule" ref="form" label-width="68px" class="demo-ruleForm">
+              <el-form :model="form" destroy-on-close inline :rules="rule" ref="form" label-width="68px"
+                       class="demo-ruleForm">
                 <el-form-item label="字典类型名称" prop="name" label-width="180">
                   <el-input placeholder="请输入内容" v-model="form.name"></el-input>
                 </el-form-item>
@@ -34,10 +35,10 @@
 
           </div>
           <div class="nav-l">
-            <el-button type="primary"  @click="showAddForm(null, '新增')">新增</el-button>
+            <el-button type="primary" @click="showAddForm(null, '新增')">新增</el-button>
           </div>
         </div>
-        <el-dialog :title="title" :visible.sync="dialogFormVisible">
+        <el-dialog destroy-on-close :title="title" :visible.sync="dialogFormVisible">
           <el-form ref="addForm" :model="addForm" :rules="rules">
             <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
               <el-input placeholder="请输入内容" v-model="addForm.name" autocomplete="off"></el-input>
@@ -62,41 +63,52 @@
             >
           </div>
         </el-dialog>
+        <div ref="tables" class="table-warp">
+          <el-table v-show="resultList.length !== 0" :max-height="maxHeight"
+                    :header-cell-style="{background:'#ccc', color: '#fff',}" :data="resultList" style="width: 100%">
+            <el-table-column align="center" prop="id" label="序号" width="50">
+              <template scope="scope">{{ scope.$index + 1 }}</template>
+            </el-table-column>
+            <el-table-column align="center" prop="name" label="字典类型名称"></el-table-column>
+            <el-table-column align="center" prop="code" label="字典类型编码"></el-table-column>
+            <el-table-column align="center" prop="createTime" label="更新时间"></el-table-column>
+            <el-table-column align="center" prop="sort" label="状态">
+              <template scope="scope">
+                <a v-if="scope.row.status === 1">启用</a>
+                <a v-else>停用</a>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="sort" label="操作">
+              <template scope="scope">
+                <div class="operate">
+                  <el-link type="info" @click="showAddForm(scope.row, '修改')">修改</el-link>
+                  <el-link type="info" @click="toPath(scope.row)">查看字典</el-link>
+                  <template>
+                    <el-popconfirm
+                      title="确认要删除吗？"
+                      @confirm="removeIt(scope.row)"
+                    >
+                      <el-link slot="reference" type="info">删除</el-link>
+                    </el-popconfirm>
+                  </template>
+                </div>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
 
-        <el-table height="100%" :header-cell-style="{background:'#ccc', color: '#fff',}"  :data="resultList" style="width: 100%"  v-if="resultList.length !== 0">
-          <el-table-column align="center"  prop="id" label="序号" width="50">
-            <template scope="scope">{{ scope.$index + 1 }}</template>
-          </el-table-column>
-          <el-table-column align="center" prop="name" label="字典类型名称"></el-table-column>
-          <el-table-column align="center" prop="code" label="字典类型编码"></el-table-column>
-          <el-table-column align="center" prop="createTime" label="更新时间"></el-table-column>
-          <el-table-column align="center" prop="sort" label="状态">
-            <template scope="scope">
-              <a v-if="scope.row.status === 1">启用</a>
-              <a v-else>停用</a>
-            </template>
-          </el-table-column>
-          <el-table-column align="center"  prop="sort" label="操作">
-            <template scope="scope">
-              <div class="operate">
-                <el-link type="info" @click="showAddForm(scope.row, '修改')">修改</el-link>
-                <el-link type="info" @click="toPath(scope.row)">查看字典</el-link >
-                <el-link type="info" @click="removeIt(scope.row)">删除</el-link >
-              </div>
-            </template>
-          </el-table-column>
-        </el-table>
-        <my-empty v-else/>
+        <my-empty v-show="resultList.length === 0" />
       </div>
-      <router-view/>
+      <router-view />
     </div>
-    <my-footer v-if="$route.path == '/layout/dataManage'" v-on:next = "next" @prev="prev" :form="form" @change="change"></my-footer>
+    <my-footer v-if="$route.path == '/layout/dataManage'" v-on:next="next" @prev="prev" :form="form"
+               @change="change"></my-footer>
 
   </div>
 </template>
 
 <script>
-import {getNowFormatDate, randomWord} from '@/uti'
+import { getNowFormatDate, randomWord } from "@/uti";
 
 import {
   addDictionaryList,
@@ -109,7 +121,7 @@ import myFooter from "@/components/myFooter";
 import myElHeader from "@/components/myElHeader";
 
 export default {
-  name: 'dataManage',
+  name: "dataManage",
   components: {
     myEmpty,
     myFooter,
@@ -118,144 +130,164 @@ export default {
 
   data() {
     return {
-      title: '',
-      formLabelWidth: '120px',
+      title: "",
+      formLabelWidth: "120px",
       dialogFormVisible: false,
       resultList: [],
+      maxHeight: null,
       addForm: {
-        name: '',
+        name: "",
         status: 1, // 状态
-        code: '',    //字典编码
+        code: "",    //字典编码
         pageNum: 1, //pageNum
-        pageSize: 10,  //分页大小
+        pageSize: 10  //分页大小
       },
-      form: {
-
-      },
+      form: {},
       rules: {
-        name: [{required: true, message: '请输入字典类型名称', trigger: 'blur'}],
-        mark: [{required: true, message: '请输入标示码', trigger: 'blur'}],
-        code: [{required: true, message: '请输入字典类型编码', trigger: 'blur'}],
+        name: [{ required: true, message: "请输入字典类型名称", trigger: "blur" }],
+        mark: [{ required: true, message: "请输入标示码", trigger: "blur" }],
+        code: [{ required: true, message: "请输入字典类型编码", trigger: "blur" }]
       },
       rule: {
-        name: [{required: false, message: '请输入字典类型名称', trigger: 'blur'}],
-        code: [{required: false, message: '请输入标示码', trigger: 'blur'}],
-        status: [{required: false, message: '请输入字典类型编码', trigger: 'blur'}],
+        name: [{ required: false, message: "请输入字典类型名称", trigger: "blur" }],
+        code: [{ required: false, message: "请输入标示码", trigger: "blur" }],
+        status: [{ required: false, message: "请输入字典类型编码", trigger: "blur" }]
       },
       status: [
-        {label: '启用', value: 0},
-        {label: '停用', value: 1},
+        { label: "启用", value: 0 },
+        { label: "停用", value: 1 }
       ]
-    }
+    };
   },
   methods: {
-    submitForm(){
-      this.dictionaryList(this.form)
+    submitForm() {
+      this.dictionaryList(this.form);
     },
-    next(){
-      this.form.pageNum ++
+    next() {
+      this.form.pageNum++;
       console.log(this.form);
-      this.dictionaryList(this.form)
+      this.dictionaryList(this.form);
     },
-    prev(){
-      this.form.pageNum --
-      this.dictionaryList(this.form)
+    prev() {
+      this.form.pageNum--;
+      this.dictionaryList(this.form);
     },
-    change(e){
+    change(e) {
       console.log(e);
-      this.form.pageNum = e
-      this.dictionaryList(this.form)
+      this.form.pageNum = e;
+      this.dictionaryList(this.form);
     },
 
     submitAddForm() {
 
-      this.$refs['addForm'].validate((valid) => {
+      this.$refs["addForm"].validate((valid) => {
         if (valid) {
-          this.title === '新增' ? addDictionaryTYpe(this.addForm).then(res => {
-            this.dictionaryList()
-              }) :      //当前打开的是新增的弹框吗 是就执行第一个不然就执行第二个
-             this.aa(this.addForm)
+          this.title === "新增" ? addDictionaryTYpe(this.addForm).then(res => {
+              this.dictionaryList();
+            }) :      //当前打开的是新增的弹框吗 是就执行第一个不然就执行第二个
+            this.aa(this.addForm);
 
-          this.dialogFormVisible = false
+          this.dialogFormVisible = false;
           this.$message({
-            message: '提交完成',
-            type: 'success'
-          })
-          this.dialogFormVisible = false
+            message: "提交完成",
+            type: "success"
+          });
+          this.dialogFormVisible = false;
         }
-      })
+      });
     },
 
     resetForm(string) {
-      string === 'form' ? this.$refs.form.resetFields() : this.$refs.addForm.resetFields();
-      this.dictionaryList(this.form)
+      string === "form" ? this.$refs.form.resetFields() : this.$refs.addForm.resetFields();
+      this.addForm = this.$options.data().addForm;
+      this.form = this.$options.data().form;
+      this.dictionaryList(this.form);
     },
-    toPath(row){
-      this.$router.push({path: '/layout/dicManage', query: {
+    toPath(row) {
+      this.$router.push({
+        path: "/layout/dicManage", query: {
           id: row.id,
           name: row.name,
           code: row.code
-        }})
-      this.$store.dispatch('dictionaryData', row)
+        }
+      });
+      this.$store.dispatch("dictionaryData", row);
     },
     aa(form) {
-      const data = {}
-      data.id = form.id
-      data.code = form.code
-      data.name = form.name
-      data.status = form.status
+      const data = {};
+      data.id = form.id;
+      data.code = form.code;
+      data.name = form.name;
+      data.status = form.status;
       upDateDictionaryList(data).then(res => {
       }).catch(e => {
-        this.$message.error(e)
-      })
+        this.$message.error(e);
+      });
     },
-    removeIt(row){
+    removeIt(row) {
+      console.log('aaa');
       removeDateDictionaryList(row.id).then(res => {
-        if(res.data.code === 200){
-          this.dictionaryList(this.form)
-        }else {
-          this.$message.error(res.data.msg)
+        if (res.data.code === 200) {
+          this.dictionaryList(this.form);
+        } else {
+          this.$message.error(res.data.msg);
         }
       }).catch(e => {
-        this.$message.error(e)
-      })
+        this.$message.error(e);
+      });
     },
     showAddForm(row, type) {
-      this.title = type
-      this.dialogFormVisible = true
-      this.addForm = row
-      type === '修改' ? (this.addForm = row) : this.addForm =this.$options.data().addForm
+      this.title = type;
+      this.dialogFormVisible = true;
+      this.addForm = row;
+      type === "修改" ? (this.addForm = row) : this.addForm = this.$options.data().addForm;
     },
     dictionaryList(addForm) {
       addDictionaryList(addForm).then(res => {
-        this.resultList = res.data.data['records']
-        this.$bus.$emit('total', res.data.data.total)
+        this.resultList = res.data.data["records"];
+        this.$bus.$emit("total", res.data.data.total);
       }).catch(e => {
-        this.$message.error(e)
-      })
+        this.$message.error(e);
+      });
     },
+    updataMaxHeight() {
+      this.maxHeight = null;
+      setTimeout(() => {
+        const warpHeight = document.getElementsByClassName("container")[0].offsetHeight;
+        const tableHeight = document.getElementsByClassName("el-table")[0].offsetHeight;
+        // this.maxHeight = Math.abs( (tableHeight - warpHeight)) + 'px'
+        console.log(this.$refs.tables.offsetHeight + "px");
+      }, 1000);
+    }
   },
 
   created() {
-    this.dictionaryList(this.form)
+    this.dictionaryList(this.form);
   },
   mounted() {
-    this.$bus.$on('pageChange', () => {
-      this.form = this.$store.state.formPage
-      this.dictionaryList(this.form)
-    })
+    this.$bus.$on("pageChange", () => {
+      this.form = this.$store.state.formPage;
+      this.dictionaryList(this.form);
+    });
+    // const table = document.getElementsByClassName('el-table__body-wrapper')
+    this.updataMaxHeight();
+    window.onresize = () => {
+      this.updataMaxHeight();
+      this.maxHeight = "800px";
+      console.log(this.maxHeight);
+    };
   },
   computed: {
     creatTimes() {
-      return (this.addForm.creatTime = getNowFormatDate())
-    },
+      return (this.addForm.creatTime = getNowFormatDate());
+    }
 
   }
-}
+};
 </script>
 
 <style scoped>
-#data-manage{
+#data-manage {
   display: flex;
   justify-content: space-between;
   flex-direction: column;
@@ -273,6 +305,7 @@ export default {
 .operate a {
   margin: 0 10px;
 }
+
 .operate {
   padding: 0;
 }

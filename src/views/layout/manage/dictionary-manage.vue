@@ -63,7 +63,15 @@
           <template scope="scope">
             <div class="operate">
               <a style="margin-right: 20px" @click="showAddForm(scope.row, '修改')">修改</a>
-              <a style="margin-right: 20px" @click="removeIt(scope.row.id)">删除</a>
+              <template>
+                <el-popconfirm
+                  title="确认要删除吗？"
+                  @confirm="removeIt(scope.row.id)"
+                >
+                  <el-link slot="reference" type="info">删除</el-link>
+
+                </el-popconfirm>
+              </template>
             </div>
           </template>
         </el-table-column>
@@ -184,7 +192,8 @@ export default {
       removeDictionary(id).then(res => {
           if(res.data.code === 200){
             this.$message.success('删除成功！')
-            this.getDictionaryAll(this.addForm )
+            this.addForm.code = this.$route.query.code
+            this.getDictionaryAll(this.addForm)
           }
       }).catch(e => {
         this.$message.error(e)
@@ -229,6 +238,9 @@ export default {
 #networkManagement .width {
   display: flex;
   justify-content: space-between;
+}
+.operate {
+  padding: 0;
 }
 
 .width > * {

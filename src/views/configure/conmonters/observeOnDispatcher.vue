@@ -373,7 +373,7 @@ export default {
 }
 
 .serve-container {
-  flex: 1;
+  width: calc(100vw - 200px - 200px - 20px);
 }
 
 .serve-container .title {

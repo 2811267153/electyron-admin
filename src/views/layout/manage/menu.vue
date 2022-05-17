@@ -2,11 +2,7 @@
   <div class="menu">
     <my-el-header/>
     <div class="container">
-      <el-row>
-        <el-col :span="3"><div class="grid-content bg-purple-dark">菜单名称</div></el-col>
-        <el-col :span="18"><div class="grid-content bg-purple-dark">组件路径</div></el-col>
-        <el-col :span="3"><div class="grid-content bg-purple-dark">操作</div></el-col>
-      </el-row>
+      <div class="tree-menu"><p>菜单名称</p><p>菜单路径</p><p>权限</p><p>操作</p></div>
       <el-tree
         :data="path"
         :props="defaultProps"
@@ -17,11 +13,15 @@
         accordion>
         <div class="custom-tree-node" slot-scope="{node, data}">
           <div class="tree">
-            <a>
+            <a class="tree-path">
               {{ data.menuName }}
             </a>
             <p class="tree-path">
               {{ data.path }}
+            </p>
+            <p class="tree-path">
+              <span v-if="data.menuType === 'F'">按钮</span>
+              <span v-else>菜单</span>
             </p>
             <div class="item-r">
               <el-link type="primary" class="link" @click="currentShow(0)">新增</el-link>
@@ -250,7 +250,7 @@ export default {
   align-items: center;
 }
 .tree-path{
-  width: 20%;
+  width: 200px;
 }
 .grid-content{
   text-align: center;

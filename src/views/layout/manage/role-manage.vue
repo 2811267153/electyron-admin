@@ -38,16 +38,29 @@
       <el-dialog title="数据权限" :visible.sync="dialogFormVisibles">
         <el-form :model="dataScopeForm">
           <el-form-item label="角色ID" :label-width="formLabelWidth">
-            <el-input v-model="dataScopeForm.roleId" placeholder="请输入内容"/>
+            <el-input v-model="dataScopeForm.roleName" placeholder="请输入内容"/>
           </el-form-item>
           <el-form-item label="数据权限" :label-width="formLabelWidth">
             <el-select v-model="dataScopeForm.dataScope">
               <el-option :label="item.label" :value="item.value" v-for="item in dataScopeType"></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="菜单权限" :label-width="formLabelWidth" required>
+            <el-tree
+              props="permission"
+              :data="menuIds"
+              :default-checked-keys="defaultMenuIds"
+              :props="defaultProps"
+              node-key="menuId"
+              accordion
+              :check-on-click-node="true"
+              show-checkbox
+              @check="checkChange">
+            </el-tree>
+          </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button @click="dialogFormVisibles = false">取 消</el-button>
           <el-button type="primary" @click="submitDataScopeForm(dataScopeForm)">确 定</el-button>
         </div>
       </el-dialog>
@@ -77,19 +90,6 @@
             <el-input v-model="addForm.roleCode" autocomplete="off" placeholder="请输入内容"></el-input>
           </el-form-item>
 
-          <el-form-item label="菜单权限" :label-width="formLabelWidth" required>
-            <el-tree
-                props="permission"
-                :data="menuIds"
-                :default-checked-keys="defaultMenuIds"
-                :props="defaultProps"
-                node-key="menuId"
-                accordion
-                :check-on-click-node="true"
-                show-checkbox
-                @check="checkChange">
-            </el-tree>
-          </el-form-item>
           <el-form-item label="权限状态" :label-width="formLabelWidth">
             <el-radio-group v-model="addForm.status">
               <el-radio :label="0">启用</el-radio>
@@ -110,6 +110,7 @@
       </el-dialog>
 
       <el-table
+          max-height="800px"
           v-if="list.length !== 0"
           :data="list"
           :header-cell-style="{background:'#f2f2f2'}"
@@ -154,7 +155,7 @@
             label="数据权限"
             width="180">
           <template scope="scope">
-            <el-link @click="distribution(scope.row.roleId)" type="info">数据权限</el-link>
+            <el-link @click="distribution(scope.row)" type="info">数据权限</el-link>
           </template>
         </el-table-column>
         <el-table-column
@@ -270,24 +271,20 @@ export default {
     }
   },
   watch: {
-    dialogFormVisible(val) {
+    dialogFormVisibles(val) {
       if (val) {
         getMenuAll().then(res => {
           this.menuIds = menuToTree(res.data.data)
-          console.log(res)
         }).catch(e => {
           this.$message.error(e)
         })
-
         //判断 当前所处的位置是否为编辑
-        if(this.title === '编辑'){
-          // this.addForm.menuIds = this.sysMenuList
-
-          this.addForm.sysMenuList.forEach(item => {
+        if(this.title === '新增'){
+          this.dataScopeForm.sysMenuList.forEach(item => {
             this.defaultMenuIds.push(item.menuId)
             console.log(this.defaultMenuIds);
           })
-          this.addForm.menuIds = this.defaultMenuIds
+          this.dataScopeForm.menuIds = this.defaultMenuIds
         }
       }else {
         this.defaultMenuIds = []
@@ -309,13 +306,16 @@ export default {
     },
     distribution(row) {
       this.dialogFormVisibles = true
-      this.dataScopeForm.roleId = row
+      this.dataScopeForm.roleId = row.roleId
+      this.dataScopeForm = row
     },
     submitDataScopeForm(dataScopeForm){
       distribution(dataScopeForm).then(res => {
         console.log(res);
         if(res.data.code === 200){
           this.$message.success('提交完成')
+          this.getRoleList(this.navForm)
+          this.dialogFormVisibles = false
         }else {
           this.$message.error(res.data.msg)
         }
@@ -330,7 +330,6 @@ export default {
       this.getRoleList(this.navForm)
     },
     clearForm() {
-      // this.resetForm('form')
       this.navForm = this.$options.data().navForm
       this.getRoleList(this.navForm)
     },

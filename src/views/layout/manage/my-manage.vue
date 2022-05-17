@@ -28,15 +28,15 @@
               <el-button type="primary" @click="show(null, '新增')">新增</el-button>
             </div>
             <el-table
-              height="100%"
+              max-height="800px"
               :data="resultList" v-if="resultList.length !== 0" @row-click="rowClick"
               :row-class-name="tableRowClassName"
               :header-cell-style="{background:'#ccc', color: '#fff'}"
               style="width: 100%; margin-top: 20px">
-              <el-table-column  align="center" label="序号" width="120">
+              <el-table-column  align="center" label="序号" width="150">
                 <template scope="scope">{{ scope.$index + 1 }}</template>
               </el-table-column>
-              <el-table-column align="center" prop="nickName" label="姓名" width="120">
+              <el-table-column align="center" prop="nickName" label="姓名">
               </el-table-column>
               <el-table-column align="center" prop="username" label="账号" show-overflow-tooltip>
               </el-table-column>
@@ -71,7 +71,15 @@
                   <el-tooltip class="item" effect="dark" content="重置后默认密码为123456" placement="top">
                     <a @click="resetPad(scope.row)" class="link-item">重置</a>
                   </el-tooltip>
-                  <a @click="show(scope.row, '删除')" class="link-item err">删除</a>
+
+                  <template>
+                    <el-popconfirm
+                      title="确认要删除吗？"
+                      @confirm="show(scope.row, '删除')"
+                    >
+                      <el-link slot="reference" class="link-item err">删除</el-link>
+                    </el-popconfirm>
+                  </template>
                 </template>
               </el-table-column>
             </el-table>
