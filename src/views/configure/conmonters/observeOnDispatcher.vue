@@ -120,7 +120,9 @@
           </el-table-column>
           <el-table-column prop="dispatchName" label="调度台名称">
           </el-table-column>
-          <el-table-column prop="domain" label="域"></el-table-column>
+          <el-table-column prop="domain" label="域">
+            <template scope="scope">{{scope.row.pbxFifo}}</template>
+          </el-table-column>
           <el-table-column prop="fifoId" label="队列号码"></el-table-column>
           <el-table-column prop="userId" label="用户">
             <template scope="scope"><span v-for="item in scope.row.userList">{{ item.nickName }}</span></template>

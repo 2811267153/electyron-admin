@@ -30,7 +30,6 @@
             </el-button
             >
           </div>
-
           <el-table
             :row-class-name="tableRowClassName"
             :header-cell-style="{background:'#ccc', color: '#fff',}"
