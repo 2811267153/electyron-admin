@@ -3,7 +3,7 @@
     <div class="header app-header">
       <div class="logo-info">
         <div class="logo"></div>
-        <h1 v-if="$route.path !== '/index'">金数GDP1000 融合通信管理平台</h1>
+        <h1 v-if="$route.path !== '/index'">金数GDD1000 融合通信管理平台</h1>
       </div>
       <div><span class="icon iconfont icon-yonghu-yuan"></span>
         <el-dropdown trigger="click">

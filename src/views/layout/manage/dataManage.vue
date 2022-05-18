@@ -64,7 +64,7 @@
           </div>
         </el-dialog>
         <div ref="tables" class="table-warp">
-          <el-table v-show="resultList.length !== 0" :max-height="maxHeight"
+          <el-table v-show="resultList.length !== 0" height="calc(100vh - 100px - 100px - 100px - 100px)"
                     :header-cell-style="{background:'#ccc', color: '#fff',}" :data="resultList" style="width: 100%">
             <el-table-column align="center" prop="id" label="序号" width="50">
               <template scope="scope">{{ scope.$index + 1 }}</template>
@@ -101,7 +101,7 @@
       </div>
       <router-view />
     </div>
-    <my-footer v-if="$route.path == '/layout/dataManage'" v-on:next="next" @prev="prev" :form="form"
+    <my-footer v-if="$route.path == '/layout/dataManage'" v-on:next="next" @prev="prev" @pageCheng="changPage" :form="form"
                @change="change"></my-footer>
 
   </div>
@@ -177,6 +177,10 @@ export default {
       this.form.pageNum = e;
       this.dictionaryList(this.form);
     },
+    changPage(data){
+      this.form.pageSize = data
+      this.dictionaryList(this.form)
+    },
 
     submitAddForm() {
 
@@ -250,32 +254,10 @@ export default {
         this.$message.error(e);
       });
     },
-    updataMaxHeight() {
-      this.maxHeight = null;
-      setTimeout(() => {
-        const warpHeight = document.getElementsByClassName("container")[0].offsetHeight;
-        const tableHeight = document.getElementsByClassName("el-table")[0].offsetHeight;
-        // this.maxHeight = Math.abs( (tableHeight - warpHeight)) + 'px'
-        console.log(this.$refs.tables.offsetHeight + "px");
-      }, 1000);
-    }
   },
 
   created() {
     this.dictionaryList(this.form);
-  },
-  mounted() {
-    this.$bus.$on("pageChange", () => {
-      this.form = this.$store.state.formPage;
-      this.dictionaryList(this.form);
-    });
-    // const table = document.getElementsByClassName('el-table__body-wrapper')
-    this.updataMaxHeight();
-    window.onresize = () => {
-      this.updataMaxHeight();
-      this.maxHeight = "800px";
-      console.log(this.maxHeight);
-    };
   },
   computed: {
     creatTimes() {

@@ -1,9 +1,11 @@
 <template>
   <div id="my-manage">
-    <my-el-header/>
+    <my-el-header />
     <div class="container">
       <el-row class="main">
-        <div class="container-l"><e-tree @treeClick="treeClick" :data="treeArr"/></div>
+        <div class="container-l">
+          <e-tree @treeClick="treeClick" :data="treeArr" />
+        </div>
         <div class="container-r">
           <div class="container-nav">
             <div class="container-form">
@@ -28,12 +30,12 @@
               <el-button type="primary" @click="show(null, '新增')">新增</el-button>
             </div>
             <el-table
-              max-height="800px"
+              height="calc(100vh - 100px - 100px - 100px - 100px)"
               :data="resultList" v-if="resultList.length !== 0" @row-click="rowClick"
               :row-class-name="tableRowClassName"
               :header-cell-style="{background:'#ccc', color: '#fff'}"
               style="width: 100%; margin-top: 20px">
-              <el-table-column  align="center" label="序号" width="150">
+              <el-table-column align="center" label="序号" width="150">
                 <template scope="scope">{{ scope.$index + 1 }}</template>
               </el-table-column>
               <el-table-column align="center" prop="nickName" label="姓名">
@@ -83,7 +85,7 @@
                 </template>
               </el-table-column>
             </el-table>
-            <my-empty v-else/>
+            <my-empty v-else />
             <!--
                   新增悬浮窗
               -->
@@ -148,7 +150,7 @@
                   :label-width="formLabelWidth"
                   prop="sex"
                 >
-                  <el-select v-model="addForm.sex" placeholder="请选择用户性别" style="width: 100%" >
+                  <el-select v-model="addForm.sex" placeholder="请选择用户性别" style="width: 100%">
                     <el-option
                       :label="item.label"
                       :value="item.value"
@@ -220,7 +222,7 @@
         </div>
       </el-row>
     </div>
-    <my-footer v-on:next = "next" @prev="prev" :form="form" @change="change"></my-footer>
+    <my-footer v-on:next="next" @prev="prev" :form="form" @change="change" @pageCheng="pageCheng"></my-footer>
 
   </div>
 
@@ -234,9 +236,9 @@ import {
   getUserAll,
   getOrganizeList, deleteUser, upDataUser, getRoleList, upDataPassword
 } from "@/newwork/system-colltroner";
-import {fn} from "@/uti";
+import { fn } from "@/uti";
 import myEmpty from "@/newwork/myEmpty";
-import {isValidEmail, isValidPhone} from "@/util/validate";
+import { isValidPhone } from "@/util/validate";
 import myTree from "@/components/myTree";
 import myFooter from "@/components/myFooter";
 import myElHeader from "@/components/myElHeader";
@@ -253,23 +255,17 @@ export default {
   data() {
     const validatePhone = (rule, value, callback) => {
       if (!isValidPhone(value)) {
-        callback(new Error('手机号格式输入有误,请确认'))
+        callback(new Error("手机号格式输入有误,请确认"));
       } else {
-        callback()
+        callback();
       }
-    }
-    const validateEmail = (rule, value, callback) => {
-      if (!isValidEmail(value)) {
-        callback(new Error('邮箱地址输入格式有误,请确认'))
-      } else {
-        callback()
-      }
-    }
+    };
+
     return {
       form: {
         nickName: "",
         phone: "",
-        status: '',
+        status: "",
         pageNum: 1,
         pageSize: 10
       },
@@ -299,52 +295,52 @@ export default {
       timer: {},
       treeArr: [],
       sexList: [
-        {label: "男", value: 0},
-        {label: "女", value: 1}
+        { label: "男", value: 0 },
+        { label: "女", value: 1 }
       ],
       rules: {
         nickName: [
-          {required: true, message: "此项为必填项，请确认", trigger: "blur"}
+          { required: true, message: "此项为必填项，请确认", trigger: "blur" }
         ],
         roleId: [
-          {required: true, message: "此项为必填项，请确认", trigger: "blur"}
+          { required: true, message: "此项为必填项，请确认", trigger: "blur" }
         ],
         email: [
-          {required: false, message: "此项为必填项，请确认", trigger: "blur"},
+          { required: false, message: "此项为必填项，请确认", trigger: "blur" }
           // {validator: validateEmail, message: '邮箱格式输入有误,请确认', trigger: 'change'}
         ],
         deptId: [
-          {required: true, message: "此项为必填项，请确认", trigger: "blur"}
+          { required: true, message: "此项为必填项，请确认", trigger: "blur" }
         ],
         username: [
-          {required: true, message: "此项为必填项，请确认", trigger: "blur"}
+          { required: true, message: "此项为必填项，请确认", trigger: "blur" }
         ],
         password: [
-          {required: true, message: "此项为必填项，请确认", trigger: "blur"}
+          { required: true, message: "此项为必填项，请确认", trigger: "blur" }
         ],
 
         phone: [
-          {required: true, message: "此项为必填项，请确认", trigger: "blur"},
+          { required: true, message: "此项为必填项，请确认", trigger: "blur" }
           // {validator: validatePhone, message: '手机号格式输入有误,请确认', trigger: 'change'}
         ],
         status: [
-          {required: false, message: "此项为必填项，请确认", trigger: "blur"}
+          { required: false, message: "此项为必填项，请确认", trigger: "blur" }
         ],
         sex: [
-          {required: false, message: "此项为必填项，请确认", trigger: "blur"}
+          { required: false, message: "此项为必填项，请确认", trigger: "blur" }
         ]
       },
       form_rules: {
         nickName: [
-          {required: false, message: "此项为必填项，请确认", trigger: "blur"}
+          { required: false, message: "此项为必填项，请确认", trigger: "blur" }
         ],
         phone: [
-          {required: false, message: "此项为必填项，请确认", trigger: "blur"},
-          {validator: validatePhone, message: '手机号格式输入有误,请确认', trigger: 'blur'}
+          { required: false, message: "此项为必填项，请确认", trigger: "blur" },
+          { validator: validatePhone, message: "手机号格式输入有误,请确认", trigger: "blur" }
         ],
         status: [
-          {required: false, message: "此项为必填项，请确认", trigger: "blur"}
-        ],
+          { required: false, message: "此项为必填项，请确认", trigger: "blur" }
+        ]
       }
 
     };
@@ -352,43 +348,43 @@ export default {
 
   methods: {
     getSelectedValue(value) {
-      this.addForm.deptId = value.deptId
+      this.addForm.deptId = value.deptId;
     },
     onSubmit() {
       this.getUserAll(this.form);
     },
     treeClick(a) {
-      this.form =this.$options.data().form
+      this.form = this.$options.data().form;
       console.log(a);
-      a.deptId === '100' ? this.form.deptId = '' :   this.form.deptId = a.deptId;
-      console.log(this.form)
+      a.deptId === "100" ? this.form.deptId = "" : this.form.deptId = a.deptId;
+      console.log(this.form);
       this.getUserAll(this.form);
     },
-    next(){
-      this.form.pageNum ++
+    next() {
+      this.form.pageNum++;
       console.log(this.form);
-      this.getUserAll(this.form)
+      this.getUserAll(this.form);
     },
-    prev(){
-      this.form.pageNum --
-      this.getUserAll(this.form)
+    prev() {
+      this.form.pageNum--;
+      this.getUserAll(this.form);
     },
-    change(e){
+    change(e) {
       console.log(e);
-      this.form.pageNum = e
-      this.getUserAll(this.form)
+      this.form.pageNum = e;
+      this.getUserAll(this.form);
     },
-    reset(row){
-      const  data = {}
-      data.password = '123456';
-      data.userId = row.userId
-      upDataPassword(data).then(res=> {
-        if(res.data.code === 200){
-          this.$message.success('提交完成')
-        }else {
-          this.$message.error(res.data.msg)
+    reset(row) {
+      const data = {};
+      data.password = "123456";
+      data.userId = row.userId;
+      upDataPassword(data).then(res => {
+        if (res.data.code === 200) {
+          this.$message.success("提交完成");
+        } else {
+          this.$message.error(res.data.msg);
         }
-      })
+      });
     },
 
     addForms() {
@@ -422,22 +418,26 @@ export default {
         }
       });
     },
-    resetPad(row){
-        const data = {}
-        data.userId = row.userId
+    resetPad(row) {
+      const data = {};
+      data.userId = row.userId;
       console.log(row);
-        data.password = '123456'
+      data.password = "123456";
       upDataPassword(data).then(res => {
         console.log(res);
-        if(res.data.code === 200){
-          this.$message.success('提交完成')
-        }else {
-          this.$message.error(res.data.msg)
+        if (res.data.code === 200) {
+          this.$message.success("提交完成");
+        } else {
+          this.$message.error(res.data.msg);
         }
-      }).catch(e => this.$message.error(e))
+      }).catch(e => this.$message.error(e));
+    },
+    pageCheng(data){
+      this.form.pageSize = data
+      this.getUserAll(this.form)
     },
     onClear() {
-      this.form.deptId = ''
+      this.form.deptId = "";
       this.resetForm();
       this.getUserAll(this.form);
     },
@@ -448,25 +448,25 @@ export default {
         this.$message.error(e);
       });
       getRoleList().then(res => {
-        console.log(res)
+        console.log(res);
         if (res.data.code === 200) {
-          this.roleList = res.data.data.records
+          this.roleList = res.data.data.records;
         }
-      })
+      });
       this.title = title;
       if (this.title === "新增") {
         this.isShow = true;
         this.addForm = this.$options.data().addForm;
         this.$refs.addForm.clearValidate();
         this.$nextTick(() => {
-          this.$refs.myTree.valueName = this.addForm.deptId
-        })
+          this.$refs.myTree.valueName = this.addForm.deptId;
+        });
       } else if (title === "修改") {
         this.addForm = row;
         this.isShow = true;
         this.$nextTick(() => {
-          this.$refs.myTree.valueName = this.addForm.sysDept.deptName
-        })
+          this.$refs.myTree.valueName = this.addForm.sysDept.deptName;
+        });
       } else if (title === "删除") {
         deleteUser(row.userId).then(res => {
           if (res.data.code === 200) {
@@ -481,27 +481,26 @@ export default {
       }
     },
     resetForm(form) {
-      if(form === 'form'){
-       this.form = this.$options.data().form
-        this.form.deptId = ''
-      }else {
+      if (form === "form") {
+        this.form = this.$options.data().form;
+        this.form.deptId = "";
+      } else {
         this.$refs.addForm.resetFields();
       }
-      this.getUserAll(this.form)
+      this.getUserAll(this.form);
     },
 
     rowClick(row) {
       this.row = row;
     },
-    tableRowClassName({row, rowIndex}) {
+    tableRowClassName({ row, rowIndex }) {
       //把每一行的索引放进row
       row.index = rowIndex;
     },
     getUserAll(formPage) {
       getUserAll(formPage).then(res => {
-        this.$bus.$emit('total', res.data.data.total)
+        this.$bus.$emit("total", res.data.data.total);
         this.resultList = res.data.data.records;
-        console.log(res.data);
       });
     }
   },
@@ -533,36 +532,35 @@ export default {
     },
     isShow(val, newVal) {
       if (!val) {
-        this.addForm = this.$options.data().addForm
+        this.addForm = this.$options.data().addForm;
       }
-    },
-  },
-  mounted() {
-    this.$bus.$on("pageChange", () => {
-      this.getUserAll(this.$store.state.formPage);
-    });
+    }
   }
 };
 </script>
 
 <style scoped>
-#my-manage{
+#my-manage {
   display: flex;
   height: calc(100vh - 160px);
   justify-content: space-between;
   flex-direction: column;
 }
-.main{
+
+.main {
   overflow: hidden;
   display: flex;
 }
+
 .container-l {
   width: 200px;
-  flex-shrink:0;
+  flex-shrink: 0;
 }
-.container-r{
+
+.container-r {
   flex: 1;
 }
+
 .container-form {
   display: flex;
   height: 40px;
@@ -573,13 +571,16 @@ export default {
   display: flex;
   flex-wrap: wrap;
 }
+
 .link-item {
   margin: 0 10px;
   cursor: pointer;
 }
-.form-item  {
+
+.form-item {
   width: 48%;
 }
+
 .err {
   color: red;
 }

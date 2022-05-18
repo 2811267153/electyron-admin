@@ -264,6 +264,7 @@ export default {
       });
     }
   },
+
   components: {
     myTree,
     myFooter,
@@ -298,10 +299,6 @@ export default {
 
 .input {
   width: 30%;
-}
-
-.operate a {
-  margin: 0 10px;
 }
 
 .custom-tree-node {

@@ -23,7 +23,7 @@
         </el-form>
       </div>
       <el-table
-        max-height="800px"
+        height="calc(100vh - 100px - 100px - 100px - 100px)"
         :data="list"
         style="width: 100%">
         <el-table-column
@@ -86,7 +86,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <my-footer v-on:next="next" @prev="prev" :form="form" @change="change"></my-footer>
+    <my-footer v-on:next="next" @prev="prev" :form="form" @change="change"  @pageCheng="pageCheng"></my-footer>
   </div>
 </template>
 
@@ -118,6 +118,13 @@ export default {
       this.getPbxList(this.form)
     },
     clear(){
+      this.form = this.$options.data().form
+      this.getPbxList(this.form)
+    },
+    pageCheng(e){
+      this.form = this.$options.data().form
+      this.form.pageSize = e
+      this.getPbxList(this.form)
     },
     getPbxList(form){
       getPbxList(form).then(res => {
@@ -143,7 +150,17 @@ export default {
   },
   created() {
     this.getPbxList(this.form)
-  }
+  },
+  mounted() {
+    this.$bus.$on('pageCheng', (data) => {
+      this.form = this.$options.data().form
+      this.form.pageSize = data
+      this.getPbxList(this.form)
+    })
+  },
+  destroyed(){
+    this.$bus.$off('pageChang')
+  },
 }
 </script>
 

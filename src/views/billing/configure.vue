@@ -23,6 +23,7 @@
 
       <el-table
           :data="list"
+          height="calc(100vh - 100px - 100px - 100px - 100px)"
           :header-cell-style="{background:'#ccc', color: '#fff',}"
           style="width: 100%;margin-top: 20px">
         <el-table-column
@@ -73,6 +74,7 @@
         <el-table-column
             align="center"
             prop="address"
+            fixed="right"
             label="操作">
           <template scope="scope">
             <el-link @click="addForms(scope.row, '编辑')" style="margin-right: 20px">编辑</el-link>
@@ -124,7 +126,7 @@
         </div>
       </el-dialog>
     </div>
-    <my-footer v-on:next = "next" @prev="prev" :form="form" @change="formChange"></my-footer>
+    <my-footer v-on:next = "next" @prev="prev" :form="form" @change="formChange"  @pageCheng="pageCheng"></my-footer>
 
   </div>
 </template>
@@ -209,6 +211,11 @@ export default {
     myElHeader
   },
   methods: {
+    pageCheng(e){
+      this.form = this.$options.data().form
+      this.form.pageSize = e
+      this.getProfile(this.form)
+    },
     find() {
       this.getProfileInfo(this.form);
     },
@@ -319,12 +326,6 @@ export default {
       this.getProfileInfo(this.form);
     }
   },
-  mounted() {
-    this.$bus.$on("pageChange", () => {
-      this.form = this.$store.state.formPage;
-      this.getProfileInfo(this.form);
-    });
-  }
 };
 </script>
 

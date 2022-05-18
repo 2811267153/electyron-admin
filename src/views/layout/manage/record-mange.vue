@@ -19,6 +19,7 @@
       <el-table
         :header-cell-style="{background:'#ccc', color: '#fff'}"
         :data="tableData"
+        height="calc(100vh - 100px - 100px - 100px - 100px)"
         style="width: 100%">
         <el-table-column
           align="center"
@@ -41,24 +42,21 @@
         <el-table-column
           prop="ipAddress"
           align="center"
-          width="200"
           label="IP地址">
         </el-table-column>
         <el-table-column
           prop="targetPage"
           align="center"
-          width="200"
           label="目标页面">
         </el-table-column>
         <el-table-column
           prop="operation"
           align="center"
-          width="200"
           label="操作">
         </el-table-column>
       </el-table>
     </div>
-    <my-footer v-on:next = "next" @prev="prev" :form="form" @change="change"></my-footer>
+    <my-footer v-on:next = "next" @prev="prev" :form="form" @change="change" @pageCheng="pageCheng"></my-footer>
   </div>
 
 </template>
@@ -101,7 +99,6 @@ export default {
   methods: {
     next(){
       this.form.pageNum ++
-      console.log(this.form);
       this.getLog(this.form)
     },
     prev(){
@@ -109,15 +106,16 @@ export default {
       this.getLog(this.form)
     },
     change(e){
-      console.log(e);
       this.form.pageNum = e
       this.getLog(this.form)
     },
-
+    pageCheng(e) {
+      this.form = this.$options.data().form
+      this.form.pageSize = e
+      this.getLog(this.form)
+    },
     getLog(form){
-      console.log(form)
       getLog(form).then(res => {
-        console.log(res)
         this.$bus.$emit('total', res.data.data.total)
         this.tableData = res.data.data.records
       }).catch(e => {
@@ -136,11 +134,6 @@ export default {
       this.getLog(this.form)
     }
   },
-  mounted() {
-    this.$bus.$on('pageChange',() => {
-      this.getLog(this.form)
-    })
-  }
 }
 </script>
 

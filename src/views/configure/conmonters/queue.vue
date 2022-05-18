@@ -115,7 +115,7 @@
         </div>
       </el-dialog>
       <el-table
-        max-height="800px"
+        height="calc(100vh - 100px - 100px - 100px - 100px)"
         :header-cell-style="{background:'#ccc', color: '#fff',}"
         class="table"
         :data="list"
@@ -170,6 +170,7 @@
         <el-table-column
           align="center"
           prop="wrapupTime"
+          fixed="right"
           label="操作">
           <template scope="scope">
             <el-link @click="addForms(scope.row, '编辑')" style="margin-left: 20px">编辑</el-link>
@@ -179,7 +180,7 @@
       </el-table>
       <my-empty v-else/>
     </div>
-    <my-footer v-on:next = "next" @prev="prev" :form="form" @change="change"></my-footer>
+    <my-footer v-on:next = "next" @prev="prev" :form="form" @change="change"  @pageCheng="pageCheng"></my-footer>
   </div>
 </template>
 
@@ -277,8 +278,10 @@ export default {
     getSelectedValue(value) {
       this.addForm.deptId = value.deptId
     },
-    beforeRemove(){
-      console.log('开始');
+    pageCheng(e){
+      this.form = this.$options.data().form
+      this.form.pageSize = e
+      this.getFifo(this.form)
     },
 
     next(){
@@ -342,8 +345,6 @@ export default {
       this.getFifo(this.form)
     },
     submitForm(){
-
-
       this.$refs.addForm.validate((valid) => {
         if (valid) {
       this.title === '新增' ? addFifo(this.addForm).then(res => {
@@ -439,10 +440,14 @@ export default {
     myElHeader
   },
   mounted() {
-    this.$bus.$on('pageChange', () => {
-      this.form = this.$store.state.formPage
+    this.$bus.$on('pageChang', (data) => {
+      this.form = this.$options.data().form
+      this.form = data
       this.getFifo(this.form)
     })
+  },
+  destroyed(){
+    this.$bus.$off('pageChang')
   },
   watch: {
     dialogFormVisible (val){

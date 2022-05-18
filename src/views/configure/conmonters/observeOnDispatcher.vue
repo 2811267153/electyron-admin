@@ -110,31 +110,32 @@
         <el-table
           :row-class-name="tableRowClassName"
           :data="list"
-          max-height="800px"
+          height="calc(100vh - 100px - 100px - 100px - 100px)"
           style="width: 100%"
         >
-          <el-table-column prop="date" label="序号" width="50 ">
+          <el-table-column prop="date" label="序号" width="50px" align="center">
             <template scope="scope">
               {{ scope.$index + 1 }}
             </template>
           </el-table-column>
-          <el-table-column prop="dispatchName" label="调度台名称">
+          <el-table-column prop="dispatchName" align="center" label="调度台名称">
           </el-table-column>
-          <el-table-column prop="domain" label="域">
-            <template scope="scope">{{scope.row.pbxFifo}}</template>
-          </el-table-column>
-          <el-table-column prop="fifoId" label="队列号码"></el-table-column>
-          <el-table-column prop="userId" label="用户">
-            <template scope="scope"><span v-for="item in scope.row.userList">{{ item.nickName }}</span></template>
-          </el-table-column>
-          <el-table-column prop="number" label="坐标">
+          <el-table-column prop="domain" align="center" label="域">
             <template scope="scope">
-            <span
-            >经度：{{ scope.row.latitude }}纬度：{{ scope.row.longitude }}</span
-            >
+              <span v-if="scope.row">{{scope.row.domain}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="number" label="操作">
+          <el-table-column prop="fifoId" align="center" label="队列号码"></el-table-column>
+          <el-table-column prop="userId" align="center" label="用户">
+            <template scope="scope"><span v-for="item in scope.row.userList">{{ item.nickName }}</span></template>
+          </el-table-column>
+          <el-table-column prop="number" align="center" label="坐标" min-width="120px">
+            <template scope="scope">
+            <p>经度：{{ scope.row.latitude }}</p >
+            <p>纬度：{{ scope.row.longitude }}</p >
+            </template>
+          </el-table-column>
+          <el-table-column prop="number" align="center" label="操作" fixed="right" min-width="120px">
             <template scope="scope">
               <div class="operate">
                 <el-link
@@ -158,7 +159,7 @@
         </el-table>
       </div>
     </div>
-    <my-footer v-on:next="next" @prev="prev" :form="form" @change="change"></my-footer>
+    <my-footer v-on:next="next" @prev="prev" :form="form"  @pageCheng="pageCheng"></my-footer>
   </div>
 </template>
 
@@ -195,7 +196,7 @@ export default {
       list: [],
       userId: [], //用户选择的列表
       addForm: {
-        deptId: "",
+        deptId: undefined,
         dispatchName: "",
         domain: "",
         fifoId: "",
@@ -242,6 +243,11 @@ export default {
     prev() {
       this.form.pageNum--;
       this.getRateList(this.form);
+    },
+    pageCheng(e){
+      this.form = this.$options.data().form
+      this.form.pageSize = e
+      this.getDeskList(this.form)
     },
     change(e) {
       this.form.pageNum = e;
@@ -304,8 +310,6 @@ export default {
       if (title === "编辑") {
         this.addForm = row;
         this.userId = this.addForm.userList
-      } else {
-        console.log("aa");
       }
     },
     tableRowClassName({ row, rowIndex }) {
@@ -347,6 +351,7 @@ export default {
       });
     }
   },
+
   watch: {
     dialogFormVisible(val) {
       if (!val) {

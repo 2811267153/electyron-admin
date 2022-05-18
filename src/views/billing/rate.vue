@@ -38,15 +38,15 @@
               <el-button type="primary" @click="submitForm">确 定</el-button>
             </div>
           </el-dialog>
-          <el-table max-height="800" :data="list" :header-cell-style="{background:'#ccc', color: '#fff',}" style="width: 100%" border v-if="list.length !== 0">
-            <el-table-column align="center" prop="date" label="序号" width="180">
+          <el-table  height="calc(100vh - 100px - 100px - 100px - 100px)" :data="list" :header-cell-style="{background:'#ccc', color: '#fff',}" style="width: 100%" v-if="list.length !== 0">
+            <el-table-column align="center" prop="date" label="序号" width="50">
               <template scope="scope">
                 {{ scope.$index + 1 }}
               </template>
             </el-table-column>
             <el-table-column align="center" prop="groupName" label="费率组名称">
             </el-table-column>
-            <el-table-column align="center" prop="address" label="操作">
+            <el-table-column align="center" prop="address" label="操作" fixed="right" min-width="200px">
               <template scope="scope">
                 <el-link
                   class="a-link"
@@ -71,7 +71,7 @@
           </el-empty>
         </div>
       </div>
-      <my-footer v-on:next = "next" @prev="prev" :form="form" @change="change"></my-footer>
+      <my-footer v-on:next = "next" @prev="prev" :form="form" @change="change"  @pageCheng="pageCheng"></my-footer>
     </div>
     <div v-else>
       <div class="warps">
@@ -270,13 +270,13 @@ export default {
       }
     }
   },
-  mounted() {
-    this.$bus.$on('pageChange', () => {
-      this.form = this.$store.state.formPage
-      this.getRateList(this.form)
-    })
-  },
+
   methods: {
+    pageCheng(e){
+      this.form = this.$options.data().form
+      this.form.pageSize = e
+      this.getRateList(this.form)
+    },
     next(){
       this.form.pageNum ++
       this.getRateList(this.form)

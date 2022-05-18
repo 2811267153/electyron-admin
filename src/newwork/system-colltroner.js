@@ -141,7 +141,6 @@ export function addRole(data){
     })
 }
 export function getRoleList(data){
-    console.log(data)
     return request({
         url: '/system/role/list',
         method: 'get',

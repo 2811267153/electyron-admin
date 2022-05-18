@@ -17,12 +17,13 @@
         </div>
         <el-table
           :data="list"
-          border
+          height="calc(100vh - 100px - 100px - 100px - 100px)"
           :header-cell-style="{background:'#ccc', color: '#fff',}"
           style="width: 100%">
           <el-table-column
             align="center"
             label="序号"
+            width="50"
             prop="date">
             <template scope="scope">{{scope.$index + 1}}</template>
           </el-table-column>
@@ -45,6 +46,7 @@
             label="会议成员">
           </el-table-column>
           <el-table-column
+            fixed="right"
             prop="member"  align="center"
             label="操作">
             <template scope="scope"> <el-link @click="info(scope.row.conferenceUniqueId)">查看详情</el-link> </template>
@@ -52,7 +54,7 @@
         </el-table>
       </div>
       <div class="detail" v-else>
-        <div class="nav-form"><el-button @click="black" type="primary">返回</el-button></div>
+        <div class="form-nav"><div></div><el-button @click="black" type="primary">返回</el-button></div>
         <el-table
           :data="detailList"
           :header-cell-style="{background:'#ccc', color: '#fff',}"
@@ -88,7 +90,7 @@
       </div>
     </div>
   </div>
-  <my-footer v-on:next = "next" @prev="prev" :form="form" @change="change"></my-footer>
+  <my-footer v-on:next = "next" @prev="prev" :form="form" @change="change"  @pageCheng="pageCheng"></my-footer>
 </div>
 </template>
 
@@ -122,6 +124,11 @@ export default {
     },
     prev(){
       this.form.pageNum --
+      this.getRecord(this.form)
+    },
+    pageCheng(e){
+      this.form = this.$options.data().form
+      this.form.pageSize = e
       this.getRecord(this.form)
     },
     change(e){
@@ -165,12 +172,6 @@ export default {
   },
   created() {
     this.getRecord(this.form)
-  },
-  mounted() {
-    this.$bus.$on('pageChange', () => {
-      this.form =this.$store.state.formPage
-      this.getRecord(this.form)
-    })
   }
 }
 </script>

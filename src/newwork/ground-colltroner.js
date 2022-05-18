@@ -184,10 +184,11 @@ export function addProfile(data) {
  * @param data 获取初试列表
  * @return {AxiosPromise}
  */
-export  function getProfile() {
+export  function getProfile(data) {
     return request({
         url: '/pbx/profile/init/list',
         method: 'get',
+        params: data
     })
 }
 

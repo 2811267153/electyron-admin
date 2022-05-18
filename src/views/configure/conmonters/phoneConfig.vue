@@ -62,7 +62,7 @@
               </template>
             </el-table-column>
             <el-table-column align="center" prop="bussiness" label="业务类型"> </el-table-column>
-            <el-table-column align="center" prop="address" label="操作">
+            <el-table-column align="center" prop="address" label="操作"  fixed="right" >
               <template scope="scope">
                 <el-link
                   class="a-link"
@@ -296,7 +296,7 @@
       </span>
         </el-dialog>
       </div>
-    <my-footer v-on:next = "next" @prev="prev" :form="form" @change="footerChange"></my-footer>
+    <my-footer v-on:next = "next" @prev="prev" :form="form" @change="footerChange" @pageCheng="pageCheng"></my-footer>
   </div>
 </template>
 
@@ -446,6 +446,11 @@ export default {
       console.log(this.form);
       this.getDirectory(this.form)
     },
+    pageCheng(e){
+      this.form = this.$options.data().form
+      this.form.pageSize = e
+      this.getDirectory()
+    },
     prev(){
       this.form.pageNum --
       this.getDirectory(this.form)
@@ -496,7 +501,7 @@ export default {
             });
           }
         } else {
-          this.$message.error("提交失败， 请重试");
+          return false
         }
       });
     },
@@ -573,6 +578,16 @@ export default {
 
   created() {
     this.getDirectory(this.form);
+  },
+  mounted() {
+    this.$bus.$on('pageCheng', (data) => {
+      this.form = this.$options.data().form
+      this.form.pageSize = data
+      this.getDirectory(this.form)
+    })
+  },
+  destroyed(){
+    this.$bus.$off('pageChang')
   },
   watch: {
     dialogFormVisible(val, newVal) {

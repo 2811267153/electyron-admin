@@ -2,12 +2,7 @@
   <!--  角色管理-->
   <div class="role">
     <el-header>
-      <div class="content-nav">
-        <el-breadcrumb class="nav-bar" separator="/">
-          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item><a>{{ $route.meta.title }}</a></el-breadcrumb-item>
-        </el-breadcrumb>
-      </div>
+      <my-el-header/>
     </el-header>
     <div class="container">
       <div class="nav">
@@ -113,27 +108,25 @@
           max-height="800px"
           v-if="list.length !== 0"
           :data="list"
-          :header-cell-style="{background:'#f2f2f2'}"
-          height="500px"
+          :header-cell-style="{background:'#ccc', color: '#fff',}"
+          height="calc(100vh - 400px)"
           style="width: 100%; margin-top: 20px">
         <el-table-column
             prop="date"
             align="center"
             label="序号"
-            width="180">
+            width="50">
           <template scope="scope">{{ scope.$index + 1 }}</template>
         </el-table-column>
         <el-table-column
             prop="roleName"
             align="center"
-            label="角色名称"
-            width="180">
+            label="角色名称">
         </el-table-column>
         <el-table-column
             prop="name"
             align="center"
-            label="状态"
-            width="180">
+            label="状态">
           <template scope="scope">
             <p v-if="scope.row.status === 0">
               启用
@@ -146,14 +139,12 @@
         <el-table-column
             prop="createTime"
             align="center"
-            label="创建时间"
-            width="300">
+            label="创建时间">
         </el-table-column>
         <el-table-column
             prop="createTime"
             align="center"
-            label="数据权限"
-            width="180">
+            label="数据权限">
           <template scope="scope">
             <el-link @click="distribution(scope.row)" type="info">数据权限</el-link>
           </template>
@@ -161,6 +152,7 @@
         <el-table-column
             align="center"
             prop="address"
+            fixed="right"
             label="操作">
           <template scope="scope">
             <el-link style="margin-right: 20px" type="info" @click="addForms(scope.row, '编辑')">编辑</el-link>
@@ -170,7 +162,7 @@
       </el-table>
       <my-empty v-else></my-empty>
     </div>
-    <my-footer v-on:next = "next" @prev="prev" :form="navForm" @change="change"></my-footer>
+    <my-footer v-on:next = "next" @prev="prev" :form="navForm" @change="change" @pageCheng="pageCheng"></my-footer>
   </div>
 </template>
 
@@ -180,14 +172,13 @@ import {
   getRoleList,
   getMenuAll,
   deleteRoleList,
-  getDistribution,
   distribution, upDataRoleList
 } from "@/newwork/system-colltroner";
 import {menuToTree, treeToArray} from "@/uti";
-import {deleteRate} from "@/newwork/ground-colltroner";
 import myEmpty from "@/newwork/myEmpty";
 import {isValidNumber} from "@/util/validate";
 import myFooter from "@/components/myFooter";
+import myElHeader from "@/components/myElHeader";
 
 
 export default {
@@ -304,6 +295,11 @@ export default {
       this.navForm.pageNum = e
       this.getRoleList(this.navForm)
     },
+    pageCheng(e){
+      this.navForm = this.$options.data().navForm
+      this.navForm.pageSize = e
+      this.getRoleList(this.navForm)
+    },
     distribution(row) {
       this.dialogFormVisibles = true
       this.dataScopeForm.roleId = row.roleId
@@ -406,16 +402,15 @@ export default {
   created() {
     this.getRoleList(this.navForm)
   },
-
-
   components: {
     myEmpty,
-    myFooter
+    myFooter,
+    myElHeader
   },
 }
 </script>
 
-<style >
+<style>
 .el-header{
   padding: 0 !important;
 }
@@ -450,7 +445,6 @@ export default {
 }
 .container{
   margin-top: 20px;
-  width: 100%;
   padding: 20px;
   box-shadow: 0 0 15px #ccc;
   background-color: #fff;

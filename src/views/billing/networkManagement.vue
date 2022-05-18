@@ -213,7 +213,7 @@
 
     <div class="table-warp">
       <div class="table">
-        <el-table :header-cell-style="{background:'#ccc', color: '#fff',}"  :data="list" style="width: 100%" >
+        <el-table :header-cell-style="{background:'#ccc', color: '#fff',}"   height="calc(100vh - 100px - 100px - 100px - 100px)" :data="list" style="width: 100%" >
           <el-table-column align="center" prop="date" label="序号" width="50px">
             <template scope="scope">{{ scope.$index + 1 }}</template>
           </el-table-column>
@@ -262,7 +262,7 @@
     </div>
 
   </div>
-  <my-footer v-on:next = "next" @prev="prev" :form="forms" @change="change"></my-footer>
+  <my-footer v-on:next = "next" @prev="prev" :form="forms" @change="change"  @pageCheng="pageCheng"></my-footer>
 </div>
 
 </template>
@@ -416,6 +416,11 @@ export default {
       this.forms.pageNum = e
       this.getPbxAll(this.forms)
     },
+    pageCheng(e){
+      this.forms = this.$options.data().forms
+      this.forms.pageSize = e
+      this.getPbxAll(this.forms)
+    },
     clear(){
       this.forms = this.$options.data().forms
       this.getPbxAll(this.forms)
@@ -487,7 +492,7 @@ export default {
       deletePbx(row.id).then(res => {
         if (res.data.code === 200) {
           this.$message.success('删除完成')
-          this.getPbxAll(this.form)
+          this.getPbxAll(this.forms)
         } else {
           this.$message.error(res.data.msg)
         }
@@ -533,7 +538,7 @@ export default {
   },
   created() {
 
-    this.getPbxAll(this.form)
+    this.getPbxAll(this.forms)
     this.getProfileInfo()
   },
   watch: {

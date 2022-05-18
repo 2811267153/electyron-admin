@@ -3,7 +3,7 @@
     <my-el-header/>
     <div class="container">
       <div class="form-nav">
-        <el-form :inline="true" :model="form" class="demo-form-inline" ref="form" rules="rules">
+        <el-form :inline="true" :model="form" class="demo-form-inline" ref="form" :rules="rules">
           <el-form-item label="方案名称" prop="diaplanName">
             <el-input v-model="form.diaplanName"  placeholder="请输入内容"></el-input>
           </el-form-item>
@@ -63,8 +63,8 @@
           >
         </div>
       </el-dialog>
-      <el-table max-height="800px" :header-cell-style="{background:'#ccc', color: '#fff',}":data="list"  style="width: 100%; margin-top: 20px"  v-if="list.length !==0">
-        <el-table-column prop="date" align="center" label="序号" width="180">
+      <el-table  height="calc(100vh - 100px - 100px - 100px - 100px)" :header-cell-style="{background:'#ccc', color: '#fff',}":data="list"  style="width: 100%; margin-top: 20px"  v-if="list.length !==0">
+        <el-table-column prop="date" align="center" label="序号" width="50">
           <template scope="scope">
             {{ scope.$index + 1 }}
           </template>
@@ -80,7 +80,7 @@
         </el-table-column>
         <el-table-column prop="createTime" align="center" label="更新时间">
         </el-table-column>
-        <el-table-column align="center" prop="stauts" label="操作">
+        <el-table-column align="center" prop="stauts" label="操作" fixed="right">
           <template scope="scope">
             <el-link
                 style="margin-right: 20px"
@@ -97,7 +97,7 @@
       </el-table>
       <my-empty v-else/>
     </div>
-    <my-footer v-on:next = "next" @prev="prev" :form="form" @change="formChange"></my-footer>
+    <my-footer v-on:next = "next" @prev="prev" :form="form" @change="formChange"  @pageCheng="pageCheng"></my-footer>
   </div>
 </template>
 
@@ -164,7 +164,11 @@ export default {
         console.log(e)
       })
     },
-
+    pageCheng(e){
+      this.form = this.$options.data().form
+      this.form.pageSize = e
+      this.getDaiPlan(this.form)
+    },
     //搜索
     find() {
       this.getDaiPlan(this.form)
@@ -277,6 +281,7 @@ export default {
       return this.addForm.diaplanRateGroup
     }
   },
+
   watch: {
     dialogFormVisible(val) {
       if (val === true) {
@@ -300,12 +305,6 @@ export default {
     diaplanPrefix(){
       this.addForm.diaplanPrefix = ''
     }
-  },
-  mounted() {
-    this.$bus.$on('pageChange', () => {
-      this.form = this.$store.state.formPage
-      this.getDaiPlan(this.form)
-    })
   }
 }
 </script>

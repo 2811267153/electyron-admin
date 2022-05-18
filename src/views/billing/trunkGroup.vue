@@ -134,7 +134,7 @@
         >
       </div>
     </el-dialog>
-    <el-table max-height="800px" :header-cell-style="{background:'#ccc', color: '#fff',}" :data="list" style="width: 100%" v-if="list.length !== 0" >
+    <el-table  height="calc(100vh - 100px - 100px - 100px - 100px)" :header-cell-style="{background:'#ccc', color: '#fff',}" :data="list" style="width: 100%" v-if="list.length !== 0" >
       <el-table-column align="center" prop="index" label="序号" width="50">
         <template scope="scope">{{ scope.$index + 1 }}</template>
       </el-table-column>
@@ -176,7 +176,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="remark" label="操作">
+      <el-table-column align="center" prop="remark" label="操作" fixed="right" >
         <template scope="scope">
           <el-link
             style="margin-right: 20px"
@@ -196,7 +196,7 @@
     </el-table>
     <my-empty v-else/>
   </div>
-  <my-footer v-on:next = "next" @prev="prev" :form="form" @change="change"></my-footer>
+  <my-footer v-on:next = "next" @prev="prev" :form="form" @change="change"  @pageCheng="pageCheng"></my-footer>
 </div>
 </template>
 
@@ -327,6 +327,11 @@ export default {
         this.addFrom.pbxGwgroupGatewayList.splice(index, 1)
       }
     },
+    pageCheng(e){
+      this.form = this.$options.data().form
+      this.form.pageSize = e
+      this.getGwgroup(this.form)
+    },
     addGateway() {
       this.addFrom.pbxGwgroupGatewayList.push({
         gatewayId: '',
@@ -385,6 +390,7 @@ export default {
       this.getGwgroup(this.form)
     },
 
+
     resetForm(type) {
       type = 'form' ? this.$refs['form'].resetFields() : this.$refs['addForm'].resetFields()
     },
@@ -411,10 +417,14 @@ export default {
     this.getGwgroup(this.form)
   },
   mounted() {
-    this.$bus.$on('pageChange', () => {
-      this.form = this.$store.state.formPage
+    this.$bus.$on('pageCheng', (data) => {
+      this.form = this.$options.data().form
+      this.form.pageSize = data
       this.getGwgroup(this.form)
     })
+  },
+  destroyed(){
+    this.$bus.$off('pageChang')
   },
   watch: {
     dialogFormVisible(val) {
