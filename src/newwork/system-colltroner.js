@@ -173,6 +173,13 @@ export function distribution(data) {
         method: 'post'
     })
 }
+export function verificationCode(data) {
+    return request({
+        url: '/system/role/role/code',
+        data,
+        method: 'post'
+    })
+}
 
 /**
  * 用户管理

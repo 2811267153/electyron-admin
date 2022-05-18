@@ -16,8 +16,6 @@
           </el-dropdown-menu>
         </el-dropdown>
       </div>
-      <!--      <p><span @click="loginOut">当前用户:</span> {{ userInfo.nickName }}</p>-->
-      <!--      <p>  <span>用户</span>: {{userInfo.data.user.username || ''}} <el-button @click="loginOut" class="login-out">退出</el-button></p>-->
     </div>
     <div class="header-nav">
       <el-container>

@@ -29,7 +29,6 @@
           <el-button type="primary" @click="addForms(null, '新增')">新增</el-button>
         </div>
       </div>
-
       <el-dialog title="数据权限" :visible.sync="dialogFormVisibles">
         <el-form :model="dataScopeForm">
           <el-form-item label="角色ID" :label-width="formLabelWidth">
@@ -40,13 +39,13 @@
               <el-option :label="item.label" :value="item.value" v-for="item in dataScopeType"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="菜单权限" :label-width="formLabelWidth" required>
+          <el-form-item v-if="dataScopeForm.dataScope === 2" label="数据权限" :label-width="formLabelWidth" required>
             <el-tree
               props="permission"
-              :data="menuIds"
+              :data="formatList"
               :default-checked-keys="defaultMenuIds"
               :props="defaultProps"
-              node-key="menuId"
+              node-key="deptId"
               accordion
               :check-on-click-node="true"
               show-checkbox
@@ -59,8 +58,6 @@
           <el-button type="primary" @click="submitDataScopeForm(dataScopeForm)">确 定</el-button>
         </div>
       </el-dialog>
-
-
       <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close>
         <el-form :model="addForm" ref="addForm" :rules="rules">
           <el-form-item
@@ -84,6 +81,24 @@
           >
             <el-input v-model="addForm.roleCode" autocomplete="off" placeholder="请输入内容"></el-input>
           </el-form-item>
+          <el-form-item
+              label="菜单权限"
+              :label-width="formLabelWidth"
+              prop="roleCode"
+          >
+            <el-tree
+              props="permission"
+              :data="menuIds"
+              :default-checked-keys="defaultMenuIds"
+              :props="menuProps"
+              node-key="menuId"
+              accordion
+              :check-on-click-node="true"
+              show-checkbox
+              @check="menuChange">
+            </el-tree>
+          </el-form-item>
+
 
           <el-form-item label="权限状态" :label-width="formLabelWidth">
             <el-radio-group v-model="addForm.status">
@@ -172,9 +187,9 @@ import {
   getRoleList,
   getMenuAll,
   deleteRoleList,
-  distribution, upDataRoleList
+  distribution, upDataRoleList, getOrganizeList
 } from "@/newwork/system-colltroner";
-import {menuToTree, treeToArray} from "@/uti";
+import { fn, menuToTree, treeToArray } from "@/uti";
 import myEmpty from "@/newwork/myEmpty";
 import {isValidNumber} from "@/util/validate";
 import myFooter from "@/components/myFooter";
@@ -205,6 +220,7 @@ export default {
         roleName: '', //角色名称
         status: '',
       },
+      formatList: [],  //部门列表
       defaultMenuIds: [], // '默认选中的ID'
       timer: {},
       addForm: {
@@ -244,6 +260,10 @@ export default {
       isVacancy: true,
       defaultProps: {
         children: 'children',
+        label: 'deptName'
+      },
+      menuProps: {
+        children: 'children',
         label: 'menuName'
       },
       status: [
@@ -256,30 +276,36 @@ export default {
         {label: '本部门数据权限', value: 3},
         {label: '本部门及一下数据权限', value: 4},
         {label: '本人', value: 5},
-      ]
-
-
+      ],
+      defaultExpand: [] //默认展开的菜单
     }
   },
   watch: {
     dialogFormVisibles(val) {
       if (val) {
-        getMenuAll().then(res => {
-          this.menuIds = menuToTree(res.data.data)
-        }).catch(e => {
-          this.$message.error(e)
-        })
+
         //判断 当前所处的位置是否为编辑
-        if(this.title === '新增'){
-          this.dataScopeForm.sysMenuList.forEach(item => {
-            this.defaultMenuIds.push(item.menuId)
-            console.log(this.defaultMenuIds);
-          })
-          this.dataScopeForm.menuIds = this.defaultMenuIds
-        }
+        console.log(this.dataScopeForm);
+        this.dataScopeForm.sysDeptList.forEach(item => {
+          console.log(item);
+          this.defaultMenuIds.push(item.deptId)
+        })
+        this.dataScopeForm.deptIds = this.defaultMenuIds
       }else {
         this.defaultMenuIds = []
-      }}
+      }},
+    dialogFormVisible(val){
+      if(!val){
+        this.addForm = this.$options.data()
+      }else {
+        if(this.title === '编辑'){
+          console.log(this.addForm.sysMenuList);
+          this.addForm.sysMenuList.forEach(item => {
+            this.defaultMenuIds.push(item.menuId)
+          })
+        }
+      }
+    }
   },
   methods: {
     next(){
@@ -300,14 +326,26 @@ export default {
       this.navForm.pageSize = e
       this.getRoleList(this.navForm)
     },
+    //提交数据权限
+
     distribution(row) {
       this.dialogFormVisibles = true
+      //获取部门列表
+      this.getOrganizeList()
       this.dataScopeForm.roleId = row.roleId
       this.dataScopeForm = row
     },
+    getOrganizeList(){
+      getOrganizeList().then(res => {
+        console.log(res);
+       if(res.data.code === 200){
+         this.formatList = fn(res.data.data)
+       }
+      })
+    },
+    //提交数据权限
     submitDataScopeForm(dataScopeForm){
       distribution(dataScopeForm).then(res => {
-        console.log(res);
         if(res.data.code === 200){
           this.$message.success('提交完成')
           this.getRoleList(this.navForm)
@@ -317,10 +355,33 @@ export default {
         }
       })
     },
+    //菜单权限更改
+    menuChange(data, context){
+      console.log(context);
+        this.addForm.menuIds = context.checkedKeys
+      // const defaultMenuId = treeToArray(context.checkedNodes)
+      // console.log(this.addForm);
+      // defaultMenuId.forEach(item =>  this.addForm.menuIds.push(item.menuId))
+      this.changeAddForm()
+
+      // //
+      // //添加 角色权限列表
+      // console.log(menuId);
+      // menuId.forEach(item =>  this.dataScopeForm.deptIds.push(item.deptId))
+      // this.changeAddForm()
+    },
     addForms(row, title) {
       this.dialogFormVisible = true
       this.title = title
       this.title === '新增' ? this.addForm = this.$options.data().addForm : this.addForm = row
+
+      //获取菜单列表
+      getMenuAll().then(res => {
+        this.menuIds = menuToTree(res.data.data)
+      }).catch(e => {
+        this.$message.error(e)
+      })
+
     },
     find() {
       this.getRoleList(this.navForm)
@@ -341,8 +402,8 @@ export default {
     },
     submitForm() {
       this.$refs.addForm.validate((valid) => {
-        this.changeAddForm()
-        if (valid && !this.isVacancy) {
+        // this.changeAddForm()
+        if (valid){
           if (this.title === '新增') {
             addRole(this.addForm).then(res => {
               if (res.data.code === 200) {
@@ -376,24 +437,32 @@ export default {
     },
 
     checkChange(a, context) {
-      this.addForm.menuIds = []
+      this.dataScopeForm.deptIds = []
       const menuId = treeToArray(context.checkedNodes)
 
       //添加 角色权限列表
-      menuId.forEach(item =>  this.addForm.menuIds.push(item.menuId))
-    this.changeAddForm()
+      console.log(menuId);
+      menuId.forEach(item =>  this.dataScopeForm.deptIds.push(item.deptId))
+      this.changeAddForm()
     },
     /**
      *
      * 查询 表单是否 添加菜单权限
      */
     changeAddForm(){
-      this.addForm.menuIds.length === 0 ? this.isVacancy = true : this.isVacancy = false
+      // console.log(this.addForm);
+      // this.addForm.sysDeptList.length === 0 ? this.isVacancy = true : this.isVacancy = false
+
+      if(this.addForm.hasOwnProperty('sysDeptList') &&  this.addForm.sysDeptList.length === 0){
+        this.isVacancy = true
+      }else {
+        this.isVacancy = false
+      }
     },
     getRoleList(form) {
       getRoleList(form).then(res => {
         this.$bus.$emit('total', res.data.data.total)
-        this.list = res.data.data.records
+        this.list = (res.data.data.records)
       }).catch(e => {
         this.$message.error(e)
       })

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div  v-if="toggle">
+    <div  v-show="toggle">
       <div class="warps">
           <my-el-header/>
         <div class="container">
@@ -46,26 +46,15 @@
             </el-table-column>
             <el-table-column align="center" prop="groupName" label="费率组名称">
             </el-table-column>
-            <el-table-column align="center" prop="address" label="操作" fixed="right" min-width="200px">
+            <el-table-column align="center" prop="remark" label="备注"></el-table-column>
+            <el-table-column align="center" prop="address" label="操作" min-width="200px">
               <template scope="scope">
-                <el-link
-                  class="a-link"
-                  type="info"
-                  @click="showAddForm(scope.row, '编辑')"
-                >编辑
-                </el-link
-                >
-                <el-link class="a-link" type="info" @click="removeIt(scope.row)"
-                >删除
-                </el-link
-                >
-                <el-link class="a-link" type="info" @click="isToggle(scope.row)"
-                >查看费率组列表
-                </el-link
-                >
+                <el-link class="a-link" type="info" @click="showAddForm(scope.row, '编辑')">编辑 </el-link>
+                <el-link class="a-link" type="info" @click="removeIt(scope.row)" >删除
+                </el-link><el-link class="a-link" type="info" @click="isToggle(scope.row)">查看费率组列表</el-link>
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="remark" label="备注"></el-table-column>
+
           </el-table>
           <el-empty v-else>
           </el-empty>
@@ -73,102 +62,101 @@
       </div>
       <my-footer v-on:next = "next" @prev="prev" :form="form" @change="change"  @pageCheng="pageCheng"></my-footer>
     </div>
-    <div v-else>
+    <div v-show="!toggle">
       <div class="warps">
         <my-el-header/>
-      </div>
-      <div class="container">
-        <div>
-          <p>费率组列表</p>
-          <div class="form-nav">
-            <div>
-              <el-button type="primary" @click="onSubmits">添加费率</el-button>
-              <el-button type="primary" @click="black">返回</el-button>
+        <div class="container">
+          <div>
+            <div class="form-nav">
+              <div class="scope">
+                <el-button type="primary" @click="onSubmits">添加费率</el-button>
+                <el-button type="primary" @click="black">返回</el-button>
+              </div>
             </div>
           </div>
-        </div>
-        <el-dialog destroy-on-close :title="listTitle" :visible.sync="listDialogFormVisible">
-          <el-form :model="addListFrom" ref="formName" :rules="addRules">
-            <el-form-item
-              label="费率名称"
-              :label-width="formLabelWidth"
-              prop="rateName"
-            >
-              <el-input v-model="addListFrom.rateName"  placeholder="请输入内容" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item
-              label="费率组"
-              :label-width="formLabelWidth"
-              name="rateGroup"
-              required
-            >
-              <el-input v-model="row.groupName"  placeholder="请输入内容" disabled></el-input>
-            </el-form-item>
-            <div class="width">
+          <el-dialog destroy-on-close :title="listTitle" :visible.sync="listDialogFormVisible">
+            <el-form :model="addListFrom" ref="formName" :rules="addRules">
               <el-form-item
-                label="费率前缀"
+                label="费率名称"
                 :label-width="formLabelWidth"
-                prop="ratePrefix"
-
+                prop="rateName"
               >
-                <el-input
-                  class="input"
-                  v-model="addListFrom.ratePrefix"
-                  autocomplete="off" placeholder="请输入内容"
-                ></el-input>
+                <el-input v-model="addListFrom.rateName"  placeholder="请输入内容" autocomplete="off"></el-input>
               </el-form-item>
-            </div>
-            <el-form-item
-              label="计费方式"
-              :label-width="formLabelWidth"
-              required
-            >
+              <el-form-item
+                label="费率组"
+                :label-width="formLabelWidth"
+                name="rateGroup"
+                required
+              >
+                <el-input v-model="row.groupName"  placeholder="请输入内容" disabled></el-input>
+              </el-form-item>
               <div class="width">
-                <el-form-item prop="rate">
-                  <el-input style="margin-right: 20px" v-model="addListFrom.rate" placeholder="请输入费率"></el-input>
-                </el-form-item>
-                <el-form-item style="margin-left: 20px" prop="billingPeriod">
-                  <el-input v-model="addListFrom.billingPeriod" placeholder="请输入计费周期"></el-input>
+                <el-form-item
+                  label="费率前缀"
+                  :label-width="formLabelWidth"
+                  prop="ratePrefix"
+
+                >
+                  <el-input
+                    class="input"
+                    v-model="addListFrom.ratePrefix"
+                    autocomplete="off" placeholder="请输入内容"
+                  ></el-input>
                 </el-form-item>
               </div>
-            </el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <div class="footers">
-              <p>注意: 费率默认已分为单位, 计费时间为60(s)秒</p>
+              <el-form-item
+                label="计费方式"
+                :label-width="formLabelWidth"
+                required
+              >
+                <div class="width">
+                  <el-form-item prop="rate">
+                    <el-input style="margin-right: 20px" v-model="addListFrom.rate" placeholder="请输入费率"></el-input>
+                  </el-form-item>
+                  <el-form-item style="margin-left: 20px" prop="billingPeriod">
+                    <el-input v-model="addListFrom.billingPeriod" placeholder="请输入计费周期"></el-input>
+                  </el-form-item>
+                </div>
+              </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
               <div class="footers">
-                <el-button @click="listDialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="submitForms('编辑')"
-                >确 定
-                </el-button
-                >
+                <p>注意: 费率默认已分为单位, 计费时间为60(s)秒</p>
+                <div class="footers">
+                  <el-button @click="listDialogFormVisible = false">取 消</el-button>
+                  <el-button type="primary" @click="submitForms('编辑')"
+                  >确 定
+                  </el-button
+                  >
+                </div>
               </div>
             </div>
-          </div>
-        </el-dialog>
-        <el-table max-height="800" :data="rateItemList"  style="width: 100%; margin-top: 20px" v-if="list.length !== 0">
-          <el-table-column align="center" prop="date" label="序号">
-            <template scope="scope">{{ scope.$index + 1 }}</template>
-          </el-table-column>
-          <el-table-column align="center" prop="rateName" label="费率名称">
-          </el-table-column>
-          <el-table-column align="center" prop="rate" label="费率">
-          </el-table-column>
-          <el-table-column align="center" prop="billingPeriod" label="费率区间">
-          </el-table-column>
-          <el-table-column align="center" prop="ratePrefix" label="费率前缀">
-          </el-table-column>
+          </el-dialog>
+          <el-table max-height="800" :data="rateItemList"  style="width: 100%; margin-top: 20px" v-if="list.length !== 0">
+            <el-table-column align="center" prop="date" label="序号">
+              <template scope="scope">{{ scope.$index + 1 }}</template>
+            </el-table-column>
+            <el-table-column align="center" prop="rateName" label="费率名称">
+            </el-table-column>
+            <el-table-column align="center" prop="rate" label="费率">
+            </el-table-column>
+            <el-table-column align="center" prop="billingPeriod" label="费率区间">
+            </el-table-column>
+            <el-table-column align="center" prop="ratePrefix" label="费率前缀">
+            </el-table-column>
 
-          <el-table-column align="center" prop="createTime" label="创建时间">
-          </el-table-column>
-          <el-table-column prop="area" label="操作">
-            <template scope="scope">
-              <el-link class="a-link" type="info" @click="upDataForm(scope.row)">编辑</el-link>
-              <el-link class="a-link" type="info" @click="removeIt(scope.row)">删除</el-link>
-            </template>
-          </el-table-column>
-        </el-table>
-        <my-empty v-else/>
+            <el-table-column align="center" prop="createTime" label="创建时间">
+            </el-table-column>
+            <el-table-column prop="area" align="center" label="操作" fixed="right">
+              <template scope="scope">
+                <el-link class="a-link" type="info" @click="upDataForm(scope.row)">编辑</el-link>
+                <el-link class="a-link" type="info" @click="removeIt(scope.row)">删除</el-link>
+              </template>
+            </el-table-column>
+          </el-table>
+          <my-empty v-else/>
+        </div>
       </div>
     </div>
   </div>
@@ -471,7 +459,7 @@ export default {
 <style scoped>
 
 .a-link {
-  margin-right: 20px;
+  margin-right: 10px;
 }
 
 .footers {
@@ -482,6 +470,9 @@ export default {
   color: #cccccc;
 }
 
+.scope{
+  text-align: right;
+}
 .pagination {
   margin-top: 20px;
 }
