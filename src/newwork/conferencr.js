@@ -26,3 +26,14 @@ export function getPbxList(data) {
         params: data
     })
 }
+
+
+//重试PBX配置
+export function delPbxConfigure(type) {
+    return request({
+        url: '/pbx/config/reload',
+        params: {
+            type
+        }
+    })
+}

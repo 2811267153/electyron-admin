@@ -5,8 +5,8 @@
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item><a>{{ $route.meta.title }}</a></el-breadcrumb-item>
       </el-breadcrumb>
-      <div>
-        <el-link slot></el-link>
+      <div class="btn">
+        <slot></slot>
       </div>
     </div>
   </el-header>
@@ -28,4 +28,5 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
+
 </style>

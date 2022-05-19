@@ -480,27 +480,14 @@ export default {
 </script>
 
 <style>
-.el-header{
-  padding: 0 !important;
-}
+
 .role{
   display: flex;
   height: calc(100vh - 160px);
   justify-content: space-between;
   flex-direction: column;
 }
-.content-nav {
-  padding: 20px;
-  box-shadow: 0 0 15px #ccc;
-  border-radius: 10px;
-  background-color: #fff;
-}
-.el-table::before{
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 0;
-}
+
 .nav {
   display: flex;
   justify-content: space-between;

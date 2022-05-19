@@ -31,7 +31,7 @@
               <div class="operate" v-if="currentIndex === 0 ">
                 <el-form ref="form" :model="form" :rules="rules">
                   <el-form-item label="用户名" :label-width="labelWidth" prop="username">
-                    <el-input v-model="form.username"></el-input>
+                    <el-input v-model="form.nickName"></el-input>
                   </el-form-item>
                   <el-form-item label="手机号" :label-width="labelWidth" prop="phone">
                     <el-input v-model="form.phone"></el-input>
@@ -125,7 +125,6 @@ export default {
   methods: {
     getOrganizeId(id) {
       getOrganizeId(id).then(res => {
-        console.log(res);
         this.dept = res.data.data.deptName;
       });
     },
@@ -137,28 +136,25 @@ export default {
             data.userId = this.userInfo.userId
             data.password = this.form.password
             upDataPassword(data).then(res => {
-              console.log(res);
               if(res.data.code === 200){
                 this.$message.success('提交完成')
                 this.resetForm()
                 removeCookie()
                 location.reload()
-
               }else {
                 this.$message.error(res.data.msg)
               }
             })
           }
         } else {
-          console.log('error submit!!');
           return false;
         }
       }) :
        this.$refs.form.validate((valid) => {
          if (valid) {
            upDataUser(this.form).then(res => {
-             console.log(res);
              if(res.data.code === 200){
+               this.$message.success('修改完成，请重新登录')
                this.resetForm()
                removeCookie()
                location.reload()
@@ -180,7 +176,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 
 #account{
   width: 100%;
@@ -191,6 +187,7 @@ export default {
   background-color: #fff;
   border-radius: 10px;
   height: 80vh;
+  text-align: left;
 }
 .body-l h2 {
   /*display: flex;*/

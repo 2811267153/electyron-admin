@@ -80,16 +80,17 @@
         </el-table-column>
         <el-table-column prop="createTime" align="center" label="更新时间">
         </el-table-column>
-        <el-table-column align="center" prop="stauts" label="操作" fixed="right">
+        <el-table-column align="center" prop="stauts" label="操作" fixed="right" min-width="100px">
           <template scope="scope">
-            <el-link
-                style="margin-right: 20px"
-                @click="showAddForm(scope.row, '编辑')"
-                type="info"
-            >编辑
-            </el-link
-            >
-            <el-link style="margin-right: 20px" @click="removeIt(scope.row)" type="info">删除</el-link>
+            <div class="operate">
+              <el-link @click="showAddForm(scope.row, '编辑')" type="info"  >编辑 </el-link>
+              <template>
+                <el-popconfirm title="确认要删除吗？" @confirm="removeIt(scope.row)">
+                  <el-link type="info" slot="reference">删除
+                  </el-link>
+                </el-popconfirm>
+              </template>
+            </div>
           </template>
         </el-table-column>
         <el-table-column prop="remark" label="备注" align="center">

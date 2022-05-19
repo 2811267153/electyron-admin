@@ -176,16 +176,21 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="remark" label="操作" fixed="right" >
+      <el-table-column align="center" prop="remark" label="操作" fixed="right" min-width="100px">
         <template scope="scope">
-          <el-link
-            style="margin-right: 20px"
-            @click="showAddForm(scope.row, '编辑')"
-            type="info"
-          >编辑
-          </el-link
-          >
-          <el-link @click="removeIt(scope.row)" style="margin-right: 20px" type="info">删除</el-link>
+          <div class="operate">
+            <el-link
+              @click="showAddForm(scope.row, '编辑')"
+              type="info"
+            >编辑
+            </el-link
+            >
+            <template>
+              <el-popconfirm title="确认要删除吗？" @confirm="removeIt(scope.row)">
+                <el-link type="info" slot="reference">删除 </el-link>
+              </el-popconfirm>
+            </template>
+          </div>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="remark" label="备注">
@@ -450,12 +455,6 @@ export default {
 </script>
 
 <style scoped>
-
-.container p {
-  background-color: #f2f2f2;
-  padding: 10px 15px;
-}
-
 .nav-form {
   margin: 15px;
   height: 40px;
@@ -474,6 +473,7 @@ export default {
   display: flex;
   width: 100%;
   justify-content: space-between;
+  max-height: 63px;
 }
 
 .el-input {

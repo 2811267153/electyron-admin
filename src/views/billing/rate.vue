@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div  v-show="toggle">
+    <div v-show="toggle">
       <div class="warps">
-          <my-el-header/>
+        <my-el-header />
         <div class="container">
           <div class="form-nav">
             <el-form :inline="true" :model="form" class="demo-form-inline" :rules="addFroms" ref="form">
@@ -28,7 +28,6 @@
               >
                 <el-input v-model="addForm.groupName" autocomplete="off" placeholder="请输入内容"></el-input>
               </el-form-item>
-
               <el-form-item label="备注" :label-width="formLabelWidth">
                 <el-input v-model="addForm.remark" autocomplete="off" placeholder="请输入内容"></el-input>
               </el-form-item>
@@ -38,7 +37,9 @@
               <el-button type="primary" @click="submitForm">确 定</el-button>
             </div>
           </el-dialog>
-          <el-table  height="calc(100vh - 100px - 100px - 100px - 100px)" :data="list" :header-cell-style="{background:'#ccc', color: '#fff',}" style="width: 100%" v-if="list.length !== 0">
+          <el-table height="calc(100vh - 100px - 100px - 100px - 100px)" :data="list"
+                    :header-cell-style="{background:'#ccc', color: '#fff',}" style="width: 100%"
+                    v-if="list.length !== 0">
             <el-table-column align="center" prop="date" label="序号" width="50">
               <template scope="scope">
                 {{ scope.$index + 1 }}
@@ -47,11 +48,18 @@
             <el-table-column align="center" prop="groupName" label="费率组名称">
             </el-table-column>
             <el-table-column align="center" prop="remark" label="备注"></el-table-column>
-            <el-table-column align="center" prop="address" label="操作" min-width="200px">
+            <el-table-column align="center" prop="address" label="操作" min-width="200px" >
               <template scope="scope">
-                <el-link class="a-link" type="info" @click="showAddForm(scope.row, '编辑')">编辑 </el-link>
-                <el-link class="a-link" type="info" @click="removeIt(scope.row)" >删除
-                </el-link><el-link class="a-link" type="info" @click="isToggle(scope.row)">查看费率组列表</el-link>
+                <div class="operate">
+                  <el-link type="info" @click="showAddForm(scope.row, '编辑')">编辑</el-link>
+                  <el-link type="info" @click="isToggle(scope.row)">查看费率组列表</el-link>
+                  <template>
+                    <el-popconfirm title="确认要删除吗？" @confirm="removeIt(scope.row)">
+                      <el-link type="info" slot="reference">删除
+                      </el-link>
+                    </el-popconfirm>
+                  </template>
+                </div>
               </template>
             </el-table-column>
 
@@ -59,15 +67,16 @@
           <el-empty v-else>
           </el-empty>
         </div>
+          <my-footer v-on:next="next" @prev="prev" :form="form" @change="change" @pageCheng="pageCheng"></my-footer>
       </div>
-      <my-footer v-on:next = "next" @prev="prev" :form="form" @change="change"  @pageCheng="pageCheng"></my-footer>
     </div>
     <div v-show="!toggle">
       <div class="warps">
-        <my-el-header/>
+        <my-el-header />
         <div class="container">
           <div>
             <div class="form-nav">
+              <div></div>
               <div class="scope">
                 <el-button type="primary" @click="onSubmits">添加费率</el-button>
                 <el-button type="primary" @click="black">返回</el-button>
@@ -81,7 +90,7 @@
                 :label-width="formLabelWidth"
                 prop="rateName"
               >
-                <el-input v-model="addListFrom.rateName"  placeholder="请输入内容" autocomplete="off"></el-input>
+                <el-input v-model="addListFrom.rateName" placeholder="请输入内容" autocomplete="off"></el-input>
               </el-form-item>
               <el-form-item
                 label="费率组"
@@ -89,7 +98,7 @@
                 name="rateGroup"
                 required
               >
-                <el-input v-model="row.groupName"  placeholder="请输入内容" disabled></el-input>
+                <el-input v-model="row.groupName" placeholder="请输入内容" disabled></el-input>
               </el-form-item>
               <div class="width">
                 <el-form-item
@@ -133,7 +142,8 @@
               </div>
             </div>
           </el-dialog>
-          <el-table max-height="800" :data="rateItemList"  style="width: 100%; margin-top: 20px" v-if="list.length !== 0">
+          <el-table max-height="800" :data="rateItemList" style="width: 100%; margin-top: 20px"
+                    v-if="list.length !== 0">
             <el-table-column align="center" prop="date" label="序号">
               <template scope="scope">{{ scope.$index + 1 }}</template>
             </el-table-column>
@@ -145,17 +155,23 @@
             </el-table-column>
             <el-table-column align="center" prop="ratePrefix" label="费率前缀">
             </el-table-column>
-
             <el-table-column align="center" prop="createTime" label="创建时间">
             </el-table-column>
             <el-table-column prop="area" align="center" label="操作" fixed="right">
               <template scope="scope">
-                <el-link class="a-link" type="info" @click="upDataForm(scope.row)">编辑</el-link>
-                <el-link class="a-link" type="info" @click="removeIt(scope.row)">删除</el-link>
+                <div class="operate">
+                  <el-link type="info" @click="upDataForm(scope.row)">编辑</el-link>
+                  <template>
+                    <el-popconfirm title="确认要删除吗？" @confirm="removeIt(scope.row)">
+                      <el-link type="info" slot="reference">删除
+                      </el-link>
+                    </el-popconfirm>
+                  </template>
+                </div>
               </template>
             </el-table-column>
           </el-table>
-          <my-empty v-else/>
+          <my-empty v-else />
         </div>
       </div>
     </div>
@@ -172,12 +188,12 @@ import {
   getRateList, putRateList, upDaterateItem
 } from "@/newwork/ground-colltroner";
 import myEmpty from "@/newwork/myEmpty";
-import {isValidNumber} from "@/util/validate";
+import { isValidNumber } from "@/util/validate";
 import myFooter from "@/components/myFooter";
 import myElHeader from "@/components/myElHeader";
 
 export default {
-  name: 'rate',
+  name: "rate",
   components: {
     myEmpty,
     myFooter,
@@ -186,114 +202,114 @@ export default {
 
   data() {
     const validateNum = (rule, value, callback) => {
-      if(!isValidNumber(value)){
-        callback(new Error('ip地址输入有误,请确认'))
-      }else {
-        callback()
+      if (!isValidNumber(value)) {
+        callback(new Error("ip地址输入有误,请确认"));
+      } else {
+        callback();
       }
-    }
+    };
     return {
-      title: '添加费率组',
+      title: "添加费率组",
       form: {
-        rateGroupId: '',
+        rateGroupId: ""
       },
       /**
        *
        * 费率组表单
        */
       addForm: {
-        groupName: '',  //费率名称
+        groupName: ""  //费率名称
       },
       list: [],  //保存费率组列表
       rateItemList: [], //保存费率列表
       dialogFormVisible: false,
-      formLabelWidth: '140px',
+      formLabelWidth: "140px",
       toggle: true,
-      shows: '',  //设置费率编辑状态
-      rateGroupId: '',
+      shows: "",  //设置费率编辑状态
+      rateGroupId: "",
       /**
        * 费率添加表单
        */
       addList: [],
       listFrom: {
-        numberPrefix: '',
-        billingName: ''
+        numberPrefix: "",
+        billingName: ""
       },
-      listTitle: '添加费率',
+      listTitle: "添加费率",
       listDialogFormVisible: false,
       addListFrom: {
-        rateName: '',  //费率名称
-        billingPeriod: '',//计费周期单位为秒
-        rateGroupId: '', //费率组ID
-        ratePrefix: '', //费率前缀
-        rate: '', //费率
+        rateName: "",  //费率名称
+        billingPeriod: "",//计费周期单位为秒
+        rateGroupId: "", //费率组ID
+        ratePrefix: "", //费率前缀
+        rate: "" //费率
       },
       row: {},
       region: [
-        {label: '分机', value: '分机'},
-        {label: '国外', value: '国外'},
-        {label: '国内', value: '国内'}
+        { label: "分机", value: "分机" },
+        { label: "国外", value: "国外" },
+        { label: "国内", value: "国内" }
       ],
       addRules: {
         rateName: [
-          {required: true, message: '该选项为必填项，请曲确认', trigger: 'blur'}
+          { required: true, message: "该选项为必填项，请曲确认", trigger: "blur" }
         ],
         ratePrefix: [
-          {required: true, message: '该选项为必填项，请曲确认', trigger: 'blur'}
+          { required: true, message: "该选项为必填项，请曲确认", trigger: "blur" }
         ],
         rate: [
-          {required: true, message: '该选项为必填项，请曲确认', trigger: 'blur'},
-          {validator: validateNum, message: '请输入合法的数字', trigger: 'blur'}
+          { required: true, message: "该选项为必填项，请曲确认", trigger: "blur" },
+          { validator: validateNum, message: "请输入合法的数字", trigger: "blur" }
         ],
         billingPeriod: [
-          {required: true, message: '该选项为必填项，请曲确认', trigger: 'blur'},
-          {validator: validateNum, message: '请输入合法的数字', trigger: 'blur'}
+          { required: true, message: "该选项为必填项，请曲确认", trigger: "blur" },
+          { validator: validateNum, message: "请输入合法的数字", trigger: "blur" }
 
-        ],
+        ]
       },
       addFroms: {
         groupName: [
-          {required: true, message: '该选项为必填项，请曲确认', trigger: 'blur'}
-        ],
+          { required: true, message: "该选项为必填项，请曲确认", trigger: "blur" }
+        ]
       }
-    }
+    };
   },
 
   methods: {
-    pageCheng(e){
-      this.form = this.$options.data().form
-      this.form.pageSize = e
-      this.getRateList(this.form)
+    pageCheng(e) {
+      this.form = this.$options.data().form;
+      this.form.pageSize = e;
+      this.getRateList(this.form);
     },
-    next(){
-      this.form.pageNum ++
-      this.getRateList(this.form)
+    next() {
+      this.form.pageNum++;
+      this.getRateList(this.form);
     },
-    prev(){
-      this.form.pageNum --
-      this.getRateList(this.form)
+    prev() {
+      this.form.pageNum--;
+      this.getRateList(this.form);
     },
-    change(e){
-      this.form.pageNum = e
-      this.getRateList(this.form)
+    change(e) {
+      this.form.pageNum = e;
+      this.getRateList(this.form);
     },
     find() {
-      this.getRateList(this.form)
+      this.getRateList(this.form);
     },
     black() {
-      this.toggle = true
+      this.toggle = true;
     },
     clear() {
-      this.form = this.$options.data().form
-      this.getRateList(this.form)
+      this.form = this.$options.data().form;
+      this.getRateList(this.form);
     },
     getRateList(form) {
       getRateList(form).then(res => {
-        this.$bus.$emit('total', res.data.data.total)
-        this.list = res.data.data.records
+        this.$bus.$emit("total", res.data.data.total);
+        this.list = res.data.data.records;
       }).catch(e => {
-        this.$message.error(e)
-      })
+        this.$message.error(e);
+      });
     },
     /**
      *
@@ -302,26 +318,26 @@ export default {
      */
     getRateItemList(form) {
       getRateItemList(form).then(res => {
-        console.log(res)
+        console.log(res);
         if (res.data.code === 200) {
-          this.rateItemList = res.data.data.records
+          this.rateItemList = res.data.data.records;
         } else {
-          console.log(res)
+          console.log(res);
         }
       }).catch(e => {
-        this.$message.error(e)
-      })
+        this.$message.error(e);
+      });
     },
     onSubmits() {
-      this.listDialogFormVisible = true
-      this.listTitle = '添加费率'
+      this.listDialogFormVisible = true;
+      this.listTitle = "添加费率";
     },
     isToggle(row) {
-      this.toggle = false
-      this.row = row
-      console.log(row)
-      this.form.rateGroupId = row.id
-      this.getRateItemList(this.form)
+      this.toggle = false;
+      this.row = row;
+      console.log(row);
+      this.form.rateGroupId = row.id;
+      this.getRateItemList(this.form);
     },
     /**
      *
@@ -330,134 +346,133 @@ export default {
     submitForm() {
       this.$refs.addForm.validate((valid) => {
         if (valid) {
-          if (this.title === '添加费率组') {
+          if (this.title === "添加费率组") {
             addRateList(this.addForm).then(res => {
-              console.log(res)
-              this.getRateList(this.form)
-              this.addForm = this.$options.data().addForm
-              location.reload()
-            })
-            this.getRateList(this.form)
-            this.dialogFormVisible = false
+              console.log(res);
+              this.getRateList(this.form);
+              this.addForm = this.$options.data().addForm;
+              location.reload();
+            });
+            this.getRateList(this.form);
+            this.dialogFormVisible = false;
           } else {
             putRateList(this.addForm).then(res => {
-              console.log(res)
+              console.log(res);
               if (res.data.code === 200) {
-                this.getRateList()
-                this.$message.success('提交完成')
-                this.dialogFormVisible = false
+                this.getRateList();
+                this.$message.success("提交完成");
+                this.dialogFormVisible = false;
               } else {
-                this.$message.error(res.data.msg)
+                this.$message.error(res.data.msg);
               }
-            })
+            });
           }
         }
-      })
+      });
     },
     //添加费率列表
     submitForms() {
       this.$refs.formName.validate((valid) => {
         if (valid) {
-          if (this.listTitle === '添加费率') {
+          if (this.listTitle === "添加费率") {
             addRateItemList(this.addListFrom).then(res => {
-              this.resetForm()
+              this.resetForm();
               if (res.data.code === 200) {
-                this.$message.success('添加完成')
-                this.dialogFormVisible = false
-                this.getRateItemList(this.form)
+                this.$message.success("添加完成");
+                this.dialogFormVisible = false;
+                this.getRateItemList(this.form);
               } else {
-                this.$message.error(res.data.msg)
+                this.$message.error(res.data.msg);
               }
             }).catch(e => {
-              this.$message.error(e)
-            })
+              this.$message.error(e);
+            });
           } else {
             upDaterateItem(this.addListFrom).then(res => {
-              console.log(res)
+              console.log(res);
               if (res.data.code === 200) {
-                this.getRateItemList(this.form)
-                this.listDialogFormVisible = false
-                this.$message.success('提交完成')
+                this.getRateItemList(this.form);
+                this.listDialogFormVisible = false;
+                this.$message.success("提交完成");
 
               } else {
-                this.$message.error(res.data.msg)
+                this.$message.error(res.data.msg);
               }
-            })
+            });
           }
         } else {
-          return false
+          return false;
         }
-      })
+      });
     },
     showAddForm(row, title) {
-      this.title = title
-      if (title === '编辑') {
-        this.addForm = row
+      this.title = title;
+      if (title === "编辑") {
+        this.addForm = row;
       }
-      this.dialogFormVisible = true
+      this.dialogFormVisible = true;
     },
     //编辑费率
 
     upDataForm(row) {
-      this.addListFrom = row
-      this.listTitle = '编辑费率'
-      this.listDialogFormVisible = true
+      this.addListFrom = row;
+      this.listTitle = "编辑费率";
+      this.listDialogFormVisible = true;
     },
     //删除费率组
     removeIt(row) {
       this.toggle ? deleteRate(row.id).then(res => {
         if (res.data.code == 200) {
-          this.$message.success('提交完成')
-          this.getRateList(this.form)
+          this.$message.success("提交完成");
+          this.getRateList(this.form);
         } else {
-          this.$message.error(res.data.msg)
+          this.$message.error(res.data.msg);
         }
       }).catch(e => this.$message.error(e)) : deleteRateItem(row.id).then(res => {
         if (res.data.code === 200) {
 
-          this.$message.success('提交完成')
+          this.$message.success("提交完成");
           //由于上边已经给form表单设置过id了 这里直接使用就ok
-          this.getRateItemList(this.form)
+          this.getRateItemList(this.form);
         } else {
-          this.$message.error(res.data.msg)
+          this.$message.error(res.data.msg);
         }
-      })
+      });
     },
 
     //  清除表单
     resetForm(type) {
-     type ==='form' ?  this.$refs.form.resetFields() : this.$refs.formName.resetFields();
+      type === "form" ? this.$refs.form.resetFields() : this.$refs.formName.resetFields();
     }
   },
   watch: {
     listDialogFormVisible(val) {
       if (val !== true) {
-        this.getRateItemList(this.form)
-        this.resetForm()
+        this.getRateItemList(this.form);
+        this.resetForm();
       }
     },
     toggle(val) {
       if (val === true) {
-        this.rateItemList = []
+        this.rateItemList = [];
       } else {
-        this.addListFrom.rateGroupId = this.row.id
+        this.addListFrom.rateGroupId = this.row.id;
       }
-    },
+    }
   },
   computed: {
     createId() {
-      return (this.addForm.id = (Math.random() * 1000000).toFixed(0))
+      return (this.addForm.id = (Math.random() * 1000000).toFixed(0));
     }
   },
   created() {
-    this.getRateList(this.form)
-    this.getRateItemList(this.form)
+    this.getRateList(this.form);
+    this.getRateItemList(this.form);
   }
-}
+};
 </script>
 
 <style scoped>
-
 .a-link {
   margin-right: 10px;
 }
@@ -466,17 +481,14 @@ export default {
   display: flex;
   justify-content: space-between;
 }
-.footers p{
+
+.footers p {
   color: #cccccc;
 }
 
-.scope{
+.scope {
   text-align: right;
 }
-.pagination {
-  margin-top: 20px;
-}
-
 .width {
   display: flex;
   width: 100%;

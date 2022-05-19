@@ -75,10 +75,19 @@
             align="center"
             prop="address"
             fixed="right"
+            min-width="100px"
             label="操作">
           <template scope="scope">
-            <el-link @click="addForms(scope.row, '编辑')" style="margin-right: 20px">编辑</el-link>
-            <el-link @click="del(scope.row.id)" style="margin-right: 20px">删除</el-link>
+            <div class="operate">
+
+              <el-link @click="addForms(scope.row, '编辑')" style="margin-right: 20px">编辑</el-link>
+              <template>
+                <el-popconfirm title="确认要删除吗？" @confirm="del(scope.row)">
+                  <el-link type="info" slot="reference">删除
+                  </el-link>
+                </el-popconfirm>
+              </template>
+            </div>
           </template>
         </el-table-column>
       </el-table>

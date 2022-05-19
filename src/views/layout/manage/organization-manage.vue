@@ -31,7 +31,7 @@
 
             <!--          <my-tree style="width: 100%" :options="formList" @getValue="getSelectedValue"></my-tree>-->
             <!--          <my-el-tree v-model="addForm.parentId" :options="formList" :value='row.parentId' :props="defaultProps"/>-->
-            <treeselect v-model="addForm.parentId" :multiple="false" :options="formList" :normalizer="normalizer" />
+            <treeselect v-model="addForm.parentId" :multiple="false" :options="formatList" :normalizer="normalizer" />
           </el-form-item>
           <el-form-item label="状态" :label-width="formLabelWidth">
             <el-radio-group v-model="addForm.status">
@@ -167,11 +167,8 @@ export default {
   methods: {
     getOrganizeList(form) {
       getOrganizeList(form).then(res => {
-        console.log(res);
         this.$emit("total", res.data.data.total);
-        // this.list = res.data.data;
         this.formatList = fn(res.data.data);
-        // this.formatList
         this.formatList.forEach(item => {
           this.defaulExpanded.push(item.deptId)
         })
@@ -180,7 +177,6 @@ export default {
       });
     },
     filterNode(value, data) {
-      console.log(value, data);
       if (!value) return true;
       return data.deptName.indexOf(value) !== -1;
     },

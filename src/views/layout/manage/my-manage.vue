@@ -66,19 +66,21 @@
                 </template>
               </el-table-column>
               <el-table-column prop="starts" label="操作" align="center" fixed="right" min-width="200px">
-                <template scope="scope" class="link">
-                  <a @click="show(scope.row, '修改')" class="link-item">修改</a>
-                  <el-tooltip class="item" effect="dark" content="重置后默认密码为123456" placement="top">
-                    <a @click="resetPad(scope.row)" class="link-item">重置</a>
-                  </el-tooltip>
-                  <template>
-                    <el-popconfirm
-                      title="确认要删除吗？"
-                      @confirm="show(scope.row, '删除')"
-                    >
-                      <el-link slot="reference" class="link-item">删除</el-link>
-                    </el-popconfirm>
-                  </template>
+                <template scope="scope">
+                  <div class="operate">
+                    <a @click="show(scope.row, '修改')" class="link-item">修改</a>
+                    <el-tooltip class="item" effect="dark" content="重置后默认密码为123456" placement="top">
+                      <a @click="resetPad(scope.row)" class="link-item">重置</a>
+                    </el-tooltip>
+                    <template>
+                      <el-popconfirm
+                        title="确认要删除吗？"
+                        @confirm="show(scope.row, '删除')"
+                      >
+                        <el-link slot="reference" class="link-item">删除</el-link>
+                      </el-popconfirm>
+                    </template>
+                  </div>
                 </template>
               </el-table-column>
             </el-table>
@@ -555,7 +557,7 @@ export default {
 }
 
 .container-r {
-  width: calc(100vw - 200px - 150px);
+  width: calc(100vw - 200px - 90px - 200px);
 }
 
 .container-form {

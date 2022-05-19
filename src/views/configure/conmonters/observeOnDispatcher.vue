@@ -129,30 +129,28 @@
           <el-table-column prop="userId" align="center" label="用户">
             <template scope="scope"><span v-for="item in scope.row.userList">{{ item.nickName }}</span></template>
           </el-table-column>
-          <el-table-column prop="number" align="center" label="坐标" min-width="120px">
+          <el-table-column prop="number" align="center" label="坐标" min-width="130px">
             <template scope="scope">
             <p>经度：{{ scope.row.latitude }}</p >
             <p>纬度：{{ scope.row.longitude }}</p >
             </template>
           </el-table-column>
-          <el-table-column prop="number" align="center" label="操作" fixed="right" min-width="120px">
+          <el-table-column prop="number" align="center" label="操作" fixed="right" min-width="130px">
             <template scope="scope">
               <div class="operate">
                 <el-link
-                  style="margin-right: 20px"
                   @click="showAddForm(scope.row, '编辑')"
                   type="info"
                 >编辑
                 </el-link
                 >
-                <el-link
-                  style="margin-right: 20px"
-                  @click="removeIt(scope.row)"
-                  type="info"
-                >删除
-                </el-link
-                >
-                <el-link style="margin-right: 20px" type="info">调度组</el-link>
+                <template>
+                  <el-popconfirm title="确认要删除吗？" @confirm="removeIt(scope.row)">
+                    <el-link type="info" slot="reference">删除
+                    </el-link>
+                  </el-popconfirm>
+                </template>
+                <el-link type="info">调度组</el-link>
               </div>
             </template>
           </el-table-column>

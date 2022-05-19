@@ -78,7 +78,7 @@
                 <a v-else>停用</a>
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="sort" label="操作">
+            <el-table-column align="center" prop="sort" label="操作" min-width="150px">
               <template scope="scope">
                 <div class="operate">
                   <el-link type="info" @click="showAddForm(scope.row, '修改')">修改</el-link>
@@ -282,14 +282,6 @@ export default {
   height: 40px;
   overflow: hidden;
   justify-content: space-between;
-}
-
-.operate a {
-  margin: 0 10px;
-}
-
-.operate {
-  padding: 0;
 }
 
 </style>

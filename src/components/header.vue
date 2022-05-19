@@ -5,9 +5,9 @@
         <div class="logo"></div>
         <h1 v-if="$route.path !== '/index'">金数GDD1000 融合通信管理平台</h1>
       </div>
-      <div><span class="icon iconfont icon-yonghu-yuan"></span>
+      <div><span class="icon iconfont icon-yonghu-yuan tubiao"></span>
         <el-dropdown trigger="click">
-      <span class="el-dropdown-link">
+      <span class="el-dropdown-link tubiao">
          {{ userInfo.nickName }}<i class="el-icon-arrow-down el-icon--right"></i>
       </span>
           <el-dropdown-menu slot="dropdown">
@@ -36,17 +36,18 @@
                   :index="item.name + '' "
                   style="width: 200px"
                   :key="index"
+                  v-if="!item.meta.isHide"
                   v-for="(item, index) in routes.children"
                 >
                   <template slot="title">
-                    <span>{{ item.meta.title }}</span>
+                    <i :class="item.meta.icon"></i>  <span >{{ item.meta.title }}</span>
                   </template>
                   <el-menu-item-group
                     :route="path"
                     style="width: 200px"
                     v-for="path in item.children"
                   >
-                    <div v-if="path.meta">
+                    <div v-if="path.meta ">
                       <el-menu-item class="menu-item" :index="path.path + ''">{{ path.meta.title }}</el-menu-item>
                     </div>
                   </el-menu-item-group>
@@ -77,8 +78,8 @@ export default {
       home: false,
       formPage: {},
       userInfoNav: [
+        { "icon": "icon-icon7", title: "个人中心" },
         { "icon": "icon-tuichu", title: "退出" },
-        { "icon": "icon-icon7", title: "个人中心" }
       ]
     };
   },
@@ -96,9 +97,9 @@ export default {
     },
     infoClick(i) {
       if (i === 0) {
-        this.loginOut();
-      } else {
         this.$router.push("/account");
+      } else {
+        this.loginOut();
       }
     }
   },
@@ -121,26 +122,18 @@ export default {
 </script>
 
 <style>
-.el-container {
-  background-color: #fff;
-  height: calc(100vh - 80px);
-}
-.is-vertical{
-  color: #2c3e50;
-  padding: 20px;
-  height: calc(100vh - 80px);
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-}
+
 .header {
   padding: 0 30px 0 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-
+.sub-menu-warp{
+  text-align: left;
+}
 .el-submenu li {
+
   background-color: rgb(67, 74, 80) !important;
 }
 
@@ -156,6 +149,7 @@ export default {
 
 .header-nav {
   background-color: #545c64;
+  height: calc(100vh - 80px);
 }
 
 .header h1 {
@@ -177,9 +171,6 @@ export default {
   display: flex;
 }
 
-
-
-
 .total span {
   display: inline-block;
   background-color: #409EFF;
@@ -198,5 +189,8 @@ export default {
 
 .header span {
   vertical-align: middle;
+}
+.tubiao{
+  cursor: default;
 }
 </style>

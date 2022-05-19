@@ -2,7 +2,6 @@
   <div class="warps">
     <my-el-header/>
     <div class="container">
-      <p>会议终端</p>
       <div class="form-nav">
         <el-form :inline="true" :model="form" class="demo-form-inline">
           <el-form-item label="会议终端名称">

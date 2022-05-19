@@ -60,7 +60,7 @@ const routes = [
         redirect: {
           path: '/layout/serveStarts'
         },
-        meta: { title: '系统配置' },
+        meta: { title: '系统配置', icon: 'el-icon-setting'},
         children: [
           {
             meta: { title: '服务器状态' },
@@ -118,7 +118,7 @@ const routes = [
         path: '/converse',
         name: 'configure',
         component: configure,
-        meta: { title: '设备管理' },
+        meta: { title: '设备管理', icon: 'el-icon-orange' },
         redirect: {
           path: '/converse/phoneConfig'
         },
@@ -159,7 +159,7 @@ const routes = [
         path: '/billing',
         name: 'billing',
         component: configure,
-        meta: { title: '落地管理' },
+        meta: { title: '落地管理', icon: 'el-icon-aim' },
         redirect: {
           path: '/billing/networkManagement'
         },
@@ -199,7 +199,7 @@ const routes = [
       {
         path: '/call',
         component: call,
-        meta: { title: '呼叫管理' },
+        meta: { title: '呼叫管理',icon: 'el-icon-chat-line-round' },
         redirect: {
           path: '/call/ivr'
         },
@@ -222,7 +222,7 @@ const routes = [
       {
           path: '/bill',
         component: converse,
-        meta: { title: '通话账单' },
+        meta: { title: '通话账单' ,icon: 'el-icon-document-remove'},
         name: 'bill',
         redirect: {
           path: '/bill/index'
@@ -253,7 +253,7 @@ const routes = [
       {
         path:'/account',
         component: account,
-        meta: { title: '个人中心' },
+        meta: { title: '个人中心', isHide: true },
       }
     ]
   },

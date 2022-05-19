@@ -1,6 +1,6 @@
 <template>
   <div class="warps">
-    <my-el-header/>
+    <my-el-header>   <el-button @click.nav.native="resetConfigure" type="primary" icon="el-icon-edit" size="small">重置队列配置</el-button> </my-el-header>
     <div class="container">
       <div class="form-nav">
         <el-form :inline="true" :model="form" ref="form" class="demo-form-inline" :rules="rule">
@@ -171,10 +171,18 @@
           align="center"
           prop="wrapupTime"
           fixed="right"
+          min-width="100px"
           label="操作">
           <template scope="scope">
-            <el-link @click="addForms(scope.row, '编辑')" style="margin-left: 20px">编辑</el-link>
-            <el-link @click="del(scope.row)" style="margin-left: 20px">删除</el-link>
+            <div class="operate">
+              <el-link @click="addForms(scope.row, '编辑')" style="margin-right: 20px">编辑</el-link>
+              <template>
+                <el-popconfirm title="确认要删除吗？" @confirm="del(scope.row)">
+                  <el-link  slot="reference">删除
+                  </el-link>
+                </el-popconfirm>
+              </template>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -193,6 +201,7 @@ import myTree from "@/components/myTree";
 import myFooter from "@/components/myFooter";
 import { upDataFile } from "@/newwork/ground-colltroner";
 import myElHeader from "@/components/myElHeader";
+import { delPbxConfigure } from "@/newwork/conferencr";
 
 export default {
   name: "queue",
@@ -301,7 +310,8 @@ export default {
     //上传文件
     httpRequest(param){
       let File = param.file
-      let FileName = File.name
+      this.addForm.fifoName = File.name
+      console.log(param);
       this.addForm.fifoWaitMusic = FileName
       let formData = new FormData()
       upDataFile(File).then(res => {
@@ -313,6 +323,9 @@ export default {
       }).catch(e => {
         this.$message.error(e)
       })
+    },
+    beforeRemove(){
+      console.log('aaa');
     },
     error(){
       this.$message.error('上传失败, 请重试')
@@ -425,6 +438,16 @@ export default {
       getOrganizeList().then(res => {
         this.treeArr = fn(res.data.data);
       });
+    },
+    resetConfigure(){
+      delPbxConfigure('fifo').then(res => {
+        console.log(res);
+        if(res.data.code === 200 ){
+          this.$message.success('提交完成')
+        }else {
+          this.$message.error(res.data.msg)
+        }
+      })
     }
 
 

@@ -1,302 +1,289 @@
 <template>
   <div class="warps">
-    <my-el-header/>
+    <my-el-header>
+      <el-button @click.native="resetConfigure" type="primary" icon="el-icon-edit" size="small">重置话机配置</el-button>
+    </my-el-header>
     <div class="container">
-        <div class="phone-r">
-          <div class="nav-form">
-            <el-form :inline="true" :model="form" ref="form" class="demo-form-inline">
-              <el-form-item label="分机名称" prop="directoryName">
-                <el-input v-model="form.directoryName" placeholder="请输入内容"></el-input>
-              </el-form-item>
-              <el-form-item label="域地址" prop="domain">
-                <el-input v-model="form.domain" placeholder="请输入内容"></el-input>
-              </el-form-item>
-              <el-form-item label="计费方式" prop="billingType">
-                <el-select v-model="form.billingType" placeholder="中继类型">
-                  <el-option
-                    :label="item.label"
-                    :value="item.value"
-                    v-for="item in billingType"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item>
-                <el-button type="primary" @click="find">查询</el-button>
-                <el-button @click="clear">重置</el-button>
-              </el-form-item>
-            </el-form>
-            <el-button type="primary" @click="addForms(null, '添加话机')"
-            >添加话机
-            </el-button
-            >
-          </div>
-          <el-table
-            :row-class-name="tableRowClassName"
-            :header-cell-style="{background:'#ccc', color: '#fff',}"
-            :data="list"
-            style="width: 100%"
-            height="calc(100vh - 100px - 100px - 100px - 100px)"
-            v-if="list.length !== 0"
+      <div class="phone-r">
+        <div class="nav-form">
+          <el-form :inline="true" :model="form" ref="form" class="demo-form-inline">
+            <el-form-item label="分机名称" prop="directoryName">
+              <el-input v-model="form.directoryName" placeholder="请输入内容"></el-input>
+            </el-form-item>
+            <el-form-item label="域地址" prop="domain">
+              <el-input v-model="form.domain" placeholder="请输入内容"></el-input>
+            </el-form-item>
+            <el-form-item label="计费方式" prop="billingType">
+              <el-select v-model="form.billingType" placeholder="中继类型">
+                <el-option
+                  :label="item.label"
+                  :value="item.value"
+                  v-for="item in billingType"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="find">查询</el-button>
+              <el-button @click="clear">重置</el-button>
+            </el-form-item>
+          </el-form>
+          <el-button type="primary" @click="addForms(null, '添加话机')"
+          >添加话机
+          </el-button
           >
-            <el-table-column prop="date" align="center" label="序号" width="50px">
-              <template scope="scope">
-                {{ scope.$index + 1 }}
-              </template>
-            </el-table-column>
-            <el-table-column align="center" prop="directoryName" label="分机名称"></el-table-column>
-            <el-table-column align="center" prop="directoryNumber" label="鉴权号码">
-            </el-table-column>
-            <el-table-column align="center" prop="diaplan" label="拨号地址">
-            </el-table-column>
-            <el-table-column align="center" prop="deptName" label="部门">
-            </el-table-column>
-            <el-table-column align="center" prop="groupName" label="中继组">
-            </el-table-column>
-            <el-table-column align="center" prop="domain" label="域地址"></el-table-column>
-            <el-table-column align="center" prop="balance" label="余额"></el-table-column>
-            <el-table-column align="center" prop="expire" label="超时时长"></el-table-column>
-            <el-table-column align="center" prop="overdraft" label="计费方式">
-              <template scope="scope">
-                <div v-if="scope.row.billingType === 1">后付费</div>
-                <div v-else>先付费</div>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" prop="bussiness" label="业务类型"> </el-table-column>
-            <el-table-column align="center" prop="address" label="操作"  fixed="right" >
-              <template scope="scope">
-                <el-link
-                  class="a-link"
-                  type="info"
-                  @click="addForms(scope.row, '编辑')"
-                >编辑
-                </el-link
-                >
-
-                <el-link class="a-link" type="info" @click="recharge(scope.row)"
-                >充值
-                </el-link
-                >
-
+        </div>
+        <el-table
+          :row-class-name="tableRowClassName"
+          :header-cell-style="{background:'#ccc', color: '#fff',}"
+          :data="list"
+          style="width: 100%"
+          height="calc(100vh - 100px - 100px - 100px - 100px)"
+          v-if="list.length !== 0"
+        >
+          <el-table-column prop="date" align="center" label="序号" width="50px">
+            <template scope="scope">
+              {{ scope.$index + 1 }}
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="directoryName" label="分机名称"></el-table-column>
+          <el-table-column align="center" prop="directoryNumber" label="鉴权号码">
+          </el-table-column>
+          <el-table-column align="center" prop="diaplan" label="拨号地址">
+          </el-table-column>
+          <el-table-column align="center" prop="deptName" label="部门">
+          </el-table-column>
+          <el-table-column align="center" prop="groupName" label="中继组">
+          </el-table-column>
+          <el-table-column align="center" prop="domain" label="域地址"></el-table-column>
+          <el-table-column align="center" prop="balance" label="余额"></el-table-column>
+          <el-table-column align="center" prop="expire" label="超时时长"></el-table-column>
+          <el-table-column align="center" prop="overdraft" label="计费方式">
+            <template scope="scope">
+              <div v-if="scope.row.billingType === 1">后付费</div>
+              <div v-else>先付费</div>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="bussiness" label="业务类型"></el-table-column>
+          <el-table-column align="center" prop="address" label="操作" fixed="right" min-width="130px">
+            <template scope="scope">
+              <div class="operate">
+                <el-link type="info" @click="addForms(scope.row, '编辑')">编辑</el-link >
+                <el-link type="info" @click="recharge(scope.row)">充值 </el-link>
                 <template>
-                  <el-popconfirm
-                    title="确认要删除吗？"
-                    @confirm="removeIt(scope.row)"
-                  >
-                    <el-link class="a-link" type="info"  slot='reference'
-                    >删除
-                    </el-link
-                    >
+                  <el-popconfirm title="确认要删除吗？" @confirm="removeIt(scope.row)">
+                    <el-link type="info" slot="reference">删除
+                    </el-link>
                   </el-popconfirm>
                 </template>
-              </template>
-            </el-table-column>
-          </el-table>
-          <my-empty v-else />
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+        <my-empty v-else />
 
-        </div>
+      </div>
 
-        <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close>
-          <el-form :model="addForm" :rules="rules" ref="addForm">
-            <div class="width">
-              <el-form-item
-
-                label="分机名称"
-                :label-width="formLabelWidth"
-                prop="directoryName"
-              >
-                <el-input
-                  placeholder="请输入内容"
-                  v-model="addForm.directoryName"
-                  autocomplete="off"
-                >
-                </el-input>
-              </el-form-item>
-              <el-form-item
-                label="计费账号"
-                :label-width="formLabelWidth"
-                prop="accountUser"
-              >
-                <el-input
-                  placeholder="请输入内容"
-                  @change="accountUserChange"
-                  v-model="addForm.accountUser"
-                  autocomplete="off"
-                >
-                </el-input>
-              </el-form-item>
-
-            </div>
-
-            <div class="width">
-              <el-form-item
-                label="计费方式"
-                :label-width="formLabelWidth"
-                prop="billingType"
-              >
-                <el-select v-model="addForm.billingType" style="width: 100%" >
-                  <el-option
-                    v-for="item in billingType"
-                    :key="item.id"
-                    :label="item.label"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item
-                label="支持的业务类型"
-                :label-width="formLabelWidth"
-                prop="bussiness"
-              >
-                <!--            <el-select v-model="addForm.bussiness">-->
-                <!--              <el-option :label="item.label" :value="item.value" v-for="item in bussiness"></el-option>-->
-                <!--            </el-select>-->
-                <el-select
-                  v-model="bussinessList"
-                  multiple
-                  @change="change"
-                  style="width: 100%"
-                  collapse-tags
-                  placeholder="请选择">
-                  <el-option
-                    v-for="item in bussiness"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </div>
-            <div class="width">
-              <el-form-item
-                label="鉴权号码"
-                :label-width="formLabelWidth"
-                prop="directoryNumber"
-              >
-                <el-input
-                  :disabled="true"
-                  v-model="addForm.directoryNumber"
-                  autocomplete="off"
-                ></el-input>
-              </el-form-item>
-              <el-form-item
-                label="鉴权密码"
-                :label-width="formLabelWidth"
-                prop="password"
-              >
-                <el-input
-                  placeholder="请输入内容"
-                  v-model="addForm.password"
-                  clearable
-                >
-                </el-input>
-              </el-form-item>
-            </div>
-            <div class="width">
-              <el-form-item label="账户余额" :label-width="formLabelWidth" prop="balance">
-                <el-input v-model="addForm.balance" placeholder="请输入内容"></el-input>
-              </el-form-item>
-
-              <el-form-item label="域地址" :label-width="formLabelWidth" prop="domain">
-                <el-input v-model="addForm.domain" placeholder="请输入内容"></el-input>
-              </el-form-item>
-            </div>
-            <div class="width">
-              <el-form-item label="使能状态" :label-width="formLabelWidth" prop="disable">
-                <el-select v-model="addForm.disable" placeholder="请选择" style="width: 100%" >
-                  <el-option
-                    v-for="item in disable"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  >
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="部门名称" :label-width="formLabelWidth" prop="deptId">
-                <my-tree ref="myTree" style="width: 100%"  :options="deptIdList" @getValue="getSelectedValue"></my-tree>
-              </el-form-item>
-            </div>
-            <div class="width">
-              <el-form-item label="拨号方案" :label-width="formLabelWidth" prop="diaplan">
-                <el-select v-model="addForm.diaplan" placeholder="请选择" style="width: 100%" >
-                  <el-option
-                    v-for="item in diaPlanList"
-                    :key="item.value"
-                    :label="item.diaplanName"
-                    :value="item.id">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="费率组" :label-width="formLabelWidth" prop="rateGroup">
-                <el-select v-model="addForm.rateGroup" placeholder="请选择" style="width: 100%" >
-                  <el-option
-                    v-for="item in rateGroup"
-                    :key="item.value"
-                    :label="item.groupName"
-                    :value="item.id">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </div>
-            <div class="width">
-              <el-form-item label="超时时长" :label-width="formLabelWidth" prop="expire">
-                <el-input
-                  style="display: inline-block; margin-right: 10px"
-                  placeholder="请输入内容"
-                  v-model="addForm.expire"
-                ></el-input>
-              </el-form-item>
-              <el-form-item label="资源类型" :label-width="formLabelWidth" prop="type">
-                <el-select v-model="addForm.type" placeholder="请选择" style="width: 100%" >
-                  <el-option
-                    v-for="item in typeList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </div>
-            <div class="width">
-              <el-form-item label="经度" :label-width="formLabelWidth" prop="latitude">
-                <el-input
-                  placeholder="请输入内容"
-                  v-model="addForm.latitude"
-                ></el-input>
-              </el-form-item>
-              <el-form-item label="纬度" :label-width="formLabelWidth" prop="longitude">
-                <el-input v-model="addForm.longitude" placeholder="请输入内容"></el-input>
-              </el-form-item>
-            </div>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogFormVisible = false">取消</el-button>
-            <el-button type="primary" @click="submitForm('addForm')"
-            >确 定
-            </el-button
+      <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close>
+        <el-form :model="addForm" :rules="rules" ref="addForm">
+          <div class="width">
+            <el-form-item
+              label="分机名称"
+              :label-width="formLabelWidth"
+              prop="directoryName"
             >
+              <el-input
+                placeholder="请输入内容"
+                v-model="addForm.directoryName"
+                autocomplete="off"
+              >
+              </el-input>
+            </el-form-item>
+            <el-form-item
+              label="计费账号"
+              :label-width="formLabelWidth"
+              prop="accountUser"
+            >
+              <el-input
+                placeholder="请输入内容"
+                @change="accountUserChange"
+                v-model="addForm.accountUser"
+                autocomplete="off"
+              >
+              </el-input>
+            </el-form-item>
+
           </div>
-        </el-dialog>
-        <el-dialog title="充值提示" :visible.sync="showBar" width="30%" center>
-          <p class="title">
-            <b>充值提醒：</b>
-            <span
-            >你将要为 {{ rechargeInfo.directoryNumber }}进行充值</span
+
+          <div class="width">
+            <el-form-item
+              label="计费方式"
+              :label-width="formLabelWidth"
+              prop="billingType"
             >
-          </p>
-          <el-input
-            v-model="chongZhi.balance"
-            placeholder="请输入金额"
-          ></el-input>
-          <span slot="footer" class="dialog-footer">
+              <el-select v-model="addForm.billingType" style="width: 100%">
+                <el-option
+                  v-for="item in billingType"
+                  :key="item.id"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item
+              label="支持的业务类型"
+              :label-width="formLabelWidth"
+              prop="bussiness"
+            >
+              <!--            <el-select v-model="addForm.bussiness">-->
+              <!--              <el-option :label="item.label" :value="item.value" v-for="item in bussiness"></el-option>-->
+              <!--            </el-select>-->
+              <el-select
+                v-model="bussinessList"
+                multiple
+                @change="change"
+                style="width: 100%"
+                collapse-tags
+                placeholder="请选择">
+                <el-option
+                  v-for="item in bussiness"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+          <div class="width">
+            <el-form-item
+              label="鉴权号码"
+              :label-width="formLabelWidth"
+              prop="directoryNumber"
+            >
+              <el-input
+                :disabled="true"
+                v-model="addForm.directoryNumber"
+                autocomplete="off"
+              ></el-input>
+            </el-form-item>
+            <el-form-item
+              label="鉴权密码"
+              :label-width="formLabelWidth"
+              prop="password"
+            >
+              <el-input
+                placeholder="请输入内容"
+                v-model="addForm.password"
+                clearable
+              >
+              </el-input>
+            </el-form-item>
+          </div>
+          <div class="width">
+            <el-form-item label="账户余额" :label-width="formLabelWidth" prop="balance">
+              <el-input v-model="addForm.balance" placeholder="请输入内容"></el-input>
+            </el-form-item>
+
+            <el-form-item label="域地址" :label-width="formLabelWidth" prop="domain">
+              <el-input v-model="addForm.domain" placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </div>
+          <div class="width">
+            <el-form-item label="使能状态" :label-width="formLabelWidth" prop="disable">
+              <el-select v-model="addForm.disable" placeholder="请选择" style="width: 100%">
+                <el-option
+                  v-for="item in disable"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="部门名称" :label-width="formLabelWidth" prop="deptId">
+              <my-tree ref="myTree" style="width: 100%" :options="deptIdList" @getValue="getSelectedValue"></my-tree>
+            </el-form-item>
+          </div>
+          <div class="width">
+            <el-form-item label="拨号方案" :label-width="formLabelWidth" prop="diaplan">
+              <el-select v-model="addForm.diaplan" placeholder="请选择" style="width: 100%">
+                <el-option
+                  v-for="item in diaPlanList"
+                  :key="item.value"
+                  :label="item.diaplanName"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="费率组" :label-width="formLabelWidth" prop="rateGroup">
+              <el-select v-model="addForm.rateGroup" placeholder="请选择" style="width: 100%">
+                <el-option
+                  v-for="item in rateGroup"
+                  :key="item.value"
+                  :label="item.groupName"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+          <div class="width">
+            <el-form-item label="超时时长" :label-width="formLabelWidth" prop="expire">
+              <el-input
+                style="display: inline-block; margin-right: 10px"
+                placeholder="请输入内容"
+                v-model="addForm.expire"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="资源类型" :label-width="formLabelWidth" prop="type">
+              <el-select v-model="addForm.type" placeholder="请选择" style="width: 100%">
+                <el-option
+                  v-for="item in typeList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+          <div class="width">
+            <el-form-item label="经度" :label-width="formLabelWidth" prop="latitude">
+              <el-input
+                placeholder="请输入内容"
+                v-model="addForm.latitude"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="纬度" :label-width="formLabelWidth" prop="longitude">
+              <el-input v-model="addForm.longitude" placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </div>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取消</el-button>
+          <el-button type="primary" @click="submitForm('addForm')"
+          >确 定
+          </el-button
+          >
+        </div>
+      </el-dialog>
+      <el-dialog title="充值提示" :visible.sync="showBar" width="30%" center>
+        <p class="title">
+          <b>充值提醒：</b>
+          <span
+          >你将要为 {{ rechargeInfo.directoryNumber }}进行充值</span
+          >
+        </p>
+        <el-input
+          v-model="chongZhi.balance"
+          placeholder="请输入金额"
+        ></el-input>
+        <span slot="footer" class="dialog-footer">
         <el-button @click="showBar = false">取 消</el-button>
         <el-button type="primary" @click="submit(rechargeInfo)"
         >确 定</el-button
         >
       </span>
-        </el-dialog>
-      </div>
-    <my-footer v-on:next = "next" @prev="prev" :form="form" @change="footerChange" @pageCheng="pageCheng"></my-footer>
+      </el-dialog>
+    </div>
+    <my-footer v-on:next="next" @prev="prev" :form="form" @change="footerChange" @pageCheng="pageCheng"></my-footer>
   </div>
 </template>
 
@@ -311,6 +298,7 @@ import { isValidIP, isValidNumber } from "@/util/validate";
 import myTree from "@/components/myTree";
 import myFooter from "@/components/myFooter";
 import myElHeader from "@/components/myElHeader";
+import { delPbxConfigure } from "@/newwork/conferencr";
 
 export default {
   name: "phoneConfig",
@@ -324,7 +312,7 @@ export default {
   computed: {
     getterDeptIdList() {
       return fn(this.deptIdList);
-    },
+    }
 
   },
   data() {
@@ -441,24 +429,24 @@ export default {
     };
   },
   methods: {
-    next(){
-      this.form.pageNum ++
+    next() {
+      this.form.pageNum++;
       console.log(this.form);
-      this.getDirectory(this.form)
+      this.getDirectory(this.form);
     },
-    pageCheng(e){
-      this.form = this.$options.data().form
-      this.form.pageSize = e
-      this.getDirectory()
+    pageCheng(e) {
+      this.form = this.$options.data().form;
+      this.form.pageSize = e;
+      this.getDirectory();
     },
-    prev(){
-      this.form.pageNum --
-      this.getDirectory(this.form)
+    prev() {
+      this.form.pageNum--;
+      this.getDirectory(this.form);
     },
-    footerChange(e){
+    footerChange(e) {
       console.log(e);
-      this.form.pageNum = e
-      this.getDirectory(this.form)
+      this.form.pageNum = e;
+      this.getDirectory(this.form);
     },
     find() {
       this.getDirectory(this.form);
@@ -467,14 +455,14 @@ export default {
       this.addForm.deptId = value.deptId;
     },
     clear() {
-      this.form = this.$options.form
+      this.form = this.$options.form;
       this.getDirectory(this.form);
     },
-    change(){
-      this.addForm.bussiness = this.bussinessList.join(',')
+    change() {
+      this.addForm.bussiness = this.bussinessList.join(",");
     },
-    accountUserChange(){
-      this.addForm.directoryNumber = this.addForm.accountUser
+    accountUserChange() {
+      this.addForm.directoryNumber = this.addForm.accountUser;
     },
     submitForm() {
       this.$refs["addForm"].validate((valid) => {
@@ -501,7 +489,7 @@ export default {
             });
           }
         } else {
-          return false
+          return false;
         }
       });
     },
@@ -511,15 +499,15 @@ export default {
       if (title === "编辑" && this.dialogFormVisible === true) {
         this.addForm = row;
         this.$nextTick(() => {
-          this.$refs.myTree.valueName = this.addForm.deptName
-          this.bussinessList =  this.addForm.bussiness.split(',')
-        })
+          this.$refs.myTree.valueName = this.addForm.deptName;
+          this.bussinessList = this.addForm.bussiness.split(",");
+        });
       } else {
         this.addForm = this.$options.data().addForm;
         this.$nextTick(() => {
-          this.$refs.myTree.valueName = this.addForm.deptName
-          this.bussinessList =  []
-        })
+          this.$refs.myTree.valueName = this.addForm.deptName;
+          this.bussinessList = [];
+        });
       }
     },
     tableRowClassName({ row, rowIndex }) {
@@ -567,11 +555,18 @@ export default {
     },
     getDirectory(form) {
       getDirectory(form).then(res => {
-        this.$bus.$emit('total', res.data.data.total)
+        this.$bus.$emit("total", res.data.data.total);
         if (res.data.code === 200) {
           this.list = res.data.data.records;
         }
       }).catch(e => this.$message.error(e));
+    },
+
+    //重置Pbx配置
+    resetConfigure() {
+      delPbxConfigure("sofia").then(res => {
+        console.log(res);
+      });
     }
 
   },
@@ -580,14 +575,14 @@ export default {
     this.getDirectory(this.form);
   },
   mounted() {
-    this.$bus.$on('pageCheng', (data) => {
-      this.form = this.$options.data().form
-      this.form.pageSize = data
-      this.getDirectory(this.form)
-    })
+    this.$bus.$on("pageCheng", (data) => {
+      this.form = this.$options.data().form;
+      this.form.pageSize = data;
+      this.getDirectory(this.form);
+    });
   },
-  destroyed(){
-    this.$bus.$off('pageChang')
+  destroyed() {
+    this.$bus.$off("pageChang");
   },
   watch: {
     dialogFormVisible(val, newVal) {
@@ -673,4 +668,6 @@ export default {
 .width > * {
   flex: 1;
 }
+
+
 </style>

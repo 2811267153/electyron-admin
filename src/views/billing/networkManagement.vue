@@ -239,20 +239,21 @@
               <div v-else> 不注册</div>
             </template>
           </el-table-column>
-          <el-table-column prop="recording" align="center"  fixed="right"  label="操作">
+          <el-table-column prop="recording" align="center"  fixed="right"  label="操作" min-width="100px">
             <template scope="scope">
               <div class="operate">
                 <el-link
-                  class="a-link"
                   @click="showAddForm(scope.row, '编辑')"
                   type="info"
                 >编辑
                 </el-link
                 >
-                <el-link class="a-link" @click="removeIt(scope.row)" type="info"
-                >删除
-                </el-link
-                >
+                <template>
+                  <el-popconfirm title="确认要删除吗？" @confirm="removeIt(scope.row)">
+                    <el-link type="info" slot="reference">删除
+                    </el-link>
+                  </el-popconfirm>
+                </template>
               </div>
             </template>
           </el-table-column>
