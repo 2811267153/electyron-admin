@@ -18,7 +18,7 @@
           <el-button type="primary" @click="showForm('新增')">新增</el-button>
         </div>
       </div>
-      <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close>
+      <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close :close-on-click-modal="false">
         <el-form ref="addForm" :model="addForm" :rules="rules">
           <el-form-item label="部门名称" :label-width="formLabelWidth" prop="deptName">
             <el-input class="input" v-model="addForm.deptName" autocomplete="off" placeholder="请输入内容"></el-input>

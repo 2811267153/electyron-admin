@@ -7,7 +7,7 @@
       </div>
       <div class="serve-container">
         <div class="form-nav">
-          <el-form :inline="true" :model="form" class="demo-form-inline" :rules="form" ref="form">
+          <el-form :inline="true" :close-on-click-modal="false" :model="form" class="demo-form-inline" :rules="form" ref="form">
             <el-form-item label="费率组" prop="diaplanRateGroup">
               <el-input v-model="form.diaplanRateGroup" placeholder="请输入内容"></el-input>
             </el-form-item>
@@ -22,7 +22,7 @@
           >
         </div>
 
-        <el-dialog destroy-on-close :title="title" :visible.sync="dialogFormVisible">
+        <el-dialog destroy-on-close :title="title" :close-on-click-modal="false" :visible.sync="dialogFormVisible">
           <el-form :model="addForm" ref="addForm" :rules="rules">
             <div class="width">
               <el-form-item

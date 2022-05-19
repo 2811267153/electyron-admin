@@ -83,7 +83,7 @@
 
       </div>
 
-      <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close>
+      <el-dialog :title="title" :close-on-click-modal='false' :visible.sync="dialogFormVisible" destroy-on-close>
         <el-form :model="addForm" :rules="rules" ref="addForm">
           <div class="width">
             <el-form-item

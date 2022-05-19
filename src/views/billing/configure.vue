@@ -93,7 +93,7 @@
       </el-table>
 
 
-      <el-dialog destroy-on-close :title="title" :visible.sync="dialogFormVisible">
+      <el-dialog destroy-on-close :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="false"	>
         <el-form :model="addForm" ref="addForm" :rules="rules">
           <el-form-item label="服务接口名称" :label-width="formLabelWidth" prop="profileName">
             <el-input v-model="addForm.profileName" autocomplete="off" placeholder="请输入内容"></el-input>

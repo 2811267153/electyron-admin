@@ -29,7 +29,7 @@
           <el-button type="primary" @click="addForms(null, '新增')">新增</el-button>
         </div>
       </div>
-      <el-dialog title="数据权限" :visible.sync="dialogFormVisibles">
+      <el-dialog title="数据权限" :visible.sync="dialogFormVisibles" :close-on-click-modal="false">
         <el-form :model="dataScopeForm">
           <el-form-item label="角色ID" :label-width="formLabelWidth">
             <el-input v-model="dataScopeForm.roleName" placeholder="请输入内容"/>
@@ -58,7 +58,7 @@
           <el-button type="primary" @click="submitDataScopeForm(dataScopeForm)">确 定</el-button>
         </div>
       </el-dialog>
-      <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close>
+      <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close  :close-on-click-modal="false">
         <el-form :model="addForm" ref="addForm" :rules="rules">
           <el-form-item
               label="角色名称"

@@ -10,6 +10,7 @@
         @node-click="meunClick"
         :expand-on-click-node="false"
         :default-expanded-keys="defaultShowNodes"
+
         accordion>
         <div class="custom-tree-node" slot-scope="{node, data}">
           <div class="tree">
@@ -32,7 +33,7 @@
         </div>
       </el-tree>
       <div>
-        <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close>
+        <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close  :close-on-click-modal="false">
           <el-form :model="addForm" ref="addForm" :rules="rules">
             <el-form-item label="菜单名称" :label-width="formLabelWidth" prop="menuName">
               <el-input v-model="addForm.menuName" autocomplete="off" placeholder="请输入内容"></el-input>

@@ -38,7 +38,7 @@
             <el-button type="primary" @click="showAddForm(null, '新增')">新增</el-button>
           </div>
         </div>
-        <el-dialog destroy-on-close :title="title" :visible.sync="dialogFormVisible">
+        <el-dialog destroy-on-close :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="false"	>
           <el-form ref="addForm" :model="addForm" :rules="rules">
             <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
               <el-input placeholder="请输入内容" v-model="addForm.name" autocomplete="off"></el-input>
@@ -200,7 +200,14 @@ export default {
         }
       });
     },
-
+    handleClose(){
+      this.$confirm('确认关闭？')
+        .then(_ => {
+         this.dialogFormVisible = false
+          this.dictionaryList(this.form)
+        })
+        .catch(_ => {});
+    },
     resetForm(string) {
       string === "form" ? this.$refs.form.resetFields() : this.$refs.addForm.resetFields();
       this.addForm = this.$options.data().addForm;

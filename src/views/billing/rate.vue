@@ -19,7 +19,7 @@
             </el-button
             >
           </div>
-          <el-dialog destroy-on-close :title="title" :visible.sync="dialogFormVisible">
+          <el-dialog destroy-on-close :title="title"  :close-on-click-modal="false" :visible.sync="dialogFormVisible">
             <el-form ref="addForm" :model="addForm" :rules="addFroms">
               <el-form-item
                 label="添加费率组名称"
@@ -83,7 +83,7 @@
               </div>
             </div>
           </div>
-          <el-dialog destroy-on-close :title="listTitle" :visible.sync="listDialogFormVisible">
+          <el-dialog destroy-on-close  :close-on-click-modal="false" :title="listTitle" :visible.sync="listDialogFormVisible">
             <el-form :model="addListFrom" ref="formName" :rules="addRules">
               <el-form-item
                 label="费率名称"

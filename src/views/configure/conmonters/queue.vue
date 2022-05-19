@@ -23,7 +23,7 @@
         </el-form>
         <el-button type="primary"  @click="addForms(null, '新增')">新增队列</el-button>
       </div>
-      <el-dialog :title="title"  destroy-on-close ref="addForm" :visible.sync="dialogFormVisible">
+      <el-dialog :close-on-click-modal="false" :title="title"  destroy-on-close ref="addForm" :visible.sync="dialogFormVisible">
         <el-form :model="addForm" ref="addForm" :rules="rules">
           <div class="width">
             <el-form-item label="队列名称" :label-width="formLabelWidth" prop="fifoName">

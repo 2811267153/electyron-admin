@@ -16,7 +16,7 @@
           </el-button
           ></a>
       </div>
-      <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close>
+      <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close :close-on-click-modal="false">
         <el-form ref="addForm" :model="addForm" :rules="riles">
           <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
             <el-input placeholder="请输入内容" v-model="addForm.name" autocomplete="off"></el-input>

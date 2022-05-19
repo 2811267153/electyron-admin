@@ -93,6 +93,7 @@
               :title="title"
               :visible.sync="isShow"
               width="40%"
+              :close-on-click-modal="false"
             >
               <el-form ref="addForm" :model="addForm" id="form" :rules="rules">
                 <el-form-item
@@ -355,7 +356,8 @@ export default {
     treeClick(a) {
       this.form = this.$options.data().form;
       console.log(a);
-      a.deptId === "100" ? this.form.deptId = "" : this.form.deptId = a.deptId;
+      console.log(a);
+      a.deptId === "1" ? this.form.deptId = "" : this.form.deptId = a.deptId;
       console.log(this.form);
       this.getUserAll(this.form);
     },
@@ -440,6 +442,7 @@ export default {
       this.resetForm();
       this.getUserAll(this.form);
     },
+
     show(row, title) {
       getOrganizeList(this.form).then(res => {
         this.deptIdList = res.data.data;
