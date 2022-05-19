@@ -29,7 +29,7 @@
 
             <!--          <my-tree style="width: 100%" :options="formList" @getValue="getSelectedValue"></my-tree>-->
             <!--          <my-el-tree v-model="addForm.parentId" :options="formList" :value='row.parentId' :props="defaultProps"/>-->
-            <treeselect v-model="parent" :multiple="false" :options="formatList" :normalizer="normalizer" />
+            <treeselect v-model="parent" :multiple="false" :disabled="isDisabled" :options="formatList" :normalizer="normalizer" />
           </el-form-item>
           <el-form-item label="状态" :label-width="formLabelWidth">
             <el-radio-group v-model="addForm.status">
@@ -47,12 +47,13 @@
       </div>
       <div class="tree-menu"><p>部门名称</p>
         <p>创建时间</p>
-        <p>状态</p>
+        <p style="padding-left: 25px">状态</p>
         <p>操作</p></div>
       <el-tree
         @node-click="handleNodeClick"
         :data="formatList"
         ref="tree"
+        :indent="0"
         :default-expanded-keys="defaulExpanded"
         :expand-on-click-node="false"
         node-key="deptId"
@@ -115,6 +116,7 @@ export default {
           label: node.deptName
         };
       },
+      isDisabled: false,
       title: "新增",
       dialogFormVisible: false,
       dialogFormVisibles: false,
@@ -278,14 +280,17 @@ export default {
     },
     parent: {
       get() {
-        console.log(this.addForm.parentId);
         if(this.addForm.parentId === '0'){
+          console.log(this.isDisabled);
+          this.isDisabled = true
           return this.addForm.deptId
         }else {
+          this.isDisabled = false
           return this.addForm.parentId
         }
       },
       set(value){
+        console.log(this.isDisabled);
         return this.addForm.parentId = value
       }
     }

@@ -2,15 +2,15 @@
   <div class="menu">
     <my-el-header/>
     <div class="container">
-      <div class="tree-menu"><p>菜单名称</p><p>菜单路径</p><p>权限</p><p>操作</p></div>
+      <div class="tree-menu"><p>菜单名称</p><p>菜单路径</p><p style="padding-left: 25px">权限</p><p>操作</p></div>
       <el-tree
         :data="path"
         :props="defaultProps"
         node-key="menuId"
+        :indent="0"
         @node-click="meunClick"
         :expand-on-click-node="false"
         :default-expanded-keys="defaultShowNodes"
-
         accordion>
         <div class="custom-tree-node" slot-scope="{node, data}">
           <div class="tree">
@@ -176,7 +176,6 @@ export default {
     meunClick(data) {
       this.row = data
       this.showIndex === null ? console.log('1') : this.showForm(this.showTitle[this.showIndex]);
-
     },
     showForm(type) {
       this.dialogFormVisible = true

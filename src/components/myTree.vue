@@ -74,7 +74,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.value.deptName, '------------------')
     this.resultValue = this.value;   // 初始值
     this.initHandle();
   },

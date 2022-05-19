@@ -282,11 +282,11 @@ export default {
         {label: '停用', value: 1},
       ],
       dataScopeType: [
-        {label: '全部数据权限', value: 1},
-        {label: '自定义数据权限', value: 2},
+        {label: '本人', value: 5},
         {label: '本部门数据权限', value: 3},
         {label: '本部门及一下数据权限', value: 4},
-        {label: '本人', value: 5},
+        {label: '全部数据权限', value: 1},
+        {label: '自定义数据权限', value: 2},
       ],
       defaultExpand: [] //默认展开的菜单
     }

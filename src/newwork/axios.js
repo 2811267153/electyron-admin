@@ -2,7 +2,7 @@ import axios from 'axios'
 import store from "@/store";
 import {getCookie, removeCookie} from "@/auth";
 import { MessageBox } from 'element-ui'
-import Vue from "vue";
+// import {message}
 
 export function request(config) {
     const instance = axios.create({
@@ -31,6 +31,7 @@ export function request(config) {
         }
         return config
     }, error => {
+        console.log(error);
 
     })
 

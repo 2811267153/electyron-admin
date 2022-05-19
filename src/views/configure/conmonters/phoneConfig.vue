@@ -200,7 +200,8 @@
               </el-select>
             </el-form-item>
             <el-form-item label="部门名称" :label-width="formLabelWidth" prop="deptId">
-              <my-tree ref="myTree" style="width: 100%" :options="deptIdList" @getValue="getSelectedValue"></my-tree>
+<!--              <my-tree ref="myTree" style="width: 100%" :options="deptIdList" @getValue="getSelectedValue"></my-tree>-->
+              <treeselect v-model="deptIds" :multiple="false" :options="deptIdList" :normalizer="normalizer" placeholder="请输入内容"/>
             </el-form-item>
           </div>
           <div class="width">
@@ -299,6 +300,9 @@ import myTree from "@/components/myTree";
 import myFooter from "@/components/myFooter";
 import myElHeader from "@/components/myElHeader";
 import { delPbxConfigure } from "@/newwork/conferencr";
+import treeselect from "@riophae/vue-treeselect";
+// import the styles
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
   name: "phoneConfig",
@@ -307,13 +311,27 @@ export default {
     myEmpty,
     myTree,
     myFooter,
-    myElHeader
+    myElHeader,
+    treeselect
   },
   computed: {
     getterDeptIdList() {
       return fn(this.deptIdList);
-    }
+    },
+    deptIds() {
+    //   get(){
+    //     if(this.addForm.deptId === 0){
+    //       console.log(this.addForm);
+    //      return  this.addForm.deptId = this.addForm.deptName
+    //     }
+    //   },
+    //   set(value){
+    //    return  this.addForm.deptId = value
+    //   }
+    // }
 
+      return this.addForm.deptId
+    }
   },
   data() {
     const validateIP = (rule, value, callback) => {
@@ -332,6 +350,16 @@ export default {
     };
 
     return {
+      normalizer(node) {
+        if (node.children && !node.children.length) {
+          delete node.children;
+        }
+        return {
+          id: node.deptId,
+          children: node.children,
+          label: node.deptName
+        };
+      },
       title: "添加话机",
       dialogFormVisible: false,
       formLabelWidth: "150px",
@@ -354,7 +382,7 @@ export default {
         balance: "", // balance
         billingType: "", //计费方式（1、为后付费。2、预付费）
         bussiness: "", //支持的业务类型（语音、视频、广播）
-        deptId: "", // 部门ID
+        deptId: null, // 部门ID
         diaplan: "", //拨号方案
         directoryName: "", //分机名称
         // stats: '', //录音状态
@@ -499,13 +527,11 @@ export default {
       if (title === "编辑" && this.dialogFormVisible === true) {
         this.addForm = row;
         this.$nextTick(() => {
-          this.$refs.myTree.valueName = this.addForm.deptName;
           this.bussinessList = this.addForm.bussiness.split(",");
         });
       } else {
         this.addForm = this.$options.data().addForm;
         this.$nextTick(() => {
-          this.$refs.myTree.valueName = this.addForm.deptName;
           this.bussinessList = [];
         });
       }
@@ -574,6 +600,7 @@ export default {
   created() {
     this.getDirectory(this.form);
   },
+
   mounted() {
     this.$bus.$on("pageCheng", (data) => {
       this.form = this.$options.data().form;
@@ -616,8 +643,7 @@ export default {
     deptId(val) {
       this.addForm.deptId = val[val.length - 1];
     }
-  }
-
+  },
 };
 </script>
 

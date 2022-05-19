@@ -58,17 +58,25 @@
           <div class="width">
             <el-form-item label="队列等待音" :label-width="formLabelWidth" prop="fifoWaitMusic">
               <el-upload
-                class="upload-demo"
-                action= ""
-                :before-remove="beforeRemove"
+                :action="uploadFileUrl"
+                :limit="limit"
                 :with-credentials="true"
-                :http-request="httpRequest"
-                :limit="1"
                 :show-file-list="false"
-                :on-error="error"
-                :on-success="success">
+                :before-upload="handleBeforeUpload"
+                :headers="headers"
+                :on-success="handleUploadSuccess"
+                :on-error="handleUploadError"
+              >
                 <el-button size="small" type="primary" style="margin-right: 20px">点击上传</el-button>
-                <span slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</span>
+                <div class="el-upload__tip" slot="tip" v-if="addForm.fifoWaitMusic.length === 0">
+                  请上传
+                  <template v-if="fileSize"> 大小不超过 <b style="color: #f56c6c">{{ fileSize }}MB</b> </template>
+                  <template v-if="fileType"> 格式为 <b style="color: #f56c6c">{{ fileType.join("/") }}</b> </template>
+                  的文件
+                </div>
+                <div class="el-upload__tip" slot="tip" v-else>
+                 当前选择的文件:  {{addForm.fifoWaitMusic}}
+                </div>
               </el-upload>
             </el-form-item>
             <el-form-item label="最大注册数" :label-width="formLabelWidth" prop="memberSimultaneous">
@@ -104,7 +112,7 @@
               <el-input v-model="addForm.fifoNight" placeholder="请输入内容"></el-input>
             </el-form-item>
             <el-form-item label="所属部门" :label-width="formLabelWidth" prop="fifoEmergency">
-              <my-tree ref="myTree" style="width: 100%" :options="treeArr" @getValue="getSelectedValue"></my-tree>
+              <treeselect v-model="addForm.deptId" :multiple="false" :options="treeArr" :normalizer="normalizer" placeholder="请输入内容"/>
             </el-form-item>
 
           </div>
@@ -202,11 +210,25 @@ import myFooter from "@/components/myFooter";
 import { upDataFile } from "@/newwork/ground-colltroner";
 import myElHeader from "@/components/myElHeader";
 import { delPbxConfigure } from "@/newwork/conferencr";
+import { getCookie } from "@/auth";
+import treeselect from "@riophae/vue-treeselect";
+// import the styles
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
   name: "queue",
   data(){
     return {
+      normalizer(node) {
+        if (node.children && !node.children.length) {
+          delete node.children;
+        }
+        return {
+          id: node.deptId,
+          children: node.children,
+          label: node.deptName
+        };
+      },
       form: {
         fifoName: '', //队列名称
         fifoAgent: '',//队列名称
@@ -230,7 +252,7 @@ export default {
       fifoRouterInList: [],  //入路由号码列表
       fifoRouterOutList: [], //出路由号码列表
       fifoEmergencyList: [], //紧急呼叫号码
-
+      fileData: '', //提交的音乐
       list: [],
       dialogFormVisible: false,
       title: '新增',
@@ -280,7 +302,14 @@ export default {
         memberTimeout: [
           { required: false, message: '该选项不可为空,请确认', trigger: 'blur' },
         ],
-      }
+      },
+      limit: 1,
+      uploadFileUrl: 'http://localhost:8080/dispatch/file/upload',
+      headers: {
+        Authorization: "Bearer " + getCookie(),
+      },
+      fileSize: 5,
+      fileType: ['avi']
     }
   },
   methods: {
@@ -307,47 +336,53 @@ export default {
       this.form.pageNum = e
       this.getUserAll(this.form)
     },
-    //上传文件
-    httpRequest(param){
-      let File = param.file
-      this.addForm.fifoName = File.name
-      console.log(param);
-      this.addForm.fifoWaitMusic = FileName
-      let formData = new FormData()
-      upDataFile(File).then(res => {
-        if(res.data.code === 200){
-          alert('OK')
-        }else {
-          this.$message.error(res.datamsg)
+    handleBeforeUpload(file){
+      console.log(file);
+      this.fileData = file
+      if (this.fileType) {
+        let fileExtension = "";
+        if (file.name.lastIndexOf(".") > -1) {
+          fileExtension = file.name.slice(file.name.lastIndexOf(".") + 1);
         }
-      }).catch(e => {
-        this.$message.error(e)
-      })
+        const isTypeOk = this.fileType.some((type) => {
+          if (file.type.indexOf(type) > -1) return true;
+          if (fileExtension && fileExtension.indexOf(type) > -1) return true;
+          return false;
+        });
+        if (!isTypeOk) {
+          this.$message.error(`文件格式不正确, 请上传${this.fileType.join("/")}格式文件!`);
+          return false;
+        }
+      }
+      // 校检文件大小
+      if (this.fileSize) {
+        const isLt = file.size / 1024 / 1024 < this.fileSize;
+        if (!isLt) {
+          this.$message.error(`上传文件大小不能超过 ${this.fileSize} MB!`);
+          return false;
+        }
+      }
+      return true;
     },
-    beforeRemove(){
-      console.log('aaa');
+    handleUploadError(){
+      this.$message.error("上传失败, 请重试");
     },
-    error(){
-      this.$message.error('上传失败, 请重试')
-    },
-    success(){
-      this.$message.success('上传完成!!!')
+    handleUploadSuccess(res){
+      if (res.code === 200){
+        this.$message.success("上传成功");
+        this.addForm.fifoWaitMusic = this.fileData.name
+      }else {
+        this.$message.error("上传失败, 请重试");
+      }
     },
     addForms(row, type){
       this.title = type
-      type !== '新增' ?  this.addForm = row : ''
       this.getFifo(this.form)
       this.dialogFormVisible = true
       if(type === '新增'){
         this.addForm = this.$options.data().addForm
-        this.$nextTick(() => {
-          this.$refs.myTree.valueName = this.addForm.deptId
-        })
       }else {
         this.addForm = row
-        this.$nextTick(() => {
-          this.$refs.myTree.valueName = this.addForm.deptId
-        })
       }
     },
     resetForm(type) {
@@ -361,8 +396,6 @@ export default {
       this.$refs.addForm.validate((valid) => {
         if (valid) {
       this.title === '新增' ? addFifo(this.addForm).then(res => {
-          alert('submit!');
-          console.log(res)
           if(res.data.code === 200){
             this.getFifo(this.form)
             this.$message.success('提交完成')
@@ -371,7 +404,6 @@ export default {
             this.$message.error(res.data.msg)
           }
         }) : upDataFifo(this.addForm).then(res => {
-          console.log(res )
           if(res.data.code === 200){
             this.getFifo(this.form)
             this.$message.success('提交完成')
@@ -382,7 +414,6 @@ export default {
           }
         })
         } else {
-          console.log('error submit!!');
           return false;
         }
       });
@@ -390,7 +421,6 @@ export default {
     },
     del(row){
       delFifo(row.id).then(res => {
-        console.log(res)
         if(res.data.code === 200){
           this.$message.success('提交完成')
           this.getFifo(this.form)
@@ -401,7 +431,6 @@ export default {
     },
     getFifo(form){
       getFifo(form).then(res => {
-        console.log(res)
         if(res.data.code === 200){
           this.$bus.$emit('total', res.data.data.total)
           this.list = res.data.data.records
@@ -441,7 +470,6 @@ export default {
     },
     resetConfigure(){
       delPbxConfigure('fifo').then(res => {
-        console.log(res);
         if(res.data.code === 200 ){
           this.$message.success('提交完成')
         }else {
@@ -460,21 +488,14 @@ export default {
     myEmpty,
     myTree,
     myFooter,
-    myElHeader
-  },
-  mounted() {
-    this.$bus.$on('pageChang', (data) => {
-      this.form = this.$options.data().form
-      this.form = data
-      this.getFifo(this.form)
-    })
+    myElHeader,
+    treeselect
   },
   destroyed(){
     this.$bus.$off('pageChang')
   },
   watch: {
     dialogFormVisible (val){
-
       if(!val){
         this.addForm = this.$options.data().addForm
       }else {
@@ -490,16 +511,6 @@ export default {
 </script>
 
 <style scoped>
-.queue{
-  width: 100%;
-  padding: 20px;
-  margin-left: 20px;
-  margin-top: 20px;
-  box-shadow: 0 0 15px #ccc;
-  background-color: #fff;
-  border-radius: 10px;
-  height: 78vh;
-}
 .form-nav{
   display: flex;
   height: 40px;

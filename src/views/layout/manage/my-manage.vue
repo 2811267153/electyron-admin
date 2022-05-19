@@ -18,8 +18,8 @@
                 </el-form-item>
                 <el-form-item label="用户状态" prop="status">
                   <el-select v-model="form.status">
-                    <el-option label="开启" :value=0></el-option>
-                    <el-option label="关闭" :value=1></el-option>
+                    <el-option label="启用" :value=0></el-option>
+                    <el-option label="停用" :value=1></el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item>
@@ -92,7 +92,7 @@
               :destroy-on-close="true"
               :title="title"
               :visible.sync="isShow"
-              width="40%"
+              width="50vw"
               :close-on-click-modal="false"
             >
               <el-form ref="addForm" :model="addForm" id="form" :rules="rules">
@@ -142,7 +142,8 @@
                   prop="deptId"
                   :label-width="formLabelWidth"
                 >
-                  <my-tree ref="myTree" style="width: 100%" :options="treeArr" @getValue="getSelectedValue"></my-tree>
+<!--                  <my-tree ref="myTree" style="width: 100%" :options="treeArr" @getValue="getSelectedValue"></my-tree>-->
+                  <treeselect v-model="addForm.deptId" :multiple="false" :options="treeArr" :normalizer="normalizer" />
                 </el-form-item>
                 <el-form-item
                   class="form-item"
@@ -242,6 +243,9 @@ import { isValidPhone } from "@/util/validate";
 import myTree from "@/components/myTree";
 import myFooter from "@/components/myFooter";
 import myElHeader from "@/components/myElHeader";
+import treeselect from "@riophae/vue-treeselect";
+// import the styles
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
   name: "serve-manage",
@@ -250,7 +254,8 @@ export default {
     myEmpty,
     myTree,
     myFooter,
-    myElHeader
+    myElHeader,
+    treeselect
   },
   data() {
     const validatePhone = (rule, value, callback) => {
@@ -262,6 +267,16 @@ export default {
     };
 
     return {
+      normalizer(node) {
+        if (node.children && !node.children.length) {
+          delete node.children;
+        }
+        return {
+          id: node.deptId,
+          children: node.children,
+          label: node.deptName
+        };
+      },
       form: {
         nickName: "",
         phone: "",
@@ -320,7 +335,7 @@ export default {
         ],
 
         phone: [
-          { required: true, message: "此项为必填项，请确认", trigger: "blur" }
+          { required: false, message: "此项为必填项，请确认", trigger: "blur" }
           // {validator: validatePhone, message: '手机号格式输入有误,请确认', trigger: 'change'}
         ],
         status: [
@@ -395,6 +410,7 @@ export default {
           if (this.title === "新增") {
             addUser(this.addForm).then(res => {
               if (res.data.code === 200) {
+                this.isShow = false
                 this.getUserAll(this.$store.state.formPage);
                 this.$message.success("提交完成");
               } else {
@@ -403,10 +419,10 @@ export default {
             }).catch(e => {
               this.$message.error(e);
             });
-            this.isShow = false;
           } else {
             upDataUser(this.addForm).then(res => {
               if (res.data.code === 200) {
+                this.isShow = false
                 this.getUserAll(this.$store.state.formPage);
                 this.$message.success("提交完成");
               } else {
@@ -460,15 +476,9 @@ export default {
         this.isShow = true;
         this.addForm = this.$options.data().addForm;
         this.$refs.addForm.clearValidate();
-        this.$nextTick(() => {
-          this.$refs.myTree.valueName = this.addForm.deptId;
-        });
       } else if (title === "修改") {
         this.addForm = row;
         this.isShow = true;
-        this.$nextTick(() => {
-          this.$refs.myTree.valueName = this.addForm.sysDept.deptName;
-        });
       } else if (title === "删除") {
         deleteUser(row.userId).then(res => {
           if (res.data.code === 200) {
