@@ -1,9 +1,7 @@
 <template>
   <!--  组织管理-->
   <div class="management">
-    <my-el-header>
-      <el-link slot>aaa</el-link>
-    </my-el-header>
+    <my-el-header> </my-el-header>
     <div class="container">
       <div class="nav-form">
         <el-form ref="form" class="form" :model="form" label-width="80px" :inline="true">
@@ -31,7 +29,7 @@
 
             <!--          <my-tree style="width: 100%" :options="formList" @getValue="getSelectedValue"></my-tree>-->
             <!--          <my-el-tree v-model="addForm.parentId" :options="formList" :value='row.parentId' :props="defaultProps"/>-->
-            <treeselect v-model="addForm.parentId" :multiple="false" :options="formatList" :normalizer="normalizer" />
+            <treeselect v-model="parent" :multiple="false" :options="formatList" :normalizer="normalizer" />
           </el-form-item>
           <el-form-item label="状态" :label-width="formLabelWidth">
             <el-radio-group v-model="addForm.status">
@@ -275,11 +273,21 @@ export default {
     createTime() {
       return this.addForm.createTime = getNowFormatDate();
     },
-    formList() {
-      return fn(this.list);
-    },
     parentId() {
       return parseInt(this.row.parentId);
+    },
+    parent: {
+      get() {
+        console.log(this.addForm.parentId);
+        if(this.addForm.parentId === '0'){
+          return this.addForm.deptId
+        }else {
+          return this.addForm.parentId
+        }
+      },
+      set(value){
+        return this.addForm.parentId = value
+      }
     }
   }
 };

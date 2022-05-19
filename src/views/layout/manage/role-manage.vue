@@ -31,7 +31,7 @@
       </div>
       <el-dialog title="数据权限" :visible.sync="dialogFormVisibles" :close-on-click-modal="false">
         <el-form :model="dataScopeForm">
-          <el-form-item label="角色ID" :label-width="formLabelWidth">
+          <el-form-item label="角色名称" :label-width="formLabelWidth">
             <el-input v-model="dataScopeForm.roleName" placeholder="请输入内容"/>
           </el-form-item>
           <el-form-item label="数据权限" :label-width="formLabelWidth">
@@ -168,10 +168,21 @@
             align="center"
             prop="address"
             fixed="right"
+            min-width="100px"
             label="操作">
           <template scope="scope">
-            <el-link style="margin-right: 20px" type="info" @click="addForms(scope.row, '编辑')">编辑</el-link>
-            <el-link style="margin-right: 20px" type="info" @click="removeIt(scope.row)">删除</el-link>
+            <div class="operate">
+              <el-link  type="info" @click="addForms(scope.row, '编辑')">编辑</el-link>
+
+              <template>
+                <el-popconfirm
+                  title="确认要删除吗？"
+                  @confirm="removeIt(scope.row, '删除')"
+                >
+                  <el-link slot="reference" class="link-item">删除</el-link>
+                </el-popconfirm>
+              </template>
+            </div>
           </template>
         </el-table-column>
       </el-table>
