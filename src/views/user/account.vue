@@ -30,7 +30,7 @@
               </div>
               <div class="operate" v-if="currentIndex === 0 ">
                 <el-form ref="form" :model="form" :rules="rules">
-                  <el-form-item label="用户名" :label-width="labelWidth" prop="username">
+                  <el-form-item label="用户名" :label-width="labelWidth" prop="nickName">
                     <el-input v-model="form.nickName"></el-input>
                   </el-form-item>
                   <el-form-item label="手机号" :label-width="labelWidth" prop="phone">
@@ -95,14 +95,14 @@ export default {
         sex: 1
       },
       rules: {
-        username: [
+        nickName: [
           { required: true, message: "该项为必填项,请确认", trigger: "blur" }
         ],
         phone: [
           { required: true, message: "该项为必填项,请确认", trigger: "blur" }
         ],
         email: [
-          { required: true, message: "该项为必填项,请确认", trigger: "blur" }
+          { required: false, message: "该项为必填项,请确认", trigger: "blur" }
         ],
         sex: [
           { required: true, message: "该项为必填项,请确认", trigger: "blur" }
@@ -119,6 +119,7 @@ export default {
   },
   created() {
     this.userInfo = this.$store.state.userInfo;
+    this.sysDept = this.$store.state.sysDept
     this.form = this.$store.state.userInfo;
     this.getOrganizeId(this.userInfo.deptId);
   },
@@ -154,10 +155,8 @@ export default {
          if (valid) {
            upDataUser(this.form).then(res => {
              if(res.data.code === 200){
-               this.$message.success('修改完成，请重新登录')
-               this.resetForm()
-               removeCookie()
-               location.reload()
+               this.$store.dispatch('userInfo', this.form)
+               location.reload();
              }
            })
          } else {

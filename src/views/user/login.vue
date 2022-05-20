@@ -72,7 +72,7 @@ export default {
           const sysMenuList = res.data.data.user.sysMenuList
           setCookie(res.data.data.JSESSIONID)
           console.log(res.data.data.user.sysMenuList)
-          this.$router.push({path: '/layout/serveStarts'}).catch(e => console.log(e))
+          this.$router.push({path: '/home/serveStart'}).catch(e => console.log(e))
         }else {
           this.$message.error(res.data.msg)
         }

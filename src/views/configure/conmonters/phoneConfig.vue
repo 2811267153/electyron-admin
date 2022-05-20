@@ -319,17 +319,6 @@ export default {
       return fn(this.deptIdList);
     },
     deptIds() {
-    //   get(){
-    //     if(this.addForm.deptId === 0){
-    //       console.log(this.addForm);
-    //      return  this.addForm.deptId = this.addForm.deptName
-    //     }
-    //   },
-    //   set(value){
-    //    return  this.addForm.deptId = value
-    //   }
-    // }
-
       return this.addForm.deptId
     }
   },

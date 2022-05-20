@@ -204,24 +204,24 @@
         </div>
       </el-dialog>
       <el-table :data="list" style="width: 100%">
-        <el-table-column prop="date" label="序号" width="100">
+        <el-table-column prop="date" label="序号" >
           <template scope="scope">
             {{ scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="设备名称" width="100">
+        <el-table-column prop="name" label="设备名称">
         </el-table-column>
-        <el-table-column prop="serialNumber" label="SIP号" width="180">
+        <el-table-column prop="serialNumber" label="SIP号">
         </el-table-column>
-        <el-table-column prop="company" label="设备厂商" width="180">
+        <el-table-column prop="company" label="设备厂商" >
         </el-table-column>
-        <el-table-column prop="ip" label="设备IP" width="180">
+        <el-table-column prop="ip" label="设备IP">
         </el-table-column>
-        <el-table-column prop="area" label="所属区域" width="180">
+        <el-table-column prop="area" label="所属区域">
         </el-table-column>
-        <el-table-column prop="createTime" label="安装时间" width="180">
+        <el-table-column prop="createTime" label="安装时间" >
         </el-table-column>
-        <el-table-column prop="address" label="设备位置" width="300">
+        <el-table-column prop="address" label="设备位置">
           <template scope="scope">
             <div>
               {{ scope.row.address.province }}{{ scope.row.address.city
@@ -229,13 +229,13 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="stauts" label="设备状态" width="180">
+        <el-table-column prop="stauts" label="设备状态">
           <template scope="scope">
             <div v-if="scope.row.stauts">已连通</div>
             <div v-else>未连通</div>
           </template>
         </el-table-column>
-        <el-table-column prop="stauts" label="设备状态" width="操作">
+        <el-table-column prop="stauts" label="设备状态">
           <template scope="scope">
             <el-link
               class="a-link"
@@ -281,6 +281,7 @@ export default {
       isReadOnly: false,
       dialogTableVisible: false,
       formLabelWidth: '120px',
+      disabled: false,
       form: {
         serialNumber: '', //序列号
         deviceName: '', //设备名称

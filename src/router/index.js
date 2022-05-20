@@ -33,6 +33,7 @@ import configures from '@/views/billing/configure'
 
 
 import hisBill from "@/views/converse/hisBill";
+import serveStaut from "@/views/home/serveStaut";
 import intercept from "@/views/converse/intercept";
 
 import user from "@/views/user/user";
@@ -41,77 +42,34 @@ import jsCookie from "js-cookie";
 import queue from "@/views/configure/conmonters/queue";
 import meetingMinutes from "@/views/call/meetingMinutes";
 import account from "@/views/user/account";
+import home from "@/views/home/home";
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    redirect: 'layout'
+    redirect: 'home'
   },
   {
     path: '/home',
     component: headers,
-    redirect: 'layout',
+    redirect: 'home',
+    name: 'home',
     children: [
       {
-        path: '/layout',
-        name: 'layout',
-        component: layout,
+        path: '/home',
+        component: home,
+        meta: { title: '首页', icon: 'el-icon-house'},
         redirect: {
-          path: '/layout/serveStarts'
+          path: '/home/serveStart'
         },
-        meta: { title: '系统配置', icon: 'el-icon-setting'},
         children: [
           {
             meta: { title: '服务器状态' },
-            path: '/layout/serveStarts',
+            path: '/home/serveStart',
             component: serveStauts,
-            name: 'serveManage'
+            name: 'serveStart'
           },
-          {
-            meta: { title: '字典类型' },
-            component: dataManage,
-            path: '/layout/dataManage',
-            name: 'dataManage',
-            children: [
-              {
-                meta: { title: '字典管理' },
-                component: dictionaryManage,
-                path: '/layout/dicManage',
-                name: 'dataManage'
-              }
-            ]
-          },
-          {
-            meta: { title: '用户管理' },
-            path: '/layout/myManage',
-            component: myManage,
-            name: 'myManage'
-          },
-          {
-            meta: { title: '角色管理' },
-            path: '/layout/roleManage',
-            component: roleManage,
-            name: 'roleManage'
-          },
-          {
-            meta: { title: '组织管理' },
-            path: '/layout/organizationManage',
-            component: organizationManage,
-            name: 'organizationManage'
-          },
-          {
-            meta: { title: '菜单管理' },
-            path: '/layout/menu',
-            component: menu,
-            name: 'menu'
-          },
-          {
-            meta: { title: '日志' },
-            path: '/layout/recordMange',
-            component: recordMange,
-            name: 'recordMange'
-          }
         ]
       },
       {
@@ -199,6 +157,7 @@ const routes = [
       {
         path: '/call',
         component: call,
+        name: 'call',
         meta: { title: '呼叫管理',icon: 'el-icon-chat-line-round' },
         redirect: {
           path: '/call/ivr'
@@ -254,7 +213,64 @@ const routes = [
         path:'/account',
         component: account,
         meta: { title: '个人中心', isHide: true },
-      }
+      },
+      {
+        path: '/layout',
+        name: 'layout',
+        component: layout,
+        redirect: {
+          path: '/layout/serveStarts'
+        },
+        meta: { title: '系统配置', icon: 'el-icon-setting'},
+        children: [
+
+          {
+            meta: { title: '字典类型' },
+            component: dataManage,
+            path: '/layout/dataManage',
+            name: 'dataManage',
+            children: [
+              {
+                meta: { title: '字典管理' },
+                component: dictionaryManage,
+                path: '/layout/dicManage',
+                name: 'dataManage'
+              }
+            ]
+          },
+          {
+            meta: { title: '用户管理' },
+            path: '/layout/myManage',
+            component: myManage,
+            name: 'myManage'
+          },
+          {
+            meta: { title: '角色管理' },
+            path: '/layout/roleManage',
+            component: roleManage,
+            name: 'roleManage'
+          },
+          {
+            meta: { title: '组织管理' },
+            path: '/layout/organizationManage',
+            component: organizationManage,
+            name: 'organizationManage'
+          },
+          {
+            meta: { title: '菜单管理' },
+            path: '/layout/menu',
+            component: menu,
+            name: 'menu'
+          },
+          {
+            meta: { title: '日志' },
+            path: '/layout/recordMange',
+            component: recordMange,
+            name: 'recordMange'
+          }
+        ]
+      },
+
     ]
   },
   ///----------系统配置-----------
@@ -276,14 +292,21 @@ const router = new VueRouter({
 router.beforeEach((to, form, next) => {
   next()
   if(to.path !== '/user' && jsCookie.get('JSESSIONID') !== undefined  ){
-    if(to.path === '/layout/serveStarts' || to.path === '/account'){
+    if(to.path === '/home/serveStart' || to.path === '/account'){
+      store.commit('sysMenuList', JSON.parse(window.localStorage.getItem('sysMenuList')))
       store.commit('userInfo', JSON.parse(window.localStorage.getItem('userInfo')))
+      store.commit('sysDept', JSON.parse(window.localStorage.getItem('sysDept')))
+      store.commit('userInfo', JSON.parse(window.localStorage.getItem('userInfo')))
+      console.log('aaa');
       next()
     }else {
+      store.commit('sysMenuList', JSON.parse(window.localStorage.getItem('sysMenuList')))
       store.commit('userInfo', JSON.parse(window.localStorage.getItem('userInfo')))
+      store.commit('sysDept', JSON.parse(window.localStorage.getItem('sysDept')))
+      store.commit('sysRole', JSON.parse(window.localStorage.getItem('sysRole')))
       let flag = false
       if(!flag){
-        store.state.userInfo.sysMenuList.forEach(item => {
+        store.state.sysMenuList.forEach(item => {
           if(item.menuName.indexOf(to.meta.title) !== -1){
             flag = true
           }

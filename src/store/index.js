@@ -7,11 +7,9 @@ export default new Vuex.Store({
   state: {
     userInfo: {},
     dictionaryData: {},
-    // formPage: {
-    //   pageNum: 1,
-    //   pageSize: 10,
-    // },
-    total: 0  // 获取数据的总长度
+    sysMenuList: {}, //菜单
+    sysDept: {}, //部门
+    sysRole: {}, //角色
   },
   getters: {},
 
@@ -23,12 +21,18 @@ export default new Vuex.Store({
     dictionaryData(context, value){
       context.commit('dictionaryData', value)
     },
-    total(context, value){
-      context.commit('total', value)
+    sysMenuList(context, value){
+      context.commit('sysMenuList', value)
+      window.localStorage.setItem('sysMenuList', JSON.stringify(value))
     },
-    formPage(context, value){
-      context.commit('formPage', value)
-    }
+    sysDept(context, value){
+      context.commit('sysDept', value)
+      window.localStorage.setItem('sysDept', JSON.stringify(value))
+    },
+    sysRole(context, value){
+      context.commit('sysRole', value)
+      window.localStorage.setItem('sysRole', JSON.stringify(value))
+    },
   },
 
   mutations: {
@@ -38,12 +42,15 @@ export default new Vuex.Store({
     dictionaryData(state, dictionaryData){
       state.dictionaryData = dictionaryData
     },
-    total(state, total){
-      state.total = total
+    sysMenuList(state, sysMenuList){
+      state.sysMenuList = sysMenuList
     },
-    formPage(state, formPage){
-      state.formPage = formPage
+    sysDept(state, sysDept){
+      state.sysDept = sysDept
     },
+    sysRole(state, sysRole){
+      state.sysRole = sysRole
+    }
   },
 
   modules: {}

@@ -297,8 +297,8 @@ export default {
 
         //判断 当前所处的位置是否为编辑
         console.log(this.dataScopeForm);
+
         this.dataScopeForm.sysDeptList.forEach(item => {
-          console.log(item);
           this.defaultMenuIds.push(item.deptId)
         })
         this.dataScopeForm.deptIds = this.defaultMenuIds
@@ -307,13 +307,16 @@ export default {
       }},
     dialogFormVisible(val){
       if(!val){
-        this.addForm = this.$options.data()
+        this.addForm = this.$options.data().addForm
       }else {
         if(this.title === '编辑'){
+          this.defaultMenuIds = []
           console.log(this.addForm.sysMenuList);
           this.addForm.sysMenuList.forEach(item => {
             this.defaultMenuIds.push(item.menuId)
           })
+        }else {
+          this.defaultMenuIds = []
         }
       }
     }
@@ -368,18 +371,8 @@ export default {
     },
     //菜单权限更改
     menuChange(data, context){
-      console.log(context);
-        this.addForm.menuIds = context.checkedKeys
-      // const defaultMenuId = treeToArray(context.checkedNodes)
-      // console.log(this.addForm);
-      // defaultMenuId.forEach(item =>  this.addForm.menuIds.push(item.menuId))
+      this.addForm.menuIds = context.checkedKeys
       this.changeAddForm()
-
-      // //
-      // //添加 角色权限列表
-      // console.log(menuId);
-      // menuId.forEach(item =>  this.dataScopeForm.deptIds.push(item.deptId))
-      // this.changeAddForm()
     },
     addForms(row, title) {
       this.dialogFormVisible = true

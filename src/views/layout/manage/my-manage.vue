@@ -10,11 +10,14 @@
           <div class="container-nav">
             <div class="container-form">
               <el-form :inline="true" ref="form" :model="form" :rules="form_rules" class="demo-form-inline">
-                <el-form-item label="用户名称" prop="nickName">
+                <el-form-item label="用户名称">
                   <el-input placeholder="请输入内容" v-model="form.nickName"></el-input>
                 </el-form-item>
-                <el-form-item label="手机号" prop="phone">
+                <el-form-item label="手机号">
                   <el-input placeholder="请输入内容" v-model="form.phone"></el-input>
+                </el-form-item>
+                <el-form-item label="用户角色">
+                  <el-input placeholder="请输入内容" v-model="form.roleName"></el-input>
                 </el-form-item>
                 <el-form-item label="用户状态" prop="status">
                   <el-select v-model="form.status">
@@ -49,6 +52,13 @@
                 label="所属部门"
               >
                 <template scope="scope">{{ scope.row.sysDept.deptName }}</template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="department"
+                label="角色"
+              >
+                <template scope="scope">{{ scope.row.sysRole.roleName }}</template>
               </el-table-column>
               <el-table-column
                 align="center"
@@ -145,6 +155,15 @@
 <!--                  <my-tree ref="myTree" style="width: 100%" :options="treeArr" @getValue="getSelectedValue"></my-tree>-->
                   <treeselect v-model="addForm.deptId" :multiple="false" :options="treeArr" :normalizer="normalizer" />
                 </el-form-item>
+<!--                <el-form-item-->
+<!--                  class="form-item"-->
+<!--                  label="角色"-->
+<!--                  prop="deptId"-->
+<!--                  :label-width="formLabelWidth"-->
+<!--                >-->
+<!--&lt;!&ndash;                  <my-tree ref="myTree" style="width: 100%" :options="treeArr" @getValue="getSelectedValue"></my-tree>&ndash;&gt;-->
+
+<!--                </el-form-item>-->
                 <el-form-item
                   class="form-item"
                   label="用户性别"
@@ -285,7 +304,7 @@ export default {
         pageSize: 10
       },
       addForm: {
-        deptId: "",//部门
+        deptId: null,//部门
         email: "", //email
         nickName: "",//昵称
         password: "",//密码
@@ -411,7 +430,7 @@ export default {
             addUser(this.addForm).then(res => {
               if (res.data.code === 200) {
                 this.isShow = false
-                this.getUserAll(this.$store.state.formPage);
+                this.getUserAll(this.form);
                 this.$message.success("提交完成");
               } else {
                 this.$message.error(res.data.msg);
@@ -423,8 +442,14 @@ export default {
             upDataUser(this.addForm).then(res => {
               if (res.data.code === 200) {
                 this.isShow = false
-                this.getUserAll(this.$store.state.formPage);
+                this.getUserAll(this.form);
                 this.$message.success("提交完成");
+
+                //讲修改的数据域本地数据对比 是否修改本地保存的数据
+                const userInfo = this.$store.state.userInfo
+                if (this.addForm.userId === userInfo.userId){
+                  this.$store.dispatch('userInfo', this.addForm)
+                }
               } else {
                 this.$message.error(res.data.msg);
               }
@@ -475,7 +500,6 @@ export default {
       if (this.title === "新增") {
         this.isShow = true;
         this.addForm = this.$options.data().addForm;
-        this.$refs.addForm.clearValidate();
       } else if (title === "修改") {
         this.addForm = row;
         this.isShow = true;

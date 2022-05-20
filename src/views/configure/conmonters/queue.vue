@@ -112,7 +112,7 @@
               <el-input v-model="addForm.fifoNight" placeholder="请输入内容"></el-input>
             </el-form-item>
             <el-form-item label="所属部门" :label-width="formLabelWidth" prop="fifoEmergency">
-              <treeselect v-model="addForm.deptId" :multiple="false" :options="treeArr" :normalizer="normalizer" placeholder="请输入内容"/>
+              <treeselect v-model="deptId" :multiple="false" :options="treeArr" :normalizer="normalizer" placeholder="请输入内容"/>
             </el-form-item>
 
           </div>
@@ -383,6 +383,7 @@ export default {
         this.addForm = this.$options.data().addForm
       }else {
         this.addForm = row
+        console.log(row);
       }
     },
     resetForm(type) {
@@ -504,6 +505,16 @@ export default {
         this.getDirectory(5)
         this.getDirectory(0)
         //查找字典
+      }
+    }
+  },
+  computed: {
+    deptId: {
+      get(){
+          return this.addForm.deptId + ''
+      },
+      set(val){
+        this.addForm.deptId = val
       }
     }
   }

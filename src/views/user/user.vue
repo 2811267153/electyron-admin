@@ -68,11 +68,16 @@ export default {
       this.index  = 4
       getLogin(this.username, this.password).then(res => {
         if (res.data.code === 200){
-          this.$store.dispatch('userInfo', res.data.data.user)
           const sysMenuList = res.data.data.user.sysMenuList
+          const sysDept = res.data.data.user.sysDept
+          const sysRole = res.data.data.user.sysRole
+
+          this.$store.dispatch('sysMenuList', sysMenuList)
+          this.$store.dispatch('userInfo', res.data.data.user)
+          this.$store.dispatch('sysDept', sysDept)
+          this.$store.dispatch('sysRole', sysRole)
           setCookie(res.data.data.JSESSIONID)
-          console.log(res.data.data.user.sysMenuList)
-          this.$router.push({path: '/layout/serveStarts'}).catch(e => console.log(e))
+          this.$router.push({path: '/home/serveStart'}).catch(e => console.log(e))
         }else {
           this.$message.error(res.data.msg)
         }

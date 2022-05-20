@@ -256,10 +256,9 @@ export default {
     },
     treeClick(a) {
       this.form = this.$options.data().form;
-      console.log(a);
       a.deptId === "100" ? this.form.deptId = "" : this.form.deptId = a.deptId;
       console.log(this.form);
-      this.getUserAll(this.form);
+      this.getDeskList(this.form);
     },
     clear() {
       this.form = this.$options.data().form;
