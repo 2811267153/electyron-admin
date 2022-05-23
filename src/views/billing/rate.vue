@@ -19,7 +19,7 @@
             </el-button
             >
           </div>
-          <el-dialog destroy-on-close :title="title"  :close-on-click-modal="false" :visible.sync="dialogFormVisible">
+          <el-dialog destroy-on-close :title="title" :close-on-click-modal="false" :visible.sync="dialogFormVisible">
             <el-form ref="addForm" :model="addForm" :rules="addFroms">
               <el-form-item
                 label="添加费率组名称"
@@ -48,7 +48,7 @@
             <el-table-column align="center" prop="groupName" label="费率组名称">
             </el-table-column>
             <el-table-column align="center" prop="remark" label="备注"></el-table-column>
-            <el-table-column align="center" prop="address" label="操作" min-width="200px" >
+            <el-table-column align="center" prop="address" label="操作" min-width="200px">
               <template scope="scope">
                 <div class="operate">
                   <el-link type="info" @click="showAddForm(scope.row, '编辑')">编辑</el-link>
@@ -67,7 +67,7 @@
           <el-empty v-else>
           </el-empty>
         </div>
-          <my-footer v-on:next="next" @prev="prev" :form="form" @change="change" @pageCheng="pageCheng"></my-footer>
+        <my-footer v-on:next="next" @prev="prev" :form="form" @change="change" @pageCheng="pageCheng"></my-footer>
       </div>
     </div>
     <div v-show="!toggle">
@@ -83,7 +83,8 @@
               </div>
             </div>
           </div>
-          <el-dialog destroy-on-close  :close-on-click-modal="false" :title="listTitle" :visible.sync="listDialogFormVisible">
+          <el-dialog destroy-on-close :close-on-click-modal="false" :title="listTitle"
+                     :visible.sync="listDialogFormVisible">
             <el-form :model="addListFrom" ref="formName" :rules="addRules">
               <el-form-item
                 label="费率名称"
@@ -113,21 +114,22 @@
                     autocomplete="off" placeholder="请输入内容"
                   ></el-input>
                 </el-form-item>
+                <el-form-item
+                  label="计费方式"
+                  :label-width="formLabelWidth"
+                  required
+                >
+                  <div class="width">
+                    <el-form-item prop="rate">
+                      <el-input style="margin-right: 20px" v-model="addListFrom.rate" placeholder="请输入费率"></el-input>
+                    </el-form-item>
+                    <el-form-item style="margin-left: 20px" prop="billingPeriod">
+                      <el-input v-model="addListFrom.billingPeriod" placeholder="请输入计费周期"></el-input>
+                    </el-form-item>
+                  </div>
+                </el-form-item>
+
               </div>
-              <el-form-item
-                label="计费方式"
-                :label-width="formLabelWidth"
-                required
-              >
-                <div class="width">
-                  <el-form-item prop="rate">
-                    <el-input style="margin-right: 20px" v-model="addListFrom.rate" placeholder="请输入费率"></el-input>
-                  </el-form-item>
-                  <el-form-item style="margin-left: 20px" prop="billingPeriod">
-                    <el-input v-model="addListFrom.billingPeriod" placeholder="请输入计费周期"></el-input>
-                  </el-form-item>
-                </div>
-              </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
               <div class="footers">
@@ -183,9 +185,12 @@
 import {
   addRateItemList,
   addRateList,
-  deleteRate, deleteRateItem,
+  deleteRate,
+  deleteRateItem,
   getRateItemList,
-  getRateList, putRateList, upDaterateItem
+  getRateList,
+  putRateList,
+  upDaterateItem
 } from "@/newwork/ground-colltroner";
 import myEmpty from "@/newwork/myEmpty";
 import { isValidNumber } from "@/util/validate";
@@ -489,6 +494,7 @@ export default {
 .scope {
   text-align: right;
 }
+
 .width {
   display: flex;
   width: 100%;

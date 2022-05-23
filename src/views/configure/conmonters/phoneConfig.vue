@@ -1,7 +1,7 @@
 <template>
   <div class="warps">
     <my-el-header>
-      <el-button @click.native="resetConfigure" type="primary" icon="el-icon-edit" size="small">重置话机配置</el-button>
+      <!--      <el-button @click.native="resetConfigure" type="primary" icon="el-icon-edit" size="small">重置话机配置</el-button>-->
     </my-el-header>
     <div class="container">
       <div class="phone-r">
@@ -14,7 +14,7 @@
               <el-input v-model="form.domain" placeholder="请输入内容"></el-input>
             </el-form-item>
             <el-form-item label="计费方式" prop="billingType">
-              <el-select v-model="form.billingType" placeholder="中继类型">
+              <el-select v-model="form.billingType" placeholder="计费方式">
                 <el-option
                   :label="item.label"
                   :value="item.value"
@@ -46,7 +46,7 @@
             </template>
           </el-table-column>
           <el-table-column align="center" prop="directoryName" label="分机名称"></el-table-column>
-          <el-table-column align="center" prop="directoryNumber" label="鉴权号码">
+          <el-table-column align="center" prop="directoryNumber" label="分机号码">
           </el-table-column>
           <el-table-column align="center" prop="diaplan" label="拨号地址">
           </el-table-column>
@@ -60,15 +60,15 @@
           <el-table-column align="center" prop="overdraft" label="计费方式">
             <template scope="scope">
               <div v-if="scope.row.billingType === 1">后付费</div>
-              <div v-else>先付费</div>
+              <div v-else>预付费</div>
             </template>
           </el-table-column>
           <el-table-column align="center" prop="bussiness" label="业务类型"></el-table-column>
           <el-table-column align="center" prop="address" label="操作" fixed="right" min-width="130px">
             <template scope="scope">
               <div class="operate">
-                <el-link type="info" @click="addForms(scope.row, '编辑')">编辑</el-link >
-                <el-link type="info" @click="recharge(scope.row)">充值 </el-link>
+                <el-link type="info" @click="addForms(scope.row, '编辑')">编辑</el-link>
+                <el-link type="info" @click="recharge(scope.row)">充值</el-link>
                 <template>
                   <el-popconfirm title="确认要删除吗？" @confirm="removeIt(scope.row)">
                     <el-link type="info" slot="reference">删除
@@ -83,7 +83,7 @@
 
       </div>
 
-      <el-dialog :title="title" :close-on-click-modal='false' :visible.sync="dialogFormVisible" destroy-on-close>
+      <el-dialog :title="title" :close-on-click-modal="false" :visible.sync="dialogFormVisible" destroy-on-close>
         <el-form :model="addForm" :rules="rules" ref="addForm">
           <div class="width">
             <el-form-item
@@ -155,7 +155,7 @@
           </div>
           <div class="width">
             <el-form-item
-              label="鉴权号码"
+              label="分机号码"
               :label-width="formLabelWidth"
               prop="directoryNumber"
             >
@@ -200,8 +200,9 @@
               </el-select>
             </el-form-item>
             <el-form-item label="部门名称" :label-width="formLabelWidth" prop="deptId">
-<!--              <my-tree ref="myTree" style="width: 100%" :options="deptIdList" @getValue="getSelectedValue"></my-tree>-->
-              <treeselect v-model="deptIds" :multiple="false" :options="deptIdList" :normalizer="normalizer" placeholder="请输入内容"/>
+              <!--              <my-tree ref="myTree" style="width: 100%" :options="deptIdList" @getValue="getSelectedValue"></my-tree>-->
+              <treeselect v-model="deptIds" :multiple="false" :options="deptIdList" :normalizer="normalizer"
+                          placeholder="请输入内容" />
             </el-form-item>
           </div>
           <div class="width">
@@ -319,7 +320,7 @@ export default {
       return fn(this.deptIdList);
     },
     deptIds() {
-      return this.addForm.deptId
+      return this.addForm.deptId;
     }
   },
   data() {
@@ -401,8 +402,8 @@ export default {
         { label: "固定会议路由点", value: 8 }
       ],
       billingType: [
-        { label: "预付费", value: 1 },
-        { label: "后付费", value: 2 }
+        { label: "预付费", value: 0 },
+        { label: "后付费", value: 1 }
       ],
       relayType: [
         { label: "开启", value: "开启" },
@@ -472,7 +473,7 @@ export default {
       this.addForm.deptId = value.deptId;
     },
     clear() {
-      this.form = this.$options.form;
+      this.form = this.$options.data().form;
       this.getDirectory(this.form);
     },
     change() {
@@ -632,7 +633,7 @@ export default {
     deptId(val) {
       this.addForm.deptId = val[val.length - 1];
     }
-  },
+  }
 };
 </script>
 

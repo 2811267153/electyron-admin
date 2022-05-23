@@ -78,7 +78,7 @@ export default {
           this.$store.dispatch("sysDept", sysDept);
           this.$store.dispatch("sysRole", sysRole);
           setCookie(res.data.data.JSESSIONID);
-          this.$router.push({ path: "/home" }).catch(e => console.log(e));
+          this.$router.push({ path: "/home/serveStart" }).catch(e => console.log(e));
         } else {
           this.$message.error(res.data.msg);
         }

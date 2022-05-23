@@ -7,9 +7,16 @@
       </div>
       <div class="serve-container">
         <div class="form-nav">
-          <el-form :inline="true" :close-on-click-modal="false" :model="form" class="demo-form-inline" :rules="form" ref="form">
-            <el-form-item label="费率组" prop="diaplanRateGroup">
-              <el-input v-model="form.diaplanRateGroup" placeholder="请输入内容"></el-input>
+          <el-form :inline="true" :close-on-click-modal="false" :model="form" class="demo-form-inline" :rules="form"
+                   ref="form">
+            <el-form-item label="调度台名称" prop="diaplanRateGroup">
+              <el-input v-model="form.dispatchName" placeholder="请输入内容"></el-input>
+            </el-form-item>
+            <el-form-item label="队列号码" prop="diaplanRateGroup">
+              <el-input v-model="form.fifoId" placeholder="请输入内容"></el-input>
+            </el-form-item>
+            <el-form-item label="用户" prop="diaplanRateGroup">
+              <el-input v-model="form.nickName" placeholder="请输入内容"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="find">查询</el-button>
@@ -41,7 +48,8 @@
                 :label-width="formLabelWidth"
                 prop="deptId"
               >
-                <treeselect v-model="addForm.deptId" :multiple="false" :options="treeArr" placeholder="请选择" noOptionsText="暂无数据" :normalizer="normalizer" />
+                <treeselect v-model="addForm.deptId" :multiple="false" :options="treeArr" placeholder="请选择"
+                            noOptionsText="暂无数据" :normalizer="normalizer" />
               </el-form-item>
             </div>
             <div class="width">
@@ -122,7 +130,7 @@
           </el-table-column>
           <el-table-column prop="domain" align="center" label="域">
             <template scope="scope">
-              <span v-if="scope.row">{{scope.row.domain}}</span>
+              <span v-if="scope.row">{{ scope.row.domain }}</span>
             </template>
           </el-table-column>
           <el-table-column prop="fifoId" align="center" label="队列号码"></el-table-column>
@@ -131,8 +139,8 @@
           </el-table-column>
           <el-table-column prop="number" align="center" label="坐标" min-width="130px">
             <template scope="scope">
-            <p>经度：{{ scope.row.latitude }}</p >
-            <p>纬度：{{ scope.row.longitude }}</p >
+              <p>经度：{{ scope.row.latitude }}</p>
+              <p>纬度：{{ scope.row.longitude }}</p>
             </template>
           </el-table-column>
           <el-table-column prop="number" align="center" label="操作" fixed="right" min-width="130px">
@@ -157,7 +165,7 @@
         </el-table>
       </div>
     </div>
-    <my-footer v-on:next="next" @prev="prev" :form="form"  @pageCheng="pageCheng"></my-footer>
+    <my-footer v-on:next="next" @prev="prev" :form="form" @pageCheng="pageCheng"></my-footer>
   </div>
 </template>
 
@@ -184,11 +192,13 @@ export default {
   },
   data() {
     return {
-      title: "添加话机",
+      title: "添加调度台",
       dialogFormVisible: false,
       formLabelWidth: "120px",
       form: {
-        stauts: ""
+        dispatchName: "",
+        fifoId: "",
+        nickName: ""
       },
       userList: "", //用户列表
       list: [],
@@ -233,6 +243,7 @@ export default {
   },
   methods: {
     find() {
+      this.getDeskList(this.form);
     },
     next() {
       this.form.pageNum++;
@@ -242,17 +253,17 @@ export default {
       this.form.pageNum--;
       this.getRateList(this.form);
     },
-    pageCheng(e){
-      this.form = this.$options.data().form
-      this.form.pageSize = e
-      this.getDeskList(this.form)
+    pageCheng(e) {
+      this.form = this.$options.data().form;
+      this.form.pageSize = e;
+      this.getDeskList(this.form);
     },
     change(e) {
       this.form.pageNum = e;
       this.getRateList(this.form);
     },
-    blur(){
-      this.addForm.userId = this.userId.join(',')
+    blur() {
+      this.addForm.userId = this.userId.join(",");
     },
     treeClick(a) {
       this.form = this.$options.data().form;
@@ -262,6 +273,7 @@ export default {
     },
     clear() {
       this.form = this.$options.data().form;
+      this.getDeskList(this.form);
     },
     submitForm() {
       this.$refs.addForm.validate((valid) => {
@@ -306,7 +318,7 @@ export default {
       this.title = title;
       if (title === "编辑") {
         this.addForm = row;
-        this.userId = this.addForm.userList
+        this.userId = this.addForm.userList;
       }
     },
     tableRowClassName({ row, rowIndex }) {
@@ -315,12 +327,12 @@ export default {
     removeIt(row) {
       delFifo(row.id).then(res => {
         console.log(res);
-        if(res.data.code === 200){
-          this.$message.success('提交完成')
-        }else {
-          this.$message.error(res.data.msg)
+        if (res.data.code === 200) {
+          this.$message.success("提交完成");
+        } else {
+          this.$message.error(res.data.msg);
         }
-      })
+      });
       this.list.map((item, i) => {
 
         if (row === item) {
@@ -353,7 +365,7 @@ export default {
     dialogFormVisible(val) {
       if (!val) {
         this.addForm = this.$options.data().addForm;
-        this.userId = []
+        this.userId = [];
       }
     }
   },

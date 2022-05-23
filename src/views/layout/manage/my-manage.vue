@@ -150,20 +150,20 @@
                   class="form-item"
                   label="所属部门"
                   prop="deptId"
+                  placeholder="请输入内容"
                   :label-width="formLabelWidth"
                 >
-<!--                  <my-tree ref="myTree" style="width: 100%" :options="treeArr" @getValue="getSelectedValue"></my-tree>-->
+                  <!--                  <my-tree ref="myTree" style="width: 100%" :options="treeArr" @getValue="getSelectedValue"></my-tree>-->
                   <treeselect v-model="addForm.deptId" :multiple="false" :options="treeArr" :normalizer="normalizer" />
                 </el-form-item>
-<!--                <el-form-item-->
-<!--                  class="form-item"-->
-<!--                  label="角色"-->
-<!--                  prop="deptId"-->
-<!--                  :label-width="formLabelWidth"-->
-<!--                >-->
-<!--&lt;!&ndash;                  <my-tree ref="myTree" style="width: 100%" :options="treeArr" @getValue="getSelectedValue"></my-tree>&ndash;&gt;-->
-
-<!--                </el-form-item>-->
+                <!--                <el-form-item-->
+                <!--                  class="form-item"-->
+                <!--                  label="角色"-->
+                <!--                  prop="deptId"-->
+                <!--                  :label-width="formLabelWidth"-->
+                <!--                >-->
+                <!--&lt;!&ndash;                  <my-tree ref="myTree" style="width: 100%" :options="treeArr" @getValue="getSelectedValue"></my-tree>&ndash;&gt;-->
+                <!--                </el-form-item>-->
                 <el-form-item
                   class="form-item"
                   label="用户性别"
@@ -253,8 +253,12 @@
 import eTree from "@/components/eTree";
 import {
   addUser,
+  deleteUser,
+  getOrganizeList,
+  getRoleList,
   getUserAll,
-  getOrganizeList, deleteUser, upDataUser, getRoleList, upDataPassword
+  upDataPassword,
+  upDataUser
 } from "@/newwork/system-colltroner";
 import { fn } from "@/uti";
 import myEmpty from "@/newwork/myEmpty";
@@ -429,7 +433,7 @@ export default {
           if (this.title === "新增") {
             addUser(this.addForm).then(res => {
               if (res.data.code === 200) {
-                this.isShow = false
+                this.isShow = false;
                 this.getUserAll(this.form);
                 this.$message.success("提交完成");
               } else {
@@ -441,14 +445,14 @@ export default {
           } else {
             upDataUser(this.addForm).then(res => {
               if (res.data.code === 200) {
-                this.isShow = false
+                this.isShow = false;
                 this.getUserAll(this.form);
                 this.$message.success("提交完成");
 
                 //讲修改的数据域本地数据对比 是否修改本地保存的数据
-                const userInfo = this.$store.state.userInfo
-                if (this.addForm.userId === userInfo.userId){
-                  this.$store.dispatch('userInfo', this.addForm)
+                const userInfo = this.$store.state.userInfo;
+                if (this.addForm.userId === userInfo.userId) {
+                  this.$store.dispatch("userInfo", this.addForm);
                 }
               } else {
                 this.$message.error(res.data.msg);
@@ -474,9 +478,9 @@ export default {
         }
       }).catch(e => this.$message.error(e));
     },
-    pageCheng(data){
-      this.form.pageSize = data
-      this.getUserAll(this.form)
+    pageCheng(data) {
+      this.form.pageSize = data;
+      this.getUserAll(this.form);
     },
     onClear() {
       this.form.deptId = "";

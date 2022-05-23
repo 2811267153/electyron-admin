@@ -1,6 +1,8 @@
 <template>
   <div class="warps">
-    <my-el-header>   <el-button @click.nav.native="resetConfigure" type="primary" icon="el-icon-edit" size="small">重置队列配置</el-button> </my-el-header>
+    <my-el-header>
+      <!--      <el-button @click.nav.native="resetConfigure" type="primary" icon="el-icon-edit" size="small">重置队列配置</el-button>-->
+    </my-el-header>
     <div class="container">
       <div class="form-nav">
         <el-form :inline="true" :model="form" ref="form" class="demo-form-inline" :rules="rule">
@@ -21,9 +23,10 @@
             <el-button @click="resetForm('clear')">重置</el-button>
           </el-form-item>
         </el-form>
-        <el-button type="primary"  @click="addForms(null, '新增')">新增队列</el-button>
+        <el-button type="primary" @click="addForms(null, '新增')">新增队列</el-button>
       </div>
-      <el-dialog :close-on-click-modal="false" :title="title"  destroy-on-close ref="addForm" :visible.sync="dialogFormVisible">
+      <el-dialog :close-on-click-modal="false" :title="title" destroy-on-close ref="addForm"
+                 :visible.sync="dialogFormVisible">
         <el-form :model="addForm" ref="addForm" :rules="rules">
           <div class="width">
             <el-form-item label="队列名称" :label-width="formLabelWidth" prop="fifoName">
@@ -35,7 +38,7 @@
           </div>
           <div class="width">
             <el-form-item label="入路由号码" :label-width="formLabelWidth" prop="fifoRouterIn">
-              <el-select v-model="addForm.fifoRouterIn" placeholder="请选择" style="width: 100%" >
+              <el-select v-model="addForm.fifoRouterIn" placeholder="请选择" style="width: 100%">
                 <el-option
                   v-for="item in fifoRouterInList"
                   :key="item.id"
@@ -45,7 +48,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="出路由号码" :label-width="formLabelWidth" prop="fifoRouterOut">
-              <el-select v-model="addForm.fifoRouterOut" placeholder="请选择" style="width: 100%" >
+              <el-select v-model="addForm.fifoRouterOut" placeholder="请选择" style="width: 100%">
                 <el-option
                   v-for="item in fifoRouterOutList"
                   :key="item.id"
@@ -70,12 +73,12 @@
                 <el-button size="small" type="primary" style="margin-right: 20px">点击上传</el-button>
                 <div class="el-upload__tip" slot="tip" v-if="addForm.fifoWaitMusic.length === 0">
                   请上传
-                  <template v-if="fileSize"> 大小不超过 <b style="color: #f56c6c">{{ fileSize }}MB</b> </template>
-                  <template v-if="fileType"> 格式为 <b style="color: #f56c6c">{{ fileType.join("/") }}</b> </template>
+                  <template v-if="fileSize"> 大小不超过 <b style="color: #f56c6c">{{ fileSize }}MB</b></template>
+                  <template v-if="fileType"> 格式为 <b style="color: #f56c6c">{{ fileType.join("/") }}</b></template>
                   的文件
                 </div>
                 <div class="el-upload__tip" slot="tip" v-else>
-                 当前选择的文件:  {{addForm.fifoWaitMusic}}
+                  当前选择的文件: {{ addForm.fifoWaitMusic }}
                 </div>
               </el-upload>
             </el-form-item>
@@ -93,7 +96,7 @@
           </div>
           <div class="width">
             <el-form-item label="紧急号码" :label-width="formLabelWidth" prop="fifoEmergency">
-              <el-select v-model="addForm.fifoEmergency" placeholder="请选择" style="width: 100%" >
+              <el-select v-model="addForm.fifoEmergency" placeholder="请选择" style="width: 100%">
                 <el-option
                   v-for="item in fifoEmergencyList"
                   :key="item.id"
@@ -112,7 +115,8 @@
               <el-input v-model="addForm.fifoNight" placeholder="请输入内容"></el-input>
             </el-form-item>
             <el-form-item label="所属部门" :label-width="formLabelWidth" prop="fifoEmergency">
-              <treeselect v-model="deptId" :multiple="false" :options="treeArr" :normalizer="normalizer" placeholder="请输入内容"/>
+              <treeselect v-model="addForm.deptIds" :multiple="false" :options="treeArr" :normalizer="normalizer"
+                          placeholder="请输入内容" />
             </el-form-item>
 
           </div>
@@ -133,7 +137,7 @@
           align="center"
           prop="date"
           label="序号">
-          <template scope="scope">{{scope.$index + 1}}</template>
+          <template scope="scope">{{ scope.$index + 1 }}</template>
         </el-table-column>
         <el-table-column
           prop="fifoName"
@@ -186,7 +190,7 @@
               <el-link @click="addForms(scope.row, '编辑')" style="margin-right: 20px">编辑</el-link>
               <template>
                 <el-popconfirm title="确认要删除吗？" @confirm="del(scope.row)">
-                  <el-link  slot="reference">删除
+                  <el-link slot="reference">删除
                   </el-link>
                 </el-popconfirm>
               </template>
@@ -194,20 +198,19 @@
           </template>
         </el-table-column>
       </el-table>
-      <my-empty v-else/>
+      <my-empty v-else />
     </div>
-    <my-footer v-on:next = "next" @prev="prev" :form="form" @change="change"  @pageCheng="pageCheng"></my-footer>
+    <my-footer v-on:next="next" @prev="prev" :form="form" @change="change" @pageCheng="pageCheng"></my-footer>
   </div>
 </template>
 
 <script>
 import { addFifo, delFifo, getDirectory, getFifo, upDataFifo } from "@/newwork/directory";
 import myEmpty from "@/newwork/myEmpty";
-import { getDictionaryAll, getOrganizeList } from "@/newwork/system-colltroner";
+import { getOrganizeList } from "@/newwork/system-colltroner";
 import { fn } from "@/uti";
 import myTree from "@/components/myTree";
 import myFooter from "@/components/myFooter";
-import { upDataFile } from "@/newwork/ground-colltroner";
 import myElHeader from "@/components/myElHeader";
 import { delPbxConfigure } from "@/newwork/conferencr";
 import { getCookie } from "@/auth";
@@ -217,7 +220,7 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
   name: "queue",
-  data(){
+  data() {
     return {
       normalizer(node) {
         if (node.children && !node.children.length) {
@@ -230,115 +233,117 @@ export default {
         };
       },
       form: {
-        fifoName: '', //队列名称
-        fifoAgent: '',//队列名称
-        fifoRouterIn: '',  //fifoRouterIn
-        memberTimeout: '', //	agent等待时间
+        fifoName: "", //队列名称
+        fifoAgent: "",//队列名称
+        fifoRouterIn: "",  //fifoRouterIn
+        memberTimeout: "" //	agent等待时间
       },
       treeArr: [],
       addForm: {
-        domain: '', //域
-        fifoAgent: '', //号码
-        fifoName: '', //队列名称
-        fifoRouterIn: '', //入路由点号码
-        fifoRouterOut: '', //出路由点号码
-        fifoWaitMusic: '', //队列等待音
-        memberSimultaneous: '', //agent最大同时注册数量至少为1
-        memberTimeout: '', //agent等待时间
-        wrapupTime : '', //接听下一路电话的间隔
-        fifoEmergency: '', //紧急呼叫号码
-        fifoNight: ''
+        domain: "", //域
+        fifoAgent: "", //号码
+        fifoName: "", //队列名称
+        fifoRouterIn: "", //入路由点号码
+        fifoRouterOut: "", //出路由点号码
+        fifoWaitMusic: "", //队列等待音
+        memberSimultaneous: "", //agent最大同时注册数量至少为1
+        memberTimeout: "", //agent等待时间
+        wrapupTime: "", //接听下一路电话的间隔
+        fifoEmergency: "", //紧急呼叫号码
+        fifoNight: "",
+        deptId: null
+
       },
       fifoRouterInList: [],  //入路由号码列表
       fifoRouterOutList: [], //出路由号码列表
       fifoEmergencyList: [], //紧急呼叫号码
-      fileData: '', //提交的音乐
+      fileData: "", //提交的音乐
       list: [],
       dialogFormVisible: false,
-      title: '新增',
-      formLabelWidth: '120px',
+      title: "新增",
+      formLabelWidth: "120px",
       rules: {
         fifoName: [
-          { required: true, message: '该选项不可为空,请确认', trigger: 'blur' },
+          { required: true, message: "该选项不可为空,请确认", trigger: "blur" }
         ],
         fifoAgent: [
-          { required: true, message: '该选项不可为空,请确认', trigger: 'blur' },
+          { required: true, message: "该选项不可为空,请确认", trigger: "blur" }
         ],
         fifoRouterIn: [
-          { required: true, message: '该选项不可为空,请确认', trigger: 'blur' },
+          { required: true, message: "该选项不可为空,请确认", trigger: "blur" }
         ],
         fifoRouterOut: [
-          { required: true, message: '该选项不可为空,请确认', trigger: 'blur' },
+          { required: true, message: "该选项不可为空,请确认", trigger: "blur" }
         ],
         fifoWaitMusic: [
-          { required: true, message: '该选项不可为空,请确认', trigger: 'blur' },
+          { required: true, message: "该选项不可为空,请确认", trigger: "blur" }
         ],
         memberSimultaneous: [
-          { required: true, message: '该选项不可为空,请确认', trigger: 'blur' },
+          { required: true, message: "该选项不可为空,请确认", trigger: "blur" }
         ],
         memberTimeout: [
-          { required: true, message: '该选项不可为空,请确认', trigger: 'blur' },
+          { required: true, message: "该选项不可为空,请确认", trigger: "blur" }
         ],
         wrapupTime: [
-          { required: true, message: '该选项不可为空,请确认', trigger: 'blur' },
+          { required: true, message: "该选项不可为空,请确认", trigger: "blur" }
         ],
         fifoEmergency: [
-          { required: true, message: '该选项不可为空,请确认', trigger: 'blur' },
+          { required: true, message: "该选项不可为空,请确认", trigger: "blur" }
         ],
-      domain: [
-          { required: true, message: '该选项不可为空,请确认', trigger: 'blur' },
-        ],
+        domain: [
+          { required: true, message: "该选项不可为空,请确认", trigger: "blur" }
+        ]
       },
       rule: {
         fifoName: [
-          { required: false, message: '该选项不可为空,请确认', trigger: 'blur' },
+          { required: false, message: "该选项不可为空,请确认", trigger: "blur" }
         ],
         fifoAgent: [
-          { required: false, message: '该选项不可为空,请确认', trigger: 'blur' },
+          { required: false, message: "该选项不可为空,请确认", trigger: "blur" }
         ],
         fifoRouterIn: [
-          { required: false, message: '该选项不可为空,请确认', trigger: 'blur' },
+          { required: false, message: "该选项不可为空,请确认", trigger: "blur" }
         ],
         memberTimeout: [
-          { required: false, message: '该选项不可为空,请确认', trigger: 'blur' },
-        ],
+          { required: false, message: "该选项不可为空,请确认", trigger: "blur" }
+        ]
       },
       limit: 1,
-      uploadFileUrl: 'http://localhost:8080/dispatch/file/upload',
+      uploadFileUrl: "http://localhost:8080/dispatch/file/upload",
       headers: {
-        Authorization: "Bearer " + getCookie(),
+        Authorization: "Bearer " + getCookie()
       },
       fileSize: 5,
-      fileType: ['avi']
-    }
+      fileType: ["avi"]
+    };
   },
   methods: {
     getSelectedValue(value) {
-      this.addForm.deptId = value.deptId
+      this.addForm.deptId = value.deptId;
     },
-    pageCheng(e){
-      this.form = this.$options.data().form
-      this.form.pageSize = e
-      this.getFifo(this.form)
+    pageCheng(e) {
+      this.form = this.$options.data().form;
+      this.form.pageSize = e;
+      this.getFifo(this.form);
     },
 
-    next(){
-      this.form.pageNum ++
+    next() {
+      this.form.pageNum++;
       console.log(this.form);
-      this.getUserAll(this.form)
+      this.getUserAll(this.form);
     },
-    prev(){
-      this.form.pageNum --
-      this.getUserAll(this.form)
+    prev() {
+      this.form.pageNum--;
+      this.getUserAll(this.form);
     },
-    change(e){
+    change(e) {
       console.log(e);
-      this.form.pageNum = e
-      this.getUserAll(this.form)
+      this.form.pageNum = e;
+      this.getUserAll(this.form);
     },
-    handleBeforeUpload(file){
+    handleBeforeUpload(file) {
       console.log(file);
-      this.fileData = file
+      this.fileData = file;
       if (this.fileType) {
         let fileExtension = "";
         if (file.name.lastIndexOf(".") > -1) {
@@ -364,81 +369,81 @@ export default {
       }
       return true;
     },
-    handleUploadError(){
+    handleUploadError() {
       this.$message.error("上传失败, 请重试");
     },
-    handleUploadSuccess(res){
-      if (res.code === 200){
+    handleUploadSuccess(res) {
+      if (res.code === 200) {
         this.$message.success("上传成功");
-        this.addForm.fifoWaitMusic = this.fileData.name
-      }else {
+        this.addForm.fifoWaitMusic = this.fileData.name;
+      } else {
         this.$message.error("上传失败, 请重试");
       }
     },
-    addForms(row, type){
-      this.title = type
-      this.getFifo(this.form)
-      this.dialogFormVisible = true
-      if(type === '新增'){
-        this.addForm = this.$options.data().addForm
-      }else {
-        this.addForm = row
+    addForms(row, type) {
+      this.title = type;
+      this.getFifo(this.form);
+      this.dialogFormVisible = true;
+      if (type === "新增") {
+        this.addForm = this.$options.data().addForm;
+      } else {
+        this.addForm = row;
         console.log(row);
       }
     },
     resetForm(type) {
-     type === 'clear' ? this.$refs.form.resetFields(): this.$refs.addForm.resetFields();
-      this.getFifo(this.form)
+      type === "clear" ? this.$refs.form.resetFields() : this.$refs.addForm.resetFields();
+      this.getFifo(this.form);
     },
-    find(){
-      this.getFifo(this.form)
+    find() {
+      this.getFifo(this.form);
     },
-    submitForm(){
+    submitForm() {
       this.$refs.addForm.validate((valid) => {
         if (valid) {
-      this.title === '新增' ? addFifo(this.addForm).then(res => {
-          if(res.data.code === 200){
-            this.getFifo(this.form)
-            this.$message.success('提交完成')
-            this.dialogFormVisible = false
-          }else {
-            this.$message.error(res.data.msg)
-          }
-        }) : upDataFifo(this.addForm).then(res => {
-          if(res.data.code === 200){
-            this.getFifo(this.form)
-            this.$message.success('提交完成')
-            this.dialogFormVisible = false
+          this.title === "新增" ? addFifo(this.addForm).then(res => {
+            if (res.data.code === 200) {
+              this.getFifo(this.form);
+              this.$message.success("提交完成");
+              this.dialogFormVisible = false;
+            } else {
+              this.$message.error(res.data.msg);
+            }
+          }) : upDataFifo(this.addForm).then(res => {
+            if (res.data.code === 200) {
+              this.getFifo(this.form);
+              this.$message.success("提交完成");
+              this.dialogFormVisible = false;
 
-          }else {
-            this.$message.error(res.data.msg)
-          }
-        })
+            } else {
+              this.$message.error(res.data.msg);
+            }
+          });
         } else {
           return false;
         }
       });
 
     },
-    del(row){
+    del(row) {
       delFifo(row.id).then(res => {
-        if(res.data.code === 200){
-          this.$message.success('提交完成')
-          this.getFifo(this.form)
-        }else {
-          this.$message.error(res.data.msg)
+        if (res.data.code === 200) {
+          this.$message.success("提交完成");
+          this.getFifo(this.form);
+        } else {
+          this.$message.error(res.data.msg);
         }
-      })
+      });
     },
-    getFifo(form){
+    getFifo(form) {
       getFifo(form).then(res => {
-        if(res.data.code === 200){
-          this.$bus.$emit('total', res.data.data.total)
-          this.list = res.data.data.records
-        }else {
-          this.$message.error(res.data.msg)
+        if (res.data.code === 200) {
+          this.$bus.$emit("total", res.data.data.total);
+          this.list = res.data.data.records;
+        } else {
+          this.$message.error(res.data.msg);
         }
-      }).catch(e => this.$message.error(e))
+      }).catch(e => this.$message.error(e));
     },
     //出 入 队列
 
@@ -446,44 +451,44 @@ export default {
      * @param type === 1 为 紧急呼叫的结果 === 4 为入路由的结果 === 5 为出路由的结果
      */
 
-    getDirectory(type){
-      const data = {}
-      data.type = type
-      if(type === 4 ){
+    getDirectory(type) {
+      const data = {};
+      data.type = type;
+      if (type === 4) {
         getDirectory(data).then(res => {
-          this.fifoRouterInList = res.data.data.records
-        })
-      }else if(type === 5) {
+          this.fifoRouterInList = res.data.data.records;
+        });
+      } else if (type === 5) {
         getDirectory(data).then(res => {
-          this.fifoRouterOutList = res.data.data.records
-        })
-      }else {
+          this.fifoRouterOutList = res.data.data.records;
+        });
+      } else {
         getDirectory(data).then(res => {
-          this.fifoEmergencyList = res.data.data.records
-        })
+          this.fifoEmergencyList = res.data.data.records;
+        });
       }
     },
 
-    getOrganizeList(){
+    getOrganizeList() {
       getOrganizeList().then(res => {
         this.treeArr = fn(res.data.data);
       });
     },
-    resetConfigure(){
-      delPbxConfigure('fifo').then(res => {
-        if(res.data.code === 200 ){
-          this.$message.success('提交完成')
-        }else {
-          this.$message.error(res.data.msg)
+    resetConfigure() {
+      delPbxConfigure("fifo").then(res => {
+        if (res.data.code === 200) {
+          this.$message.success("提交完成");
+        } else {
+          this.$message.error(res.data.msg);
         }
-      })
+      });
     }
 
 
   },
   created() {
-    this.getFifo(this.form)
-    this.getOrganizeList()
+    this.getFifo(this.form);
+    this.getOrganizeList();
   },
   components: {
     myEmpty,
@@ -492,49 +497,52 @@ export default {
     myElHeader,
     treeselect
   },
-  destroyed(){
-    this.$bus.$off('pageChang')
+  destroyed() {
+    this.$bus.$off("pageChang");
   },
   watch: {
-    dialogFormVisible (val){
-      if(!val){
-        this.addForm = this.$options.data().addForm
-      }else {
+    dialogFormVisible(val) {
+      if (!val) {
+        this.addForm = this.$options.data().addForm;
+      } else {
         //出, 入队列
-        this.getDirectory(4)
-        this.getDirectory(5)
-        this.getDirectory(0)
+        this.getDirectory(4);
+        this.getDirectory(5);
+        this.getDirectory(0);
         //查找字典
       }
     }
   },
   computed: {
     deptId: {
-      get(){
-          return this.addForm.deptId + ''
+      get() {
+        return this.addForm.deptId + "";
       },
-      set(val){
-        this.addForm.deptId = val
+      set(val) {
+        this.addForm.deptId = val;
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>
-.form-nav{
+.form-nav {
   display: flex;
   height: 40px;
   justify-content: space-between;
 }
-.table{
+
+.table {
   margin-top: 20px;
 }
-.width{
+
+.width {
   display: flex;
   justify-content: space-between;
   width: 100%;
 }
+
 .width > * {
   flex: 1;
 }

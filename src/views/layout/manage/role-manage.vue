@@ -2,22 +2,22 @@
   <!--  角色管理-->
   <div class="role">
     <el-header>
-      <my-el-header/>
+      <my-el-header />
     </el-header>
     <div class="container">
       <div class="nav">
         <div class="nav-l">
-          <el-form ref="form" label-width="80px" :inline="true" :rules="form_rules"  :model="navForm">
+          <el-form ref="form" label-width="80px" :inline="true" :rules="form_rules" :model="navForm">
             <el-form-item label="角色名称" prop="roleName">
               <el-input v-model="navForm.roleName" placeholder="请输入内容"></el-input>
             </el-form-item>
             <el-form-item label="状态" prop="status">
               <el-select v-model="navForm.status" placeholder="请选择">
                 <el-option
-                    v-for="item in status"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
+                  v-for="item in status"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -32,7 +32,7 @@
       <el-dialog title="数据权限" :visible.sync="dialogFormVisibles" :close-on-click-modal="false">
         <el-form :model="dataScopeForm">
           <el-form-item label="角色名称" :label-width="formLabelWidth">
-            <el-input v-model="dataScopeForm.roleName" placeholder="请输入内容"/>
+            <el-input v-model="dataScopeForm.roleName" placeholder="请输入内容" />
           </el-form-item>
           <el-form-item label="数据权限" :label-width="formLabelWidth">
             <el-select v-model="dataScopeForm.dataScope">
@@ -58,33 +58,33 @@
           <el-button type="primary" @click="submitDataScopeForm(dataScopeForm)">确 定</el-button>
         </div>
       </el-dialog>
-      <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close  :close-on-click-modal="false">
+      <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close :close-on-click-modal="false">
         <el-form :model="addForm" ref="addForm" :rules="rules">
           <el-form-item
-              label="角色名称"
-              :label-width="formLabelWidth"
-              prop="roleName"
+            label="角色名称"
+            :label-width="formLabelWidth"
+            prop="roleName"
           >
             <el-input v-model="addForm.roleName" autocomplete="off" placeholder="请输入内容"></el-input>
           </el-form-item>
           <el-form-item
-              label="显示顺序"
-              :label-width="formLabelWidth"
-              prop="orderNum"
+            label="显示顺序"
+            :label-width="formLabelWidth"
+            prop="orderNum"
           >
             <el-input v-model="addForm.orderNum" autocomplete="off" placeholder="请输入内容"></el-input>
           </el-form-item>
           <el-form-item
-              label="角色编码"
-              :label-width="formLabelWidth"
-              prop="roleCode"
+            label="角色编码"
+            :label-width="formLabelWidth"
+            prop="roleCode"
           >
             <el-input v-model="addForm.roleCode" autocomplete="off" placeholder="请输入内容"></el-input>
           </el-form-item>
           <el-form-item
-              label="菜单权限"
-              :label-width="formLabelWidth"
-              prop="roleCode"
+            label="菜单权限"
+            :label-width="formLabelWidth"
+            prop="roleCode"
           >
             <el-tree
               props="permission"
@@ -93,6 +93,7 @@
               :props="menuProps"
               node-key="menuId"
               accordion
+              :check-strictly="true"
               :check-on-click-node="true"
               show-checkbox
               @check="menuChange">
@@ -120,28 +121,28 @@
       </el-dialog>
 
       <el-table
-          max-height="800px"
-          v-if="list.length !== 0"
-          :data="list"
-          :header-cell-style="{background:'#ccc', color: '#fff',}"
-          height="calc(100vh - 400px)"
-          style="width: 100%; margin-top: 20px">
+        max-height="800px"
+        v-if="list.length !== 0"
+        :data="list"
+        :header-cell-style="{background:'#ccc', color: '#fff',}"
+        height="calc(100vh - 400px)"
+        style="width: 100%; margin-top: 20px">
         <el-table-column
-            prop="date"
-            align="center"
-            label="序号"
-            width="50">
+          prop="date"
+          align="center"
+          label="序号"
+          width="50">
           <template scope="scope">{{ scope.$index + 1 }}</template>
         </el-table-column>
         <el-table-column
-            prop="roleName"
-            align="center"
-            label="角色名称">
+          prop="roleName"
+          align="center"
+          label="角色名称">
         </el-table-column>
         <el-table-column
-            prop="name"
-            align="center"
-            label="状态">
+          prop="name"
+          align="center"
+          label="状态">
           <template scope="scope">
             <p v-if="scope.row.status === 0">
               启用
@@ -152,27 +153,27 @@
           </template>
         </el-table-column>
         <el-table-column
-            prop="createTime"
-            align="center"
-            label="创建时间">
+          prop="createTime"
+          align="center"
+          label="创建时间">
         </el-table-column>
         <el-table-column
-            prop="createTime"
-            align="center"
-            label="数据权限">
+          prop="createTime"
+          align="center"
+          label="数据权限">
           <template scope="scope">
             <el-link @click="distribution(scope.row)" type="info">数据权限</el-link>
           </template>
         </el-table-column>
         <el-table-column
-            align="center"
-            prop="address"
-            fixed="right"
-            min-width="100px"
-            label="操作">
+          align="center"
+          prop="address"
+          fixed="right"
+          min-width="100px"
+          label="操作">
           <template scope="scope">
             <div class="operate">
-              <el-link  type="info" @click="addForms(scope.row, '编辑')">编辑</el-link>
+              <el-link type="info" @click="addForms(scope.row, '编辑')">编辑</el-link>
 
               <template>
                 <el-popconfirm
@@ -188,48 +189,50 @@
       </el-table>
       <my-empty v-else></my-empty>
     </div>
-    <my-footer v-on:next = "next" @prev="prev" :form="navForm" @change="change" @pageCheng="pageCheng"></my-footer>
+    <my-footer v-on:next="next" @prev="prev" :form="navForm" @change="change" @pageCheng="pageCheng"></my-footer>
   </div>
 </template>
 
 <script>
 import {
   addRole,
-  getRoleList,
-  getMenuAll,
   deleteRoleList,
-  distribution, upDataRoleList, getOrganizeList
+  distribution,
+  getMenuAll,
+  getOrganizeList,
+  getRoleList,
+  upDataRoleList
 } from "@/newwork/system-colltroner";
 import { fn, menuToTree, treeToArray } from "@/uti";
 import myEmpty from "@/newwork/myEmpty";
-import {isValidNumber} from "@/util/validate";
+import { isValidNumber } from "@/util/validate";
 import myFooter from "@/components/myFooter";
 import myElHeader from "@/components/myElHeader";
 
 
 export default {
-  name: 'role-manage',
+  name: "role-manage",
   data() {
     const validateNum = (rule, value, callback) => {
-      if(!isValidNumber(value)){
-        callback(new Error('ip地址输入有误,请确认'))
-      }else {
-        callback()
+      if (!isValidNumber(value)) {
+        callback(new Error("ip地址输入有误,请确认"));
+      } else {
+        callback();
       }
-    }
+    };
     return {
       menuIds: [],//菜单列表
-      formLabelWidth: '120px',
+      formLabelWidth: "120px",
       dialogFormVisible: false,
       dialogFormVisibles: false,
-      title: '新增',
+      title: "新增",
       navForm: {
         pageSize: 14,
         pageNum: 1,
-        orderNum: '', //显示顺序
-        roleCode: '', //角色编码
-        roleName: '', //角色名称
-        status: '',
+        orderNum: "", //显示顺序
+        roleCode: "", //角色编码
+        roleName: "", //角色名称
+        status: ""
       },
       formatList: [],  //部门列表
       defaultMenuIds: [], // '默认选中的ID'
@@ -238,197 +241,205 @@ export default {
         menuIds: [],
         pageSize: 14,
         pageNum: 1,
-        orderNum: '', //显示顺序
-        roleCode: '', //角色编码
-        roleName: '', //角色名称
-        status: 0,
+        orderNum: "", //显示顺序
+        roleCode: "", //角色编码
+        roleName: "", //角色名称
+        status: 0
       },
       total: 0,
       selectMenuList: [],
       dataScopeForm: {
-        dataScope: ''
+        dataScope: ""
       },
       list: [],
       rules: {
-        roleName: [{required: true, message: '此项为必填项，请确认', trigger: 'blur'},],
-        orderNum: [{required: true, message: '此项为必填项，请确认', trigger: 'blur'},
-          {validator: validateNum, message: '请输入合法的数字', trigger: 'blur'}
+        roleName: [{ required: true, message: "此项为必填项，请确认", trigger: "blur" }],
+        orderNum: [{ required: true, message: "此项为必填项，请确认", trigger: "blur" },
+          { validator: validateNum, message: "请输入合法的数字", trigger: "blur" }
         ],
-        roleCode: [{required: true, message: '此项为必填项，请确认', trigger: 'blur'},],
+        roleCode: [{ required: true, message: "此项为必填项，请确认", trigger: "blur" }],
         permission: [
-          {required: true, message: '此项为必填项，请确认', trigger: 'blur'}
+          { required: true, message: "此项为必填项，请确认", trigger: "blur" }
         ],
         status: [
-          {required: true, message: '此项为必填项，请确认', trigger: 'blur'}
+          { required: true, message: "此项为必填项，请确认", trigger: "blur" }
         ]
       },
-      form_rules:{
-        roleName: [{required: false, message: '此项为必填项，请确认', trigger: 'blur'},],
+      form_rules: {
+        roleName: [{ required: false, message: "此项为必填项，请确认", trigger: "blur" }],
         status: [
-          {required: false, message: '此项为必填项，请确认', trigger: 'blur'}
+          { required: false, message: "此项为必填项，请确认", trigger: "blur" }
         ]
       },
       isVacancy: true,
       defaultProps: {
-        children: 'children',
-        label: 'deptName'
+        children: "children",
+        label: "deptName"
       },
       menuProps: {
-        children: 'children',
-        label: 'menuName'
+        children: "children",
+        label: "menuName"
       },
       status: [
-        {label: '启用', value: 0},
-        {label: '停用', value: 1},
+        { label: "启用", value: 0 },
+        { label: "停用", value: 1 }
       ],
       dataScopeType: [
-        {label: '本人', value: 5},
-        {label: '本部门数据权限', value: 3},
-        {label: '本部门及一下数据权限', value: 4},
-        {label: '全部数据权限', value: 1},
-        {label: '自定义数据权限', value: 2},
+        { label: "本人", value: 5 },
+        { label: "本部门数据权限", value: 3 },
+        { label: "本部门及一下数据权限", value: 4 },
+        { label: "全部数据权限", value: 1 },
+        { label: "自定义数据权限", value: 2 }
       ],
       defaultExpand: [] //默认展开的菜单
-    }
+    };
   },
   watch: {
     dialogFormVisibles(val) {
       if (val) {
-
         //判断 当前所处的位置是否为编辑
         console.log(this.dataScopeForm);
 
         this.dataScopeForm.sysDeptList.forEach(item => {
-          this.defaultMenuIds.push(item.deptId)
-        })
-        this.dataScopeForm.deptIds = this.defaultMenuIds
-      }else {
-        this.defaultMenuIds = []
-      }},
-    dialogFormVisible(val){
-      if(!val){
-        this.addForm = this.$options.data().addForm
-      }else {
-        if(this.title === '编辑'){
-          this.defaultMenuIds = []
+          this.defaultMenuIds.push(item.deptId);
+        });
+        this.dataScopeForm.deptIds = this.defaultMenuIds;
+      } else {
+        this.defaultMenuIds = [];
+      }
+    },
+    dialogFormVisible(val) {
+      if (!val) {
+        this.addForm = this.$options.data().addForm;
+      } else {
+        if (this.title === "编辑") {
+          this.defaultMenuIds = [];
           console.log(this.addForm.sysMenuList);
           this.addForm.sysMenuList.forEach(item => {
-            this.defaultMenuIds.push(item.menuId)
-          })
-        }else {
-          this.defaultMenuIds = []
+            this.defaultMenuIds.push(item.menuId);
+          });
+        } else {
+          this.defaultMenuIds = [];
         }
       }
     }
   },
   methods: {
-    next(){
-      this.navForm.pageNum --
-      this.getRoleList(this.navForm)
+    next() {
+      this.navForm.pageNum--;
+      this.getRoleList(this.navForm);
     },
-    prev(){
-      this.navForm.pageNum ++
-      this.getRoleList(this.navForm)
+    prev() {
+      this.navForm.pageNum++;
+      this.getRoleList(this.navForm);
     },
-    change(e){
-
-      this.navForm.pageNum = e
-      this.getRoleList(this.navForm)
+    change(e) {
+      this.navForm.pageNum = e;
+      this.getRoleList(this.navForm);
     },
-    pageCheng(e){
-      this.navForm = this.$options.data().navForm
-      this.navForm.pageSize = e
-      this.getRoleList(this.navForm)
+    pageCheng(e) {
+      this.navForm = this.$options.data().navForm;
+      this.navForm.pageSize = e;
+      this.getRoleList(this.navForm);
     },
     //提交数据权限
 
     distribution(row) {
-      this.dialogFormVisibles = true
+      this.dialogFormVisibles = true;
       //获取部门列表
-      this.getOrganizeList()
-      this.dataScopeForm.roleId = row.roleId
-      this.dataScopeForm = row
+      this.getOrganizeList();
+      this.dataScopeForm.roleId = row.roleId;
+      this.dataScopeForm = row;
     },
-    getOrganizeList(){
+    getOrganizeList() {
       getOrganizeList().then(res => {
         console.log(res);
-       if(res.data.code === 200){
-         this.formatList = fn(res.data.data)
-       }
-      })
+        if (res.data.code === 200) {
+          this.formatList = fn(res.data.data);
+        }
+      });
     },
     //提交数据权限
-    submitDataScopeForm(dataScopeForm){
+    submitDataScopeForm(dataScopeForm) {
       distribution(dataScopeForm).then(res => {
-        if(res.data.code === 200){
-          this.$message.success('提交完成')
-          this.getRoleList(this.navForm)
-          this.dialogFormVisibles = false
-        }else {
-          this.$message.error(res.data.msg)
+        if (res.data.code === 200) {
+          this.$message.success("提交完成");
+          this.getRoleList(this.navForm);
+          this.dialogFormVisibles = false;
+        } else {
+          this.$message.error(res.data.msg);
         }
-      })
+      });
     },
     //菜单权限更改
-    menuChange(data, context){
-      this.addForm.menuIds = context.checkedKeys
-      this.changeAddForm()
+    menuChange(data, context) {
+      this.addForm.menuIds = context.checkedKeys;
+      this.changeAddForm();
     },
     addForms(row, title) {
-      this.dialogFormVisible = true
-      this.title = title
-      this.title === '新增' ? this.addForm = this.$options.data().addForm : this.addForm = row
+      this.dialogFormVisible = true;
+      this.title = title;
+      if (this.title === "新增") {
+        this.addForm = this.$options.data().addForm;
+      } else {
+        this.addForm = row;
+        const uid = [];
+        this.addForm.sysMenuList.forEach(item => {
+          uid.push(item.menuId);
+        });
+        this.addForm.menuIds = uid;
+      }
 
       //获取菜单列表
       getMenuAll().then(res => {
-        this.menuIds = menuToTree(res.data.data)
+        this.menuIds = menuToTree(res.data.data);
       }).catch(e => {
-        this.$message.error(e)
-      })
+        this.$message.error(e);
+      });
 
     },
     find() {
-      this.getRoleList(this.navForm)
+      this.getRoleList(this.navForm);
     },
     clearForm() {
-      this.navForm = this.$options.data().navForm
-      this.getRoleList(this.navForm)
+      this.navForm = this.$options.data().navForm;
+      this.getRoleList(this.navForm);
     },
     removeIt(row) {
       deleteRoleList(row.roleId).then(res => {
         if (res.data.code === 200) {
-          this.$message.success('提交完成')
-          this.getRoleList(this.navForm)
+          this.$message.success("提交完成");
+          this.getRoleList(this.navForm);
         } else {
-          this.$message.error(res.data.msg)
+          this.$message.error(res.data.msg);
         }
-      })
+      });
     },
     submitForm() {
       this.$refs.addForm.validate((valid) => {
         // this.changeAddForm()
-        if (valid){
-          if (this.title === '新增') {
+        if (valid) {
+          if (this.title === "新增") {
             addRole(this.addForm).then(res => {
               if (res.data.code === 200) {
-                this.$message.success('提交完成')
-                this.getRoleList(this.navForm)
-                this.resetForm()
-                this.dialogFormVisible = false
+                this.$message.success("提交完成");
+                this.getRoleList(this.navForm);
+                this.resetForm();
+                this.dialogFormVisible = false;
               } else {
-                this.$message.error(res.data.msg)
+                this.$message.error(res.data.msg);
               }
-            }).catch(e => this.$message.error(e))
+            }).catch(e => this.$message.error(e));
           } else {
             upDataRoleList(this.addForm).then((res => {
-              if(res.data.code === 200){
-                this.$message.success('提交完成')
-                this.getRoleList(this.navForm)
-                this.dialogFormVisible = false
-              }else {
-                this.$message.error(res.data.msg)
+              if (res.data.code === 200) {
+                this.$message.success("提交完成");
+                this.getRoleList(this.navForm);
+                this.dialogFormVisible = false;
+              } else {
+                this.$message.error(res.data.msg);
               }
-            }))
+            }));
           }
         } else {
           return false;
@@ -436,56 +447,56 @@ export default {
       });
     },
     resetForm(string) {
-      string === 'form' ? this.$refs.form.resetFields() : this.$refs.addForm.resetFields();
-      this.getRoleList(this.navForm)
+      string === "form" ? this.$refs.form.resetFields() : this.$refs.addForm.resetFields();
+      this.getRoleList(this.navForm);
     },
 
     checkChange(a, context) {
-      this.dataScopeForm.deptIds = []
-      const menuId = treeToArray(context.checkedNodes)
+      this.dataScopeForm.deptIds = [];
+      const menuId = treeToArray(context.checkedNodes);
 
       //添加 角色权限列表
       console.log(menuId);
-      menuId.forEach(item =>  this.dataScopeForm.deptIds.push(item.deptId))
-      this.changeAddForm()
+      menuId.forEach(item => this.dataScopeForm.deptIds.push(item.deptId));
+      this.changeAddForm();
     },
     /**
      *
      * 查询 表单是否 添加菜单权限
      */
-    changeAddForm(){
+    changeAddForm() {
       // console.log(this.addForm);
       // this.addForm.sysDeptList.length === 0 ? this.isVacancy = true : this.isVacancy = false
 
-      if(this.addForm.hasOwnProperty('sysDeptList') &&  this.addForm.sysDeptList.length === 0){
-        this.isVacancy = true
-      }else {
-        this.isVacancy = false
+      if (this.addForm.hasOwnProperty("sysDeptList") && this.addForm.sysDeptList.length === 0) {
+        this.isVacancy = true;
+      } else {
+        this.isVacancy = false;
       }
     },
     getRoleList(form) {
       getRoleList(form).then(res => {
-        this.$bus.$emit('total', res.data.data.total)
-        this.list = (res.data.data.records)
+        this.$bus.$emit("total", res.data.data.total);
+        this.list = (res.data.data.records);
       }).catch(e => {
-        this.$message.error(e)
-      })
+        this.$message.error(e);
+      });
     }
   },
   created() {
-    this.getRoleList(this.navForm)
+    this.getRoleList(this.navForm);
   },
   components: {
     myEmpty,
     myFooter,
     myElHeader
-  },
-}
+  }
+};
 </script>
 
 <style>
 
-.role{
+.role {
   display: flex;
   height: calc(100vh - 160px);
   justify-content: space-between;
@@ -503,7 +514,8 @@ export default {
   height: 40px;
   display: flex;
 }
-.container{
+
+.container {
   margin-top: 20px;
   padding: 20px;
   box-shadow: 0 0 15px #ccc;

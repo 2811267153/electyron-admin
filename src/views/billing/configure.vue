@@ -1,6 +1,6 @@
 <template>
   <div class="warps">
-    <my-el-header/>
+    <my-el-header />
     <div class="container">
       <div class="form-nav">
         <el-form :inline="true" :model="form" ref="form" class="demo-form-inline" :rules="rule">
@@ -22,61 +22,61 @@
       </div>
 
       <el-table
-          :data="list"
-          height="calc(100vh - 100px - 100px - 100px - 100px)"
-          :header-cell-style="{background:'#ccc', color: '#fff',}"
-          style="width: 100%;margin-top: 20px">
+        :data="list"
+        height="calc(100vh - 100px - 100px - 100px - 100px)"
+        :header-cell-style="{background:'#ccc', color: '#fff',}"
+        style="width: 100%;margin-top: 20px">
         <el-table-column
-            align="center"
-            prop="date"
-            label="序号">
+          align="center"
+          prop="date"
+          label="序号">
           <template scope="scope">{{ scope.$index + 1 }}</template>
         </el-table-column>
         <el-table-column
-            align="center"
-            prop="profileName"
-            label="服务接口名称">
+          align="center"
+          prop="profileName"
+          label="服务接口名称">
         </el-table-column>
         <el-table-column
-            align="center"
-            prop="netName"
-            label="网卡名称">
+          align="center"
+          prop="netName"
+          label="网卡名称">
         </el-table-column>
         <el-table-column
-            align="center"
-            prop="profileSipIp"
-            label="IP">
+          align="center"
+          prop="profileSipIp"
+          label="IP">
         </el-table-column>
         <el-table-column
-            align="center"
-            prop="profileSipPort"
-            label="端口">
+          align="center"
+          prop="profileSipPort"
+          label="端口">
         </el-table-column>
         <el-table-column
-            align="center"
-            prop="template"
-            label="模板">
+          align="center"
+          prop="template"
+          label="模板">
         </el-table-column>
         <el-table-column
-            align="center"
-            prop="netMac"
-            label="网卡的mac地址">
+          align="center"
+          prop="netMac"
+          label="网卡的mac地址">
         </el-table-column>
         <el-table-column
-            align="center"
-            prop="netMac"
-            label="状态">
+          align="center"
+          prop="netMac"
+          label="状态">
           <template scope="scope">
             <a v-if="scope.row.status === 0">启用</a>
             <a v-else>禁用</a>
           </template>
         </el-table-column>
         <el-table-column
-            align="center"
-            prop="address"
-            fixed="right"
-            min-width="100px"
-            label="操作">
+          align="center"
+          prop="address"
+          fixed="right"
+          min-width="100px"
+          label="操作">
           <template scope="scope">
             <div class="operate">
 
@@ -93,21 +93,28 @@
       </el-table>
 
 
-      <el-dialog destroy-on-close :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="false"	>
+      <el-dialog destroy-on-close :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
         <el-form :model="addForm" ref="addForm" :rules="rules">
           <el-form-item label="服务接口名称" :label-width="formLabelWidth" prop="profileName">
             <el-input v-model="addForm.profileName" autocomplete="off" placeholder="请输入内容"></el-input>
           </el-form-item>
-          <el-form-item label="网卡名称" :label-width="formLabelWidth" prop="netName">
-            <el-select @change="change" v-model="addForm.netName" placeholder="请选择">
-              <el-option
+          <div class="width">
+            <el-form-item label="网卡名称" :label-width="formLabelWidth" prop="netName">
+              <el-select style="width: 100%" @change="change" v-model="addForm.netName" placeholder="请选择">
+                <el-option
                   v-for="item in netNameList"
                   :key="item.value"
                   :label="item.netName"
                   :value="item.netName">
-              </el-option>
-            </el-select>
-          </el-form-item>
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="配置文件" :label-width="formLabelWidth" prop="template">
+              <el-select style="width: 100%" v-model="addForm.template" placeholder="请选择配置文件">
+                <el-option :label="item.label" :value="item.value" v-for="item in templateType"></el-option>
+              </el-select>
+            </el-form-item>
+          </div>
           <el-form-item label="网卡地址" :label-width="formLabelWidth" prop="netMac">
             <el-input v-model="addForm.netMac" disabled autocomplete="off" placeholder="请输入内容"></el-input>
           </el-form-item>
@@ -116,11 +123,6 @@
           </el-form-item>
           <el-form-item label="端口" :label-width="formLabelWidth" prop="profileSipPort">
             <el-input v-model="addForm.profileSipPort" autocomplete="off" placeholder="请输入内容"></el-input>
-          </el-form-item>
-          <el-form-item label="配置文件" :label-width="formLabelWidth" prop="template">
-            <el-select v-model="addForm.template" placeholder="请选择活动区域">
-              <el-option :label="item.label" :value="item.value" v-for="item in templateType"></el-option>
-            </el-select>
           </el-form-item>
           <el-form-item label="状态" :label-width="formLabelWidth">
             <el-radio-group v-model="addForm.status">
@@ -135,7 +137,7 @@
         </div>
       </el-dialog>
     </div>
-    <my-footer v-on:next = "next" @prev="prev" :form="form" @change="formChange"  @pageCheng="pageCheng"></my-footer>
+    <my-footer v-on:next="next" @prev="prev" :form="form" @change="formChange" @pageCheng="pageCheng"></my-footer>
 
   </div>
 </template>
@@ -145,6 +147,7 @@ import { addFroFile, delProFile, getProfile, getProfileInfo, upDataProFile } fro
 import { isValidPost } from "@/util/validate";
 import myFooter from "@/components/myFooter";
 import myElHeader from "@/components/myElHeader";
+
 export default {
   name: "configure",
   data() {
@@ -220,29 +223,29 @@ export default {
     myElHeader
   },
   methods: {
-    pageCheng(e){
-      this.form = this.$options.data().form
-      this.form.pageSize = e
-      this.getProfile(this.form)
+    pageCheng(e) {
+      this.form = this.$options.data().form;
+      this.form.pageSize = e;
+      this.getProfile(this.form);
     },
     find() {
       this.getProfileInfo(this.form);
     },
-    next(){
-      this.form.pageNum ++
-      this.getProfile(this.form)
+    next() {
+      this.form.pageNum++;
+      this.getProfile(this.form);
     },
-    prev(){
-      this.form.pageNum --
-      this.getProfile(this.form)
+    prev() {
+      this.form.pageNum--;
+      this.getProfile(this.form);
     },
-    formChange(e){
-      this.form.pageNum = e
-      this.getProfile(this.form)
+    formChange(e) {
+      this.form.pageNum = e;
+      this.getProfile(this.form);
     },
-    clear(){
-      this.form = this.$options.data().form
-      this.getProfile(this.form)
+    clear() {
+      this.form = this.$options.data().form;
+      this.getProfile(this.form);
     },
     change(e) {
       console.log(e);
@@ -290,7 +293,7 @@ export default {
         if (valid) {
           this.title === "新增" ? this.addDataForm() : this.upDataForm();
         } else {
-          console.log('error submit!!');
+          console.log("error submit!!");
           return false;
         }
       });
@@ -331,10 +334,11 @@ export default {
   },
   watch: {
     dialogFormVisible(val) {
-      this.resetForm();
-      this.getProfileInfo(this.form);
+      if (!val) {
+        this.addForm = this.$options.data().addForm;
+      }
     }
-  },
+  }
 };
 </script>
 
@@ -358,7 +362,8 @@ export default {
 .width > * {
   flex: 1;
 }
-.configure{
+
+.configure {
   width: 100%;
   padding: 20px;
   margin-left: 20px;
