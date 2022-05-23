@@ -1,40 +1,37 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Vue from "vue";
+import VueRouter from "vue-router";
 import store from "@/store";
-import { Message } from 'element-ui'
+import { Message } from "element-ui";
 
 import headers from "@/components/header";
 
-import layout from '@/views/layout'
+import layout from "@/views/layout";
 
-import myManage from '@/views/layout/manage/my-manage'
-import organizationManage from '@/views/layout/manage/organization-manage'
-import recordMange from '@/views/layout/manage/record-mange'
-import roleManage from '@/views/layout/manage/role-manage'
-import serveManage from '@/views/layout/manage/searce-manage'
-import serveStauts from '@/views/layout/manage/serveStauts'
-import dictionaryManage from '@/views/layout/manage/dictionary-manage'
-import dataManage from '@/views/layout/manage/dataManage'
+import myManage from "@/views/layout/manage/my-manage";
+import organizationManage from "@/views/layout/manage/organization-manage";
+import recordMange from "@/views/layout/manage/record-mange";
+import roleManage from "@/views/layout/manage/role-manage";
+import serveStauts from "@/views/layout/manage/serveStauts";
+import dictionaryManage from "@/views/layout/manage/dictionary-manage";
+import dataManage from "@/views/layout/manage/dataManage";
 
-import configure from '@/views/configure/configure'
-import phoneConfig from '@/views/configure/conmonters/phoneConfig'
-import observeOnDispatcher from '@/views/configure/conmonters/observeOnDispatcher'
-import cameraView from '@/views/configure/conmonters/cameraView'
-import terminal from '@/views/configure/conmonters/terminal'
-import networkManagement from '@/views/billing/networkManagement'
-import trunkGroup from '@/views/billing/trunkGroup'
-import dialPlan from '@/views/billing/dialPlan'
-import rate from '@/views/billing/rate'
-import call from '@/views/call/call'
-import converse from '@/views/converse/converse'
-import ivr from '@/views/call/ivr'
-import calls from '@/views/call/calls'
-import configures from '@/views/billing/configure'
+import configure from "@/views/configure/configure";
+import phoneConfig from "@/views/configure/conmonters/phoneConfig";
+import observeOnDispatcher from "@/views/configure/conmonters/observeOnDispatcher";
+import cameraView from "@/views/configure/conmonters/cameraView";
+import terminal from "@/views/configure/conmonters/terminal";
+import networkManagement from "@/views/billing/networkManagement";
+import trunkGroup from "@/views/billing/trunkGroup";
+import dialPlan from "@/views/billing/dialPlan";
+import rate from "@/views/billing/rate";
+import call from "@/views/call/call";
+import converse from "@/views/converse/converse";
+import ivr from "@/views/call/ivr";
+import calls from "@/views/call/calls";
+import configures from "@/views/billing/configure";
 
 
 import hisBill from "@/views/converse/hisBill";
-import serveStaut from "@/views/home/serveStaut";
-import intercept from "@/views/converse/intercept";
 
 import user from "@/views/user/user";
 import menu from "@/views/layout/manage/menu";
@@ -43,127 +40,128 @@ import queue from "@/views/configure/conmonters/queue";
 import meetingMinutes from "@/views/call/meetingMinutes";
 import account from "@/views/user/account";
 import home from "@/views/home/home";
-Vue.use(VueRouter)
+
+Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
-    redirect: 'home'
+    path: "/",
+    redirect: "home"
   },
   {
-    path: '/home',
+    path: "/home",
     component: headers,
-    redirect: 'home',
-    name: 'home',
+    redirect: "home",
+    name: "home",
     children: [
       {
-        path: '/home',
-        component: home,
-        meta: { title: '首页', icon: 'el-icon-house'},
+        path: "/home",
+        component: serveStauts,
+        meta: { title: "首页", icon: "el-icon-house" },
         redirect: {
-          path: '/home/serveStart'
-        },
-        children: [
-          {
-            meta: { title: '服务器状态' },
-            path: '/home/serveStart',
-            component: serveStauts,
-            name: 'serveStart'
-          },
-        ]
+          path: "/home/serveStart"
+        }
+        // children: [
+        //   {
+        //     meta: { title: "服务器状态" },
+        //     path: "/home/serveStart",
+        //     component: serveStauts,
+        //     name: "serveStart"
+        //   }
+        // ]
       },
       {
-        path: '/converse',
-        name: 'configure',
+        path: "/converse",
+        name: "configure",
         component: configure,
-        meta: { title: '设备管理', icon: 'el-icon-orange' },
+        meta: { title: "设备管理", icon: "el-icon-orange" },
         redirect: {
-          path: '/converse/phoneConfig'
+          path: "/converse/phoneConfig"
         },
         children: [
           {
-            meta: { title: '话机管理' },
-            path: '/configure/phoneConfig',
-            name: 'phoneConfig',
+            meta: { title: "话机管理" },
+            path: "/configure/phoneConfig",
+            name: "phoneConfig",
             component: phoneConfig
           },
           {
-            meta: { title: '调度台' },
-            path: '/configure/observeOnDispatcher',
-            name: 'observeOnDispatcher',
+            meta: { title: "调度台" },
+            path: "/configure/observeOnDispatcher",
+            name: "observeOnDispatcher",
             component: observeOnDispatcher
           },
           {
-            meta: { title: '摄像头' },
-              path: '/configure/cameraView',
-            name: 'cameraView',
+            meta: { title: "摄像头" },
+            path: "/configure/cameraView",
+            name: "cameraView",
             component: cameraView
           },
           {
-            meta: { title: '会议终端' },
-            path: '/configure/terminal',
-            name: 'terminal',
+            meta: { title: "会议终端" },
+            path: "/configure/terminal",
+            name: "terminal",
             component: terminal
           },
           {
-            meta: { title: '队列管理' },
-            path: '/configure/queue',
-            name: 'queue',
+            meta: { title: "队列管理" },
+            path: "/configure/queue",
+            name: "queue",
             component: queue
           }
         ]
       },
       {
-        path: '/billing',
-        name: 'billing',
+        path: "/billing",
+        name: "billing",
         component: configure,
-        meta: { title: '落地管理', icon: 'el-icon-aim' },
+        meta: { title: "落地管理", icon: "el-icon-aim" },
         redirect: {
-          path: '/billing/networkManagement'
+          path: "/billing/networkManagement"
         },
         children: [
           {
-            meta: { title: '网关管理' },
-            path: '/billing/networkManagement',
-            name: 'networkManagement',
+            meta: { title: "网关管理" },
+            path: "/billing/networkManagement",
+            name: "networkManagement",
             component: networkManagement
           },
           {
-            meta: { title: '中继组' },
-            path: '/billing/trunkGroup',
-            name: 'trunkGroup',
+            meta: { title: "中继组" },
+            path: "/billing/trunkGroup",
+            name: "trunkGroup",
             component: trunkGroup
           },
           {
-            meta: { title: '拨号方案' },
-            path: '/billing/dialPlan',
-            name: 'dialPlan',
+            meta: { title: "拨号方案" },
+            path: "/billing/dialPlan",
+            name: "dialPlan",
             component: dialPlan
           },
           {
-            meta: { title: '费率组' },
-            path: '/billing/rate',
-            name: 'rate',
+            meta: { title: "费率组" },
+            path: "/billing/rate",
+            name: "rate",
             component: rate
           },
           {
-            meta: { title: '配置管理' },
-            path: '/billing/configure',
-            name: 'configure',
+            meta: { title: "配置管理" },
+            path: "/billing/configure",
+            name: "configure",
             component: configures
           }
         ]
       },
       {
-        path: '/call',
+        path: "/call",
         component: call,
-        name: 'call',
-        meta: { title: '呼叫管理',icon: 'el-icon-chat-line-round' },
+        name: "call",
+        meta: { title: "呼叫管理", icon: "el-icon-chat-line-round" },
         redirect: {
-          path: '/call/ivr'
+          path: "/call/ivr"
         },
         children: [
-          {meta: {title: 'ivr管理'}, path: '/call/ivr', name: 'ivr', component: ivr, hidden: true},
+          { meta: { title: "ivr管理" }, path: "/call/ivr", name: "ivr", component: ivr, hidden: true },
           // {
           //   meta: { title: 'DID管理' },
           //   path: '/call/did',
@@ -171,23 +169,23 @@ const routes = [
           //   component: did
           // },
           {
-            meta: { title: '呼叫转移' },
-            path: '/call/calls',
-            name: 'calls',
+            meta: { title: "呼叫转移" },
+            path: "/call/calls",
+            name: "calls",
             component: calls
-          },
+          }
         ]
       },
       {
-          path: '/bill',
+        path: "/bill",
         component: converse,
-        meta: { title: '通话账单' ,icon: 'el-icon-document-remove'},
-        name: 'bill',
+        meta: { title: "通话账单", icon: "el-icon-document-remove" },
+        name: "bill",
         redirect: {
-          path: '/bill/index'
+          path: "/bill/index"
         },
         children: [
-          {meta: {title: '历史话单'}, path: '/bill/index', name: 'billIndex', component: hisBill},
+          { meta: { title: "历史话单" }, path: "/bill/index", name: "billIndex", component: hisBill },
           // {
           //   meta: { title: 'DID管理' },
           //   path: '/call/did',
@@ -201,127 +199,127 @@ const routes = [
           //   component: intercept
           // },
           {
-            meta: { title: '会议记录' },
-            path: '/call/meetingMinutes',
-            name: 'meetingMinutes',
+            meta: { title: "会议记录" },
+            path: "/call/meetingMinutes",
+            name: "meetingMinutes",
             component: meetingMinutes
-          },
+          }
 
         ]
       },
       {
-        path:'/account',
+        path: "/account",
         component: account,
-        meta: { title: '个人中心', isHide: true },
+        meta: { title: "个人中心", isHide: true }
       },
       {
-        path: '/layout',
-        name: 'layout',
+        path: "/layout",
+        name: "layout",
         component: layout,
         redirect: {
-          path: '/layout/serveStarts'
+          path: "/layout/serveStarts"
         },
-        meta: { title: '系统配置', icon: 'el-icon-setting'},
+        meta: { title: "系统配置", icon: "el-icon-setting" },
         children: [
 
           {
-            meta: { title: '字典类型' },
+            meta: { title: "字典类型" },
             component: dataManage,
-            path: '/layout/dataManage',
-            name: 'dataManage',
+            path: "/layout/dataManage",
+            name: "dataManage",
             children: [
               {
-                meta: { title: '字典管理' },
+                meta: { title: "字典管理" },
                 component: dictionaryManage,
-                path: '/layout/dicManage',
-                name: 'dataManage'
+                path: "/layout/dicManage",
+                name: "dataManage"
               }
             ]
           },
           {
-            meta: { title: '用户管理' },
-            path: '/layout/myManage',
+            meta: { title: "用户管理" },
+            path: "/layout/myManage",
             component: myManage,
-            name: 'myManage'
+            name: "myManage"
           },
           {
-            meta: { title: '角色管理' },
-            path: '/layout/roleManage',
+            meta: { title: "角色管理" },
+            path: "/layout/roleManage",
             component: roleManage,
-            name: 'roleManage'
+            name: "roleManage"
           },
           {
-            meta: { title: '组织管理' },
-            path: '/layout/organizationManage',
+            meta: { title: "组织管理" },
+            path: "/layout/organizationManage",
             component: organizationManage,
-            name: 'organizationManage'
+            name: "organizationManage"
           },
           {
-            meta: { title: '菜单管理' },
-            path: '/layout/menu',
+            meta: { title: "菜单管理" },
+            path: "/layout/menu",
             component: menu,
-            name: 'menu'
+            name: "menu"
           },
           {
-            meta: { title: '日志' },
-            path: '/layout/recordMange',
+            meta: { title: "日志" },
+            path: "/layout/recordMange",
             component: recordMange,
-            name: 'recordMange'
+            name: "recordMange"
           }
         ]
-      },
+      }
 
     ]
   },
   ///----------系统配置-----------
 
   {
-    path : '/user',
+    path: "/user",
     component: user,
     meta: [
-      {permission: true}
+      { permission: true }
     ]
   }
-]
+];
 
 const router = new VueRouter({
-  mode: 'hash',
+  mode: "hash",
   base: process.env.BASE_URL,
   routes
-})
+});
 router.beforeEach((to, form, next) => {
-  next()
-  if(to.path !== '/user' && jsCookie.get('JSESSIONID') !== undefined  ){
-    if(to.path === '/home/serveStart' || to.path === '/account'){
-      store.commit('sysMenuList', JSON.parse(window.localStorage.getItem('sysMenuList')))
-      store.commit('userInfo', JSON.parse(window.localStorage.getItem('userInfo')))
-      store.commit('sysDept', JSON.parse(window.localStorage.getItem('sysDept')))
-      store.commit('userInfo', JSON.parse(window.localStorage.getItem('userInfo')))
-      console.log('aaa');
-      next()
-    }else {
-      store.commit('sysMenuList', JSON.parse(window.localStorage.getItem('sysMenuList')))
-      store.commit('userInfo', JSON.parse(window.localStorage.getItem('userInfo')))
-      store.commit('sysDept', JSON.parse(window.localStorage.getItem('sysDept')))
-      store.commit('sysRole', JSON.parse(window.localStorage.getItem('sysRole')))
-      let flag = false
-      if(!flag){
+  next();
+  if (to.path !== "/user" && jsCookie.get("JSESSIONID") !== undefined) {
+    if (to.path === "/home/serveStart" || to.path === "/account") {
+      store.commit("sysMenuList", JSON.parse(window.localStorage.getItem("sysMenuList")));
+      store.commit("userInfo", JSON.parse(window.localStorage.getItem("userInfo")));
+      store.commit("sysDept", JSON.parse(window.localStorage.getItem("sysDept")));
+      store.commit("userInfo", JSON.parse(window.localStorage.getItem("userInfo")));
+      console.log("aaa");
+      next();
+    } else {
+      store.commit("sysMenuList", JSON.parse(window.localStorage.getItem("sysMenuList")));
+      store.commit("userInfo", JSON.parse(window.localStorage.getItem("userInfo")));
+      store.commit("sysDept", JSON.parse(window.localStorage.getItem("sysDept")));
+      store.commit("sysRole", JSON.parse(window.localStorage.getItem("sysRole")));
+      let flag = false;
+      if (!flag) {
         store.state.sysMenuList.forEach(item => {
-          if(item.menuName.indexOf(to.meta.title) !== -1){
-            flag = true
+          if (item.menuName.indexOf(to.meta.title) !== -1) {
+            flag = true;
           }
-        })
-        if(flag){
-          next()
-        }else {
-          Message.error('你没有访问这个页面的权利哦')
-          next('/user')
+        });
+        if (flag) {
+          next();
+        } else {
+          Message.error("你没有访问这个页面的权利哦");
+          next("/user");
         }
       }
     }
-  }else {
-    next('/user')
+  } else {
+    next("/user");
   }
-})
+});
 
-export default router
+export default router;
