@@ -32,10 +32,10 @@
       <el-dialog title="数据权限" :visible.sync="dialogFormVisibles" :close-on-click-modal="false">
         <el-form :model="dataScopeForm">
           <el-form-item label="角色名称" :label-width="formLabelWidth">
-            <el-input v-model="dataScopeForm.roleName" placeholder="请输入内容" />
+            <el-input disabled v-model="dataScopeForm.roleName" placeholder="请输入内容" />
           </el-form-item>
           <el-form-item label="数据权限" :label-width="formLabelWidth">
-            <el-select v-model="dataScopeForm.dataScope">
+            <el-select v-model="dataScopeForm.dataScope" style="width: 100%">
               <el-option :label="item.label" :value="item.value" v-for="item in dataScopeType"></el-option>
             </el-select>
           </el-form-item>
@@ -87,13 +87,15 @@
             prop="roleCode"
           >
             <el-tree
+              ref="tree"
               props="permission"
               :data="menuIds"
               :default-checked-keys="defaultMenuIds"
               :props="menuProps"
               node-key="menuId"
+              check-strictly
+              @check-change="getChange"
               accordion
-              :check-strictly="true"
               :check-on-click-node="true"
               show-checkbox
               @check="menuChange">
@@ -165,7 +167,6 @@
             </p>
           </template>
         </el-table-column>
-
         <el-table-column
           align="center"
           prop="address"
@@ -300,7 +301,6 @@ export default {
       if (val) {
         //判断 当前所处的位置是否为编辑
         console.log(this.dataScopeForm);
-
         this.dataScopeForm.sysDeptList.forEach(item => {
           this.defaultMenuIds.push(item.deptId);
         });
@@ -384,13 +384,15 @@ export default {
         this.addForm = this.$options.data().addForm;
       } else {
         this.addForm = row;
+        const { sysMenuList } = row;
+        console.log(sysMenuList);
         /**
          *
          * uid里面保存的是 row里面的详细菜单的ID
          * @type {*[]}
          */
         const uid = [];
-        this.addForm.sysMenuList.forEach(item => {
+        row.sysMenuList.forEach(item => {
           uid.push(item.menuId);
         });
         this.addForm.menuIds = uid;
@@ -451,6 +453,39 @@ export default {
           return false;
         }
       });
+    },
+    getChange(data, check) {
+      if (data.parentId !== null) {
+        if (check === true) {
+          // 如果选中，设置父节点为选中
+          this.$refs.tree.setChecked(data.parentId, true);
+        } else {
+          // 如果取消选中，检查父节点是否该取消选中（可能仍有子节点为选中状态）
+          let parentNode = this.$refs.tree.getNode(data.parentId);
+          let parentHasCheckedChild = false;
+          for (
+            var i = 0, parentChildLen = parentNode.childNodes.length;
+            i < parentChildLen;
+            i++
+          ) {
+            if (parentNode.childNodes[i].checked === true) {
+              parentHasCheckedChild = true;
+              break;
+            }
+          }
+          if (!parentHasCheckedChild)
+            this.$refs.tree.setChecked(data.parentId, false);
+        }
+      }
+      // 子节点操作，如果取消选中，取消子节点选中
+      if (data.children != null && check === false) {
+        for (let j = 0, len = data.children.length; j < len; j++) {
+          let childNode = this.$refs.tree.getNode(data.children[j].id);
+          if (childNode.checked === true) {
+            this.$refs.tree.setChecked(childNode.data.id, false);
+          }
+        }
+      }
     },
     resetForm(string) {
       string === "form" ? this.$refs.form.resetFields() : this.$refs.addForm.resetFields();

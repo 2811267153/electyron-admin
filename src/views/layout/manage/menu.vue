@@ -12,7 +12,6 @@
         node-key="menuId"
         :indent="0"
         @node-click="meunClick"
-        :expand-on-click-node="false"
         :default-expanded-keys="defaultShowNodes"
         accordion>
         <div class="custom-tree-node" slot-scope="{node, data}">
@@ -236,7 +235,7 @@ export default {
         if (this.addForm.parentId === "0") {
           return this.addForm.menuId;
         } else {
-          return this.addForm.parentId
+          return this.addForm.parentId;
         }
       },
       set(val) {
