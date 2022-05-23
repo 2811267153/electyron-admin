@@ -140,19 +140,6 @@
           label="角色名称">
         </el-table-column>
         <el-table-column
-          prop="name"
-          align="center"
-          label="状态">
-          <template scope="scope">
-            <p v-if="scope.row.status === 0">
-              启用
-            </p>
-            <p v-else>
-              禁用
-            </p>
-          </template>
-        </el-table-column>
-        <el-table-column
           prop="createTime"
           align="center"
           label="创建时间">
@@ -165,6 +152,20 @@
             <el-link @click="distribution(scope.row)" type="info">数据权限</el-link>
           </template>
         </el-table-column>
+        <el-table-column
+          prop="name"
+          align="center"
+          label="状态">
+          <template scope="scope">
+            <p v-if="scope.row.status === 0">
+              启用
+            </p>
+            <p v-else>
+              禁用
+            </p>
+          </template>
+        </el-table-column>
+
         <el-table-column
           align="center"
           prop="address"
@@ -383,6 +384,11 @@ export default {
         this.addForm = this.$options.data().addForm;
       } else {
         this.addForm = row;
+        /**
+         *
+         * uid里面保存的是 row里面的详细菜单的ID
+         * @type {*[]}
+         */
         const uid = [];
         this.addForm.sysMenuList.forEach(item => {
           uid.push(item.menuId);

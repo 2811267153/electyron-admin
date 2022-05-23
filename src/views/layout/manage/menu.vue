@@ -1,8 +1,11 @@
 <template>
   <div class="menu">
-    <my-el-header/>
+    <my-el-header />
     <div class="container">
-      <div class="tree-menu"><p>菜单名称</p><p>菜单路径</p><p style="padding-left: 25px">权限</p><p>操作</p></div>
+      <div class="tree-menu"><p>菜单名称</p>
+        <p>菜单路径</p>
+        <p style="padding-left: 25px">权限</p>
+        <p>操作</p></div>
       <el-tree
         :data="path"
         :props="defaultProps"
@@ -33,27 +36,29 @@
         </div>
       </el-tree>
       <div>
-        <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close  :close-on-click-modal="false">
+        <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close :close-on-click-modal="false">
           <el-form :model="addForm" ref="addForm" :rules="rules">
             <el-form-item label="菜单名称" :label-width="formLabelWidth" prop="menuName">
               <el-input v-model="addForm.menuName" autocomplete="off" placeholder="请输入内容"></el-input>
             </el-form-item>
             <el-form-item label="菜单类型" :label-width="formLabelWidth" prop="menuType">
-              <el-select v-model="addForm.menuType"  style="width: 100%;">
-                <el-option v-for="item in menuType" :value="item.value" placeholder="请输入内容" :label="item.label"></el-option>
+              <el-select v-model="addForm.menuType" style="width: 100%;">
+                <el-option v-for="item in menuType" :value="item.value" placeholder="请输入内容"
+                           :label="item.label"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="显示顺序" :label-width="formLabelWidth" prop="orderNum">
-              <el-input v-model="addForm.orderNum" placeholder="请输入内容"/>
+              <el-input v-model="addForm.orderNum" placeholder="请输入内容" />
             </el-form-item>
-            <el-form-item label="父菜单ID" :label-width="formLabelWidth" prop="parentId">
-              <el-input v-model="addForm.parentId" placeholder="请输入内容"/>
+            <el-form-item label="父菜单" :label-width="formLabelWidth" prop="parentId">
+              <treeselect v-model="parentId" :multiple="false" :options="path"
+                          :normalizer="normalizer" />
             </el-form-item>
             <el-form-item label="路由地址" :label-width="formLabelWidth" prop="path">
-              <el-input v-model="addForm.path" placeholder="请输入内容"/>
+              <el-input v-model="addForm.path" placeholder="请输入内容" />
             </el-form-item>
             <el-form-item label="权限标识" :label-width="formLabelWidth" prop="perms">
-              <el-input v-model="addForm.perms" placeholder="请输入内容"/>
+              <el-input v-model="addForm.perms" placeholder="请输入内容" />
             </el-form-item>
             <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
               <el-radio-group v-model="addForm.status">
@@ -79,156 +84,191 @@
 
 <script>
 import { addMenuAll, delMenu, getMenuAll, upDataMenu } from "@/newwork/system-colltroner";
-import {fn, menuToTree} from "@/uti";
+import { menuToTree } from "@/uti";
 import myElHeader from "@/components/myElHeader";
+import treeselect from "@riophae/vue-treeselect";
+// import the styles
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
   name: "menu-path",
   components: {
-    myElHeader
+    myElHeader,
+    treeselect
   },
 
   data() {
     return {
-      title: '新增',
+      normalizer(node) {
+        if (node.children && !node.children.length) {
+          delete node.children;
+        }
+        return {
+          id: node.menuId,
+          children: node.children,
+          label: node.menuName
+        };
+      },
+      title: "新增",
       formLabelWidth: "120px",
       dialogFormVisible: false,
       form: {},
       path: [],
       defaultProps: {
-        children: 'children',
-        label: 'menuName'
+        children: "children",
+        label: "menuName"
       },
       addForm: {
-        menuName: '',
-        menuType: '',
-        orderNum: '',
-        parentId: '',
-        path: '',
-        perms: '',
-        status: 0,
+        menuName: "",
+        menuType: "",
+        orderNum: "",
+        parentId: "",
+        path: "",
+        perms: "",
+        status: 0
       },
-      showTitle: ['新增','编辑','删除'],
+      showTitle: ["新增", "编辑", "删除"],
       showIndex: null,
       row: {},
       defaultShowNodes: [],
       menuType: [
-        {label: '菜单', value: 'M'},
-        {label: '按钮', value: 'F'}
+        { label: "菜单", value: "M" },
+        { label: "按钮", value: "F" }
       ],
       statusType: [
-        {label: '开启', value: 0},
-        {label: '关闭', value: 1},
+        { label: "开启", value: 0 },
+        { label: "关闭", value: 1 }
       ],
       rules: {
-        menuName: [  { required: true, message: '该选项不可为空, 请确认', trigger: 'blur' },],
-        menuType: [  { required: true, message: '该选项不可为空, 请确认', trigger: 'blur' },],
-        orderNum: [  { required: true, message: '该选项不可为空, 请确认', trigger: 'blur' },],
-        parentId: [  { required: true, message: '该选项不可为空, 请确认', trigger: 'blur' },],
-        path: [  { required: true, message: '改选行不可为空, 请确认', trigger: 'blur' }, ],
-        perms: [  { required: true, message: '改选行不可为空, 请确认', trigger: 'blur' },],
-        status: [  { required: false, message: '改选行不可为空, 请确认', trigger: 'blur' },],
+        menuName: [{ required: true, message: "该选项不可为空, 请确认", trigger: "blur" }],
+        menuType: [{ required: true, message: "该选项不可为空, 请确认", trigger: "blur" }],
+        orderNum: [{ required: true, message: "该选项不可为空, 请确认", trigger: "blur" }],
+        parentId: [{ required: true, message: "该选项不可为空, 请确认", trigger: "blur" }],
+        path: [{ required: true, message: "改选行不可为空, 请确认", trigger: "blur" }],
+        perms: [{ required: true, message: "改选行不可为空, 请确认", trigger: "blur" }],
+        status: [{ required: false, message: "改选行不可为空, 请确认", trigger: "blur" }]
       }
-    }
+    };
   },
   created() {
-    this.getMenuAll(this.form)
+    this.getMenuAll(this.form);
   },
   methods: {
     getMenuAll(form) {
       getMenuAll(form).then(res => {
-        this.list = res.data.data
-        this.path = menuToTree(res.data.data)
+        this.list = res.data.data;
+        this.path = menuToTree(res.data.data);
       }).catch(e => {
-        console.log(e)
-        this.$message.error(e)
-      })
+        console.log(e);
+        this.$message.error(e);
+      });
     },
     submitForm() {
       this.$refs.addForm.validate((valid) => {
         if (valid) {
-          this.title === '新增' ? addMenuAll(this.addForm).then(res => {
-                console.log(res)
-                if (res.data.code === 200) {
-                  this.$message.success('提交完成')
-                  this.dialogFormVisible = false
-                  this.getMenuAll()
-                } else {
-                  this.$message.error(res.data.msg)
-                }
-              }) :
-              upDataMenu(this.addForm).then(res => {
-                console.log(res)
-                if (res.data.code === 200) {
-                  this.getMenuAll()
-                  this.dialogFormVisible = false
-                  this.$message.success('提交完成')
-                } else {
-                  this.$message.error(res.data.msg)
-                }
-              })
+          this.title === "新增" ? addMenuAll(this.addForm).then(res => {
+              console.log(res);
+              if (res.data.code === 200) {
+                this.$message.success("提交完成");
+                this.dialogFormVisible = false;
+                this.getMenuAll();
+              } else {
+                this.$message.error(res.data.msg);
+              }
+            }) :
+            upDataMenu(this.addForm).then(res => {
+              console.log(res);
+              if (res.data.code === 200) {
+                this.getMenuAll();
+                this.dialogFormVisible = false;
+                this.$message.success("提交完成");
+              } else {
+                this.$message.error(res.data.msg);
+              }
+            });
         } else {
-          console.log('error submit!!');
+          console.log("error submit!!");
           return false;
         }
-      })
+      });
     },
     meunClick(data) {
-      this.row = data
-      this.showIndex === null ? console.log('1') : this.showForm(this.showTitle[this.showIndex]);
+      this.row = data;
+      this.showIndex === null ? console.log("1") : this.showForm(this.showTitle[this.showIndex]);
     },
     showForm(type) {
-      this.dialogFormVisible = true
-      this.title = type
-      if (type === '编辑') {
-        console.log('aa');
-        this.addForm = this.row
-      }else {
-        this.addForm = this.$options.data().addForm
-        this.addForm.parentId = this.row.menuId
+
+      this.title = type;
+      if (type === "编辑") {
+        this.dialogFormVisible = true;
+        this.addForm = this.row;
+      } else if (type === "新增") {
+        this.dialogFormVisible = true;
+        this.showIndex = null;
+        this.addForm = this.$options.data().addForm;
+        this.addForm.parentId = this.row.menuId;
+      } else {
+        this.removeIt();
+        this.showIndex = null;
       }
     },
-    currentShow(index){
-      this.showIndex = index
+    currentShow(index) {
+      this.showIndex = index;
     },
-    removeIt(e){
-      console.log(e);
-      e.stopPropagation()
+    removeIt() {
       delMenu(this.row.menuId).then(res => {
-        if(res.data.code === 200){
-          this.getMenuAll(this.form)
-          this.dialogFormVisible = false
-          this.$message.success('提交完成')
-        }else {
-          this.$message.error(res.data.msg)
+        if (res.data.code === 200) {
+          this.getMenuAll(this.form);
+          this.dialogFormVisible = false;
+          this.$message.success("提交完成");
+        } else {
+          this.$message.error(res.data.msg);
         }
-      })
+      });
     }
   },
   computed: {
     // pathRes(){
     //   return (this.path)
     // }
+    parentId: {
+      get() {
+        if (this.addForm.parentId === "0") {
+          return this.addForm.menuId;
+        } else {
+          return this.addForm.parentId
+        }
+      },
+      set(val) {
+        return this.addForm.parentId = val;
+      }
+    }
   },
   watch: {
+    dialogFormVisible(val) {
+      if (!val) {
+        this.showIndex = null;
+      }
+    },
     path: {
       handler() {
-        console.log(this.path)
+        console.log(this.path);
         this.path.forEach(item => {
-          this.defaultShowNodes.push(item.menuId)
-        })
+          this.defaultShowNodes.push(item.menuId);
+        });
       },
       deep: true
     }
   }
-}
+};
 </script>
 
 <style>
 .custom-tree-node {
   width: 100%;
 }
-.menu{
+
+.menu {
   display: flex;
   height: calc(100vh - 160px);
   justify-content: space-between;
@@ -244,15 +284,18 @@ export default {
 .tree .link {
   margin-right: 20px;
 }
-.form-bottom{
+
+.form-bottom {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.tree-path{
+
+.tree-path {
   width: 200px;
 }
-.grid-content{
+
+.grid-content {
   text-align: center;
 }
 </style>

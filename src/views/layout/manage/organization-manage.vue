@@ -1,7 +1,7 @@
 <template>
   <!--  组织管理-->
   <div class="management">
-    <my-el-header> </my-el-header>
+    <my-el-header></my-el-header>
     <div class="container">
       <div class="nav-form">
         <el-form ref="form" class="form" :model="form" label-width="80px" :inline="true">
@@ -29,7 +29,8 @@
 
             <!--          <my-tree style="width: 100%" :options="formList" @getValue="getSelectedValue"></my-tree>-->
             <!--          <my-el-tree v-model="addForm.parentId" :options="formList" :value='row.parentId' :props="defaultProps"/>-->
-            <treeselect v-model="parent" :multiple="false" :disabled="isDisabled" :options="formatList" :normalizer="normalizer" />
+            <treeselect v-model="parent" :multiple="false" :disabled="isDisabled" :options="formatList"
+                        :normalizer="normalizer" />
           </el-form-item>
           <el-form-item label="状态" :label-width="formLabelWidth">
             <el-radio-group v-model="addForm.status">
@@ -45,7 +46,7 @@
       </el-dialog>
       <div>
       </div>
-      <div class="tree-menu"><p>部门名称</p>
+      <div class="tree-menu "><p>部门名称</p>
         <p>创建时间</p>
         <p style="padding-left: 25px">状态</p>
         <p>操作</p></div>
@@ -79,12 +80,7 @@
 </template>
 
 <script>
-import {
-  addOrganize,
-  delOrganizeList,
-  getOrganizeList,
-  upDataOrganize
-} from "@/newwork/system-colltroner";
+import { addOrganize, delOrganizeList, getOrganizeList, upDataOrganize } from "@/newwork/system-colltroner";
 import { fn, getNowFormatDate } from "@/uti";
 import { isValidNumber } from "@/util/validate";
 import myTree from "@/components/myTree";
@@ -170,8 +166,8 @@ export default {
         this.$emit("total", res.data.data.total);
         this.formatList = fn(res.data.data);
         this.formatList.forEach(item => {
-          this.defaulExpanded.push(item.deptId)
-        })
+          this.defaulExpanded.push(item.deptId);
+        });
       }).catch(e => {
         this.$message.error(e);
       });
@@ -206,9 +202,6 @@ export default {
         this.title = type;
         this.addForm = this.$options.data().addForm;
         this.addForm.parentId = this.row.deptId;
-        // this.$nextTick(() => {
-        //   this.$refs.myTree.valueName = this.row.deptName
-        // })
       } else {
         this.removeIt();
         this.showIndex = 0;
@@ -260,7 +253,13 @@ export default {
       });
     }
   },
-
+  watch: {
+    dialogFormVisible(val) {
+      if (!val) {
+        this.showIndex = null;
+      }
+    }
+  },
   components: {
     myTree,
     myFooter,
@@ -280,18 +279,16 @@ export default {
     },
     parent: {
       get() {
-        if(this.addForm.parentId === '0'){
-          console.log(this.isDisabled);
-          this.isDisabled = true
-          return this.addForm.deptId
-        }else {
-          this.isDisabled = false
-          return this.addForm.parentId
+        if (this.addForm.parentId === "0") {
+          this.isDisabled = true;
+          return this.addForm.deptId;
+        } else {
+          this.isDisabled = false;
+          return this.addForm.parentId;
         }
       },
-      set(value){
-        console.log(this.isDisabled);
-        return this.addForm.parentId = value
+      set(value) {
+        return this.addForm.parentId = value;
       }
     }
   }
