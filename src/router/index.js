@@ -57,10 +57,10 @@ const routes = [
       {
         path: "/home",
         component: serveStauts,
-        meta: { title: "首页", icon: "el-icon-house" },
-        redirect: {
-          path: "/home/serveStart"
-        }
+        meta: { title: "首页", icon: "el-icon-house" }
+        // redirect: {
+        //   path: "/home/serveStart"
+        // }
         // children: [
         //   {
         //     meta: { title: "服务器状态" },
@@ -290,7 +290,7 @@ const router = new VueRouter({
 router.beforeEach((to, form, next) => {
   next();
   if (to.path !== "/user" && jsCookie.get("JSESSIONID") !== undefined) {
-    if (to.path === "/home/serveStart" || to.path === "/account") {
+    if (to.path === "/home" || to.path === "/account") {
       store.commit("sysMenuList", JSON.parse(window.localStorage.getItem("sysMenuList")));
       store.commit("userInfo", JSON.parse(window.localStorage.getItem("userInfo")));
       store.commit("sysDept", JSON.parse(window.localStorage.getItem("sysDept")));

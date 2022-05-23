@@ -4,18 +4,18 @@
       <div class="width">
         <div style="height: 300px; color: white">
           <el-steps direction="vertical" :active="index" :align-center="true">
-            <el-step title="开始" ></el-step>
-            <el-step title="填写账号" ></el-step>
-            <el-step title="输入密码" >></el-step>
-            <el-step title="提交"  >></el-step>
+            <el-step title="开始"></el-step>
+            <el-step title="填写账号"></el-step>
+            <el-step title="输入密码">></el-step>
+            <el-step title="提交">></el-step>
           </el-steps>
         </div>
       </div>
     </div>
     <div class="login-other">
       <h2>欢迎使用调度管理系统！</h2>
-      <el-form class="el-from" ref="form"  label-width="120">
-        <el-form-item label="账号" >
+      <el-form class="el-from" ref="form" label-width="120">
+        <el-form-item label="账号">
           <el-input v-model="username" @focus="focus(2)"></el-input>
         </el-form-item>
         <el-form-item label="密码">
@@ -31,7 +31,8 @@
 
 <script>
 import getLogin from "@/newwork/user";
-import {setCookie} from "@/auth";
+import { setCookie } from "@/auth";
+
 export default {
   name: "login",
   data() {
@@ -39,60 +40,60 @@ export default {
       isErr: false,
       settingShow: false,
       username: "admin",
-      password: '123456',
-        isClearNumShow: false,
-        isPadShow: false,
-      index: 0,
+      password: "123456",
+      isClearNumShow: false,
+      isPadShow: false,
+      index: 0
     };
   },
   methods: {
     loginInput(type) {
-      if (type === 'text') {
-        this.form.number.length !== 0 ? this.form.isClearNumShow = true : this.isClearNumShow = false
+      if (type === "text") {
+        this.form.number.length !== 0 ? this.form.isClearNumShow = true : this.isClearNumShow = false;
       } else {
-        this.$refs.psd.type = 'password'
-        this.form.pad.length !== 0 ? this.form.isPadShow = true : this.isPadShow = false
+        this.$refs.psd.type = "password";
+        this.form.pad.length !== 0 ? this.form.isPadShow = true : this.isPadShow = false;
       }
     },
     clear(type) {
-      if (type === 'text') {
-        this.form.number = ''
-            this.form.isClearNumShow = false
+      if (type === "text") {
+        this.form.number = "";
+        this.form.isClearNumShow = false;
       } else {
-        this.form.pad = ''
-            this.form.isPadShow = false
+        this.form.pad = "";
+        this.form.isPadShow = false;
       }
     },
 
-    onSubmit(){
-      this.index  = 4
+    onSubmit() {
+      this.index = 4;
       getLogin(this.username, this.password).then(res => {
-        if (res.data.code === 200){
-          const sysMenuList = res.data.data.user.sysMenuList
-          const sysDept = res.data.data.user.sysDept
-          const sysRole = res.data.data.user.sysRole
+        if (res.data.code === 200) {
+          const sysMenuList = res.data.data.user.sysMenuList;
+          const sysDept = res.data.data.user.sysDept;
+          const sysRole = res.data.data.user.sysRole;
 
-          this.$store.dispatch('sysMenuList', sysMenuList)
-          this.$store.dispatch('userInfo', res.data.data.user)
-          this.$store.dispatch('sysDept', sysDept)
-          this.$store.dispatch('sysRole', sysRole)
-          setCookie(res.data.data.JSESSIONID)
-          this.$router.push({path: '/home/serveStart'}).catch(e => console.log(e))
-        }else {
-          this.$message.error(res.data.msg)
+          this.$store.dispatch("sysMenuList", sysMenuList);
+          this.$store.dispatch("userInfo", res.data.data.user);
+          this.$store.dispatch("sysDept", sysDept);
+          this.$store.dispatch("sysRole", sysRole);
+          setCookie(res.data.data.JSESSIONID);
+          this.$router.push({ path: "/home" }).catch(e => console.log(e));
+        } else {
+          this.$message.error(res.data.msg);
         }
       }).catch(e => {
-        this.$message.error(e)
-      })
+        this.$message.error(e);
+      });
     },
 
-    isShow(){
-      this.isErr = !this.isErr
+    isShow() {
+      this.isErr = !this.isErr;
     },
-    focus(index){
-      this.index = index
+    focus(index) {
+      this.index = index;
     }
-  },
+  }
 };
 </script>
 
@@ -105,6 +106,7 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
+
 .login-info {
   background: linear-gradient(to bottom right, #FAFCB1, #3f86f2);
   height: 100%;
@@ -115,21 +117,26 @@ export default {
   width: 40%;
   align-items: center;
 }
-.width{
+
+.width {
   width: 50%;
 }
-.login-other{
+
+.login-other {
   padding-left: 50px;
   flex: 1;
   text-align: left;
 }
-.login-other h2{
+
+.login-other h2 {
   margin: 20px 0;
   font-size: 27px;
 }
-.el-from{
+
+.el-from {
   width: 60%;
 }
+
 .is-vertical {
   color: #fff;
 }
