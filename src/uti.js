@@ -92,7 +92,6 @@ export function menuToTree(data){
       result.push(item);
     }
   });
-
   return result;
 }
 

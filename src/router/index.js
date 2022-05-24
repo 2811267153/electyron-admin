@@ -3,6 +3,8 @@ import VueRouter from "vue-router";
 import login from "@/views/login";
 import index from "@/views/index";
 import cache from "@/util/cache";
+import { setupStore } from "@/store";
+import menu from "@/views/layout/manage/menu";
 
 Vue.use(VueRouter);
 
@@ -17,7 +19,13 @@ const routes = [
   },
   {
     path: "/home",
-    component: index
+    component: index,
+    children: [
+      {
+        path: '/home/layout/menu',
+        component: menu
+      }
+    ]
   }
 
 ];
@@ -30,11 +38,10 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.path !== "/login") {
     const token = cache.getCache("token");
+    setupStore();
     if (!token) {
       next("/");
     }
-    console.log(to.path);
-
     next();
   }
   next();

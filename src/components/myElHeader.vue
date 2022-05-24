@@ -1,5 +1,5 @@
 <template>
-  <el-header>
+
     <div class="content-nav">
       <el-breadcrumb class="nav-bar" separator="/">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
@@ -9,7 +9,6 @@
         <slot></slot>
       </div>
     </div>
-  </el-header>
 </template>
 
 <script>
@@ -21,10 +20,10 @@ export default {
 <style scoped>
 .content-nav {
   padding: 20px;
-  box-shadow: 0 0 15px #ccc;
   border-radius: 10px;
   background-color: #fff;
   display: flex;
+  height: 60px;
   justify-content: space-between;
   align-items: center;
 }
