@@ -1,5 +1,5 @@
 <template>
-  <div id="headerd">
+  <div id="header">
     <div class="header app-header">
       <div class="logo-info">
         <div class="logo"></div>
@@ -40,7 +40,7 @@
                   v-for="(item, index) in routes.children"
                 >
                   <template slot="title">
-                    <i :class="item.meta.icon"></i>  <span >{{ item.meta.title }}</span>
+                    <i :class="item.meta.icon"></i> <span>{{ item.meta.title }}</span>
                   </template>
                   <el-menu-item-group
                     :route="path"
@@ -79,7 +79,7 @@ export default {
       formPage: {},
       userInfoNav: [
         { "icon": "icon-icon7", title: "个人中心" },
-        { "icon": "icon-tuichu", title: "退出" },
+        { "icon": "icon-tuichu", title: "退出" }
       ]
     };
   },
@@ -126,19 +126,18 @@ export default {
 .header {
   padding: 0 30px 0 10px;
   display: flex;
+  height: 80px;
   justify-content: space-between;
   align-items: center;
 }
-.sub-menu-warp{
+
+.sub-menu-warp {
   text-align: left;
 }
-.el-submenu li {
 
-  background-color: rgb(67, 74, 80) !important;
-}
 
 .el-aside {
-   background-color: rgb(84, 92, 100);
+  background-color: rgb(84, 92, 100);
 }
 
 .logo {
@@ -190,7 +189,8 @@ export default {
 .header span {
   vertical-align: middle;
 }
-.tubiao{
+
+.tubiao {
   cursor: default;
 }
 </style>
