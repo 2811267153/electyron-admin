@@ -1,10 +1,10 @@
 <template>
-  <div class="menu">
+  <div class="warps">
     <my-el-header />
     <div class="container">
       <div class="tree-menu"><p>菜单名称</p>
         <p>菜单路径</p>
-        <p style="padding-left: 25px">权限</p>
+        <p>权限</p>
         <p>操作</p></div>
       <el-tree
         :data="path"
@@ -266,11 +266,14 @@ export default {
 .custom-tree-node {
   width: 100%;
 }
-
+.tree-menu{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .menu {
   display: flex;
   height: calc(100vh - 160px);
-  justify-content: space-between;
   flex-direction: column;
 }
 

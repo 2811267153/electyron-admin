@@ -16,10 +16,10 @@
       <h2>欢迎使用调度管理系统！</h2>
       <el-form class="el-from" ref="form" label-width="120">
         <el-form-item label="账号">
-          <el-input v-model="username" @focus="focus(2)"></el-input>
+          <el-input v-model="form.username" @focus="focus(2)"></el-input>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input type="password" v-model="password" @focus="focus(3)"></el-input>
+          <el-input type="password" v-model="form.password" @focus="focus(3)"></el-input>
         </el-form-item>
         <el-form-item style="text-align: right">
           <el-button type="primary" @click="onSubmit">登录</el-button>
@@ -30,8 +30,6 @@
 </template>
 
 <script>
-import getLogin from "@/newwork/user";
-import { setCookie } from "@/auth";
 
 export default {
   name: "login",
@@ -39,8 +37,10 @@ export default {
     return {
       isErr: false,
       settingShow: false,
-      username: "admin",
-      password: "123456",
+      form: {
+        username: "admin",
+        password: "123456"
+      },
       isClearNumShow: false,
       isPadShow: false,
       index: 0
@@ -67,24 +67,7 @@ export default {
 
     onSubmit() {
       this.index = 4;
-      getLogin(this.username, this.password).then(res => {
-        if (res.data.code === 200) {
-          const sysMenuList = res.data.data.user.sysMenuList;
-          const sysDept = res.data.data.user.sysDept;
-          const sysRole = res.data.data.user.sysRole;
-
-          this.$store.dispatch("sysMenuList", sysMenuList);
-          this.$store.dispatch("userInfo", res.data.data.user);
-          this.$store.dispatch("sysDept", sysDept);
-          this.$store.dispatch("sysRole", sysRole);
-          setCookie(res.data.data.JSESSIONID);
-          this.$router.push({ path: "/home/serveStart" }).catch(e => console.log(e));
-        } else {
-          this.$message.error(res.data.msg);
-        }
-      }).catch(e => {
-        this.$message.error(e);
-      });
+      this.$store.dispatch("loginAction", { ...this.form });
     },
 
     isShow() {
