@@ -1,8 +1,6 @@
 <template>
-  <div id="serve-stauts">
-    <el-header>
-      <my-el-header />
-    </el-header>
+  <div class="warps">
+    <my-el-header class="stick" />
     <div class="container">
       <div class="overview">
         <div class="overview-l">
@@ -204,5 +202,4 @@ export default {
   display: inline-block;
   padding-right: 20px;
 }
-
 </style>

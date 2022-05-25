@@ -6,9 +6,6 @@
     transition: all 0.3s;
 }
 
-body {
-}
-
 button {
     background-color: #fff;
     border: none;
@@ -72,7 +69,6 @@ html {
     flex: 1;
     background-color: #fff;
     margin-top: 20px;
-    overflow: hidden;
     box-shadow: 0 0 15px #ccc;
     padding: 20px;
     border-radius: 10px;

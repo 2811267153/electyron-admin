@@ -14,7 +14,7 @@ export function mapMenuRouter(menuList) {
     const a = [];
     if (menuList.left !== 0) {
       for (const menu of menuList) {
-        if (menu.parentId === "2") {
+        if (menu.menu === "2") {
           console.log(menu, '________________');
           _recurseGetRouter(menu.children);
           console.log("parentId == 1", menu.children);

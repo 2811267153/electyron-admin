@@ -64,7 +64,6 @@
         </div>
       </el-dialog>
       <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close :close-on-click-modal="false">
-        <div class="width">
           <el-form :model="addForm" ref="addForm" :rules="rules">
             <el-form-item
               label="角色名称"
@@ -119,7 +118,6 @@
               <el-input v-model="addForm.desc" autocomplete="off" placeholder="请输入内容"></el-input>
             </el-form-item>
           </el-form>
-        </div>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
           <el-button type="primary" @click="submitForm"
@@ -542,8 +540,7 @@ export default {
 };
 </script>
 
-<style>
-
+<style scoped>
 .role {
   display: flex;
   height: calc(100vh - 160px);
