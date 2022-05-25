@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="warps">
     <div class="container">
       <p>{{ $route.meta.title }}</p>
       <div class="nav-form">
@@ -97,7 +97,8 @@
           <div slot="footer" class="dialog-footer">
             <el-button @click="dialogFormVisible = false">取 消</el-button>
             <el-button type="primary" @click="dialogFormVisible = false"
-              >确 定</el-button
+            >确 定
+            </el-button
             >
           </div>
         </el-dialog>
@@ -108,47 +109,47 @@
 
 <script>
 export default {
-  name: 'ivr',
+  name: "ivr",
   data() {
     return {
-      title: '添加虚拟接待',
+      title: "添加虚拟接待",
       dialogFormVisible: false,
-      formLabelWidth: '120px',
+      formLabelWidth: "120px",
       form: {},
       addForm: {
-        name: '',
-        type: '',
-        owner: '',
-        startRecording: '',
-        hint: '',
-        remark: ''
+        name: "",
+        type: "",
+        owner: "",
+        startRecording: "",
+        hint: "",
+        remark: ""
       },
-      value: '',
-      num: '',
+      value: "",
+      num: "",
       type: [
-        { label: '单个用户', value: '单个用户' },
-        { label: '所有用户', value: '所有用户' }
+        { label: "单个用户", value: "单个用户" },
+        { label: "所有用户", value: "所有用户" }
       ],
       rules: {
         name: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { required: true, message: "请输入活动名称", trigger: "blur" },
+          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" }
         ],
         type: [
-          { required: true, message: '请选择活动区域', trigger: 'change' }
+          { required: true, message: "请选择活动区域", trigger: "change" }
         ],
         owner: [
           {
-            type: 'date',
+            type: "date",
             required: true,
-            message: '请选择日期',
-            trigger: 'change'
+            message: "请选择日期",
+            trigger: "change"
           }
         ]
       }
-    }
+    };
   }
-}
+};
 </script>
 
 <style scoped>
@@ -177,6 +178,7 @@ export default {
   flex: 1;
   padding: 0 20px;
 }
+
 h4 {
   margin: 10px 0;
 }

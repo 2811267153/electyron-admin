@@ -84,7 +84,7 @@
       </div>
 
       <el-dialog :title="title" :close-on-click-modal="false" :visible.sync="dialogFormVisible" destroy-on-close>
-        <el-form :model="addForm" :rules="rules" ref="addForm">
+        <el-form :labelPosition="labelPosition" :model="addForm" :rules="rules" ref="addForm">
           <div class="width">
             <el-form-item
               label="分机名称"
@@ -247,13 +247,13 @@
             </el-form-item>
           </div>
           <div class="width">
-            <el-form-item label="经度" :label-width="formLabelWidth" prop="latitude">
+            <el-form-item label="经度" :labelPosition="labelPosition" :label-width="formLabelWidth" prop="latitude">
               <el-input
                 placeholder="请输入内容"
                 v-model="addForm.latitude"
               ></el-input>
             </el-form-item>
-            <el-form-item label="纬度" :label-width="formLabelWidth" prop="longitude">
+            <el-form-item label="纬度" :labelPosition="labelPosition" :label-width="formLabelWidth" prop="longitude">
               <el-input v-model="addForm.longitude" placeholder="请输入内容"></el-input>
             </el-form-item>
           </div>
@@ -290,7 +290,7 @@
 </template>
 
 <script>
-import eTree from "../../../components/eTree.vue";
+import eTree from "../../components/eTree.vue";
 import { getOrganizeList } from "@/newwork/system-colltroner";
 import { diaPlanList, getRateList } from "@/newwork/ground-colltroner";
 import { fn } from "@/uti";
@@ -350,6 +350,7 @@ export default {
           label: node.deptName
         };
       },
+      labelPosition: "right",
       title: "添加话机",
       dialogFormVisible: false,
       formLabelWidth: "150px",

@@ -115,33 +115,35 @@
                   ></el-input>
                 </el-form-item>
                 <el-form-item
-                  label="计费方式"
+                  label="地区类型"
                   :label-width="formLabelWidth"
-                  required
+                  prop="ratePrefix"
+
                 >
-                  <div class="width">
-                    <el-form-item prop="rate">
-                      <el-input style="margin-right: 20px" v-model="addListFrom.rate" placeholder="请输入费率"></el-input>
-                    </el-form-item>
-                    <el-form-item style="margin-left: 20px" prop="billingPeriod">
-                      <el-input v-model="addListFrom.billingPeriod" placeholder="请输入计费周期"></el-input>
-                    </el-form-item>
-                  </div>
+                  <el-select v-model="addForm.area" placeholder="请选择">
+                    <el-option
+                      v-for="item in area"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
                 </el-form-item>
               </div>
               <el-form-item
-                label="地区类型"
+                label="计费方式"
                 :label-width="formLabelWidth"
-                prop="ratePrefix"
-
+                required
               >
-                <el-radio-group v-model="addForm.aa">
-                  <el-radio :label="0">分机</el-radio>
-                  <el-radio :label="1">国内</el-radio>
-                  <el-radio :label="2">国外</el-radio>
-                </el-radio-group>
+                <div class="width">
+                  <el-form-item prop="rate">
+                    <el-input style="margin-right: 20px" v-model="addListFrom.rate" placeholder="请输入单位(分)"></el-input>
+                  </el-form-item>
+                  <el-form-item style="margin-left: 20px" prop="billingPeriod">
+                    <el-input v-model="addListFrom.billingPeriod" placeholder="请输入计费时间(秒)"></el-input>
+                  </el-form-item>
+                </div>
               </el-form-item>
-
             </el-form>
             <div slot="footer" class="dialog-footer">
               <div class="footers">
@@ -262,10 +264,9 @@ export default {
         rate: "" //费率
       },
       row: {},
-      region: [
-        { label: "分机", value: "分机" },
-        { label: "国外", value: "国外" },
-        { label: "国内", value: "国内" }
+      area: [
+        { label: "国外", value: "abroad" },
+        { label: "国内", value: "home" }
       ],
       addRules: {
         rateName: [

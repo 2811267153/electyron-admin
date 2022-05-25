@@ -8,17 +8,19 @@
       active-text-color="#ff7300">
       <template v-for="item in menuList">
         <div v-if="!item.hasOwnProperty('children')">
-          <el-menu-item @click.native="handMenuClick(item)" :index="item.menuId + ''"><span>{{ item.menuName }}</span></el-menu-item>
+          <el-menu-item @click.native="handMenuClick(item)" :index="item.menuId + ''"><span>{{ item.menuName }}</span>
+          </el-menu-item>
         </div>
         <template v-else>
           <el-submenu :index="item.menuId">
             <div slot="title">
-              <i :class="item.icon"></i>
+              <i class="icon" :class="item.icon"></i>
               <span>{{ item.menuName }}</span>
             </div>
-            <el-menu-item-group :index="item.menuId + ''">
+            <el-menu-item-group @click="item" :index="item.menuId + ''">
               <template v-for="submit in item.children">
-                <el-menu-item @click.native="handMenuClick(submit)" class="menu-item" :index="submit.menuId + ''"><span>{{ submit.menuName }}</span>
+                <el-menu-item @click.native="handMenuClick(submit)" class="menu-item" :index="submit.menuId + ''">
+                  <span>{{ submit.menuName }}</span>
                 </el-menu-item>
               </template>
             </el-menu-item-group>
@@ -40,18 +42,18 @@ export default {
     };
   },
   created() {
-    this.menuList = []
-    this.menuList = this.$store.state.login.menuList
-    const menu = pathMapToMenu(this.menuList, this.$route.path)
+    this.menuList = [];
+    this.menuList = this.$store.state.login.menuList;
+    const menu = pathMapToMenu(this.menuList, this.$route.path);
 
   },
   mounted() {
-    console.log(this.menuList, 'aa');
+    console.log(this.menuList, "aa");
   },
   methods: {
-    handMenuClick(item){
+    handMenuClick(item) {
       console.log(item);
-      this.$router.push(item.path)
+      this.$router.push(item.path);
     }
   }
 };
@@ -68,5 +70,10 @@ export default {
 
 .el-submenu li {
   background-color: rgb(67, 74, 80) !important;
+}
+
+.icon {
+  margin-right: 10px;
+  font-size: 20px;
 }
 </style>

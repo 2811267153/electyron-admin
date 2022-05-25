@@ -2,7 +2,7 @@
   <div class="warps">
     <my-el-header />
     <div class="container">
-      <div class="serve-bar">
+      <div class="container-l">
         <e-tree @treeClick="treeClick" :data="treeArr" />
       </div>
       <div class="serve-container">
@@ -86,22 +86,6 @@
               </el-form-item>
               <div></div>
             </div>
-            <div class="width">
-              <el-form-item label="经度" :label-width="formLabelWidth">
-                <el-input
-                  class="width"
-                  v-model="addForm.longitude"
-                  placeholder="请输入经度"
-                ></el-input>
-              </el-form-item>
-              <el-form-item label="纬度" :label-width="formLabelWidth">
-                <el-input
-                  class="width"
-                  v-model="addForm.latitude"
-                  placeholder="纬度"
-                ></el-input>
-              </el-form-item>
-            </div>
             <el-form-item label="备注" :label-width="formLabelWidth" prop="remark">
               <el-input v-model="addForm.remark"></el-input>
             </el-form-item>
@@ -170,7 +154,7 @@
 </template>
 
 <script>
-import eTree from "../../../components/eTree.vue";
+import eTree from "../../components/eTree.vue";
 import { getOrganizeList, getUserAll } from "@/newwork/system-colltroner";
 import { fn } from "@/uti";
 import myFooter from "@/components/myFooter";
@@ -392,17 +376,13 @@ export default {
   width: calc(100vw - 200px - 200px - 20px);
 }
 
-.serve-container .title {
-  background-color: #f2f2f2;
-  padding: 10px 15px;
-}
-
 .container {
   display: flex;
   justify-content: space-between;
   height: 40px;
   margin-bottom: 20px;
   background-color: #fff;
+  flex-direction: row;
 }
 
 .width {

@@ -1,6 +1,6 @@
 <template>
-  <div id="warp">
-    <my-el-header/>
+  <div class="warp">
+    <my-el-header />
     <div class="container">
       <div class="form-nav">
         <el-form :inline="true" :model="form" class="demo-form-inline">
@@ -52,7 +52,8 @@
         </el-form>
         <div>
           <el-button type="primary" @click="showAddForm(null, '新增设备')"
-            >新增设备</el-button
+          >新增设备
+          </el-button
           >
           <el-button type="primary">删除设备</el-button>
           <el-button type="primary">二维码打印</el-button>
@@ -199,12 +200,13 @@
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogTableVisible = false">取 消</el-button>
           <el-button type="primary" @click="submitForm('ruleForm')"
-            >确 定</el-button
+          >确 定
+          </el-button
           >
         </div>
       </el-dialog>
       <el-table :data="list" style="width: 100%">
-        <el-table-column prop="date" label="序号" >
+        <el-table-column prop="date" label="序号">
           <template scope="scope">
             {{ scope.$index + 1 }}
           </template>
@@ -213,13 +215,13 @@
         </el-table-column>
         <el-table-column prop="serialNumber" label="SIP号">
         </el-table-column>
-        <el-table-column prop="company" label="设备厂商" >
+        <el-table-column prop="company" label="设备厂商">
         </el-table-column>
         <el-table-column prop="ip" label="设备IP">
         </el-table-column>
         <el-table-column prop="area" label="所属区域">
         </el-table-column>
-        <el-table-column prop="createTime" label="安装时间" >
+        <el-table-column prop="createTime" label="安装时间">
         </el-table-column>
         <el-table-column prop="address" label="设备位置">
           <template scope="scope">
@@ -241,16 +243,19 @@
               class="a-link"
               type="info"
               @click="showAddForm(scope.row, '编辑')"
-              >编辑</el-link
+            >编辑
+            </el-link
             >
             <el-link class="a-link" type="info" @click="removeIt(scope.row)"
-              >删除</el-link
+            >删除
+            </el-link
             >
             <el-link
               class="a-link"
               type="info"
               @click="showAddForm(scope.row, '查看')"
-              >查看</el-link
+            >查看
+            </el-link
             >
           </template>
         </el-table-column>
@@ -260,14 +265,15 @@
 </template>
 
 <script>
-import eTree from '../../../components/eTree.vue'
-import baiduMap from 'vue-baidu-map/components/map/Map'
-import Geolocation from 'vue-baidu-map/components/controls/Geolocation.vue'
-import bmView from 'vue-baidu-map/components/map/MapView.vue'
-import { getNowFormatDate } from '@/uti'
+import eTree from "../../components/eTree.vue";
+import baiduMap from "vue-baidu-map/components/map/Map";
+import Geolocation from "vue-baidu-map/components/controls/Geolocation.vue";
+import bmView from "vue-baidu-map/components/map/MapView.vue";
+import { getNowFormatDate } from "@/uti";
 import myElHeader from "@/components/myElHeader";
+
 export default {
-  name: 'cameraView',
+  name: "cameraView",
   components: {
     eTree,
     baiduMap,
@@ -277,398 +283,398 @@ export default {
   },
   data() {
     return {
-      title: '新增设备',
+      title: "新增设备",
       isReadOnly: false,
       dialogTableVisible: false,
-      formLabelWidth: '120px',
+      formLabelWidth: "120px",
       disabled: false,
       form: {
-        serialNumber: '', //序列号
-        deviceName: '', //设备名称
-        company: '', //厂商
-        ip: '', //设备名称
-        equipmentManufacturer: '',
-        type: '',
-        stauts: ''
+        serialNumber: "", //序列号
+        deviceName: "", //设备名称
+        company: "", //厂商
+        ip: "", //设备名称
+        equipmentManufacturer: "",
+        type: "",
+        stauts: ""
       },
       addForm: {
-        name: '',
-        serialNumber: '',
-        company: '',
-        type: '',
-        ip: '',
-        host: '',
-        account: '', //账户
-        password: '',
-        area: '',
-        createTime: '',
+        name: "",
+        serialNumber: "",
+        company: "",
+        type: "",
+        ip: "",
+        host: "",
+        account: "", //账户
+        password: "",
+        area: "",
+        createTime: "",
         address: {
-          x: '',
-          y: ''
+          x: "",
+          y: ""
         },
-        location: '',
+        location: "",
         stauts: true
       },
       list: [],
       stautsData: [
-        { label: '已开通', value: '已开通' },
-        { label: '未开通', value: '未开通' }
+        { label: "已开通", value: "已开通" },
+        { label: "未开通", value: "未开通" }
       ],
       equipmentManufacturerData: [
-        { label: '华康', value: '华康' },
-        { label: '大华', value: '大华' }
+        { label: "华康", value: "华康" },
+        { label: "大华", value: "大华" }
       ],
       typeData: [
-        { label: '红外测温', value: '红外测温' },
-        { label: '视频监控', value: '视频监控' },
-        { label: '人脸卡口', value: '人脸卡口' },
-        { label: '车辆卡口', value: '车辆卡口' },
-        { label: '视频门禁', value: '视频门禁' }
+        { label: "红外测温", value: "红外测温" },
+        { label: "视频监控", value: "视频监控" },
+        { label: "人脸卡口", value: "人脸卡口" },
+        { label: "车辆卡口", value: "车辆卡口" },
+        { label: "视频门禁", value: "视频门禁" }
       ],
       area: [
         {
-          value: 'zhinan',
-          label: '指南',
+          value: "zhinan",
+          label: "指南",
           children: [
             {
-              value: 'shejiyuanze',
-              label: '设计原则',
+              value: "shejiyuanze",
+              label: "设计原则",
               children: [
                 {
-                  value: 'yizhi',
-                  label: '一致'
+                  value: "yizhi",
+                  label: "一致"
                 },
                 {
-                  value: 'fankui',
-                  label: '反馈'
+                  value: "fankui",
+                  label: "反馈"
                 },
                 {
-                  value: 'xiaolv',
-                  label: '效率'
+                  value: "xiaolv",
+                  label: "效率"
                 },
                 {
-                  value: 'kekong',
-                  label: '可控'
+                  value: "kekong",
+                  label: "可控"
                 }
               ]
             },
             {
-              value: 'daohang',
-              label: '导航',
+              value: "daohang",
+              label: "导航",
               children: [
                 {
-                  value: 'cexiangdaohang',
-                  label: '侧向导航'
+                  value: "cexiangdaohang",
+                  label: "侧向导航"
                 },
                 {
-                  value: 'dingbudaohang',
-                  label: '顶部导航'
+                  value: "dingbudaohang",
+                  label: "顶部导航"
                 }
               ]
             }
           ]
         },
         {
-          value: 'zujian',
-          label: '组件',
+          value: "zujian",
+          label: "组件",
           children: [
             {
-              value: 'basic',
-              label: 'Basic',
+              value: "basic",
+              label: "Basic",
               children: [
                 {
-                  value: 'layout',
-                  label: 'Layout 布局'
+                  value: "layout",
+                  label: "Layout 布局"
                 },
                 {
-                  value: 'color',
-                  label: 'Color 色彩'
+                  value: "color",
+                  label: "Color 色彩"
                 },
                 {
-                  value: 'typography',
-                  label: 'Typography 字体'
+                  value: "typography",
+                  label: "Typography 字体"
                 },
                 {
-                  value: 'icon',
-                  label: 'Icon 图标'
+                  value: "icon",
+                  label: "Icon 图标"
                 },
                 {
-                  value: 'button',
-                  label: 'Button 按钮'
+                  value: "button",
+                  label: "Button 按钮"
                 }
               ]
             },
             {
-              value: 'form',
-              label: 'Form',
+              value: "form",
+              label: "Form",
               children: [
                 {
-                  value: 'radio',
-                  label: 'Radio 单选框'
+                  value: "radio",
+                  label: "Radio 单选框"
                 },
                 {
-                  value: 'checkbox',
-                  label: 'Checkbox 多选框'
+                  value: "checkbox",
+                  label: "Checkbox 多选框"
                 },
                 {
-                  value: 'input',
-                  label: 'Input 输入框'
+                  value: "input",
+                  label: "Input 输入框"
                 },
                 {
-                  value: 'input-number',
-                  label: 'InputNumber 计数器'
+                  value: "input-number",
+                  label: "InputNumber 计数器"
                 },
                 {
-                  value: 'select',
-                  label: 'Select 选择器'
+                  value: "select",
+                  label: "Select 选择器"
                 },
                 {
-                  value: 'cascader',
-                  label: 'Cascader 级联选择器'
+                  value: "cascader",
+                  label: "Cascader 级联选择器"
                 },
                 {
-                  value: 'switch',
-                  label: 'Switch 开关'
+                  value: "switch",
+                  label: "Switch 开关"
                 },
                 {
-                  value: 'slider',
-                  label: 'Slider 滑块'
+                  value: "slider",
+                  label: "Slider 滑块"
                 },
                 {
-                  value: 'time-picker',
-                  label: 'TimePicker 时间选择器'
+                  value: "time-picker",
+                  label: "TimePicker 时间选择器"
                 },
                 {
-                  value: 'date-picker',
-                  label: 'DatePicker 日期选择器'
+                  value: "date-picker",
+                  label: "DatePicker 日期选择器"
                 },
                 {
-                  value: 'datetime-picker',
-                  label: 'DateTimePicker 日期时间选择器'
+                  value: "datetime-picker",
+                  label: "DateTimePicker 日期时间选择器"
                 },
                 {
-                  value: 'upload',
-                  label: 'Upload 上传'
+                  value: "upload",
+                  label: "Upload 上传"
                 },
                 {
-                  value: 'rate',
-                  label: 'Rate 评分'
+                  value: "rate",
+                  label: "Rate 评分"
                 },
                 {
-                  value: 'form',
-                  label: 'Form 表单'
+                  value: "form",
+                  label: "Form 表单"
                 }
               ]
             },
             {
-              value: 'data',
-              label: 'Data',
+              value: "data",
+              label: "Data",
               children: [
                 {
-                  value: 'table',
-                  label: 'Table 表格'
+                  value: "table",
+                  label: "Table 表格"
                 },
                 {
-                  value: 'tag',
-                  label: 'Tag 标签'
+                  value: "tag",
+                  label: "Tag 标签"
                 },
                 {
-                  value: 'progress',
-                  label: 'Progress 进度条'
+                  value: "progress",
+                  label: "Progress 进度条"
                 },
                 {
-                  value: 'tree',
-                  label: 'Tree 树形控件'
+                  value: "tree",
+                  label: "Tree 树形控件"
                 },
                 {
-                  value: 'pagination',
-                  label: 'Pagination 分页'
+                  value: "pagination",
+                  label: "Pagination 分页"
                 },
                 {
-                  value: 'badge',
-                  label: 'Badge 标记'
+                  value: "badge",
+                  label: "Badge 标记"
                 }
               ]
             },
             {
-              value: 'notice',
-              label: 'Notice',
+              value: "notice",
+              label: "Notice",
               children: [
                 {
-                  value: 'alert',
-                  label: 'Alert 警告'
+                  value: "alert",
+                  label: "Alert 警告"
                 },
                 {
-                  value: 'loading',
-                  label: 'Loading 加载'
+                  value: "loading",
+                  label: "Loading 加载"
                 },
                 {
-                  value: 'message',
-                  label: 'Message 消息提示'
+                  value: "message",
+                  label: "Message 消息提示"
                 },
                 {
-                  value: 'message-box',
-                  label: 'MessageBox 弹框'
+                  value: "message-box",
+                  label: "MessageBox 弹框"
                 },
                 {
-                  value: 'notification',
-                  label: 'Notification 通知'
+                  value: "notification",
+                  label: "Notification 通知"
                 }
               ]
             },
             {
-              value: 'navigation',
-              label: 'Navigation',
+              value: "navigation",
+              label: "Navigation",
               children: [
                 {
-                  value: 'menu',
-                  label: 'NavMenu 导航菜单'
+                  value: "menu",
+                  label: "NavMenu 导航菜单"
                 },
                 {
-                  value: 'tabs',
-                  label: 'Tabs 标签页'
+                  value: "tabs",
+                  label: "Tabs 标签页"
                 },
                 {
-                  value: 'breadcrumb',
-                  label: 'Breadcrumb 面包屑'
+                  value: "breadcrumb",
+                  label: "Breadcrumb 面包屑"
                 },
                 {
-                  value: 'dropdown',
-                  label: 'Dropdown 下拉菜单'
+                  value: "dropdown",
+                  label: "Dropdown 下拉菜单"
                 },
                 {
-                  value: 'steps',
-                  label: 'Steps 步骤条'
+                  value: "steps",
+                  label: "Steps 步骤条"
                 }
               ]
             },
             {
-              value: 'others',
-              label: 'Others',
+              value: "others",
+              label: "Others",
               children: [
                 {
-                  value: 'dialog',
-                  label: 'Dialog 对话框'
+                  value: "dialog",
+                  label: "Dialog 对话框"
                 },
                 {
-                  value: 'tooltip',
-                  label: 'Tooltip 文字提示'
+                  value: "tooltip",
+                  label: "Tooltip 文字提示"
                 },
                 {
-                  value: 'popover',
-                  label: 'Popover 弹出框'
+                  value: "popover",
+                  label: "Popover 弹出框"
                 },
                 {
-                  value: 'card',
-                  label: 'Card 卡片'
+                  value: "card",
+                  label: "Card 卡片"
                 },
                 {
-                  value: 'carousel',
-                  label: 'Carousel 走马灯'
+                  value: "carousel",
+                  label: "Carousel 走马灯"
                 },
                 {
-                  value: 'collapse',
-                  label: 'Collapse 折叠面板'
+                  value: "collapse",
+                  label: "Collapse 折叠面板"
                 }
               ]
             }
           ]
         },
         {
-          value: 'ziyuan',
-          label: '资源',
+          value: "ziyuan",
+          label: "资源",
           children: [
             {
-              value: 'axure',
-              label: 'Axure Components'
+              value: "axure",
+              label: "Axure Components"
             },
             {
-              value: 'sketch',
-              label: 'Sketch Templates'
+              value: "sketch",
+              label: "Sketch Templates"
             },
             {
-              value: 'jiaohu',
-              label: '组件交互文档'
+              value: "jiaohu",
+              label: "组件交互文档"
             }
           ]
         }
       ],
       rules: {
-        name: [{ required: true, message: '请输入设备名称', trigger: 'blur' }],
+        name: [{ required: true, message: "请输入设备名称", trigger: "blur" }],
         serialNumber: [
-          { required: true, message: '请输入序列号', trigger: 'blur' }
+          { required: true, message: "请输入序列号", trigger: "blur" }
         ],
         company: [
-          { required: true, message: '请输入设备厂商', trigger: 'blur' }
+          { required: true, message: "请输入设备厂商", trigger: "blur" }
         ],
-        type: [{ required: true, message: '请输入设备类型', trigger: 'blur' }],
-        area: [{ required: true, message: '请输入区域位置', trigger: 'blur' }]
+        type: [{ required: true, message: "请输入设备类型", trigger: "blur" }],
+        area: [{ required: true, message: "请输入区域位置", trigger: "blur" }]
       }
-    }
+    };
   },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.list.push(this.addForm)
-          this.dialogTableVisible = false
-          window.localStorage.setItem('camera', JSON.stringify(this.list))
+          this.list.push(this.addForm);
+          this.dialogTableVisible = false;
+          window.localStorage.setItem("camera", JSON.stringify(this.list));
           this.$message({
-            message: '提交完成',
-            type: 'success'
-          })
+            message: "提交完成",
+            type: "success"
+          });
         } else {
           this.$message({
-            message: '提交失败， 请重试',
-            type: 'error'
-          })
-          return false
+            message: "提交失败， 请重试",
+            type: "error"
+          });
+          return false;
         }
-      })
+      });
     },
     showAddForm(row, title) {
-      this.dialogTableVisible = true
-      this.title = title
-      if (title === '编辑') {
-        this.addForm = row
-      } else if (title === '查看') {
-        this.addForm = row
-        this.isReadOnly = true
+      this.dialogTableVisible = true;
+      this.title = title;
+      if (title === "编辑") {
+        this.addForm = row;
+      } else if (title === "查看") {
+        this.addForm = row;
+        this.isReadOnly = true;
       } else {
-        this.resetForm()
+        this.resetForm();
       }
     },
     tableRowClassName({ row, rowIndex }) {
-      row.index = rowIndex
+      row.index = rowIndex;
     },
 
     removeIt(row) {
       this.list.map((item, i) => {
         if (row === item) {
-          this.list.splice(i, 1)
+          this.list.splice(i, 1);
         }
-      })
+      });
     },
     locationSuccess(e) {
-      this.addForm.address.x = e.marker.map.SC.lat
-      this.addForm.address.y = e.marker.map.SC.lng
-      console.log(e)
-      this.addForm.address = e['addressComponent']
-      console.log(this.addForm)
+      this.addForm.address.x = e.marker.map.SC.lat;
+      this.addForm.address.y = e.marker.map.SC.lng;
+      console.log(e);
+      this.addForm.address = e["addressComponent"];
+      console.log(this.addForm);
     },
     resetForm(formName) {
-      this.$refs[formName].resetFields()
+      this.$refs[formName].resetFields();
     }
   },
   created() {
-    this.list = JSON.parse(window.localStorage.getItem('camera')) || []
+    this.list = JSON.parse(window.localStorage.getItem("camera")) || [];
   },
   computed: {
     createTime(value) {
-      return (this.addForm.createTime = getNowFormatDate(value))
+      return (this.addForm.createTime = getNowFormatDate(value));
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -680,12 +686,14 @@ export default {
   width: 45%;
   margin-right: 20px;
 }
+
 #baidu-map {
   margin-top: 20px;
   border-radius: 10px;
   overflow: hidden;
   width: 100%;
 }
+
 .a-link {
   margin-right: 20px;
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="warps">
-    <my-el-header/>
+    <my-el-header />
     <div class="container">
       <div class="form-nav">
         <el-form :inline="true" :model="form" class="demo-form-inline">
@@ -19,7 +19,8 @@
           <el-button
             type="primary"
             @click="showAddForm(null, '添加会议终端')"
-            >{{ title }}</el-button
+          >{{ title }}
+          </el-button
           >
         </div>
       </div>
@@ -35,7 +36,8 @@
         </el-table-column>
         <el-table-column prop="ip" label="所属区域" width="300">
           <template scope="scope"
-            >{{ scope.row.area[0] }}{{ scope.row.area[1] }}</template
+          >{{ scope.row.area[0] }}{{ scope.row.area[1] }}
+          </template
           >
         </el-table-column>
         <el-table-column prop="SIP" label="SIP号码" width="300">
@@ -46,18 +48,21 @@
               class="a-link"
               type="info"
               @click="showAddForm(scope.row, '编辑')"
-              >编辑</el-link
+            >编辑
+            </el-link
             >
 
             <el-link class="a-link" type="info" @click="removeIt(scope.row)"
-              >删除</el-link
+            >删除
+            </el-link
             >
 
             <el-link
               class="a-link"
               type="info"
               @click="showAddForm(scope.row, '查看')"
-              >查看</el-link
+            >查看
+            </el-link
             >
           </template>
         </el-table-column>
@@ -111,7 +116,8 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="submitForm('addForm')"
-          >确 定</el-button
+        >确 定
+        </el-button
         >
       </div>
     </el-dialog>
@@ -119,105 +125,106 @@
 </template>
 
 <script>
-import eTree from '../../../components/eTree.vue'
+import eTree from "../../components/eTree.vue";
 import myElHeader from "@/components/myElHeader";
 
 export default {
-  name: 'terminal',
+  name: "terminal",
   components: {
     eTree,
     myElHeader
   },
   data() {
     return {
-      formLabelWidth: '120px',
+      formLabelWidth: "120px",
       dialogFormVisible: false,
-      title: '添加会议终端',
+      title: "添加会议终端",
 
       form: {},
       list: [],
       addForm: {
-        name: '',
-        ip: '',
-        host: '',
-        area: '',
-        remark: ''
+        name: "",
+        ip: "",
+        host: "",
+        area: "",
+        remark: ""
       },
       options: [
         {
-          label: '湖北',
-          value: '湖北',
+          label: "湖北",
+          value: "湖北",
           children: [
-            { label: '武汉', value: '武汉' },
-            { label: '十堰', value: '十堰' },
-            { label: '襄阳', value: '襄阳' },
-            { label: '随州', value: '随州' }
+            { label: "武汉", value: "武汉" },
+            { label: "十堰", value: "十堰" },
+            { label: "襄阳", value: "襄阳" },
+            { label: "随州", value: "随州" }
           ]
         }
       ],
       rules: {
-        name: [{ required: true, message: '请输入话机名称', trigger: 'blur' }],
-        ip: [{ required: true, message: '请输入IP地址', trigger: 'blur' }],
-        area: [{ required: true, message: '请输入所属区域', trigger: 'blur' }],
-        SIP: [{ required: true, message: '请输入SIP', trigger: 'blur' }],
+        name: [{ required: true, message: "请输入话机名称", trigger: "blur" }],
+        ip: [{ required: true, message: "请输入IP地址", trigger: "blur" }],
+        area: [{ required: true, message: "请输入所属区域", trigger: "blur" }],
+        SIP: [{ required: true, message: "请输入SIP", trigger: "blur" }]
 
       }
-    }
+    };
   },
   methods: {
     submitForm(addForm) {
-      this.$refs['addFrom'].validate((valid) => {
+      this.$refs["addFrom"].validate((valid) => {
         if (valid) {
-          this.list.push(this.addForm)
+          this.list.push(this.addForm);
           this.$message({
-            message: '提交完成',
-            type: 'success'
-          })
-          this.dialogFormVisible = false
-          window.localStorage.setItem('terminal', JSON.stringify(this.list))
+            message: "提交完成",
+            type: "success"
+          });
+          this.dialogFormVisible = false;
+          window.localStorage.setItem("terminal", JSON.stringify(this.list));
         } else {
           this.$message({
-            message: '提交失败， 请重试',
-            type: 'error'
-          })
-          return false
+            message: "提交失败， 请重试",
+            type: "error"
+          });
+          return false;
         }
-      })
+      });
     },
     showAddForm(row, title) {
-      this.dialogFormVisible = true
-      this.title = title
-      if (title === '编辑') {
-        this.addForm = row
-      } else if (title === '查看') {
-        this.addForm = row
-        this.isReadOnly = true
+      this.dialogFormVisible = true;
+      this.title = title;
+      if (title === "编辑") {
+        this.addForm = row;
+      } else if (title === "查看") {
+        this.addForm = row;
+        this.isReadOnly = true;
       } else {
-        this.resetForm()
+        this.resetForm();
       }
     },
     tableRowClassName({ row, rowIndex }) {
-      row.index = rowIndex
+      row.index = rowIndex;
     },
 
     removeIt(row) {
       this.list.map((item, i) => {
         if (row === item) {
-          this.list.splice(i, 1)
+          this.list.splice(i, 1);
         }
-      })
+      });
     }
   },
   created() {
-    this.list = JSON.parse(window.localStorage.getItem('terminal')) || []
+    this.list = JSON.parse(window.localStorage.getItem("terminal")) || [];
   }
-}
+};
 </script>
 
 <style scoped>
 .width {
   width: 50%;
 }
+
 .a-link {
   margin-right: 20px;
 }

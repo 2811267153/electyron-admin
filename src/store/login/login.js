@@ -18,6 +18,7 @@ const login = {
     },
     changeMenu(state, value) {
       state.menuList = value;
+      console.log(value, "@@@@@@@@@2");
       //动态添加路由
       const routers = mapMenuRouter(value);
       routers.forEach(item => {

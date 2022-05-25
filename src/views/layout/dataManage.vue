@@ -1,11 +1,10 @@
 <template>
-  <div id="data-manage">
+  <div class="warps">
     <my-el-header />
     <div class="container">
-      <div class="data-manage" v-if="$route.path == '/layout/dataManage'">
+      <div class="data-manage">
         <div class="nav">
           <div class="nav-l">
-
             <div class="form-nav">
               <el-form :model="form" destroy-on-close inline :rules="rule" ref="form" label-width="68px"
                        class="demo-ruleForm">
@@ -30,30 +29,32 @@
                   <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
               </el-form>
-
             </div>
-
           </div>
           <div class="nav-l">
             <el-button type="primary" @click="showAddForm(null, '新增')">新增</el-button>
           </div>
         </div>
-        <el-dialog destroy-on-close :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="false"	>
+        <el-dialog destroy-on-close :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
           <el-form ref="addForm" :model="addForm" :rules="rules">
-            <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
-              <el-input placeholder="请输入内容" v-model="addForm.name" autocomplete="off"></el-input>
-            </el-form-item>
-
-            <el-form-item label="字典类型编码" :label-width="formLabelWidth" prop="code">
-              <el-input placeholder="请输入内容" v-model="addForm.code" autocomplete="off"></el-input>
-            </el-form-item>
-
-            <el-form-item label="状态" :label-width="formLabelWidth">
-              <el-radio-group v-model="addForm.status">
-                <el-radio :label="1">启用</el-radio>
-                <el-radio :label="2">停用</el-radio>
-              </el-radio-group>
-            </el-form-item>
+            <div class="width">
+              <el-form-item label="名称" :label-width="formLabelWidth" prop="name">
+                <el-input placeholder="请输入内容" v-model="addForm.name" autocomplete="off"></el-input>
+              </el-form-item>
+            </div>
+            <div class="width">
+              <el-form-item label="字典类型编码" :label-width="formLabelWidth" prop="code">
+                <el-input placeholder="请输入内容" v-model="addForm.code" autocomplete="off"></el-input>
+              </el-form-item>
+            </div>
+            <div class="width">
+              <el-form-item label="状态" :label-width="formLabelWidth">
+                <el-radio-group v-model="addForm.status">
+                  <el-radio :label="1">启用</el-radio>
+                  <el-radio :label="2">停用</el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </div>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -64,7 +65,7 @@
           </div>
         </el-dialog>
         <div ref="tables" class="table-warp">
-          <el-table v-show="resultList.length !== 0" height="calc(100vh - 100px - 100px - 100px - 100px)"
+          <el-table v-if="resultList.length !== 0" height="calc(100vh - 100px - 100px - 100px - 100px)"
                     :header-cell-style="{background:'#ccc', color: '#fff',}" :data="resultList" style="width: 100%">
             <el-table-column align="center" prop="id" label="序号" width="50">
               <template scope="scope">{{ scope.$index + 1 }}</template>
@@ -97,18 +98,18 @@
           </el-table>
         </div>
 
-        <my-empty v-show="resultList.length === 0" />
+        <my-empty v-if="resultList.length === 0" />
       </div>
-      <router-view />
     </div>
-    <my-footer v-if="$route.path == '/layout/dataManage'" v-on:next="next" @prev="prev" @pageCheng="changPage" :form="form"
+    <my-footer v-on:next="next" @prev="prev" @pageCheng="changPage"
+               :form="form"
                @change="change"></my-footer>
 
   </div>
 </template>
 
 <script>
-import { getNowFormatDate, randomWord } from "@/uti";
+import { getNowFormatDate } from "@/uti";
 
 import {
   addDictionaryList,
@@ -177,9 +178,9 @@ export default {
       this.form.pageNum = e;
       this.dictionaryList(this.form);
     },
-    changPage(data){
-      this.form.pageSize = data
-      this.dictionaryList(this.form)
+    changPage(data) {
+      this.form.pageSize = data;
+      this.dictionaryList(this.form);
     },
 
     submitAddForm() {
@@ -200,13 +201,14 @@ export default {
         }
       });
     },
-    handleClose(){
-      this.$confirm('确认关闭？')
+    handleClose() {
+      this.$confirm("确认关闭？")
         .then(_ => {
-         this.dialogFormVisible = false
-          this.dictionaryList(this.form)
+          this.dialogFormVisible = false;
+          this.dictionaryList(this.form);
         })
-        .catch(_ => {});
+        .catch(_ => {
+        });
     },
     resetForm(string) {
       string === "form" ? this.$refs.form.resetFields() : this.$refs.addForm.resetFields();
@@ -216,7 +218,7 @@ export default {
     },
     toPath(row) {
       this.$router.push({
-        path: "/layout/dicManage", query: {
+        path: "/home/layout/dicManage", query: {
           id: row.id,
           name: row.name,
           code: row.code
@@ -236,7 +238,7 @@ export default {
       });
     },
     removeIt(row) {
-      console.log('aaa');
+      console.log("aaa");
       removeDateDictionaryList(row.id).then(res => {
         if (res.data.code === 200) {
           this.dictionaryList(this.form);
@@ -260,7 +262,7 @@ export default {
       }).catch(e => {
         this.$message.error(e);
       });
-    },
+    }
   },
 
   created() {

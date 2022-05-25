@@ -11,26 +11,30 @@ export function mapMenuRouter(menuList) {
   });
 
   const _recurseGetRouter = (menuList) => {
-    const a = []
+    const a = [];
     if (menuList.left !== 0) {
       for (const menu of menuList) {
-        if (menu.parentId === 2) {
+        if (menu.menuType === "1") {
+
           _recurseGetRouter(menu.children);
-        } else {
-           allRouter.forEach(route => {
-                console.log(menu, '_____________');
-              if(route.path === menu.path){
-                a.push(route)
-              }
+          console.log("parentId == 1", menu.children);
+        } else if (menu.menuType === "2") {
+
+          console.log("parentId===2", menu);
+
+          allRouter.forEach(route => {
+            if (route.path === menu.path) {
+              a.push(route);
+            }
           });
-          // console.log( a, '******************');
-          // if (route) routers.push(route);
           if (!firstMenu) {
             firstMenu = menu;
           }
+
         }
       }
     }
+    console.log("这是相同的", a);
   };
   _recurseGetRouter(menuList);
   return routers;

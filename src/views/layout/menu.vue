@@ -2,14 +2,17 @@
   <div class="warps">
     <my-el-header />
     <div class="container">
-      <div class="tree-menu"><p>菜单名称</p>
+      <div class="tree-menu">
+        <p>菜单名称</p>
         <p>菜单路径</p>
         <p>权限</p>
-        <p>操作</p></div>
+        <p>操作</p>
+      </div>
       <el-tree
         :data="path"
         :props="defaultProps"
         node-key="menuId"
+        :expand-on-click-node="false"
         :indent="0"
         @node-click="meunClick"
         :default-expanded-keys="defaultShowNodes"
@@ -37,34 +40,54 @@
       <div>
         <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close :close-on-click-modal="false">
           <el-form :model="addForm" ref="addForm" :rules="rules">
-            <el-form-item label="菜单名称" :label-width="formLabelWidth" prop="menuName">
-              <el-input v-model="addForm.menuName" autocomplete="off" placeholder="请输入内容"></el-input>
-            </el-form-item>
-            <el-form-item label="菜单类型" :label-width="formLabelWidth" prop="menuType">
-              <el-select v-model="addForm.menuType" style="width: 100%;">
-                <el-option v-for="item in menuType" :value="item.value" placeholder="请输入内容"
-                           :label="item.label"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="显示顺序" :label-width="formLabelWidth" prop="orderNum">
-              <el-input v-model="addForm.orderNum" placeholder="请输入内容" />
-            </el-form-item>
-            <el-form-item label="父菜单" :label-width="formLabelWidth" prop="parentId">
-              <treeselect v-model="parentId" :multiple="false" :options="path"
-                          :normalizer="normalizer" />
-            </el-form-item>
-            <el-form-item label="路由地址" :label-width="formLabelWidth" prop="path">
-              <el-input v-model="addForm.path" placeholder="请输入内容" />
-            </el-form-item>
-            <el-form-item label="权限标识" :label-width="formLabelWidth" prop="perms">
-              <el-input v-model="addForm.perms" placeholder="请输入内容" />
-            </el-form-item>
-            <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
-              <el-radio-group v-model="addForm.status">
-                <el-radio :label="0">开启</el-radio>
-                <el-radio :label="1">关闭</el-radio>
-              </el-radio-group>
-            </el-form-item>
+            <div class="width">
+              <el-form-item label="菜单名称" :label-width="formLabelWidth" prop="menuName">
+                <el-input v-model="addForm.menuName" autocomplete="off" placeholder="请输入内容"></el-input>
+              </el-form-item>
+
+            </div>
+            <div class="width">
+              <el-form-item label="菜单类型" :label-width="formLabelWidth" prop="menuType">
+                <el-select v-model="addForm.menuType" style="width: 100%;">
+                  <el-option v-for="item in menuType" :value="item.value" placeholder="请输入内容"
+                             :label="item.label"></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+            <div class="width">
+              <el-form-item label="显示顺序" :label-width="formLabelWidth" prop="orderNum">
+                <el-input v-model="addForm.orderNum" placeholder="请输入内容" />
+              </el-form-item>
+            </div>
+            <div class="width">
+              <el-form-item label="菜单图标" :label-width="formLabelWidth" prop="orderNum">
+                <el-input v-model="addForm.icon" placeholder="请输入内容" />
+              </el-form-item>
+            </div>
+            <div class="width">
+              <el-form-item label="父菜单" :label-width="formLabelWidth" prop="parentId">
+                <treeselect v-model="parentId" :multiple="false" :options="path"
+                            :normalizer="normalizer" />
+              </el-form-item>
+            </div>
+            <div class="width">
+              <el-form-item label="路由地址" :label-width="formLabelWidth" prop="path">
+                <el-input v-model="addForm.path" placeholder="请输入内容" />
+              </el-form-item>
+            </div>
+            <div class="width">
+              <el-form-item label="权限标识" :label-width="formLabelWidth" prop="perms">
+                <el-input v-model="addForm.perms" placeholder="请输入内容" />
+              </el-form-item>
+            </div>
+            <div class="width">
+              <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
+                <el-radio-group v-model="addForm.status">
+                  <el-radio :label="0">开启</el-radio>
+                  <el-radio :label="1">关闭</el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </div>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <div class="form-bottom">
@@ -266,11 +289,13 @@ export default {
 .custom-tree-node {
   width: 100%;
 }
-.tree-menu{
+
+.tree-menu {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 .menu {
   display: flex;
   height: calc(100vh - 160px);
@@ -281,6 +306,11 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.tree-menu p {
+  text-align: center;
+  width: 200px;
 }
 
 .tree .link {

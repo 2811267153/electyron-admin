@@ -1,22 +1,23 @@
 <template>
-<div id="intercept">
-  <div class="container">
-    <p>{{$route.meta.title}}</p>
-  </div>
+  <div class="warps">
+    <div class="container">
+      <p>{{ $route.meta.title }}</p>
+    </div>
 
-</div>
+  </div>
 </template>
 
 <script>
 export default {
   name: "intercept"
-}
+};
 </script>
 
 <style scoped>
 .container {
   border: 1px solid #ccc;
   margin: 0 20px;
+  height: 100% !important;
 }
 
 .container p {

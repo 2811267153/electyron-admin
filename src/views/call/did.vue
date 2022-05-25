@@ -1,5 +1,5 @@
 <template>
-  <div id="did">
+  <div class="warps">
     <div class="container">
       <p>{{ $route.meta.title }}</p>
       <div class="nav-form">
@@ -20,7 +20,8 @@
         </el-form>
         <div>
           <el-button type="primary" @click="showAddForm(null, '新增设备')"
-            >添加DID</el-button
+          >添加DID
+          </el-button
           >
         </div>
       </div>
@@ -53,8 +54,8 @@
             @current-change=""
             style="width: 100%"
           >
-            <el-table-column type="index" width="50"> </el-table-column>
-            <el-table-column property="title" width="120"> </el-table-column>
+            <el-table-column type="index" width="50"></el-table-column>
+            <el-table-column property="title" width="120"></el-table-column>
             <el-table-column property="title" width="120">
               <template scope="scope">
                 <a @click="bubbleSort(scope.row.index, scope.row)">上移</a>
@@ -67,7 +68,8 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="dialogFormVisible = false"
-          >确 定</el-button
+        >确 定
+        </el-button
         >
       </div>
     </el-dialog>
@@ -76,64 +78,64 @@
 
 <script>
 export default {
-  name: 'did',
+  name: "did",
   data() {
     return {
       form: {},
-      title: '添加DID',
+      title: "添加DID",
       dialogFormVisible: true,
-      formLabelWidth: '120px',
+      formLabelWidth: "120px",
 
       addForm: {
-        name: '',
-        number: '',
-        turnInside1: '',
-        turnInside2: '',
-        turnInside3: '',
-        turnInsideIVR: '',
-        turnInsideSIP: ''
+        name: "",
+        number: "",
+        turnInside1: "",
+        turnInside2: "",
+        turnInside3: "",
+        turnInsideIVR: "",
+        turnInsideSIP: ""
       },
       formTabData: [
         {
-          title: '转内部号码',
+          title: "转内部号码",
           index: 1
         },
         {
-          title: '转外呼号码1',
+          title: "转外呼号码1",
           index: 2
         },
         {
-          title: '转外呼号码2',
+          title: "转外呼号码2",
           index: 3
         },
         {
-          title: '转外呼号码3',
+          title: "转外呼号码3",
           index: 4
         },
         {
-          title: '转IVR',
+          title: "转IVR",
           index: 5
         },
         {
-          title: '转SIP服务器',
+          title: "转SIP服务器",
           index: 6
         }
       ]
-    }
+    };
   },
   methods: {
     showAddForm(row, title) {
-      this.dialogFormVisible = true
-      this.title = title
+      this.dialogFormVisible = true;
+      this.title = title;
     },
     bubbleSort(e, index) {
-      console.log(index)
+      console.log(index);
     },
     tableRowClassName({ row, rowIndex }) {
-      row.index = rowIndex
+      row.index = rowIndex;
     }
   }
-}
+};
 </script>
 
 <style scoped>

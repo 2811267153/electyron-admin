@@ -1,5 +1,5 @@
 <template>
-  <div id="my-manage">
+  <div class="warps">
     <my-el-header />
     <div class="container">
       <el-row class="main">
@@ -106,129 +106,130 @@
               :close-on-click-modal="false"
             >
               <el-form ref="addForm" :model="addForm" id="form" :rules="rules">
-                <el-form-item
-                  class="form-item"
-                  label="用户名称"
-                  :label-width="formLabelWidth"
-                  prop="nickName"
-                >
-                  <el-input placeholder="请输入内容" v-model="addForm.nickName" autocomplete="off"></el-input>
-                </el-form-item>
-                <el-form-item
-                  class="form-item"
-                  label="用户角色"
-                  :label-width="formLabelWidth"
-                  prop="roleId"
-                >
-                  <el-select
-                    v-if="title === '新增'"
-                    style="width: 100%"
-                    v-model="addForm.roleId "
-                    placeholder="请选择用户角色"
-                  >
-                    <el-option
-                      :label="item.roleName"
-                      :value="item.roleId"
-                      v-for="item in roleList"
-                    ></el-option>
-                  </el-select>
-                  <el-select
-                    v-else
-                    style="width: 100%"
+                <div class="width">
+                  <el-form-item
                     class="form-item"
-                    v-model="addForm.roleId "
-                    :placeholder="addForm.department"
+                    label="用户名称"
+                    :label-width="formLabelWidth"
+                    prop="nickName"
                   >
-                    <el-option
-                      :label="item.roleName"
-                      :value="item.roleId"
-                      v-for="item in roleList"
-                    ></el-option>
-                  </el-select>
-                </el-form-item>
-                <el-form-item
-                  class="form-item"
-                  label="所属部门"
-                  prop="deptId"
-                  placeholder="请输入内容"
-                  :label-width="formLabelWidth"
-                >
-                  <!--                  <my-tree ref="myTree" style="width: 100%" :options="treeArr" @getValue="getSelectedValue"></my-tree>-->
-                  <treeselect v-model="addForm.deptId" :multiple="false" :options="treeArr" :normalizer="normalizer" />
-                </el-form-item>
-                <!--                <el-form-item-->
-                <!--                  class="form-item"-->
-                <!--                  label="角色"-->
-                <!--                  prop="deptId"-->
-                <!--                  :label-width="formLabelWidth"-->
-                <!--                >-->
-                <!--&lt;!&ndash;                  <my-tree ref="myTree" style="width: 100%" :options="treeArr" @getValue="getSelectedValue"></my-tree>&ndash;&gt;-->
-                <!--                </el-form-item>-->
-                <el-form-item
-                  class="form-item"
-                  label="用户性别"
-                  :label-width="formLabelWidth"
-                  prop="sex"
-                >
-                  <el-select v-model="addForm.sex" placeholder="请选择用户性别" style="width: 100%">
-                    <el-option
-                      :label="item.label"
-                      :value="item.value"
-                      v-for="item in sexList"
-                    ></el-option>
-                  </el-select>
-                </el-form-item>
-                <el-form-item
-                  class="form-item"
-                  label="账号"
-                  type="email"
-                  placeholder="请输入内容"
-                  :label-width="formLabelWidth"
-                  prop="username"
-                >
-                  <el-input v-model="addForm.username" autocomplete="off">
-                  </el-input>
-                </el-form-item>
-                <el-form-item label="状态" :label-width="formLabelWidth">
-                  <el-radio-group v-model="addForm.status">
-                    <el-radio :label="0">启用</el-radio>
-                    <el-radio :label="1">停用</el-radio>
-                  </el-radio-group>
-                </el-form-item>
-                <el-form-item
-                  class="form-item"
-                  label="手机号"
-                  prop="phone"
-                  :label-width="formLabelWidth"
-                >
-                  <el-input placeholder="请输入内容" v-model="addForm.phone" autocomplete="off"></el-input>
-                </el-form-item>
-                <el-form-item
-                  v-if="title !== '修改'"
-                  class="form-item"
-                  label="密码"
-                  :label-width="formLabelWidth"
-                  prop="password"
-                >
-                  <el-input
+                    <el-input placeholder="请输入内容" v-model="addForm.nickName" autocomplete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item
+                    class="form-item"
+                    label="用户角色"
+                    :label-width="formLabelWidth"
+                    prop="roleId"
+                  >
+                    <el-select
+                      v-if="title === '新增'"
+                      style="width: 100%"
+                      v-model="addForm.roleId "
+                      placeholder="请选择用户角色"
+                    >
+                      <el-option
+                        :label="item.roleName"
+                        :value="item.roleId"
+                        v-for="item in roleList"
+                      ></el-option>
+                    </el-select>
+                    <el-select
+                      v-else
+                      style="width: 100%"
+                      class="form-item"
+                      v-model="addForm.roleId "
+                      :placeholder="addForm.department"
+                    >
+                      <el-option
+                        :label="item.roleName"
+                        :value="item.roleId"
+                        v-for="item in roleList"
+                      ></el-option>
+                    </el-select>
+                  </el-form-item>
+
+                </div>
+                <div class="width">
+                  <el-form-item
+                    class="form-item"
+                    label="所属部门"
+                    prop="deptId"
                     placeholder="请输入内容"
-                    v-model="addForm.password"
-                    autocomplete="off"
-                  ></el-input>
-                </el-form-item>
-                <el-form-item
-                  class="form-item"
-                  label="邮箱"
-                  :label-width="formLabelWidth"
-                  prop="email"
-                >
-                  <el-input
-                    placeholder="请输入内容"
-                    type="email"
-                    v-model="addForm.email"
-                    autocomplete="off"
-                  ></el-input>
-                </el-form-item>
+                    :label-width="formLabelWidth"
+                  >
+                    <!--                  <my-tree ref="myTree" style="width: 100%" :options="treeArr" @getValue="getSelectedValue"></my-tree>-->
+                    <treeselect v-model="addForm.deptId" :multiple="false" :options="treeArr"
+                                :normalizer="normalizer" />
+                  </el-form-item>
+                  <el-form-item
+                    class="form-item"
+                    label="用户性别"
+                    :label-width="formLabelWidth"
+                    prop="sex"
+                  >
+                    <el-select v-model="addForm.sex" placeholder="请选择用户性别" style="width: 100%">
+                      <el-option
+                        :label="item.label"
+                        :value="item.value"
+                        v-for="item in sexList"
+                      ></el-option>
+                    </el-select>
+                  </el-form-item>
+                </div>
+                <div class="width">
+                  <el-form-item
+                    label="账号"
+                    :label-width="formLabelWidth"
+                    prop="username"
+                  >
+                    <el-input v-model="addForm.username" autocomplete="off">
+                    </el-input>
+                  </el-form-item>
+                  <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
+                    <el-radio-group v-model="addForm.status">
+                      <el-radio :label="0">启用</el-radio>
+                      <el-radio :label="1">停用</el-radio>
+                    </el-radio-group>
+                  </el-form-item>
+                </div>
+                <div class="width">
+                  <el-form-item
+                    class="form-item"
+                    label="手机号"
+                    prop="phone"
+                    :label-width="formLabelWidth"
+                  >
+                    <el-input placeholder="请输入内容" v-model="addForm.phone" autocomplete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item
+                    v-if="title !== '修改'"
+                    class="form-item"
+                    label="密码"
+                    :label-width="formLabelWidth"
+                    prop="password"
+                  >
+                    <el-input
+                      placeholder="请输入内容"
+                      v-model="addForm.password"
+                      autocomplete="off"
+                    ></el-input>
+                  </el-form-item>
+                </div>
+                <div class="width">
+                  <el-form-item
+                    class="form-item"
+                    label="邮箱"
+                    :label-width="formLabelWidth"
+                    prop="email"
+                  >
+                    <el-input
+                      placeholder="请输入内容"
+                      type="email"
+                      v-model="addForm.email"
+                      autocomplete="off"
+                    ></el-input>
+                  </el-form-item>
+                </div>
               </el-form>
               <div slot="footer" class="dialog-footer">
                 <el-button @click="isShow = false">取 消</el-button>

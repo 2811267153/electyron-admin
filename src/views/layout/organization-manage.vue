@@ -1,6 +1,6 @@
 <template>
   <!--  组织管理-->
-  <div class="management">
+  <div class="warps">
     <my-el-header></my-el-header>
     <div class="container">
       <div class="nav-form">
@@ -18,26 +18,34 @@
       </div>
       <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close :close-on-click-modal="false">
         <el-form ref="addForm" :model="addForm" :rules="rules">
-          <el-form-item label="部门名称" :label-width="formLabelWidth" prop="deptName">
-            <el-input class="input" v-model="addForm.deptName" autocomplete="off" placeholder="请输入内容"></el-input>
-          </el-form-item>
-          <el-form-item label="显示顺序" :label-width="formLabelWidth" prop="orderNum">
-            <el-input type="number" class="input" v-model="addForm.orderNum" autocomplete="off"
-                      placeholder="请输入内容"></el-input>
-          </el-form-item>
-          <el-form-item label="上级部门" :label-width="formLabelWidth" prop="parentId">
+          <div class="width">
+            <el-form-item label="部门名称" :label-width="formLabelWidth" prop="deptName">
+              <el-input class="input" v-model="addForm.deptName" autocomplete="off" placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </div>
+          <div class="width">
+            <el-form-item label="显示顺序" :label-width="formLabelWidth" prop="orderNum">
+              <el-input type="number" class="input" v-model="addForm.orderNum" autocomplete="off"
+                        placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </div>
+          <div class="width">
+            <el-form-item label="上级部门" :label-width="formLabelWidth" prop="parentId">
 
-            <!--          <my-tree style="width: 100%" :options="formList" @getValue="getSelectedValue"></my-tree>-->
-            <!--          <my-el-tree v-model="addForm.parentId" :options="formList" :value='row.parentId' :props="defaultProps"/>-->
-            <treeselect v-model="parent" :multiple="false" :disabled="isDisabled" :options="formatList"
-                        :normalizer="normalizer" />
-          </el-form-item>
-          <el-form-item label="状态" :label-width="formLabelWidth">
-            <el-radio-group v-model="addForm.status">
-              <el-radio :label="0">启用</el-radio>
-              <el-radio :label="1">停用</el-radio>
-            </el-radio-group>
-          </el-form-item>
+              <!--          <my-tree style="width: 100%" :options="formList" @getValue="getSelectedValue"></my-tree>-->
+              <!--          <my-el-tree v-model="addForm.parentId" :options="formList" :value='row.parentId' :props="defaultProps"/>-->
+              <treeselect v-model="parent" :multiple="false" :disabled="isDisabled" :options="formatList"
+                          :normalizer="normalizer" />
+            </el-form-item>
+          </div>
+          <div class="width">
+            <el-form-item label="状态" :label-width="formLabelWidth">
+              <el-radio-group v-model="addForm.status">
+                <el-radio :label="0">启用</el-radio>
+                <el-radio :label="1">停用</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </div>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>

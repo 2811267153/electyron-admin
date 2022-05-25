@@ -1,6 +1,6 @@
 <template>
   <!--  角色管理-->
-  <div class="role">
+  <div class="warps roleManage">
     <el-header>
       <my-el-header />
     </el-header>
@@ -31,27 +31,31 @@
       </div>
       <el-dialog title="数据权限" :visible.sync="dialogFormVisibles" :close-on-click-modal="false">
         <el-form :model="dataScopeForm">
-          <el-form-item label="角色名称" :label-width="formLabelWidth">
-            <el-input disabled v-model="dataScopeForm.roleName" placeholder="请输入内容" />
-          </el-form-item>
-          <el-form-item label="数据权限" :label-width="formLabelWidth">
-            <el-select v-model="dataScopeForm.dataScope" style="width: 100%">
-              <el-option :label="item.label" :value="item.value" v-for="item in dataScopeType"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item v-if="dataScopeForm.dataScope === 2" label="数据权限" :label-width="formLabelWidth" required>
-            <el-tree
-              props="permission"
-              :data="formatList"
-              :default-checked-keys="defaultMenuIds"
-              :props="defaultProps"
-              node-key="deptId"
-              accordion
-              :check-on-click-node="true"
-              show-checkbox
-              @check="checkChange">
-            </el-tree>
-          </el-form-item>
+          <div class="width">
+            <el-form-item label="角色名称" :label-width="formLabelWidth">
+              <el-input disabled v-model="dataScopeForm.roleName" placeholder="请输入内容" />
+            </el-form-item>
+            <el-form-item label="数据权限" :label-width="formLabelWidth">
+              <el-select v-model="dataScopeForm.dataScope" style="width: 100%">
+                <el-option :label="item.label" :value="item.value" v-for="item in dataScopeType"></el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+          <div class="width">
+            <el-form-item v-if="dataScopeForm.dataScope === 2" label="数据权限" :label-width="formLabelWidth" required>
+              <el-tree
+                props="permission"
+                :data="formatList"
+                :default-checked-keys="defaultMenuIds"
+                :props="defaultProps"
+                node-key="deptId"
+                accordion
+                :check-on-click-node="true"
+                show-checkbox
+                @check="checkChange">
+              </el-tree>
+            </el-form-item>
+          </div>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisibles = false">取 消</el-button>
@@ -59,60 +63,62 @@
         </div>
       </el-dialog>
       <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close :close-on-click-modal="false">
-        <el-form :model="addForm" ref="addForm" :rules="rules">
-          <el-form-item
-            label="角色名称"
-            :label-width="formLabelWidth"
-            prop="roleName"
-          >
-            <el-input v-model="addForm.roleName" autocomplete="off" placeholder="请输入内容"></el-input>
-          </el-form-item>
-          <el-form-item
-            label="显示顺序"
-            :label-width="formLabelWidth"
-            prop="orderNum"
-          >
-            <el-input v-model="addForm.orderNum" autocomplete="off" placeholder="请输入内容"></el-input>
-          </el-form-item>
-          <el-form-item
-            label="角色编码"
-            :label-width="formLabelWidth"
-            prop="roleCode"
-          >
-            <el-input v-model="addForm.roleCode" autocomplete="off" placeholder="请输入内容"></el-input>
-          </el-form-item>
-          <el-form-item
-            label="菜单权限"
-            :label-width="formLabelWidth"
-            prop="roleCode"
-          >
-            <el-tree
-              ref="tree"
-              props="permission"
-              :data="menuIds"
-              :default-checked-keys="defaultMenuIds"
-              :props="menuProps"
-              node-key="menuId"
-              check-strictly
-              @check-change="getChange"
-              accordion
-              :check-on-click-node="true"
-              show-checkbox
-              @check="menuChange">
-            </el-tree>
-          </el-form-item>
+        <div class="width">
+          <el-form :model="addForm" ref="addForm" :rules="rules">
+            <el-form-item
+              label="角色名称"
+              :label-width="formLabelWidth"
+              prop="roleName"
+            >
+              <el-input v-model="addForm.roleName" autocomplete="off" placeholder="请输入内容"></el-input>
+            </el-form-item>
+            <el-form-item
+              label="显示顺序"
+              :label-width="formLabelWidth"
+              prop="orderNum"
+            >
+              <el-input v-model="addForm.orderNum" autocomplete="off" placeholder="请输入内容"></el-input>
+            </el-form-item>
+            <el-form-item
+              label="角色编码"
+              :label-width="formLabelWidth"
+              prop="roleCode"
+            >
+              <el-input v-model="addForm.roleCode" autocomplete="off" placeholder="请输入内容"></el-input>
+            </el-form-item>
+            <el-form-item
+              label="菜单权限"
+              :label-width="formLabelWidth"
+              prop="roleCode"
+            >
+              <el-tree
+                ref="tree"
+                props="permission"
+                :data="menuIds"
+                :default-checked-keys="defaultMenuIds"
+                :props="menuProps"
+                node-key="menuId"
+                check-strictly
+                @check-change="getChange"
+                accordion
+                :check-on-click-node="true"
+                show-checkbox
+                @check="menuChange">
+              </el-tree>
+            </el-form-item>
 
 
-          <el-form-item label="权限状态" :label-width="formLabelWidth">
-            <el-radio-group v-model="addForm.status">
-              <el-radio :label="0">启用</el-radio>
-              <el-radio :label="1">停用</el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="备注" :label-width="formLabelWidth">
-            <el-input v-model="addForm.desc" autocomplete="off" placeholder="请输入内容"></el-input>
-          </el-form-item>
-        </el-form>
+            <el-form-item label="权限状态" :label-width="formLabelWidth">
+              <el-radio-group v-model="addForm.status">
+                <el-radio :label="0">启用</el-radio>
+                <el-radio :label="1">停用</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="备注" :label-width="formLabelWidth">
+              <el-input v-model="addForm.desc" autocomplete="off" placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </el-form>
+        </div>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
           <el-button type="primary" @click="submitForm"
