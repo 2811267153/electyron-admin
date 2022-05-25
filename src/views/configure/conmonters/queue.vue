@@ -115,7 +115,7 @@
               <el-input v-model="addForm.fifoNight" placeholder="请输入内容"></el-input>
             </el-form-item>
             <el-form-item label="所属部门" :label-width="formLabelWidth" prop="fifoEmergency">
-              <treeselect v-model="addForm.deptIds" :multiple="false" :options="treeArr" :normalizer="normalizer"
+              <treeselect v-model="addForm.deptId" :multiple="false" :options="treeArr" :normalizer="normalizer"
                           placeholder="请输入内容" />
             </el-form-item>
 

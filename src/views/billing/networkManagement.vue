@@ -437,7 +437,7 @@ export default {
       getPbxAll(form).then(res => {
         if (res.data.code === 200) {
           this.$bus.$emit("total", res.data.data.total);
-          this.list = res.data.data.records.reverse();
+          this.list = res.data.data.records;
         }
       }).catch(e => {
         this.$message.error(e);

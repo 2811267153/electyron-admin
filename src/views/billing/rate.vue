@@ -128,8 +128,20 @@
                     </el-form-item>
                   </div>
                 </el-form-item>
-
               </div>
+              <el-form-item
+                label="地区类型"
+                :label-width="formLabelWidth"
+                prop="ratePrefix"
+
+              >
+                <el-radio-group v-model="addForm.aa">
+                  <el-radio :label="0">分机</el-radio>
+                  <el-radio :label="1">国内</el-radio>
+                  <el-radio :label="2">国外</el-radio>
+                </el-radio-group>
+              </el-form-item>
+
             </el-form>
             <div slot="footer" class="dialog-footer">
               <div class="footers">

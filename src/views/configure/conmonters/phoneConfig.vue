@@ -201,7 +201,7 @@
             </el-form-item>
             <el-form-item label="部门名称" :label-width="formLabelWidth" prop="deptId">
               <!--              <my-tree ref="myTree" style="width: 100%" :options="deptIdList" @getValue="getSelectedValue"></my-tree>-->
-              <treeselect v-model="deptIds" :multiple="false" :options="deptIdList" :normalizer="normalizer"
+              <treeselect v-model="addForm.deptId" :multiple="false" :options="deptIdList" :normalizer="normalizer"
                           placeholder="请输入内容" />
             </el-form-item>
           </div>
