@@ -14,23 +14,20 @@ export function mapMenuRouter(menuList) {
     const a = [];
     if (menuList.left !== 0) {
       for (const menu of menuList) {
-        if (menu.menuType === "1") {
-
+        if (menu.parentId === "2") {
+          console.log(menu, '________________');
           _recurseGetRouter(menu.children);
           console.log("parentId == 1", menu.children);
-        } else if (menu.menuType === "2") {
-
-          console.log("parentId===2", menu);
-
+        } else if (menu.parentId === "2") {
           allRouter.forEach(route => {
             if (route.path === menu.path) {
               a.push(route);
             }
+            console.log(a);
           });
           if (!firstMenu) {
             firstMenu = menu;
           }
-
         }
       }
     }

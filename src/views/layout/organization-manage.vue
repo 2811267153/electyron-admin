@@ -63,7 +63,7 @@
         @node-click="handleNodeClick"
         :data="formatList"
         ref="tree"
-        :indent="0"
+        :indent="20"
         :default-expanded-keys="defaulExpanded"
         :expand-on-click-node="false"
         node-key="deptId"
@@ -304,14 +304,7 @@ export default {
 };
 </script>
 
-<style>
-.management {
-  display: flex;
-  height: calc(100vh - 160px);
-  justify-content: space-between;
-  flex-direction: column;
-}
-
+<style scoped>
 .input {
   width: 30%;
 }
@@ -319,13 +312,6 @@ export default {
 .custom-tree-node {
   width: 100%;
 }
-
-.tree {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .tree-menu {
   padding: 10px 20px;
   background-color: #f2f2f2;
@@ -340,10 +326,6 @@ export default {
 
 .tree .link {
   margin-right: 20px;
-}
-
-.tree div {
-  width: 200px;
 }
 
 .nav-form {

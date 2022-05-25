@@ -100,7 +100,7 @@ export default {
   padding: 5px 10px;
   text-align: center;
   font-size: 13px;
-  width: 160px;
+  width: 200px;
   overflow: hidden;
 }
 

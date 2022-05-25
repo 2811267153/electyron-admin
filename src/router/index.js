@@ -27,6 +27,7 @@ import serveStart from "@/views/home/serveStaut";
 import meetingMinutes from "@/views/call/meetingMinutes";
 import intercept from "@/views/converse/intercept";
 import { setupStore } from "@/store";
+import rateList from "@/views/billing/rateList";
 
 Vue.use(VueRouter);
 
@@ -156,6 +157,11 @@ const routes = [
       {
         path: "/home/bill/intercept",
         component: intercept,
+        meta: { icon: "" }
+      },
+      {
+        path: "/home/billing/rate/list",
+        component: rateList,
         meta: { icon: "" }
       }
     ]

@@ -1,5 +1,6 @@
 <template>
-  <el-tree
+  <div class="tree">
+    <el-tree
       class="filter-tree"
       :data="data"
       :props="defaultProps"
@@ -10,7 +11,8 @@
       :node-key="data.deptId"
       ref="tree"
       :default-expanded-keys="['1524594032656699393',101]">
-  </el-tree>
+    </el-tree>
+  </div>
 </template>
 
 <script>
@@ -54,4 +56,17 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.tree {
+  box-shadow: inset 0 0 10px #cccccc;
+  height: 100%;
+  padding: 20px;
+  border-radius: 10px;
+  margin-right: 10px;
+  display: block;
+  background-color: #f2f2f2;
+}
+.filter-tree{
+  background-color: transparent;
+}
+</style>

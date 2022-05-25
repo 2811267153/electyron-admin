@@ -13,7 +13,7 @@
         :props="defaultProps"
         node-key="menuId"
         :expand-on-click-node="false"
-        :indent="0"
+        :indent="15"
         @node-click="meunClick"
         :default-expanded-keys="defaultShowNodes"
         accordion>
@@ -286,7 +286,7 @@ export default {
 };
 </script>
 
-<style>
+<style >
 .custom-tree-node {
   width: 100%;
 }
