@@ -1,11 +1,11 @@
 <template>
   <div class="warps">
-    <my-el-header/>
+    <my-el-header />
     <div class="container">
       <div class="form-nav">
         <el-form :inline="true" :model="form" class="demo-form-inline" ref="form" :rules="rules">
           <el-form-item label="方案名称" prop="diaplanName">
-            <el-input v-model="form.diaplanName"  placeholder="请输入内容"></el-input>
+            <el-input v-model="form.diaplanName" placeholder="请输入内容"></el-input>
           </el-form-item>
 
           <el-form-item>
@@ -18,22 +18,23 @@
         </el-button
         >
       </div>
-      <el-dialog :close-on-click-modal="false" :title="title" :visible.sync="dialogFormVisible" destroy-on-close>
+      <el-dialog :width="$store.state.dialogWidth" :close-on-click-modal="false" :title="title"
+                 :visible.sync="dialogFormVisible" destroy-on-close>
         <el-form :model="addForm" ref="formName" :rules="rules">
           <div class="width">
             <el-form-item
-                label="拨号方案名称"
-                :label-width="formLabelWidth"
-                prop="diaplanName"
+              label="拨号方案名称"
+              :label-width="formLabelWidth"
+              prop="diaplanName"
             >
-              <el-input v-model="addForm.diaplanName" autocomplete="off"  placeholder="请输入内容"></el-input>
+              <el-input v-model="addForm.diaplanName" autocomplete="off" placeholder="请输入内容"></el-input>
             </el-form-item>
             <el-form-item label="中继组" :label-width="formLabelWidth" prop="diaplanGatewayGroup">
-              <el-select v-model="addForm.diaplanGatewayGroup"  placeholder="请选择"  style="width: 100%">
+              <el-select v-model="addForm.diaplanGatewayGroup" placeholder="请选择" style="width: 100%">
                 <el-option
-                    :label="item.groupName"
-                    v-for="item in trunkGroup"
-                    :value="item.id"
+                  :label="item.groupName"
+                  v-for="item in trunkGroup"
+                  :value="item.id"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -41,12 +42,12 @@
           </div>
           <div class="width">
             <el-form-item label="费率组" :label-width="formLabelWidth" prop="diaplanRateGroup">
-              <el-select v-model="addForm.diaplanRateGroup" placeholder="请选择" @change="change"  style="width: 100%">
+              <el-select v-model="addForm.diaplanRateGroup" placeholder="请选择" @change="change" style="width: 100%">
                 <el-option
-                    v-for="item in rateList"
-                    :key="item.id"
-                    :label="item.groupName"
-                    :value="item.id">
+                  v-for="item in rateList"
+                  :key="item.id"
+                  :label="item.groupName"
+                  :value="item.id">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -63,7 +64,9 @@
           >
         </div>
       </el-dialog>
-      <el-table  height="calc(100vh - 100px - 100px - 100px - 100px)" :header-cell-style="{background:'#ccc', color: '#fff',}":data="list"  style="width: 100%; margin-top: 20px"  v-if="list.length !==0">
+      <el-table height="calc(100vh - 100px - 100px - 100px - 100px)"
+                :header-cell-style="{background:'#ccc', color: '#fff',}" :data="list"
+                style="width: 100%; margin-top: 20px" v-if="list.length !==0">
         <el-table-column prop="date" align="center" label="序号" width="50">
           <template scope="scope">
             {{ scope.$index + 1 }}
@@ -83,7 +86,7 @@
         <el-table-column align="center" prop="stauts" label="操作" fixed="right" min-width="100px">
           <template scope="scope">
             <div class="operate">
-              <el-link @click="showAddForm(scope.row, '编辑')" type="info"  >编辑 </el-link>
+              <el-link @click="showAddForm(scope.row, '编辑')" type="info">编辑</el-link>
               <template>
                 <el-popconfirm title="确认要删除吗？" @confirm="removeIt(scope.row)">
                   <el-link type="info" slot="reference">删除
@@ -96,15 +99,16 @@
         <el-table-column prop="remark" label="备注" align="center">
         </el-table-column>
       </el-table>
-      <my-empty v-else/>
+      <my-empty v-else />
     </div>
-    <my-footer v-on:next = "next" @prev="prev" :form="form" @change="formChange"  @pageCheng="pageCheng"></my-footer>
+    <my-footer v-on:next="next" @prev="prev" :form="form" @change="formChange" @pageCheng="pageCheng"></my-footer>
   </div>
 </template>
 
 <script>
 import {
-  addDiaPlanList, delDiaPlan,
+  addDiaPlanList,
+  delDiaPlan,
   diaPlanList,
   getGwgroup,
   getRateItemList,
@@ -117,7 +121,7 @@ import myElHeader from "@/components/myElHeader";
 
 
 export default {
-  name: 'dialPlan',
+  name: "dialPlan",
   components: {
     myEmpty,
     myFooter,
@@ -127,65 +131,65 @@ export default {
   data() {
     return {
       dialogFormVisible: false,
-      formLabelWidth: '120px',
+      formLabelWidth: "120px",
       form: {
         pageNum: 1,
         pageSize: 10,
-        diaplanGatewayGroup: '',
-        diaplanName: '',
-        diaplanPrefix: '',
+        diaplanGatewayGroup: "",
+        diaplanName: "",
+        diaplanPrefix: ""
       },
-      title: '',
+      title: "",
       list: [],
       addForm: {
-        diaplanGatewayGroup: '', //中继组ID
-        diaplanName: '', //拨号计划名称
-        diaplanPrefix: '',  //呼出前缀
-        diaplanRateGroup: '', //费率组
+        diaplanGatewayGroup: "", //中继组ID
+        diaplanName: "", //拨号计划名称
+        diaplanPrefix: "",  //呼出前缀
+        diaplanRateGroup: "" //费率组
       },
-      rateGroupId: '',//获取费率组ID
+      rateGroupId: "",//获取费率组ID
       trunkGroup: [],
       rateList: [],
       rateItemList: [],
       rules: {
-        diaplanName: [{required: true, message: '此项为必填项， 请确认', trigger: 'blur'}],
-        diaplanGatewayGroup: [{required: true, message: '此项为必填项， 请确认', trigger: 'blur'}],
-        diaplanRateGroup: [{required: true, message: '此项为必填项， 请确认', trigger: 'blur'}],
-        diaplanPrefix: [{required: true, message: '此项为必填项， 请确认', trigger: 'blur'}]
+        diaplanName: [{ required: true, message: "此项为必填项， 请确认", trigger: "blur" }],
+        diaplanGatewayGroup: [{ required: true, message: "此项为必填项， 请确认", trigger: "blur" }],
+        diaplanRateGroup: [{ required: true, message: "此项为必填项， 请确认", trigger: "blur" }],
+        diaplanPrefix: [{ required: true, message: "此项为必填项， 请确认", trigger: "blur" }]
       }
-    }
+    };
   },
   methods: {
     getDaiPlan(form) {
       diaPlanList(form).then(res => {
-        console.log(res)
-        this.$bus.$emit('total', res.data.data.total)
-        this.list = res.data.data.records
+        console.log(res);
+        this.$bus.$emit("total", res.data.data.total);
+        this.list = res.data.data.records;
       }).catch(e => {
-        console.log(e)
-      })
+        console.log(e);
+      });
     },
-    pageCheng(e){
-      this.form = this.$options.data().form
-      this.form.pageSize = e
-      this.getDaiPlan(this.form)
+    pageCheng(e) {
+      this.form = this.$options.data().form;
+      this.form.pageSize = e;
+      this.getDaiPlan(this.form);
     },
     //搜索
     find() {
-      this.getDaiPlan(this.form)
+      this.getDaiPlan(this.form);
     },
     //重置
     clearSubmit() {
-      this.form = this.$options.data().form
-      this.getDaiPlan(this.form)
+      this.form = this.$options.data().form;
+      this.getDaiPlan(this.form);
     },
     showAddForm(row, title) {
-      this.dialogFormVisible = true
-      this.title = title
-      if (title === '编辑') {
-        this.addForm = row
+      this.dialogFormVisible = true;
+      this.title = title;
+      if (title === "编辑") {
+        this.addForm = row;
       } else {
-        this.addForm = this.$options.data().addForm
+        this.addForm = this.$options.data().addForm;
       }
     },
 
@@ -203,111 +207,111 @@ export default {
           /**
            * 添加拨号方案
            */
-          if (this.title !== '编辑') {
+          if (this.title !== "编辑") {
             addDiaPlanList(this.addForm).then(res => {
-              console.log(res)
+              console.log(res);
               if (res.data.code === 200) {
-                this.$message.success('提交完成')
-                this.getDaiPlan(this.form)
+                this.$message.success("提交完成");
+                this.getDaiPlan(this.form);
 
               } else {
-                this.$message.error(res.data.msg)
+                this.$message.error(res.data.msg);
               }
-              this.dialogFormVisible = false
+              this.dialogFormVisible = false;
             }).catch(e => {
-              console.log(e)
-              this.$message.error(e)
-            })
+              console.log(e);
+              this.$message.error(e);
+            });
           } else {
             upDateDiaPlan(this.addForm).then(res => {
               if (res.data.code === 200) {
-                this.$message.success('提交完成')
-                this.getDaiPlan(this.form)
+                this.$message.success("提交完成");
+                this.getDaiPlan(this.form);
               } else {
-                this.$message.error(res.data.msg)
+                this.$message.error(res.data.msg);
               }
-            }).catch(e => this.$message.error(e))
+            }).catch(e => this.$message.error(e));
           }
         } else {
-          return false
+          return false;
         }
-      })
+      });
     },
     change(e) {
       //获取费率组下的所有费率
-      this.rateGroupId = e
-      const data = {}
-      data.rateGroupId = e
+      this.rateGroupId = e;
+      const data = {};
+      data.rateGroupId = e;
       getRateItemList(data).then(res => {
         if (res.data.code === 200) {
           res.data.data.records.forEach((item, i) => {
-            this.addForm.diaplanPrefix = item.ratePrefix + ','
-          })
+            this.addForm.diaplanPrefix = item.ratePrefix + ",";
+          });
         } else {
-          this.$message.error(res.data.msg)
+          this.$message.error(res.data.msg);
         }
-      })
+      });
     },
     removeIt(row) {
       delDiaPlan(row.id).then(res => {
         if (res.data.code === 200) {
-          this.$message.success('提交完成')
+          this.$message.success("提交完成");
           this.getDaiPlan(this.form);
         } else {
-          this.$message.error(res.data.msg)
+          this.$message.error(res.data.msg);
         }
       }).catch(e => {
-        this.$message.error(e)
-      })
+        this.$message.error(e);
+      });
 
     },
-    next(){
-      this.forms.pageNum ++
-      this.getDaiPlan(this.forms)
+    next() {
+      this.forms.pageNum++;
+      this.getDaiPlan(this.forms);
     },
-    prev(){
-      this.forms.pageNum --
-      this.getDaiPlan(this.forms)
+    prev() {
+      this.forms.pageNum--;
+      this.getDaiPlan(this.forms);
     },
-    formChange(e){
-      this.forms.pageNum = e
-      this.getDaiPlan(this.forms)
-    },
+    formChange(e) {
+      this.forms.pageNum = e;
+      this.getDaiPlan(this.forms);
+    }
   },
   created() {
-    this.getDaiPlan(this.form)
+    this.getDaiPlan(this.form);
   },
   computed: {
-    diaplanPrefix(){
-      return this.addForm.diaplanRateGroup
+    diaplanPrefix() {
+      return this.addForm.diaplanRateGroup;
     }
   },
 
   watch: {
     dialogFormVisible(val) {
       if (val === true) {
-        getGwgroup(this.form)
+        getGwgroup(this.form);
         {
           getGwgroup(this.form).then(res => {
-            this.trunkGroup = res.data.data.records
+            this.trunkGroup = res.data.data.records;
           }).catch(e => {
-            this.$message.error(e)
-          })
+            this.$message.error(e);
+          });
         }
         getRateList(this.form).then(res => {
           if (res.data.code === 200) {
-            this.rateList = res.data.data.records
+            this.rateList = res.data.data.records;
           } else {
-            this.$message.error(res.data.msg)
+            this.$message.error(res.data.msg);
           }
-        }).catch(e => this.$message.error(e))
+        }).catch(e => this.$message.error(e));
       }
     },
-    diaplanPrefix(){
-      this.addForm.diaplanPrefix = ''
+    diaplanPrefix() {
+      this.addForm.diaplanPrefix = "";
     }
   }
-}
+};
 </script>
 
 <style scoped>

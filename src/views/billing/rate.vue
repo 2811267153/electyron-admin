@@ -19,7 +19,8 @@
             </el-button
             >
           </div>
-          <el-dialog destroy-on-close :title="title" :close-on-click-modal="false" :visible.sync="dialogFormVisible">
+          <el-dialog :width="$store.state.dialogWidth" destroy-on-close :title="title" :close-on-click-modal="false"
+                     :visible.sync="dialogFormVisible">
             <el-form ref="addForm" :model="addForm" :rules="addFroms">
               <el-form-item
                 label="添加费率组名称"
@@ -86,21 +87,25 @@
           <el-dialog destroy-on-close :close-on-click-modal="false" :title="listTitle"
                      :visible.sync="listDialogFormVisible">
             <el-form :model="addListFrom" ref="formName" :rules="addRules">
-              <el-form-item
-                label="费率名称"
-                :label-width="formLabelWidth"
-                prop="rateName"
-              >
-                <el-input v-model="addListFrom.rateName" placeholder="请输入内容" autocomplete="off"></el-input>
-              </el-form-item>
-              <el-form-item
-                label="费率组"
-                :label-width="formLabelWidth"
-                name="rateGroup"
-                required
-              >
-                <el-input v-model="row.groupName" placeholder="请输入内容" disabled></el-input>
-              </el-form-item>
+              <div class="width">
+                <el-form-item
+                  label="费率名称"
+                  :label-width="formLabelWidth"
+                  prop="rateName"
+                >
+                  <el-input v-model="addListFrom.rateName" placeholder="请输入内容" autocomplete="off"></el-input>
+                </el-form-item>
+              </div>
+              <div class="width">
+                <el-form-item
+                  label="费率组"
+                  :label-width="formLabelWidth"
+                  name="rateGroup"
+                  required
+                >
+                  <el-input v-model="row.groupName" placeholder="请输入内容" disabled></el-input>
+                </el-form-item>
+              </div>
               <div class="width">
                 <el-form-item
                   label="费率前缀"
@@ -130,20 +135,22 @@
                   </el-select>
                 </el-form-item>
               </div>
-              <el-form-item
-                label="计费方式"
-                :label-width="formLabelWidth"
-                required
-              >
-                <div class="width">
-                  <el-form-item prop="rate">
-                    <el-input style="margin-right: 20px" v-model="addListFrom.rate" placeholder="请输入单位(分)"></el-input>
-                  </el-form-item>
-                  <el-form-item style="margin-left: 20px" prop="billingPeriod">
-                    <el-input v-model="addListFrom.billingPeriod" placeholder="请输入计费时间(秒)"></el-input>
-                  </el-form-item>
-                </div>
-              </el-form-item>
+              <div class="width">
+                <el-form-item
+                  label="计费方式"
+                  :label-width="formLabelWidth"
+                  required
+                >
+                  <div class="flex">
+                    <el-form-item prop="rate">
+                      <el-input style="margin-right: 20px" v-model="addListFrom.rate" placeholder="请输入单位(分)"></el-input>
+                    </el-form-item>
+                    <el-form-item style="margin-left: 20px" prop="billingPeriod">
+                      <el-input v-model="addListFrom.billingPeriod" placeholder="请输入计费时间(秒)"></el-input>
+                    </el-form-item>
+                  </div>
+                </el-form-item>
+              </div>
             </el-form>
             <div slot="footer" class="dialog-footer">
               <div class="footers">
@@ -158,8 +165,8 @@
               </div>
             </div>
           </el-dialog>
-          <el-table max-height="800" :data="rateItemList" style="width: 100%; margin-top: 20px"
-                    v-if="list.length !== 0">
+          <el-table height="800" :data="rateItemList" style="width: 100%; margin-top: 20px"
+                    v-if="list.length !== 0" :header-cell-style="{background:'#ccc', color: '#fff'}">
             <el-table-column align="center" prop="date" label="序号">
               <template scope="scope">{{ scope.$index + 1 }}</template>
             </el-table-column>
@@ -508,12 +515,12 @@ export default {
   text-align: right;
 }
 
-.width {
+.flex {
   display: flex;
-  width: 100%;
+  justify-content: space-between;
 }
 
-.width .input {
-  width: 193px;
+.flex > * {
+  flex: 1;
 }
 </style>

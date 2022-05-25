@@ -16,7 +16,8 @@
           <el-button type="primary" @click="showForm('新增')">新增</el-button>
         </div>
       </div>
-      <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close :close-on-click-modal="false">
+      <el-dialog :width="$store.state.dialogWidth" :title="title" :visible.sync="dialogFormVisible" destroy-on-close
+                 :close-on-click-modal="false">
         <el-form ref="addForm" :model="addForm" :rules="rules">
           <div class="width">
             <el-form-item label="部门名称" :label-width="formLabelWidth" prop="deptName">

@@ -5,7 +5,9 @@ import login from "./login/login";
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
-  state: {},
+  state: {
+    dialogWidth: "900px"
+  },
   getters: {},
 
   actions: {},

@@ -93,11 +93,14 @@
       </el-table>
 
 
-      <el-dialog destroy-on-close :title="title" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
+      <el-dialog :width="$store.state.dialogWidth" destroy-on-close :title="title" :visible.sync="dialogFormVisible"
+                 :close-on-click-modal="false">
         <el-form :model="addForm" ref="addForm" :rules="rules">
-          <el-form-item label="服务接口名称" :label-width="formLabelWidth" prop="profileName">
-            <el-input v-model="addForm.profileName" autocomplete="off" placeholder="请输入内容"></el-input>
-          </el-form-item>
+          <div class="width">
+            <el-form-item label="服务接口名称" :label-width="formLabelWidth" prop="profileName">
+              <el-input v-model="addForm.profileName" autocomplete="off" placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </div>
           <div class="width">
             <el-form-item label="网卡名称" :label-width="formLabelWidth" prop="netName">
               <el-select style="width: 100%" @change="change" v-model="addForm.netName" placeholder="请选择">
@@ -115,21 +118,29 @@
               </el-select>
             </el-form-item>
           </div>
-          <el-form-item label="网卡地址" :label-width="formLabelWidth" prop="netMac">
-            <el-input v-model="addForm.netMac" disabled autocomplete="off" placeholder="请输入内容"></el-input>
-          </el-form-item>
-          <el-form-item label="IP" :label-width="formLabelWidth" prop="profileSipIp">
-            <el-input v-model="addForm.profileSipIp" disabled autocomplete="off" placeholder="请输入内容"></el-input>
-          </el-form-item>
-          <el-form-item label="端口" :label-width="formLabelWidth" prop="profileSipPort">
-            <el-input v-model="addForm.profileSipPort" autocomplete="off" placeholder="请输入内容"></el-input>
-          </el-form-item>
-          <el-form-item label="状态" :label-width="formLabelWidth">
-            <el-radio-group v-model="addForm.status">
-              <el-radio :label="0">启用</el-radio>
-              <el-radio :label="1">禁用</el-radio>
-            </el-radio-group>
-          </el-form-item>
+          <div class="width">
+            <el-form-item label="网卡地址" :label-width="formLabelWidth" prop="netMac">
+              <el-input v-model="addForm.netMac" disabled autocomplete="off" placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </div>
+          <div class="width">
+            <el-form-item label="IP" :label-width="formLabelWidth" prop="profileSipIp">
+              <el-input v-model="addForm.profileSipIp" disabled autocomplete="off" placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </div>
+          <div class="width">
+            <el-form-item label="端口" :label-width="formLabelWidth" prop="profileSipPort">
+              <el-input v-model="addForm.profileSipPort" autocomplete="off" placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </div>
+          <div class="wdith">
+            <el-form-item label="状态" :label-width="formLabelWidth">
+              <el-radio-group v-model="addForm.status">
+                <el-radio :label="0">启用</el-radio>
+                <el-radio :label="1">禁用</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </div>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>

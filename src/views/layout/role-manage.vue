@@ -29,7 +29,8 @@
           <el-button type="primary" @click="addForms(null, '新增')">新增</el-button>
         </div>
       </div>
-      <el-dialog title="数据权限" :visible.sync="dialogFormVisibles" :close-on-click-modal="false">
+      <el-dialog :width="$store.state.dialogWidth" title="数据权限" :visible.sync="dialogFormVisibles"
+                 :close-on-click-modal="false">
         <el-form :model="dataScopeForm">
           <div class="width">
             <el-form-item label="角色名称" :label-width="formLabelWidth">

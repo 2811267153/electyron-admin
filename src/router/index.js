@@ -3,7 +3,6 @@ import VueRouter from "vue-router";
 import login from "@/views/login";
 import index from "@/views/index";
 import cache from "@/util/cache";
-import { setupStore } from "@/store";
 import menu from "@/views/layout/menu";
 import recordMange from "@/views/layout/record-mange";
 import myManage from "@/views/layout/my-manage";
@@ -27,6 +26,7 @@ import hisBill from "@/views/converse/hisBill";
 import serveStart from "@/views/home/serveStaut";
 import meetingMinutes from "@/views/call/meetingMinutes";
 import intercept from "@/views/converse/intercept";
+import { setupStore } from "@/store";
 
 Vue.use(VueRouter);
 
@@ -171,11 +171,11 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.path !== "/login") {
     const token = cache.getCache("token");
-    setupStore();
     if (!token) {
-      next("/");
+      next("/login");
     }
     next();
+    setupStore();
   }
   next();
 });

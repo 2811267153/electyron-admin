@@ -83,7 +83,8 @@
 
       </div>
 
-      <el-dialog :title="title" :close-on-click-modal="false" :visible.sync="dialogFormVisible" destroy-on-close>
+      <el-dialog :width="$store.state.dialogWidth" :title="title" :close-on-click-modal="false"
+                 :visible.sync="dialogFormVisible" destroy-on-close>
         <el-form :labelPosition="labelPosition" :model="addForm" :rules="rules" ref="addForm">
           <div class="width">
             <el-form-item

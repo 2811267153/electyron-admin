@@ -30,7 +30,8 @@
         </el-button
         >
       </div>
-      <el-dialog :close-on-click-modal="false" :title="title" :visible.sync="dialogFormVisible" destroy-on-close>
+      <el-dialog :width="$store.state.dialogWidth" :close-on-click-modal="false" :title="title"
+                 :visible.sync="dialogFormVisible" destroy-on-close>
         <el-form :model="addFrom" ref="formName" :rules="rules">
           <div class="width">
             <el-form-item
@@ -53,7 +54,6 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-
           </div>
           <div class="width">
             <el-form-item
@@ -222,7 +222,6 @@
             </el-table-column>
             <el-table-column align="center" prop="gatewayName" label="网关名称"></el-table-column>
             <el-table-column align="center" prop="accountUser" label="计费账号"></el-table-column>
-            <!--          <el-table-column align="center" prop="codecs" label="支持编码"></el-table-column>-->
             <el-table-column align="center" prop="expires" label="超时时长(s)"></el-table-column>
             <el-table-column align="center" prop="gatewayIp" label="中继IP"></el-table-column>
             <el-table-column align="center" prop="gatewayPort" label="中继端口"></el-table-column>
@@ -234,8 +233,6 @@
                 <a v-else>未知</a>
               </template>
             </el-table-column>
-            <!--          <el-table-column align="center" prop="maxCall" label="最大并发数"></el-table-column>-->
-            <!--          <el-table-column align="center" prop="username" label="注册用户"></el-table-column>-->
             <el-table-column align="center" prop="username" label="是否注册">
               <template scope="scope">
                 <div v-if="scope.row.register === 1"> 注册</div>

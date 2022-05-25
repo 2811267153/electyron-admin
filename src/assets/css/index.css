@@ -153,6 +153,11 @@ header {
     width: 100%;
     justify-content: space-between;
     display: flex;
+    height: 63px;
+}
+
+.el-dialog__body {
+    min-width: 400px;
 }
 
 .width > * {

@@ -29,7 +29,8 @@
           >
         </div>
 
-        <el-dialog destroy-on-close :title="title" :close-on-click-modal="false" :visible.sync="dialogFormVisible">
+        <el-dialog :width="$store.state.dialogWidth" destroy-on-close :title="title" :close-on-click-modal="false"
+                   :visible.sync="dialogFormVisible">
           <el-form :model="addForm" ref="addForm" :rules="rules">
             <div class="width">
               <el-form-item
@@ -65,7 +66,7 @@
                 :label-width="formLabelWidth"
                 prop="fifoId"
               >
-                <el-input class="width" v-model="addForm.fifoId" style="width: 100%"></el-input>
+                <el-input v-model="addForm.fifoId" style="width: 100%"></el-input>
               </el-form-item>
             </div>
             <div class="width">
@@ -184,6 +185,7 @@ export default {
         fifoId: "",
         nickName: ""
       },
+
       userList: "", //用户列表
       list: [],
       userId: [], //用户选择的列表

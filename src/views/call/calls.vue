@@ -1,6 +1,6 @@
 <template>
   <div class="warps">
-    <my-el-header/>
+    <my-el-header />
     <div class="container">
       <div class="form-nav">
         <el-form :inline="true" :model="form" class="demo-form-inline">
@@ -28,11 +28,12 @@
         </el-form>
         <div>
           <el-button type="primary" @click="showAddForm(null, '添加呼叫转移')"
-          >添加呼叫转移</el-button
+          >添加呼叫转移
+          </el-button
           >
         </div>
       </div>
-      <el-dialog :title="title" :visible.sync="dialogFormVisible">
+      <el-dialog :width="$store.state.dialogWidth" :title="title" :visible.sync="dialogFormVisible">
         <el-form :model="addForm" :rules="rules" ref="addForm">
           <el-form-item
             label="关联号码"
@@ -82,7 +83,8 @@
                 v-for="city in cycle"
                 :label="city"
                 :key="city"
-              >{{ city }}</el-checkbox-button
+              >{{ city }}
+              </el-checkbox-button
               >
             </el-checkbox-group>
           </el-form-item>
@@ -125,7 +127,8 @@
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
           <el-button type="primary" @click="submitForm('addFrom')"
-          >确 定</el-button
+          >确 定
+          </el-button
           >
         </div>
       </el-dialog>
@@ -159,7 +162,8 @@
               style="margin-right: 20px"
               @click="showAddForm(scope.row, '编辑')"
               type="info"
-            >编辑</el-link
+            >编辑
+            </el-link
             >
             <el-link style="margin-right: 20px" type="info">删除</el-link>
           </template>
@@ -177,7 +181,7 @@ import myFooter from "@/components/myFooter";
 import myElHeader from "@/components/myElHeader";
 
 export default {
-  name: 'calls',
+  name: "calls",
   components: {
     myFooter,
     myElHeader
@@ -185,121 +189,121 @@ export default {
 
   data() {
     return {
-      title: '添加呼叫转移',
-      formLabelWidth: '120px',
+      title: "添加呼叫转移",
+      formLabelWidth: "120px",
       dialogFormVisible: false,
 
       form: {
-        associatedNumber: '',
-        transferType: '',
-        transferParameter: ''
+        associatedNumber: "",
+        transferType: "",
+        transferParameter: ""
       },
       list: [],
       transferType: [
-        { label: 'IVR', value: 'IVR' },
-        { label: '外网号码', value: '外网号码' },
-        { label: '内网号码', value: '内网号码' },
-        { label: '振玲组', value: '振玲组' }
+        { label: "IVR", value: "IVR" },
+        { label: "外网号码", value: "外网号码" },
+        { label: "内网号码", value: "内网号码" },
+        { label: "振玲组", value: "振玲组" }
       ],
       addForm: {
-        associatedNumber: '',
-        transferType: '',
-        transferParameter: '',
-        cycle: ['周一'],
-        startTime: '',
-        endTime: '',
-        remark: ''
+        associatedNumber: "",
+        transferType: "",
+        transferParameter: "",
+        cycle: ["周一"],
+        startTime: "",
+        endTime: "",
+        remark: ""
       },
-      cycle: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+      cycle: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
       rules: {
         associatedNumber: [
-          { required: true, message: '请输入关联号码', trigger: 'blur' }
+          { required: true, message: "请输入关联号码", trigger: "blur" }
         ],
         transferType: [
-          { required: true, message: '请转移类型', trigger: 'blur' }
+          { required: true, message: "请转移类型", trigger: "blur" }
         ],
         transferParameter: [
-          { required: true, message: '请输入转移参数', trigger: 'blur' }
+          { required: true, message: "请输入转移参数", trigger: "blur" }
         ],
-        cycle: [{ required: true, message: '请选择有效周期', trigger: 'blur' }],
+        cycle: [{ required: true, message: "请选择有效周期", trigger: "blur" }],
         startTime: [
-          { required: true, message: '请选择执行时间', trigger: 'blur' }
+          { required: true, message: "请选择执行时间", trigger: "blur" }
         ],
         remark: [
-          { required: false, message: '请输入活动名称', trigger: 'blur' }
+          { required: false, message: "请输入活动名称", trigger: "blur" }
         ]
       }
-    }
+    };
   },
   methods: {
     showAddForm(row, title) {
-      this.dialogFormVisible = true
-      this.title = title
-      if (title === '编辑') {
-        this.addForm = row
-        console.log(row)
-      } else if (title === '查看') {
-        this.addForm = row
-        this.isReadOnly = true
+      this.dialogFormVisible = true;
+      this.title = title;
+      if (title === "编辑") {
+        this.addForm = row;
+        console.log(row);
+      } else if (title === "查看") {
+        this.addForm = row;
+        this.isReadOnly = true;
       } else {
-        this.resetForm('addForm')
+        this.resetForm("addForm");
       }
     },
-    next(){
-      this.form.pageNum ++
-      this.getRecord(this.form)
+    next() {
+      this.form.pageNum++;
+      this.getRecord(this.form);
     },
-    prev(){
-      this.form.pageNum --
-      this.getRecord(this.form)
+    prev() {
+      this.form.pageNum--;
+      this.getRecord(this.form);
     },
-    change(e){
-      this.form.pageNum = e
-      this.getRecord(this.form)
+    change(e) {
+      this.form.pageNum = e;
+      this.getRecord(this.form);
     },
-    find(){
-      this.getRecord(this.form)
+    find() {
+      this.getRecord(this.form);
     },
-    clear(){
-      this.form = this.$options.data().form
-      this.getRecord(this.form)
+    clear() {
+      this.form = this.$options.data().form;
+      this.getRecord(this.form);
     },
     submitForm() {
-      this.$refs['addForm'].validate((valid) => {
+      this.$refs["addForm"].validate((valid) => {
         if (valid) {
           this.$message({
-            message: '提交完成',
-            type: 'success'
-          })
-          console.log(this.addForm)
-          this.list.push(this.addForm)
-          window.localStorage.setItem('calls', JSON.stringify(this.list))
-          this.dialogFormVisible = false
+            message: "提交完成",
+            type: "success"
+          });
+          console.log(this.addForm);
+          this.list.push(this.addForm);
+          window.localStorage.setItem("calls", JSON.stringify(this.list));
+          this.dialogFormVisible = false;
         } else {
-          this.$message.error('提交失败， 请重试')
-          return false
+          this.$message.error("提交失败， 请重试");
+          return false;
         }
-      })
+      });
     },
     resetForm() {
-      this.$refs['addForm'].resetFields()
+      this.$refs["addForm"].resetFields();
     },
     tableRowClassName({ row, rowIndex }) {
-      row.index = rowIndex
+      row.index = rowIndex;
     },
 
     removeIt(row) {
       this.list.map((item, i) => {
         if (row === item) {
-          this.list.splice(i, 1)
+          this.list.splice(i, 1);
         }
-      })
+      });
     }
   },
   created() {
-    this.list = JSON.parse(window.localStorage.getItem('calls')) || []
+    this.list = JSON.parse(window.localStorage.getItem("calls")) || [];
   }
-}
+};
 </script>
 
 <style scoped>

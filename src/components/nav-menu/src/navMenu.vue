@@ -72,7 +72,7 @@ export default {
   background-color: rgb(67, 74, 80) !important;
 }
 
-.icon {
+.el-menu .icon {
   margin-right: 10px;
   font-size: 20px;
 }

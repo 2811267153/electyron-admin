@@ -38,7 +38,8 @@
         </div>
       </el-tree>
       <div>
-        <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close :close-on-click-modal="false">
+        <el-dialog :width="$store.state.dialogWidth" :title="title" :visible.sync="dialogFormVisible" destroy-on-close
+                   :close-on-click-modal="false">
           <el-form :model="addForm" ref="addForm" :rules="rules">
             <div class="width">
               <el-form-item label="菜单名称" :label-width="formLabelWidth" prop="menuName">

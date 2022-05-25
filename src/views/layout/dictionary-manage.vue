@@ -17,7 +17,8 @@
         >
       </a>
     </div>
-    <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close :close-on-click-modal="false">
+    <el-dialog :width="$store.state.dialogWidth" :title="title" :visible.sync="dialogFormVisible" destroy-on-close
+               :close-on-click-modal="false">
       <el-form ref="addForm" :model="addForm" :rules="riles">
         <div class="width">
           <el-form-item label="名称" :label-width="formLabelWidth" prop="name">

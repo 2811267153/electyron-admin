@@ -59,7 +59,7 @@
           <el-button type="primary">二维码打印</el-button>
         </div>
       </div>
-      <el-dialog :title="title" :visible.sync="dialogTableVisible">
+      <el-dialog :width="$store.state.dialogWidth" :title="title" :visible.sync="dialogTableVisible">
         <el-form :rules="rules" ref="ruleForm" :model="addForm">
           <div class="width">
             <el-form-item

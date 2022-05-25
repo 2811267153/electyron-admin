@@ -35,7 +35,8 @@
         </el-button
         >
       </div>
-      <el-dialog :close-on-click-modal="false" :title="title" :visible.sync="dialogFormVisible" destroy-on-close>
+      <el-dialog :width="$store.state.dialogWidth" :close-on-click-modal="false" :title="title"
+                 :visible.sync="dialogFormVisible" destroy-on-close>
         <el-form :model="addFrom" ref="addForm" :rules="rules">
           <div class="width">
             <el-form-item
@@ -101,30 +102,31 @@
               <div style="padding: 0 20px">
                 <el-input class="el-input" v-model="pbxGwgroupGatewayList.weight" placeholder="请输入内容"></el-input>
               </div>
-              <div>
-                <el-tooltip style="margin-left: 20px; vertical-align: top" @click.native="addGateway" class="item"
+              <div style="text-align: right">
+                <el-tooltip style="height: 40px; vertical-align: top" @click.native="addGateway" class="item"
                             effect="dark" content="添加中继" placement="bottom">
-                  <el-button><i class="icon iconfont icon-jia"></i></el-button>
+                  <el-button class="ablout"><i class="icon iconfont icon-jia"></i></el-button>
                 </el-tooltip>
-                <el-tooltip style="margin-left: 20px; vertical-align: top"
+                <el-tooltip style="margin-left: 40px; vertical-align: top; height: 40px;"
                             @click.native="removeClick(pbxGwgroupGatewayList)" class="item" effect="dark" content="删除中继"
                             placement="bottom">
-                  <el-button><i class="icon iconfont icon-shanchu2"></i></el-button>
+                  <el-button class="ablout"><i class="icon iconfont icon-shanchu2"></i></el-button>
                 </el-tooltip>
 
               </div>
             </div>
           </el-form-item>
-
-          <el-form-item
-            label="备注"
-            :label-width="formLabelWidth"
-          >
-            <el-input
-              v-model="addFrom.remark"
-              placeholder="请输入内容"
-            ></el-input>
-          </el-form-item>
+          <div class="width">
+            <el-form-item
+              label="备注"
+              :label-width="formLabelWidth"
+            >
+              <el-input
+                v-model="addFrom.remark"
+                placeholder="请输入内容"
+              ></el-input>
+            </el-form-item>
+          </div>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -529,6 +531,13 @@ ul li {
 
 .li-input {
   margin: 0 10px;
+}
+
+.ablout .icon {
+  text-align: center;
+  margin: 0;
+  vertical-align: middle;
+  margin-top: -50%;
 }
 
 </style>

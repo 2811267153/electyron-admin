@@ -99,10 +99,10 @@
                   新增悬浮窗
               -->
             <el-dialog
+              :width="$store.state.dialogWidth"
               :destroy-on-close="true"
               :title="title"
               :visible.sync="isShow"
-              width="50vw"
               :close-on-click-modal="false"
             >
               <el-form ref="addForm" :model="addForm" id="form" :rules="rules">

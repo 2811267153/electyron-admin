@@ -68,7 +68,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <el-dialog :title="title" :visible.sync="dialogFormVisible">
+    <el-dialog :width="$store.state.dialogWidth" :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="addForm" ref="addFrom" :rules="rules">
         <div class="width">
           <el-form-item
