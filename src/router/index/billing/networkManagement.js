@@ -1,8 +1,8 @@
 import networkManagement from "@/views/billing/dialPlan";
 
 export default {
-  path: "/index/billing/networkManagement",
+  path: "/home/billing/networkManagement",
   component: networkManagement,
-  name: 'networkManagement',
-  children: [],
+  name: "networkManagement",
+  children: []
 };

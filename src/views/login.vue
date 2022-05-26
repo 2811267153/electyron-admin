@@ -1,7 +1,7 @@
 <template>
   <div id="user">
     <div class="login-info">
-      <div class="width">
+      <div class="widthS">
         <div style="height: 300px; color: white">
           <el-steps direction="vertical" :active="index" :align-center="true">
             <el-step title="开始"></el-step>

@@ -1,8 +1,8 @@
 import dialPlan from "@/views/billing/dialPlan";
 
 export default {
-  path: "/index/billing/dialPlan",
+  path: "/home/billing/dialPlan",
   component: dialPlan,
-  name: 'dialPlan',
-  children: [],
+  name: "dialPlan",
+  children: []
 };

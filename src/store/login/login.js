@@ -20,15 +20,16 @@ const login = {
       state.menuList = value;
       //动态添加路由
       const routers = mapMenuRouter(value);
+      console.log(routers);
+      router.addRoutes(routers);
       routers.forEach(item => {
-        router.addRoute("/home", item);
+        console.log(router, "_____");
       });
     }
   },
   actions: {
     async loginAction({ commit }, payLoad) {
       const result = await getLogin(payLoad);
-      console.log(result);
       if (result.data.code === 200) {
         const { JSESSIONID, user } = result.data.data;
         const { sysMenuList } = result.data.data.user;
