@@ -1,7 +1,6 @@
 <template>
   <div id="user">
     <div class="login-info">
-      <div class="width">
         <div style="height: 300px; color: white">
           <el-steps direction="vertical" :active="index" :align-center="true">
             <el-step title="开始"></el-step>
@@ -9,7 +8,6 @@
             <el-step title="输入密码">></el-step>
             <el-step title="提交">></el-step>
           </el-steps>
-        </div>
       </div>
     </div>
     <div class="login-other">
