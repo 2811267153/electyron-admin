@@ -56,7 +56,7 @@
         >
       </div>
     </el-dialog>
-    <el-table :data="resultList" border style="width: 100%" :header-cell-style="{background:'#ccc', color: '#fff',}">
+    <el-table :data="resultList" style="width: 100%" :header-cell-style="{background:'#ccc', color: '#fff',}">
       <el-table-column align="center" prop="name" label="序号" width="50">
         <template scope="scope">{{ scope.$index + 1 }}</template>
       </el-table-column>
@@ -69,7 +69,7 @@
         </template>
       </el-table-column>
       <el-table-column align="center" prop="createTime" label="创建时间"></el-table-column>
-      <el-table-column align="center" prop="mark" label="操作">
+      <el-table-column align="center" prop="mark" label="操作" :width="$store.state.tableMixWidth">
         <template scope="scope">
           <div class="operate">
             <a style="margin-right: 20px" @click="showAddForm(scope.row, '修改')">修改</a>

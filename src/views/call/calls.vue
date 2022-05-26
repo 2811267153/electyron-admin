@@ -156,7 +156,9 @@
             {{ scope.row.startTime }} -- {{ scope.row.endTime }}
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="操作">
+        <el-table-column prop="remark" label="备注" width="180">
+        </el-table-column>
+        <el-table-column prop="name" label="操作" :width="$store.state.tableMixWidth">
           <template scope="scope">
             <el-link
               style="margin-right: 20px"
@@ -167,8 +169,6 @@
             >
             <el-link style="margin-right: 20px" type="info">删除</el-link>
           </template>
-        </el-table-column>
-        <el-table-column prop="remark" label="备注" width="180">
         </el-table-column>
       </el-table>
     </div>

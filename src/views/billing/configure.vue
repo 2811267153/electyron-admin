@@ -28,6 +28,7 @@
         style="width: 100%;margin-top: 20px">
         <el-table-column
           align="center"
+          width="50px"
           prop="date"
           label="序号">
           <template scope="scope">{{ scope.$index + 1 }}</template>
@@ -75,7 +76,7 @@
           align="center"
           prop="address"
           fixed="right"
-          min-width="100px"
+          :width="$store.state.tableMixWidth"
           label="操作">
           <template scope="scope">
             <div class="operate">
@@ -112,6 +113,8 @@
                 </el-option>
               </el-select>
             </el-form-item>
+          </div>
+          <div class="width">
             <el-form-item label="配置文件" :label-width="formLabelWidth" prop="template">
               <el-select style="width: 100%" v-model="addForm.template" placeholder="请选择配置文件">
                 <el-option :label="item.label" :value="item.value" v-for="item in templateType"></el-option>

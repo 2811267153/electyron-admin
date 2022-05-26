@@ -22,16 +22,20 @@
           <el-dialog :width="$store.state.dialogWidth" destroy-on-close :title="title" :close-on-click-modal="false"
                      :visible.sync="dialogFormVisible">
             <el-form ref="addForm" :model="addForm" :rules="addFroms">
-              <el-form-item
-                label="添加费率组名称"
-                :label-width="formLabelWidth"
-                prop="groupName"
-              >
-                <el-input v-model="addForm.groupName" autocomplete="off" placeholder="请输入内容"></el-input>
-              </el-form-item>
-              <el-form-item label="备注" :label-width="formLabelWidth">
-                <el-input v-model="addForm.remark" autocomplete="off" placeholder="请输入内容"></el-input>
-              </el-form-item>
+              <div class="width">
+                <el-form-item
+                  label="添加费率组名称"
+                  :label-width="formLabelWidth"
+                  prop="groupName"
+                >
+                  <el-input v-model="addForm.groupName" autocomplete="off" placeholder="请输入内容"></el-input>
+                </el-form-item>
+              </div>
+              <div class="width">
+                <el-form-item label="备注" :label-width="formLabelWidth">
+                  <el-input v-model="addForm.remark" autocomplete="off" placeholder="请输入内容"></el-input>
+                </el-form-item>
+              </div>
             </el-form>
             <div slot="footer" class="dialog-footer">
               <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -39,8 +43,7 @@
             </div>
           </el-dialog>
           <el-table height="calc(100vh - 100px - 100px - 100px - 100px)" :data="list"
-                    :header-cell-style="{background:'#ccc', color: '#fff',}" style="width: 100%"
-                    v-if="list.length !== 0">
+                    :header-cell-style="{background:'#ccc', color: '#fff',}" style="width: 100%">
             <el-table-column align="center" prop="date" label="序号" width="50">
               <template scope="scope">
                 {{ scope.$index + 1 }}
@@ -48,12 +51,16 @@
             </el-table-column>
             <el-table-column align="center" prop="groupName" label="费率组名称">
             </el-table-column>
+            <el-table-column align="center" prop="groupName" label="查看费率组列表">
+              <template scope="scope">
+                <el-link type="info" @click="isToggle(scope.row)">查看费率组列表</el-link>
+              </template>
+            </el-table-column>
             <el-table-column align="center" prop="remark" label="备注"></el-table-column>
-            <el-table-column align="center" prop="address" label="操作" min-width="200px">
+            <el-table-column align="center" prop="address" label="操作" :width="$store.state.tableMixWidth">
               <template scope="scope">
                 <div class="operate">
                   <el-link type="info" @click="showAddForm(scope.row, '编辑')">编辑</el-link>
-                  <el-link type="info" @click="isToggle(scope.row)">查看费率组列表</el-link>
                   <template>
                     <el-popconfirm title="确认要删除吗？" @confirm="removeIt(scope.row)">
                       <el-link type="info" slot="reference">删除
@@ -65,8 +72,6 @@
             </el-table-column>
 
           </el-table>
-          <el-empty v-else>
-          </el-empty>
         </div>
         <my-footer v-on:next="next" @prev="prev" :form="form" @change="change" @pageCheng="pageCheng"></my-footer>
       </div>
@@ -78,18 +83,8 @@
 
 <script>
 
-import {
-  addRateItemList,
-  addRateList,
-  deleteRate,
-  deleteRateItem,
-  getRateItemList,
-  getRateList,
-  putRateList,
-  upDaterateItem
-} from "@/newwork/ground-colltroner";
+import { addRateList, deleteRate, getRateList, putRateList } from "@/newwork/ground-colltroner";
 import myEmpty from "@/newwork/myEmpty";
-import { isValidNumber } from "@/util/validate";
 import myFooter from "@/components/myFooter";
 import myElHeader from "@/components/myElHeader";
 
@@ -102,13 +97,7 @@ export default {
   },
 
   data() {
-    const validateNum = (rule, value, callback) => {
-      if (!isValidNumber(value)) {
-        callback(new Error("ip地址输入有误,请确认"));
-      } else {
-        callback();
-      }
-    };
+
     return {
       title: "添加费率组",
       form: {
@@ -144,23 +133,7 @@ export default {
         { label: "国外", value: "abroad" },
         { label: "国内", value: "home" }
       ],
-      addRules: {
-        rateName: [
-          { required: true, message: "该选项为必填项，请曲确认", trigger: "blur" }
-        ],
-        ratePrefix: [
-          { required: true, message: "该选项为必填项，请曲确认", trigger: "blur" }
-        ],
-        rate: [
-          { required: true, message: "该选项为必填项，请曲确认", trigger: "blur" },
-          { validator: validateNum, message: "请输入合法的数字", trigger: "blur" }
-        ],
-        billingPeriod: [
-          { required: true, message: "该选项为必填项，请曲确认", trigger: "blur" },
-          { validator: validateNum, message: "请输入合法的数字", trigger: "blur" }
 
-        ]
-      },
       addFroms: {
         groupName: [
           { required: true, message: "该选项为必填项，请曲确认", trigger: "blur" }
@@ -215,16 +188,32 @@ export default {
       this.listTitle = "添加费率";
     },
     isToggle(row) {
-      this.toggle = false;
-      this.row = row;
-      console.log(row);
-      this.form.rateGroupId = row.id;
-      this.getRateItemList(this.form);
+      this.$router.push({
+        path: "/home/billing/rate/list",
+        query: {
+          rateGroupId: row.id
+          
+        }
+      });
+      // this.toggle = false;
+      // this.row = row;
+      // console.log(row);
+      // this.form.rateGroupId = row.id;
     },
     /**
      *
      * 添加费率
      */
+    removeIt(row) {
+      deleteRate(row.id).then(res => {
+        if (res.data.code === 200) {
+          this.$message.success("提交完成");
+          this.getRateList(this.form);
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      }).catch(e => this.$message.error(e));
+    },
     submitForm() {
       this.$refs.addForm.validate((valid) => {
         if (valid) {
@@ -233,7 +222,6 @@ export default {
               console.log(res);
               this.getRateList(this.form);
               this.addForm = this.$options.data().addForm;
-              location.reload();
             });
             this.getRateList(this.form);
             this.dialogFormVisible = false;
@@ -265,17 +253,9 @@ export default {
     }
   },
   watch: {
-    listDialogFormVisible(val) {
+    dialogFormVisible(val) {
       if (val !== true) {
-        this.getRateItemList(this.form);
-        this.resetForm();
-      }
-    },
-    toggle(val) {
-      if (val === true) {
-        this.rateItemList = [];
-      } else {
-        this.addListFrom.rateGroupId = this.row.id;
+        this.addForm = this.$options.data().addForm;
       }
     }
   },
@@ -286,30 +266,12 @@ export default {
 </script>
 
 <style scoped>
-.a-link {
-  margin-right: 10px;
-}
 
-.footers {
-  display: flex;
-  justify-content: space-between;
-}
 
 .footers p {
   color: #000;
   line-height: 40px;
 }
 
-.scope {
-  text-align: right;
-}
 
-.flex {
-  display: flex;
-  justify-content: space-between;
-}
-
-.flex > * {
-  flex: 1;
-}
 </style>

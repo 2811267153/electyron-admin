@@ -6,7 +6,8 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
   state: {
-    dialogWidth: "900px"
+    dialogWidth: "900px",
+    tableMixWidth: "130px"
   },
   getters: {},
 

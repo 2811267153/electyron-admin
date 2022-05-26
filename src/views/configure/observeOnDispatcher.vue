@@ -44,6 +44,8 @@
                   placeholder="请输入调度台名称"
                 ></el-input>
               </el-form-item>
+            </div>
+            <div class="width">
               <el-form-item
                 label="所属部门"
                 :label-width="formLabelWidth"
@@ -61,6 +63,8 @@
               >
                 <el-input v-model="addForm.domain" placeholder="请输入" />
               </el-form-item>
+            </div>
+            <div class="width">
               <el-form-item
                 label="队列号码"
                 :label-width="formLabelWidth"
@@ -85,11 +89,12 @@
                   </el-option>
                 </el-select>
               </el-form-item>
-              <div></div>
             </div>
-            <el-form-item label="备注" :label-width="formLabelWidth" prop="remark">
-              <el-input v-model="addForm.remark"></el-input>
-            </el-form-item>
+            <div class="width">
+              <el-form-item label="备注" :label-width="formLabelWidth" prop="remark">
+                <el-input v-model="addForm.remark"></el-input>
+              </el-form-item>
+            </div>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -103,6 +108,7 @@
         <el-table
           :row-class-name="tableRowClassName"
           :data="list"
+          :header-cell-style="{background:'#ccc', color: '#fff'}"
           height="calc(100vh - 100px - 100px - 100px - 100px)"
           style="width: 100%"
         >
@@ -128,7 +134,7 @@
               <p>纬度：{{ scope.row.longitude }}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="number" align="center" label="操作" fixed="right" min-width="130px">
+          <el-table-column prop="number" align="center" label="操作" fixed="right" :width="$store.state.tableMixWidth">
             <template scope="scope">
               <div class="operate">
                 <el-link
@@ -143,7 +149,6 @@
                     </el-link>
                   </el-popconfirm>
                 </template>
-                <el-link type="info">调度组</el-link>
               </div>
             </template>
           </el-table-column>

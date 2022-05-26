@@ -14,7 +14,7 @@
           </el-form-item>
         </el-form>
         <el-button type="primary" @click="showAddForm(null, '添加方案')"
-        >添加
+        >添加拨号方案
         </el-button
         >
       </div>
@@ -29,6 +29,8 @@
             >
               <el-input v-model="addForm.diaplanName" autocomplete="off" placeholder="请输入内容"></el-input>
             </el-form-item>
+          </div>
+          <div class="width">
             <el-form-item label="中继组" :label-width="formLabelWidth" prop="diaplanGatewayGroup">
               <el-select v-model="addForm.diaplanGatewayGroup" placeholder="请选择" style="width: 100%">
                 <el-option
@@ -51,6 +53,8 @@
                 </el-option>
               </el-select>
             </el-form-item>
+          </div>
+          <div class="width">
             <el-form-item label="呼出前缀" :label-width="formLabelWidth" prop="diaplanPrefix">
               <el-input :disabled="true" v-model="addForm.diaplanPrefix"></el-input>
             </el-form-item>
@@ -83,7 +87,9 @@
         </el-table-column>
         <el-table-column prop="createTime" align="center" label="更新时间">
         </el-table-column>
-        <el-table-column align="center" prop="stauts" label="操作" fixed="right" min-width="100px">
+        <el-table-column prop="remark" label="备注" align="center">
+        </el-table-column>
+        <el-table-column align="center" prop="stauts" label="操作" fixed="right" :width="$store.state.tableMixWidth">
           <template scope="scope">
             <div class="operate">
               <el-link @click="showAddForm(scope.row, '编辑')" type="info">编辑</el-link>
@@ -96,10 +102,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="remark" label="备注" align="center">
-        </el-table-column>
       </el-table>
-      <my-empty v-else />
     </div>
     <my-footer v-on:next="next" @prev="prev" :form="form" @change="formChange" @pageCheng="pageCheng"></my-footer>
   </div>

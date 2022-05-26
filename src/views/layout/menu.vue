@@ -3,10 +3,18 @@
     <my-el-header />
     <div class="container">
       <div class="tree-menu">
-        <p>菜单名称</p>
-        <p>菜单路径</p>
-        <p>权限</p>
-        <p>操作</p>
+        <div class="tree-path" style="padding-left: 20px">
+          菜单名称
+        </div>
+        <div class="item-r">
+          <div>菜单路径</div>
+        </div>
+        <div class="item-r">
+          <div>权限</div>
+        </div>
+        <div class="item-r">
+          <div>操作</div>
+        </div>
       </div>
       <el-tree
         :data="path"
@@ -19,17 +27,18 @@
         accordion>
         <div class="custom-tree-node" slot-scope="{node, data}">
           <div class="tree">
-            <a class="tree-path">
+            <div class="tree-path">
               {{ data.menuName }}
-            </a>
-            <p class="tree-path">
-              {{ data.path }}
-            </p>
-            <p class="tree-path">
-              <span v-if="data.menuType === 'F'">按钮</span>
-              <span v-else>菜单</span>
-            </p>
+            </div>
             <div class="item-r">
+              <p>{{ data.path }}
+              </p>
+            </div>
+            <div class="item-r" style="text-align: center">
+              <span v-if="data.menuType === 'M'">菜单</span>
+              <span v-if="data.menuType === 'F'">按钮</span>
+            </div>
+            <div class="item-r" style="text-align: center">
               <el-link type="primary" class="link" @click="currentShow(0)">新增</el-link>
               <el-link type="primary" class="link" @click="currentShow(1)">编辑</el-link>
               <el-link type="primary" class="link" @click="currentShow(2)">删除</el-link>
@@ -155,6 +164,7 @@ export default {
       row: {},
       defaultShowNodes: [],
       menuType: [
+        { label: "目录", value: "C" },
         { label: "菜单", value: "M" },
         { label: "按钮", value: "F" }
       ],
@@ -286,21 +296,16 @@ export default {
 };
 </script>
 
-<style >
+<style>
 .custom-tree-node {
   width: 100%;
 }
 
 .tree-menu {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.menu {
-  display: flex;
-  height: calc(100vh - 160px);
-  flex-direction: column;
+  background-color: #ccc;
+  color: #fff;
+  line-height: 48px;
 }
 
 .tree {
@@ -309,9 +314,9 @@ export default {
   align-items: center;
 }
 
-.tree-menu p {
-  text-align: center;
-  width: 200px;
+.tree-path {
+  flex: 1;
+  font-size: 16px;
 }
 
 .tree .link {
@@ -324,8 +329,12 @@ export default {
   align-items: center;
 }
 
-.tree-path {
+.item-r {
   width: 200px;
+}
+
+.item-r div {
+  text-align: center;
 }
 
 .grid-content {

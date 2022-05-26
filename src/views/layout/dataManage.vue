@@ -32,7 +32,7 @@
             </div>
           </div>
           <div class="nav-l">
-            <el-button type="primary" @click="showAddForm(null, '新增')">新增</el-button>
+            <el-button type="primary" @click="showAddForm(null, '添加字典类型')">添加字典类型</el-button>
           </div>
         </div>
         <el-dialog :width="$store.state.dialogWidth" destroy-on-close :title="title" :visible.sync="dialogFormVisible"
@@ -66,7 +66,7 @@
           </div>
         </el-dialog>
         <div ref="tables" class="table-warp">
-          <el-table v-if="resultList.length !== 0" height="calc(100vh - 100px - 100px - 100px - 100px)"
+          <el-table height="calc(100vh - 100px - 100px - 100px - 100px)"
                     :header-cell-style="{background:'#ccc', color: '#fff',}" :data="resultList" style="width: 100%">
             <el-table-column align="center" prop="id" label="序号" width="50">
               <template scope="scope">{{ scope.$index + 1 }}</template>
@@ -74,17 +74,21 @@
             <el-table-column align="center" prop="name" label="字典类型名称"></el-table-column>
             <el-table-column align="center" prop="code" label="字典类型编码"></el-table-column>
             <el-table-column align="center" prop="createTime" label="更新时间"></el-table-column>
+            <el-table-column align="center" prop="createTime" label="字典">
+              <template scope="scope">
+                <el-link type="info" @click="toPath(scope.row)">查看字典</el-link>
+              </template>
+            </el-table-column>
             <el-table-column align="center" prop="sort" label="状态">
               <template scope="scope">
                 <a v-if="scope.row.status === 1">启用</a>
                 <a v-else>停用</a>
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="sort" label="操作" min-width="150px">
+            <el-table-column align="center" prop="sort" label="操作" :width="$store.state.tableMixWidth" fixed="right">
               <template scope="scope">
                 <div class="operate">
-                  <el-link type="info" @click="showAddForm(scope.row, '修改')">修改</el-link>
-                  <el-link type="info" @click="toPath(scope.row)">查看字典</el-link>
+                  <el-link type="info" @click="showAddForm(scope.row, '编辑')">编辑</el-link>
                   <template>
                     <el-popconfirm
                       title="确认要删除吗？"
@@ -98,8 +102,6 @@
             </el-table-column>
           </el-table>
         </div>
-
-        <my-empty v-if="resultList.length === 0" />
       </div>
     </div>
     <my-footer v-on:next="next" @prev="prev" @pageCheng="changPage"
@@ -188,11 +190,10 @@ export default {
 
       this.$refs["addForm"].validate((valid) => {
         if (valid) {
-          this.title === "新增" ? addDictionaryTYpe(this.addForm).then(res => {
+          this.title === "添加字典类型" ? addDictionaryTYpe(this.addForm).then(res => {
               this.dictionaryList();
             }) :      //当前打开的是新增的弹框吗 是就执行第一个不然就执行第二个
             this.aa(this.addForm);
-
           this.dialogFormVisible = false;
           this.$message({
             message: "提交完成",
@@ -239,7 +240,6 @@ export default {
       });
     },
     removeIt(row) {
-      console.log("aaa");
       removeDateDictionaryList(row.id).then(res => {
         if (res.data.code === 200) {
           this.dictionaryList(this.form);
@@ -254,7 +254,7 @@ export default {
       this.title = type;
       this.dialogFormVisible = true;
       this.addForm = row;
-      type === "修改" ? (this.addForm = row) : this.addForm = this.$options.data().addForm;
+      type === "编辑" ? (this.addForm = row) : this.addForm = this.$options.data().addForm;
     },
     dictionaryList(addForm) {
       addDictionaryList(addForm).then(res => {

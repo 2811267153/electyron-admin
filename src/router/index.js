@@ -28,6 +28,7 @@ import meetingMinutes from "@/views/call/meetingMinutes";
 import intercept from "@/views/converse/intercept";
 import { setupStore } from "@/store";
 import rateList from "@/views/billing/rateList";
+import account from "@/views/user/account";
 
 Vue.use(VueRouter);
 
@@ -162,6 +163,11 @@ const routes = [
       {
         path: "/home/billing/rate/list",
         component: rateList,
+        meta: { icon: "" }
+      },
+      {
+        path: "/home/account",
+        component: account,
         meta: { icon: "" }
       }
     ]

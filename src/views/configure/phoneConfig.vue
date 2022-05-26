@@ -38,7 +38,6 @@
           :data="list"
           style="width: 100%"
           height="calc(100vh - 100px - 100px - 100px - 100px)"
-          v-if="list.length !== 0"
         >
           <el-table-column prop="date" align="center" label="序号" width="50px">
             <template scope="scope">
@@ -64,7 +63,7 @@
             </template>
           </el-table-column>
           <el-table-column align="center" prop="bussiness" label="业务类型"></el-table-column>
-          <el-table-column align="center" prop="address" label="操作" fixed="right" min-width="130px">
+          <el-table-column align="center" prop="address" label="操作" fixed="right" :width="$store.state.tableMixWidth">
             <template scope="scope">
               <div class="operate">
                 <el-link type="info" @click="addForms(scope.row, '编辑')">编辑</el-link>
@@ -79,7 +78,6 @@
             </template>
           </el-table-column>
         </el-table>
-        <my-empty v-else />
 
       </div>
 
@@ -99,6 +97,9 @@
               >
               </el-input>
             </el-form-item>
+
+          </div>
+          <div class="width">
             <el-form-item
               label="计费账号"
               :label-width="formLabelWidth"
@@ -112,9 +113,7 @@
               >
               </el-input>
             </el-form-item>
-
           </div>
-
           <div class="width">
             <el-form-item
               label="计费方式"
@@ -130,6 +129,8 @@
                 ></el-option>
               </el-select>
             </el-form-item>
+          </div>
+          <div class="width">
             <el-form-item
               label="支持的业务类型"
               :label-width="formLabelWidth"
@@ -166,6 +167,8 @@
                 autocomplete="off"
               ></el-input>
             </el-form-item>
+          </div>
+          <div class="width">
             <el-form-item
               label="鉴权密码"
               :label-width="formLabelWidth"
@@ -183,7 +186,8 @@
             <el-form-item label="账户余额" :label-width="formLabelWidth" prop="balance">
               <el-input v-model="addForm.balance" placeholder="请输入内容"></el-input>
             </el-form-item>
-
+          </div>
+          <div class="width">
             <el-form-item label="域地址" :label-width="formLabelWidth" prop="domain">
               <el-input v-model="addForm.domain" placeholder="请输入内容"></el-input>
             </el-form-item>
@@ -200,6 +204,8 @@
                 </el-option>
               </el-select>
             </el-form-item>
+          </div>
+          <div class="width">
             <el-form-item label="部门名称" :label-width="formLabelWidth" prop="deptId">
               <!--              <my-tree ref="myTree" style="width: 100%" :options="deptIdList" @getValue="getSelectedValue"></my-tree>-->
               <treeselect v-model="addForm.deptId" :multiple="false" :options="deptIdList" :normalizer="normalizer"
@@ -208,7 +214,7 @@
           </div>
           <div class="width">
             <el-form-item label="拨号方案" :label-width="formLabelWidth" prop="diaplan">
-              <el-select v-model="addForm.diaplan" placeholder="请选择" style="width: 100%">
+              <el-select v-model="addForm.diaplan" @change="diaplanChange" placeholder="请选择" style="width: 100%">
                 <el-option
                   v-for="item in diaPlanList"
                   :key="item.value"
@@ -217,12 +223,14 @@
                 </el-option>
               </el-select>
             </el-form-item>
+          </div>
+          <div class="width">
             <el-form-item label="费率组" :label-width="formLabelWidth" prop="rateGroup">
-              <el-select v-model="addForm.rateGroup" placeholder="请选择" style="width: 100%">
+              <el-select disabled v-model="addForm.rateGroup" placeholder="请选择" style="width: 100%">
                 <el-option
-                  v-for="item in rateGroup"
+                  v-for="item in diaPlanList"
                   :key="item.value"
-                  :label="item.groupName"
+                  :label="item.diaplanName"
                   :value="item.id">
                 </el-option>
               </el-select>
@@ -236,6 +244,8 @@
                 v-model="addForm.expire"
               ></el-input>
             </el-form-item>
+          </div>
+          <div class="width">
             <el-form-item label="资源类型" :label-width="formLabelWidth" prop="type">
               <el-select v-model="addForm.type" placeholder="请选择" style="width: 100%">
                 <el-option
@@ -480,6 +490,9 @@ export default {
     },
     change() {
       this.addForm.bussiness = this.bussinessList.join(",");
+    },
+    diaplanChange() {
+      this.addForm.rateGroup = this.addForm.diaplan;
     },
     accountUserChange() {
       this.addForm.directoryNumber = this.addForm.accountUser;

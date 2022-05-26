@@ -15,15 +15,27 @@
     <div class="login-other">
       <h2>欢迎使用调度管理系统！</h2>
       <el-form class="el-from" ref="form" label-width="120">
-        <el-form-item label="账号">
-          <el-input v-model="form.username" @focus="focus(2)"></el-input>
-        </el-form-item>
-        <el-form-item label="密码">
-          <el-input type="password" v-model="form.password" @focus="focus(3)"></el-input>
-        </el-form-item>
-        <el-form-item style="text-align: right">
-          <el-button type="primary" @click="onSubmit">登录</el-button>
-        </el-form-item>
+        <div class="width">
+          <el-form-item label="账号">
+            <el-input v-model="form.username" @focus="focus(2)"></el-input>
+          </el-form-item>
+        </div>
+        <div class="width">
+
+          <el-form-item label="密码">
+            <el-input type="password" v-model="form.password" @focus="focus(3)"></el-input>
+          </el-form-item>
+        </div>
+        <div class="width">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit">登录</el-button>
+          </el-form-item>
+        </div>
       </el-form>
     </div>
   </div>
@@ -99,10 +111,6 @@ export default {
   text-align: center;
   width: 40%;
   align-items: center;
-}
-
-.width {
-  width: 50%;
 }
 
 .login-other {

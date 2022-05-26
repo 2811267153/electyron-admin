@@ -33,6 +33,8 @@
             <el-form-item label="队列名称" :label-width="formLabelWidth" prop="fifoName">
               <el-input v-model="addForm.fifoName" autocomplete="off" placeholder="请输入内容"></el-input>
             </el-form-item>
+          </div>
+          <div class="width">
             <el-form-item label="队列号码" :label-width="formLabelWidth" prop="fifoAgent">
               <el-input v-model="addForm.fifoAgent" autocomplete="off" placeholder="请输入内容"></el-input>
             </el-form-item>
@@ -83,14 +85,17 @@
                 </div>
               </el-upload>
             </el-form-item>
+            <el-form-item label="等待时间" :label-width="formLabelWidth" prop="memberTimeout">
+              <el-input v-model="addForm.memberTimeout" autocomplete="off" placeholder="请输入内容"></el-input>
+            </el-form-item>
+
+          </div>
+          <div class="width">
             <el-form-item label="最大注册数" :label-width="formLabelWidth" prop="memberSimultaneous">
               <el-input v-model="addForm.memberSimultaneous" autocomplete="off" placeholder="请输入内容"></el-input>
             </el-form-item>
           </div>
           <div class="width">
-            <el-form-item label="等待时间" :label-width="formLabelWidth" prop="memberTimeout">
-              <el-input v-model="addForm.memberTimeout" autocomplete="off" placeholder="请输入内容"></el-input>
-            </el-form-item>
             <el-form-item label="接听电话间隔" :label-width="formLabelWidth" prop="wrapupTime">
               <el-input v-model="addForm.wrapupTime" autocomplete="off" placeholder="请输入内容"></el-input>
             </el-form-item>
@@ -106,18 +111,20 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="域地址" :label-width="formLabelWidth" prop="fifoEmergency">
-              <el-input v-model="addForm.domain" placeholder="请输入内容"></el-input>
+
+            <el-form-item label="夜服号码" :label-width="formLabelWidth" prop="fifoEmergency">
+              <el-input v-model="addForm.fifoNight" placeholder="请输入内容"></el-input>
             </el-form-item>
 
           </div>
           <div class="width">
-            <el-form-item label="夜服号码" :label-width="formLabelWidth" prop="fifoEmergency">
-              <el-input v-model="addForm.fifoNight" placeholder="请输入内容"></el-input>
-            </el-form-item>
             <el-form-item label="所属部门" :label-width="formLabelWidth" prop="fifoEmergency">
               <treeselect v-model="addForm.deptId" :multiple="false" :options="treeArr" :normalizer="normalizer"
                           placeholder="请输入内容" />
+            </el-form-item>
+
+            <el-form-item label="域地址" :label-width="formLabelWidth" prop="fifoEmergency">
+              <el-input v-model="addForm.domain" placeholder="请输入内容"></el-input>
             </el-form-item>
 
           </div>
@@ -184,7 +191,7 @@
           align="center"
           prop="wrapupTime"
           fixed="right"
-          min-width="100px"
+          :width="$store.state.tableMixWidth"
           label="操作">
           <template scope="scope">
             <div class="operate">

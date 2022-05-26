@@ -8,7 +8,7 @@
         </div>
         <div class="container-r">
           <div class="container-nav">
-            <div class="container-form">
+            <div class="form-nav">
               <el-form :inline="true" ref="form" :model="form" :rules="form_rules" class="demo-form-inline">
                 <el-form-item label="用户名称">
                   <el-input placeholder="请输入内容" v-model="form.nickName"></el-input>
@@ -30,7 +30,7 @@
                   <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
               </el-form>
-              <el-button type="primary" @click="show(null, '新增')">新增</el-button>
+              <el-button type="primary" @click="show(null, '添加用户')">添加用户</el-button>
             </div>
             <el-table
               height="calc(100vh - 100px - 100px - 100px - 100px)"
@@ -75,12 +75,12 @@
                   </p>
                 </template>
               </el-table-column>
-              <el-table-column prop="starts" label="操作" align="center" fixed="right" min-width="200px">
+              <el-table-column prop="starts" label="操作" align="center" fixed="right" width="200">
                 <template scope="scope">
                   <div class="operate">
-                    <a @click="show(scope.row, '修改')" class="link-item">修改</a>
+                    <el-link @click="show(scope.row, '编辑')" class="link-item">编辑</el-link>
                     <el-tooltip class="item" effect="dark" content="重置后默认密码为123456" placement="top">
-                      <a @click="resetPad(scope.row)" class="link-item">重置</a>
+                      <el-link @click="resetPad(scope.row)" class="link-item">重置</el-link>
                     </el-tooltip>
                     <template>
                       <el-popconfirm
@@ -122,7 +122,7 @@
                     prop="roleId"
                   >
                     <el-select
-                      v-if="title === '新增'"
+                      v-if="title === '添加用户'"
                       style="width: 100%"
                       v-model="addForm.roleId "
                       placeholder="请选择用户角色"
@@ -323,7 +323,7 @@ export default {
       },
       row: {},
       type: "",
-      title: "新增",
+      title: "添加用户",
       deptIdList: [],
       isShow: false,
       resultList: [],
@@ -431,7 +431,7 @@ export default {
       //点击确定之后 遍历数据 确保必填项不为空
       this.$refs.addForm.validate((valid) => {
         if (valid && this.addForm.deptId.length !== 0) {
-          if (this.title === "新增") {
+          if (this.title === "添加用户") {
             addUser(this.addForm).then(res => {
               if (res.data.code === 200) {
                 this.isShow = false;
@@ -502,10 +502,10 @@ export default {
         }
       });
       this.title = title;
-      if (this.title === "新增") {
+      if (this.title === "添加用户") {
         this.isShow = true;
         this.addForm = this.$options.data().addForm;
-      } else if (title === "修改") {
+      } else if (title === "编辑") {
         this.addForm = row;
         this.isShow = true;
       } else if (title === "删除") {

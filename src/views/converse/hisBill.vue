@@ -1,6 +1,6 @@
 <template>
   <div class="warps">
-    <my-el-header/>
+    <my-el-header />
     <div class="container">
       <div class="nav-form">
         <el-form :inline="true" :model="form" class="demo-form-inline">
@@ -24,13 +24,14 @@
       </div>
       <el-table
         height="calc(100vh - 100px - 100px - 100px - 100px)"
+        :header-cell-style="{background:'#ccc', color: '#fff',}"
         :data="list"
         style="width: 100%">
         <el-table-column
           prop="date"
           label="序号"
-        width="50px">
-          <template scope="scope">{{scope.$index + 1}}</template>
+          width="50px">
+          <template scope="scope">{{ scope.$index + 1 }}</template>
         </el-table-column>
         <el-table-column
           prop="blegCallerIdName"
@@ -86,7 +87,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <my-footer v-on:next="next" @prev="prev" :form="form" @change="change"  @pageCheng="pageCheng"></my-footer>
+    <my-footer v-on:next="next" @prev="prev" :form="form" @change="change" @pageCheng="pageCheng"></my-footer>
   </div>
 </template>
 
@@ -105,35 +106,35 @@ export default {
   data() {
     return {
       form: {
-        mobilePhone: '',
-        startingTime: '',
+        mobilePhone: "",
+        startingTime: "",
         endTime: ""
       },
       list: []
-    }
+    };
 
   },
   methods: {
-    find(){
-      this.getPbxList(this.form)
+    find() {
+      this.getPbxList(this.form);
     },
-    clear(){
-      this.form = this.$options.data().form
-      this.getPbxList(this.form)
+    clear() {
+      this.form = this.$options.data().form;
+      this.getPbxList(this.form);
     },
-    pageCheng(e){
-      this.form = this.$options.data().form
-      this.form.pageSize = e
-      this.getPbxList(this.form)
+    pageCheng(e) {
+      this.form = this.$options.data().form;
+      this.form.pageSize = e;
+      this.getPbxList(this.form);
     },
-    getPbxList(form){
+    getPbxList(form) {
       getPbxList(form).then(res => {
         console.log(res);
-        if(res.data.code === 200){
+        if (res.data.code === 200) {
           this.$bus.$emit("total", res.data.data.total);
-          this.list = res.data.data.records
+          this.list = res.data.data.records;
         }
-      })
+      });
     },
     next() {
       this.form.pageNum++;
@@ -146,22 +147,22 @@ export default {
     change(e) {
       this.form.pageNum = e;
       this.getPbxList(this.form);
-    },
+    }
   },
   created() {
-    this.getPbxList(this.form)
+    this.getPbxList(this.form);
   },
   mounted() {
-    this.$bus.$on('pageCheng', (data) => {
-      this.form = this.$options.data().form
-      this.form.pageSize = data
-      this.getPbxList(this.form)
-    })
+    this.$bus.$on("pageCheng", (data) => {
+      this.form = this.$options.data().form;
+      this.form.pageSize = data;
+      this.getPbxList(this.form);
+    });
   },
-  destroyed(){
-    this.$bus.$off('pageChang')
-  },
-}
+  destroyed() {
+    this.$bus.$off("pageChang");
+  }
+};
 </script>
 
 <style scoped>

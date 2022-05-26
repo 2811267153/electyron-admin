@@ -47,8 +47,11 @@
               <el-input v-model="addFrom.groupName" autocomplete="off" placeholder="请输入内容"></el-input>
             </el-form-item>
 
-            <el-form-item label="前缀" :label-width="formLabelWidth" prop="groupPrefix" placeholder="请输入内容">
-              <el-input v-model="addFrom.groupPrefix" placeholder="请输入内容"></el-input>
+
+          </div>
+          <div class="width">
+            <el-form-item label="支持前缀" :label-width="formLabelWidth" prop="groupPrefix" placeholder="请输入内容">
+              <el-input v-model="addFrom.groupPrefix" placeholder='请填入数字，用","隔开，例如10,20,30'></el-input>
             </el-form-item>
           </div>
           <div class="width">
@@ -67,6 +70,8 @@
                 </el-option>
               </el-select>
             </el-form-item>
+          </div>
+          <div class="width">
             <el-form-item
               label="策略类型"
               :label-width="formLabelWidth"
@@ -83,13 +88,11 @@
               </el-select>
             </el-form-item>
           </div>
-          <el-form-item style="margin-top: 20px" :label="'中继组' + (index + 1)" :label-width="formLabelWidth"
+          <el-form-item :label="'中继组' + (index + 1)" :label-width="formLabelWidth"
                         :key="addFrom.pbxGwgroupGatewayList.key"
                         v-for="(pbxGwgroupGatewayList, index) in addFrom.pbxGwgroupGatewayList"
                         :prop="'pbxGwgroupGatewayList.' + index + '.gatewayId'"
-                        :rules="{
-                      required: true, message: '该项为必填项,请确认', trigger: 'blur'
-            }">
+                        :rules="rules.groupPrefix">
             <div class="width">
               <el-select v-model="pbxGwgroupGatewayList.gatewayId" placeholder="请选择">
                 <el-option

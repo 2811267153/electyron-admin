@@ -1,6 +1,6 @@
 <template>
   <div class="warps">
-    <my-el-header class="stick" />
+    <my-el-header />
     <div class="container">
       <div class="overview">
         <div class="overview-l">

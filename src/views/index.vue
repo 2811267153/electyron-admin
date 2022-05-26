@@ -52,7 +52,7 @@ export default {
   methods: {
     infoClick(i) {
       if (i === 0) {
-        this.$router.push("/account");
+        this.$router.push("/home/account");
       } else {
         this.loginOut();
       }

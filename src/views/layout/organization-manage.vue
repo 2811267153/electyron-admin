@@ -13,25 +13,26 @@
 
         </el-form>
         <div class="add">
-          <el-button type="primary" @click="showForm('新增')">新增</el-button>
+          <el-button type="primary" @click="showForm('添加组织')">添加组织</el-button>
         </div>
       </div>
       <el-dialog :width="$store.state.dialogWidth" :title="title" :visible.sync="dialogFormVisible" destroy-on-close
                  :close-on-click-modal="false">
         <el-form ref="addForm" :model="addForm" :rules="rules">
           <div class="width">
-            <el-form-item label="部门名称" :label-width="formLabelWidth" prop="deptName">
-              <el-input class="input" v-model="addForm.deptName" autocomplete="off" placeholder="请输入内容"></el-input>
+            <el-form-item label="组织名称" :label-width="formLabelWidth" prop="deptName">
+              <el-input class="input" v-model="addForm.deptName" autocomplete="off" placeholder="请输入内容"
+                        style="width: 100%"></el-input>
             </el-form-item>
           </div>
           <div class="width">
             <el-form-item label="显示顺序" :label-width="formLabelWidth" prop="orderNum">
-              <el-input type="number" class="input" v-model="addForm.orderNum" autocomplete="off"
+              <el-input style="width: 100%" type="number" class="input" v-model="addForm.orderNum" autocomplete="off"
                         placeholder="请输入内容"></el-input>
             </el-form-item>
           </div>
           <div class="width">
-            <el-form-item label="上级部门" :label-width="formLabelWidth" prop="parentId">
+            <el-form-item label="上级组织" :label-width="formLabelWidth" prop="parentId">
 
               <!--          <my-tree style="width: 100%" :options="formList" @getValue="getSelectedValue"></my-tree>-->
               <!--          <my-el-tree v-model="addForm.parentId" :options="formList" :value='row.parentId' :props="defaultProps"/>-->
@@ -55,10 +56,22 @@
       </el-dialog>
       <div>
       </div>
-      <div class="tree-menu "><p>部门名称</p>
-        <p>创建时间</p>
-        <p style="padding-left: 25px">状态</p>
-        <p>操作</p></div>
+      <div class="tree-menu">
+        <div class="tree-path">
+        <span style="margin-left: 20px">
+           显示组织
+        </span>
+        </div>
+        <div class="item-r">
+          <div>创建时间</div>
+        </div>
+        <div class="item-r">
+          <div>部门状态</div>
+        </div>
+        <div class="item-r">
+          <div>操作</div>
+        </div>
+      </div>
       <el-tree
         @node-click="handleNodeClick"
         :data="formatList"
@@ -72,10 +85,16 @@
         accordion>
         <div class="custom-tree-node" slot-scope="{node, data}">
           <div class="tree">
-            <div class="detpName"> {{ data.deptName }}</div>
-            <div>{{ data.createTime }}</div>
-            <div v-if="data.status === 0">启用</div>
-            <div v-else>停用</div>
+            <div class="tree-path">
+              {{ data.deptName }}
+            </div>
+            <div class="item-r">
+              <div>{{ data.createTime }}</div>
+            </div>
+            <div class="item-r">
+              <div v-if="data.status === 0">启用</div>
+              <div v-else>停用</div>
+            </div>
             <div class="item-r">
               <el-link type="primary" class="link" @click="currentShow(0)">新增下一级</el-link>
               <el-link type="primary" class="link" @click="currentShow(1)">编辑</el-link>
@@ -206,7 +225,7 @@ export default {
         this.addForm.deptName = this.row.deptName;
         this.addForm.orderNum = this.row.orderNum;
         this.addForm.parentId = this.row.parentId;
-      } else if (type === "新增") {
+      } else if (type === "添加组织") {
         this.dialogFormVisible = true;
         this.title = type;
         this.addForm = this.$options.data().addForm;
@@ -312,21 +331,6 @@ export default {
 .custom-tree-node {
   width: 100%;
 }
-.tree-menu {
-  padding: 10px 20px;
-  background-color: #f2f2f2;
-  display: flex;
-  justify-content: space-between;
-}
-
-.tree-menu p {
-  width: 200px;
-  text-align: center;
-}
-
-.tree .link {
-  margin-right: 20px;
-}
 
 .nav-form {
   display: flex;
@@ -344,4 +348,20 @@ export default {
 .add {
   text-align: right;
 }
+
+.item-r {
+  width: 200px;
+}
+
+.tree {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tree .tree-path {
+  flex: 1;
+  font-size: 16px;
+}
+
 </style>

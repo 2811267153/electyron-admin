@@ -26,7 +26,7 @@
           <el-button @click="clearForm">重置</el-button>
         </div>
         <div class="nav-r">
-          <el-button type="primary" @click="addForms(null, '新增')">新增</el-button>
+          <el-button type="primary" @click="addForms(null, '添加角色')">添加角色</el-button>
         </div>
       </div>
       <el-dialog :width="$store.state.dialogWidth" title="数据权限" :visible.sync="dialogFormVisibles"
@@ -36,27 +36,27 @@
             <el-form-item label="角色名称" :label-width="formLabelWidth">
               <el-input disabled v-model="dataScopeForm.roleName" placeholder="请输入内容" />
             </el-form-item>
+          </div>
+          <div class="width">
             <el-form-item label="数据权限" :label-width="formLabelWidth">
               <el-select v-model="dataScopeForm.dataScope" style="width: 100%">
                 <el-option :label="item.label" :value="item.value" v-for="item in dataScopeType"></el-option>
               </el-select>
             </el-form-item>
           </div>
-          <div class="width">
-            <el-form-item v-if="dataScopeForm.dataScope === 2" label="数据权限" :label-width="formLabelWidth" required>
-              <el-tree
-                props="permission"
-                :data="formatList"
-                :default-checked-keys="defaultMenuIds"
-                :props="defaultProps"
-                node-key="deptId"
-                accordion
-                :check-on-click-node="true"
-                show-checkbox
-                @check="checkChange">
-              </el-tree>
-            </el-form-item>
-          </div>
+          <el-form-item v-if="dataScopeForm.dataScope === 2" label="数据权限" :label-width="formLabelWidth" required>
+            <el-tree
+              props="permission"
+              :data="formatList"
+              :default-checked-keys="defaultMenuIds"
+              :props="defaultProps"
+              node-key="deptId"
+              accordion
+              :check-on-click-node="true"
+              show-checkbox
+              @check="checkChange">
+            </el-tree>
+          </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisibles = false">取 消</el-button>
@@ -64,7 +64,8 @@
         </div>
       </el-dialog>
       <el-dialog :title="title" :visible.sync="dialogFormVisible" destroy-on-close :close-on-click-modal="false">
-          <el-form :model="addForm" ref="addForm" :rules="rules">
+        <el-form :model="addForm" ref="addForm" :rules="rules">
+          <div class="width">
             <el-form-item
               label="角色名称"
               :label-width="formLabelWidth"
@@ -72,6 +73,8 @@
             >
               <el-input v-model="addForm.roleName" autocomplete="off" placeholder="请输入内容"></el-input>
             </el-form-item>
+          </div>
+          <div class="width">
             <el-form-item
               label="显示顺序"
               :label-width="formLabelWidth"
@@ -79,6 +82,8 @@
             >
               <el-input v-model="addForm.orderNum" autocomplete="off" placeholder="请输入内容"></el-input>
             </el-form-item>
+          </div>
+          <div class="width">
             <el-form-item
               label="角色编码"
               :label-width="formLabelWidth"
@@ -86,38 +91,42 @@
             >
               <el-input v-model="addForm.roleCode" autocomplete="off" placeholder="请输入内容"></el-input>
             </el-form-item>
-            <el-form-item
-              label="菜单权限"
-              :label-width="formLabelWidth"
-              prop="roleCode"
-            >
-              <el-tree
-                ref="tree"
-                props="permission"
-                :data="menuIds"
-                :default-checked-keys="defaultMenuIds"
-                :props="menuProps"
-                node-key="menuId"
-                check-strictly
-                @check-change="getChange"
-                accordion
-                :check-on-click-node="true"
-                show-checkbox
-                @check="menuChange">
-              </el-tree>
-            </el-form-item>
+          </div>
+          <el-form-item
+            label="菜单权限"
+            :label-width="formLabelWidth"
+            prop="roleCode"
+          >
+            <el-tree
+              ref="tree"
+              props="permission"
+              :data="menuIds"
+              :default-checked-keys="defaultMenuIds"
+              :props="menuProps"
+              node-key="menuId"
+              check-strictly
+              @check-change="getChange"
+              accordion
+              :check-on-click-node="true"
+              show-checkbox
+              @check="menuChange">
+            </el-tree>
+          </el-form-item>
 
-
+          <div class="width">
             <el-form-item label="权限状态" :label-width="formLabelWidth">
               <el-radio-group v-model="addForm.status">
                 <el-radio :label="0">启用</el-radio>
                 <el-radio :label="1">停用</el-radio>
               </el-radio-group>
             </el-form-item>
+          </div>
+          <div class="width">
             <el-form-item label="备注" :label-width="formLabelWidth">
               <el-input v-model="addForm.desc" autocomplete="off" placeholder="请输入内容"></el-input>
             </el-form-item>
-          </el-form>
+          </div>
+        </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
           <el-button type="primary" @click="submitForm"
@@ -176,7 +185,7 @@
           align="center"
           prop="address"
           fixed="right"
-          min-width="100px"
+          :width="$store.state.tableMixWidth"
           label="操作">
           <template scope="scope">
             <div class="operate">
@@ -385,7 +394,7 @@ export default {
     addForms(row, title) {
       this.dialogFormVisible = true;
       this.title = title;
-      if (this.title === "新增") {
+      if (this.title === "添加角色") {
         this.addForm = this.$options.data().addForm;
       } else {
         this.addForm = row;

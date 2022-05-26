@@ -51,12 +51,6 @@ html {
     padding: 0;
 }
 
-.container-l .el-tree-node__content, .roleManage .el-tree-node__content {
-    line-height: 30px;
-    height: 30px !important;
-    border-bottom: 1px solid transparent !important;
-}
-
 .warps {
     display: flex;
     height: 100%;
@@ -138,6 +132,14 @@ header {
 
 .el-form-item__content {
     text-align: left;
+    line-height: 0 !important;
+    display: flex;
+    align-items: center;
+}
+
+.el-radio-group {
+    height: 40px;
+    line-height: 44px !important;
 }
 
 .width {
@@ -157,13 +159,15 @@ header {
 }
 
 .el-dialog__header {
-    background-color: #f2f2f2;
+    background-color: #f0f4f7;
     border-bottom: 1px solid #ccc;
 }
-.el-dialog__footer{
+
+.el-dialog__footer {
     background-color: #f0f4f7;
     border-top: 1px solid #ccc;
 }
+
 .el-tree-node.is-expanded {
     position: relative;
 }
@@ -178,4 +182,17 @@ header {
     left: 11px;
     padding-left: inherit;
     border-right: 1px solid #ccc;
+}
+
+.el-dialog {
+    border-radius: 5px !important;
+    overflow: hidden;
+}
+
+.el-form-item {
+    margin-bottom: 0 !important;
+}
+
+.operate .el-link {
+    color: #409eff !important;
 }
