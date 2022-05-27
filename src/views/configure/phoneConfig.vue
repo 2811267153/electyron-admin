@@ -47,7 +47,7 @@
           <el-table-column align="center" prop="directoryName" label="分机名称"></el-table-column>
           <el-table-column align="center" prop="directoryNumber" label="分机号码">
           </el-table-column>
-          <el-table-column align="center" prop="diaplan" label="拨号地址">
+          <el-table-column align="center" prop="diaplanName" label="拨号方案">
           </el-table-column>
           <el-table-column align="center" prop="deptName" label="部门">
           </el-table-column>
@@ -62,12 +62,16 @@
               <div v-else>预付费</div>
             </template>
           </el-table-column>
-          <el-table-column align="center" prop="bussiness" label="业务类型"></el-table-column>
+          <el-table-column align="center" prop="bussiness" label="业务类型">
+            <template scope="scope">
+              {{ formatBussiness(scope.row) }}
+            </template>
+          </el-table-column>
           <el-table-column align="center" prop="address" label="操作" fixed="right" :width="$store.state.tableMixWidth">
             <template scope="scope">
               <div class="operate">
-                <el-link type="info" @click="addForms(scope.row, '编辑')">编辑</el-link>
                 <el-link type="info" @click="recharge(scope.row)">充值</el-link>
+                <el-link type="info" @click="addForms(scope.row, '编辑')">编辑</el-link>
                 <template>
                   <el-popconfirm title="确认要删除吗？" @confirm="removeIt(scope.row)">
                     <el-link type="info" slot="reference">删除
@@ -100,36 +104,91 @@
 
           </div>
           <div class="width">
-            <el-form-item
-              label="计费账号"
-              :label-width="formLabelWidth"
-              prop="accountUser"
-            >
-              <el-input
-                placeholder="请输入内容"
-                @change="accountUserChange"
-                v-model="addForm.accountUser"
-                autocomplete="off"
-              >
-              </el-input>
-            </el-form-item>
-          </div>
-          <div class="width">
-            <el-form-item
-              label="计费方式"
-              :label-width="formLabelWidth"
-              prop="billingType"
-            >
-              <el-select v-model="addForm.billingType" style="width: 100%">
+            <el-form-item label="资源类型" :label-width="formLabelWidth" prop="type">
+              <el-select v-model="addForm.type" placeholder="请选择" style="width: 100%">
                 <el-option
-                  v-for="item in billingType"
-                  :key="item.id"
+                  v-for="item in typeList"
+                  :key="item.value"
                   :label="item.label"
-                  :value="item.value"
-                ></el-option>
+                  :value="item.value">
+                </el-option>
               </el-select>
             </el-form-item>
           </div>
+
+          <div class="width">
+            <el-form-item
+              label="鉴权用户"
+              :label-width="formLabelWidth"
+              prop="directoryNumber"
+            >
+              <el-input
+                :disabled="true"
+                v-model="addForm.directoryNumber"
+                autocomplete="off"
+              ></el-input>
+            </el-form-item>
+            <el-form-item
+              label="鉴权密码"
+              :label-width="formLabelWidth"
+              prop="password"
+            >
+              <el-input
+                placeholder="请输入内容"
+                v-model="addForm.password"
+                clearable
+              >
+              </el-input>
+            </el-form-item>
+
+          </div>
+
+          <div class="width">
+            <el-form-item label="域地址" :label-width="formLabelWidth" prop="domain">
+              <el-input v-model="addForm.domain" placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </div>
+          <div class="width">
+            <el-row>
+              <el-col :span="10">
+                <el-form-item
+                  label="计费账号"
+                  :label-width="formLabelWidth"
+                  prop="accountUser"
+                >
+                  <el-input
+                    placeholder="请输入内容"
+                    @change="accountUserChange"
+                    v-model="addForm.accountUser"
+                    autocomplete="off"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="7">
+                <el-form-item label="账户余额" label-width="50" prop="balance">
+                  <el-input :disabled="title !== '添加话机'" v-model="addForm.balance" placeholder="请输入内容"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="7">
+                <el-form-item
+                  label="计费方式"
+                  label-width="50"
+                  prop="billingType"
+                >
+                  <el-select v-model="addForm.billingType" style="width: 100%">
+                    <el-option
+                      v-for="item in billingType"
+                      :key="item.id"
+                      :label="item.label"
+                      :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </div>
+
           <div class="width">
             <el-form-item
               label="支持的业务类型"
@@ -153,43 +212,6 @@
                   :value="item.value">
                 </el-option>
               </el-select>
-            </el-form-item>
-          </div>
-          <div class="width">
-            <el-form-item
-              label="分机号码"
-              :label-width="formLabelWidth"
-              prop="directoryNumber"
-            >
-              <el-input
-                :disabled="true"
-                v-model="addForm.directoryNumber"
-                autocomplete="off"
-              ></el-input>
-            </el-form-item>
-          </div>
-          <div class="width">
-            <el-form-item
-              label="鉴权密码"
-              :label-width="formLabelWidth"
-              prop="password"
-            >
-              <el-input
-                placeholder="请输入内容"
-                v-model="addForm.password"
-                clearable
-              >
-              </el-input>
-            </el-form-item>
-          </div>
-          <div class="width">
-            <el-form-item label="账户余额" :label-width="formLabelWidth" prop="balance">
-              <el-input v-model="addForm.balance" placeholder="请输入内容"></el-input>
-            </el-form-item>
-          </div>
-          <div class="width">
-            <el-form-item label="域地址" :label-width="formLabelWidth" prop="domain">
-              <el-input v-model="addForm.domain" placeholder="请输入内容"></el-input>
             </el-form-item>
           </div>
           <div class="width">
@@ -224,18 +246,18 @@
               </el-select>
             </el-form-item>
           </div>
-          <div class="width">
-            <el-form-item label="费率组" :label-width="formLabelWidth" prop="rateGroup">
-              <el-select disabled v-model="addForm.rateGroup" placeholder="请选择" style="width: 100%">
-                <el-option
-                  v-for="item in diaPlanList"
-                  :key="item.value"
-                  :label="item.diaplanName"
-                  :value="item.id">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </div>
+          <!--          <div class="width">-->
+          <!--            <el-form-item label="费率组" :label-width="formLabelWidth" prop="rateGroup">-->
+          <!--              <el-select disabled v-model="addForm.rateGroup" placeholder="请选择" style="width: 100%">-->
+          <!--                <el-option-->
+          <!--                  v-for="item in diaPlanList"-->
+          <!--                  :key="item.value"-->
+          <!--                  :label="item.diaplanName"-->
+          <!--                  :value="item.id">-->
+          <!--                </el-option>-->
+          <!--              </el-select>-->
+          <!--            </el-form-item>-->
+          <!--          </div>-->
           <div class="width">
             <el-form-item label="超时时长" :label-width="formLabelWidth" prop="expire">
               <el-input
@@ -243,18 +265,6 @@
                 placeholder="请输入内容"
                 v-model="addForm.expire"
               ></el-input>
-            </el-form-item>
-          </div>
-          <div class="width">
-            <el-form-item label="资源类型" :label-width="formLabelWidth" prop="type">
-              <el-select v-model="addForm.type" placeholder="请选择" style="width: 100%">
-                <el-option
-                  v-for="item in typeList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
             </el-form-item>
           </div>
           <div class="width">
@@ -382,23 +392,24 @@ export default {
         domain: "", //域地址
         accountUser: "", //计费账号
         balance: "", // balance
-        billingType: "", //计费方式（1、为后付费。2、预付费）
-        bussiness: "", //支持的业务类型（语音、视频、广播）
+        billingType: 0, //计费方式（1、为后付费。2、预付费）
+        bussiness: 0, //支持的业务类型（语音、视频、广播）
         deptId: null, // 部门ID
         diaplan: "", //拨号方案
         directoryName: "", //分机名称
         // stats: '', //录音状态
         directoryNumber: "", //电话号码
-        disable: "", //使能状态（0为正常，1为disable）
+        disable: 0, //使能状态（0为正常，1为disable）
         // domain: '研发部门', //部门名称
         endpointId: "45", //模块ID
-        expire: "", //超时时长
+        expire: 60, //超时时长
         latitude: "",  //纬度
         longitude: "", //经度
         password: "", //鉴权密码
         rateGroup: "", //费率组
-        type: "" //资源类型:0为系统分机1:为广播终端2：视频流3:视频会议终端4、入队列路由点5、出路由点号码6:广播路由点7:临时会议路由点8:固定会议路由点
+        type: 0 //资源类型:0为系统分机1:为广播终端2：视频流3:视频会议终端4、入队列路由点5、出路由点号码6:广播路由点7:临时会议路由点8:固定会议路由点
       },
+      dialPlanList: [], // 拨号方案
       list: [],
       deptIdList: [], //获取的部门列表
       rateGroup: [],//费率组
@@ -414,8 +425,8 @@ export default {
         { label: "固定会议路由点", value: 8 }
       ],
       billingType: [
-        { label: "预付费", value: 0 },
-        { label: "后付费", value: 1 }
+        { label: "预付费", value: 1 },
+        { label: "后付费", value: 2 }
       ],
       relayType: [
         { label: "开启", value: "开启" },
@@ -448,13 +459,13 @@ export default {
         longitude: [{ required: false, message: "该项为必填项目,请确认", trigger: "blur" }]
       },
       bussiness: [
-        { label: "语音", value: "语音" },
-        { label: "视频", value: "视频" },
-        { label: "广播", value: "广播" }
+        { label: "语音", value: 0 },
+        { label: "视频", value: 1 },
+        { label: "广播", value: 2 }
       ],
       disable: [
         { label: "正常", value: 0 },
-        { label: "disable", value: 1 }
+        { label: "失效", value: 1 }
       ]
     };
   },
@@ -463,6 +474,35 @@ export default {
       this.form.pageNum++;
       console.log(this.form);
       this.getDirectory(this.form);
+    },
+
+    formatBussiness(row) {
+      let b = "";
+      if (row.bussiness) {
+        const result = row.bussiness.split(",");
+        result.forEach((item, i) => {
+          let a = "";
+          switch (item) {
+            case "0" :
+              a = "语音";
+              break;
+            case "1" :
+              a = "视频";
+              break;
+            case "2" :
+              a = "广播";
+              break;
+          }
+
+          if (i > 0) {
+            b = b + ", " + a;
+          } else {
+            b = b + a;
+          }
+
+        });
+        return b;
+      }
     },
     pageCheng(e) {
       this.form = this.$options.data().form;
@@ -578,7 +618,7 @@ export default {
     getDiaPlanList(form) {
       diaPlanList(form).then(res => {
         if (res.data.code === 200) {
-          this.list = res.data.data.records;
+          this.dialPlanList = res.data.data.records;
         } else {
           this.$message.error(res.data.msg);
         }
@@ -649,6 +689,7 @@ export default {
       this.addForm.deptId = val[val.length - 1];
     }
   }
+
 };
 </script>
 

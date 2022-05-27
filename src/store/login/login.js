@@ -33,6 +33,7 @@ const login = {
       if (result.data.code === 200) {
         const { JSESSIONID, user } = result.data.data;
         const { sysMenuList } = result.data.data.user;
+        console.log(sysMenuList, "------");
         //数据存储到vuex
         commit("changeToken", JSESSIONID);
         commit("changeUserInfo", user);
@@ -50,6 +51,7 @@ const login = {
 
     },
     localLogin({ commit }) {
+      let formatMenuList = [];
       const token = cache.getCache("token");
       if (token) {
         commit("changeToken", token);
@@ -58,9 +60,15 @@ const login = {
       if (userInfo) {
         commit("changeUserInfo", userInfo);
       }
-      const menuList = cache.getCache("menuList");
-      if (menuList) {
-        commit("changeMenu", menuList);
+      const menuList = cache.getCache("menuList") || [];
+      if (menuList.length !== 0) {
+        formatMenuList = menuList.sort((a, b) => {
+          return a.orderNum - b.orderNum;
+        });
+      }
+      console.log("formatMenuList", formatMenuList);
+      if (formatMenuList) {
+        commit("changeMenu", formatMenuList);
       }
     }
   }

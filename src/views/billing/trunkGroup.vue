@@ -60,15 +60,10 @@
               :label-width="formLabelWidth"
               prop="strategyRetry"
             >
-              <el-select v-model="addFrom.strategyRetry" placeholder="请选择" style="width: 100%">
-                <el-option
-                  v-for="item in retryStrategyType"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
-                </el-option>
-              </el-select>
+              <el-radio-group v-model="addFrom.strategyRetry">
+                <el-radio :label="0">无响应重试</el-radio>
+                <el-radio :label="1">强制重试</el-radio>
+              </el-radio-group>
             </el-form-item>
           </div>
           <div class="width">
@@ -77,48 +72,53 @@
               :label-width="formLabelWidth"
               prop="strategyType"
             >
-              <el-select v-model="addFrom.strategyType" placeholder="请选择" style="width: 100%">
-                <el-option
-                  v-for="item in policyType"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
-                </el-option>
-              </el-select>
+              <el-radio-group v-model="addFrom.strategyType">
+                <el-radio :label="0">强制呼叫</el-radio>
+                <el-radio :label="1">随机呼叫</el-radio>
+              </el-radio-group>
             </el-form-item>
           </div>
-          <el-form-item :label="'中继组' + (index + 1)" :label-width="formLabelWidth"
-                        :key="addFrom.pbxGwgroupGatewayList.key"
-                        v-for="(pbxGwgroupGatewayList, index) in addFrom.pbxGwgroupGatewayList"
-                        :prop="'pbxGwgroupGatewayList.' + index + '.gatewayId'"
-                        :rules="rules.groupPrefix">
-            <div class="width">
-              <el-select v-model="pbxGwgroupGatewayList.gatewayId" placeholder="请选择">
-                <el-option
-                  v-for="item in pbxList"
-                  :key="item.id"
-                  :label="item.gatewayName"
-                  :value="item.id">
-                </el-option>
-              </el-select>
-              <div style="padding: 0 20px">
-                <el-input class="el-input" v-model="pbxGwgroupGatewayList.weight" placeholder="请输入内容"></el-input>
-              </div>
-              <div style="text-align: right">
-                <el-tooltip style="height: 40px; vertical-align: top" @click.native="addGateway" class="item"
-                            effect="dark" content="添加中继" placement="bottom">
-                  <el-button class="ablout"><i class="icon iconfont icon-jia"></i></el-button>
-                </el-tooltip>
-                <el-tooltip style="margin-left: 40px; vertical-align: top; height: 40px;"
-                            @click.native="removeClick(pbxGwgroupGatewayList)" class="item" effect="dark" content="删除中继"
-                            placement="bottom">
-                  <el-button class="ablout"><i class="icon iconfont icon-shanchu2"></i></el-button>
-                </el-tooltip>
+          <div class="width">
+            <el-form-item :label="'中继' + (index + 1)" :label-width="formLabelWidth"
+                          :key="addFrom.pbxGwgroupGatewayList.key"
+                          v-for="(pbxGwgroupGatewayList, index) in addFrom.pbxGwgroupGatewayList"
+                          :prop="'pbxGwgroupGatewayList.' + index + '.gatewayId'"
+                          :rules="[
+                              { required: true, message: '该项为必填项,请确认', trigger: 'blur' },
+                          ]">
+              <div class="widths">
+                <el-select class="w200" v-model="pbxGwgroupGatewayList.gatewayId" placeholder="请选择">
+                  <el-option
+                    style="width: 100%"
+                    v-for="item in pbxList"
+                    :key="item.id"
+                    :label="item.gatewayName"
+                    :value="item.id">
+                  </el-option>
+                </el-select>
+                <div style="padding: 0 20px" class="w200">
+                  <el-form-item label="权重">
+                    <el-input style="width: 100%" type="age" class="el-input"
+                              v-model.number="pbxGwgroupGatewayList.weight"
+                              placeholder="填入权重数值"></el-input>
+                  </el-form-item>
+                </div>
+                <div style="text-align: right; width: 150px">
+                  <el-tooltip style="height: 40px; vertical-align: top" @click.native="addGateway" class="item"
+                              effect="dark" content="添加中继" placement="bottom">
+                    <el-button class="ablout"><i class="icon iconfont icon-jia"></i></el-button>
+                  </el-tooltip>
+                  <el-tooltip style="margin-left: 20px; vertical-align: top; height: 40px;"
+                              @click.native="removeClick(pbxGwgroupGatewayList)" class="item" effect="dark"
+                              content="删除中继"
+                              placement="bottom">
+                    <el-button class="ablout"><i class="icon iconfont icon-shanchu2"></i></el-button>
+                  </el-tooltip>
 
+                </div>
               </div>
-            </div>
-          </el-form-item>
+            </el-form-item>
+          </div>
           <div class="width">
             <el-form-item
               label="备注"
@@ -140,8 +140,7 @@
         </div>
       </el-dialog>
       <el-table height="calc(100vh - 100px - 100px - 100px - 100px)"
-                :header-cell-style="{background:'#ccc', color: '#fff',}" :data="list" style="width: 100%"
-                v-if="list.length !== 0">
+                :header-cell-style="{background:'#ccc', color: '#fff',}" :data="list" style="width: 100%">
         <el-table-column align="center" prop="index" label="序号" width="50">
           <template scope="scope">{{ scope.$index + 1 }}</template>
         </el-table-column>
@@ -206,7 +205,6 @@
           </template>
         </el-table-column>
       </el-table>
-      <my-empty v-else />
     </div>
     <my-footer v-on:next="next" @prev="prev" :form="form" @change="change" @pageCheng="pageCheng"></my-footer>
   </div>
@@ -247,8 +245,8 @@ export default {
       addFrom: {
         groupPrefix: "",
         groupName: "", //中继名称
-        strategyRetry: "", //重试策略，
-        strategyType: "", // 策略类型
+        strategyRetry: 0, //重试策略，
+        strategyType: 0, // 策略类型
         pbxGwgroupGatewayList: "", //中继数组
         totalWeight: 0, //总的权重值，为组内中继之和
         pageNum: 1,
@@ -478,19 +476,19 @@ export default {
   height: 40px;
 }
 
-.width {
+.width, .widths {
   display: flex;
   width: 100%;
   justify-content: space-between;
   max-height: 63px;
 }
 
-.el-input {
-  display: inline-block;
-}
-
 .width > * {
   flex: 1;
+}
+
+.el-input {
+  display: inline-block;
 }
 
 ul {
@@ -543,4 +541,7 @@ ul li {
   margin-top: -50%;
 }
 
+.widths .w200 {
+  flex: 1;
+}
 </style>

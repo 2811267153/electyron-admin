@@ -27,10 +27,28 @@ export function mapMenuRouter(menuList) {
       }
     }
   };
-  _recurseGetRouter(menuList);
+  // _recurseGetRouter(menuList);
   return routers;
 }
 
+export function formatMenu(menuList) {
+  console.log("menuList", menuList);
+  const resultList = [];
+  if (menuList.left !== 0) {
+    for (const menu of menuList) {
+      if (menu.menuType === "M") {
+        menu.sort((a, b) => {
+          return a.orderNum - b.orderNum;
+        });
+      } else if (menu.menuType !== "F") {
+        menuList.sort((a, b) => {
+          resultList.push(a.orderNum - b.orderNum);
+          formatMenu(menu.children);
+        });
+      }
+    }
+  }
+}
 
 export function pathMapToMenu(userMenu, currentPath) {
   for (const menu of userMenu) {

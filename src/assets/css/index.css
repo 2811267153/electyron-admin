@@ -17,7 +17,7 @@ input {
 }
 
 html {
-    font-size: 16px;
+    font-size: 14px;
 }
 
 /*::-webkit-resizer  {*/
@@ -53,10 +53,9 @@ html {
 
 .warps {
     display: flex;
-    height: 100%;
+    height: calc(100vh - 110px);
     flex-direction: column;
     border-radius: 10px;
-
 }
 
 .container {
@@ -67,6 +66,7 @@ html {
     padding: 20px;
     border-radius: 10px;
     flex-direction: column;
+    overflow: auto;
 }
 
 .container form {

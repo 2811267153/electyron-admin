@@ -57,18 +57,36 @@
               </el-select>
             </el-form-item>
           </div>
+          <div v-if="addFrom.gatewayType !== 1" class="width">
+            <el-form-item prop="accountUser" label="计费账号" :label-width="formLabelWidth">
+              <el-input placeholder="请输入内容"
+                        v-model="addFrom.accountUser"></el-input>
+            </el-form-item>
+          </div>
           <div class="width">
             <el-form-item
-              label="域地址"
+              label="中继IP"
+
               :label-width="formLabelWidth"
-              prop="realm"
+              prop="gatewayIp"
             >
-              <el-input placeholder="请输入内容"
-                        v-model="addFrom.realm"
+              <el-input @change="gatewayIpCahnge"
+                        placeholder="请输入内容"
+                        v-model="addFrom.gatewayIp"
                         autocomplete="off"
-                        @change="realmBlur"
               ></el-input>
             </el-form-item>
+            <el-form-item
+              label="中继端口"
+              :label-width="formLabelWidth"
+              prop="gatewayPort"
+            >
+              <el-input placeholder="请输入内容"
+                        v-model="addFrom.gatewayPort"
+                        autocomplete="off"
+              ></el-input>
+            </el-form-item>
+
           </div>
           <div class="width">
             <el-form-item
@@ -82,6 +100,52 @@
               ></el-input>
             </el-form-item>
           </div>
+          <div class="width">
+            <el-form-item
+              label="服务接口"
+              :label-width="formLabelWidth"
+              prop="profileId"
+            >
+              <el-select v-model="addFrom.profileId" placeholder="请选择" style="width: 100%">
+                <el-option
+                  v-for="item in profileIdList"
+                  :key="item.id"
+                  :label="item.profileName"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+
+          <div class="width">
+            <el-form-item
+              label="是否注册"
+              :label-width="formLabelWidth"
+              prop="register"
+            >
+              <el-radio-group v-model="addFrom.register">
+                <el-radio :label="1">注册</el-radio>
+                <el-radio :label="0">不注册</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </div>
+          <div v-if="addFrom.register === 1" class="width">
+            <el-form-item
+              label="注册用户"
+              :label-width="formLabelWidth"
+              prop="username"
+            >
+              <el-input v-model="addFrom.username" placeholder="请输入内容" />
+            </el-form-item>
+            <el-form-item
+              label="密码"
+              :label-width="formLabelWidth"
+              prop="password"
+            >
+              <el-input v-model="addFrom.password" placeholder="请输入内容" />
+            </el-form-item>
+          </div>
+
           <div class="width" v-if="title === '添加网关'">
             <el-form-item
 
@@ -131,46 +195,7 @@
               ></el-input>
             </el-form-item>
           </div>
-          <div class="width">
-            <el-form-item
-              label="中继IP"
-              :label-width="formLabelWidth"
-              prop="gatewayIp"
-            >
-              <el-input placeholder="请输入内容"
-                        v-model="addFrom.gatewayIp"
-                        autocomplete="off"
-              ></el-input>
-            </el-form-item>
-          </div>
-          <div class="width">
-            <el-form-item
-              label="中继端口"
-              :label-width="formLabelWidth"
-              prop="gatewayPort"
-            >
-              <el-input placeholder="请输入内容"
-                        v-model="addFrom.gatewayPort"
-                        autocomplete="off"
-              ></el-input>
-            </el-form-item>
-          </div>
-          <div class="width">
-            <el-form-item
-              label="服务接口"
-              :label-width="formLabelWidth"
-              prop="profileId"
-            >
-              <el-select v-model="addFrom.profileId" placeholder="请选择" style="width: 100%">
-                <el-option
-                  v-for="item in profileIdList"
-                  :key="item.id"
-                  :label="item.netName"
-                  :value="item.id">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </div>
+
           <div class="width">
             <el-form-item
               label="最大并发数"
@@ -178,41 +203,6 @@
               prop="maxCall"
             >
               <el-input placeholder="请输入内容" v-model="addFrom.maxCall" />
-            </el-form-item>
-          </div>
-          <div class="width">
-            <el-form-item prop="accountUser" label="计费账号" :label-width="formLabelWidth">
-              <el-input :disabled="addFrom.gatewayType === 1" placeholder="请输入内容"
-                        v-model="addFrom.accountUser"></el-input>
-            </el-form-item>
-          </div>
-          <div v-if="addFrom.register === 1" class="width">
-            <el-form-item
-              label="注册用户"
-              :label-width="formLabelWidth"
-              prop="username"
-            >
-              <el-input v-model="addFrom.username" placeholder="请输入内容" />
-            </el-form-item>
-            <el-form-item
-              label="密码"
-              :label-width="formLabelWidth"
-              prop="password"
-            >
-              <el-input v-model="addFrom.password" placeholder="请输入内容" />
-            </el-form-item>
-          </div>
-
-          <div class="width">
-            <el-form-item
-              label="是否注册"
-              :label-width="formLabelWidth"
-              prop="register"
-            >
-              <el-radio-group v-model="addFrom.register">
-                <el-radio :label="1">注册</el-radio>
-                <el-radio :label="0">不注册</el-radio>
-              </el-radio-group>
             </el-form-item>
           </div>
         </el-form>
@@ -335,7 +325,7 @@ export default {
         accountUser: "", //计费账号
         codecs: "", //支持编码
         dtmfMode: "", //dtmfMode
-        expires: "", //超时时长
+        expires: "60", //超时时长
         gatewayIp: "", //中继IP
         gatewayName: "", //网关名称
         gatewayPort: "", //中继端口
@@ -345,7 +335,7 @@ export default {
         profileId: "", //profileId
         proxyIp: "", //代理IP
         realm: "", //域地址
-        register: 1, //是否注册 0不注册/ 1 注册
+        register: 0, //是否注册 0不注册/ 1 注册
         username: "" //注册用户名
       },
       codecsList: [],
@@ -374,7 +364,7 @@ export default {
         ]
       },
       rules: {
-        accountUser: [{ required: false, message: "该选项为必填项， 请确认", trigger: "blur" }],
+        accountUser: [{ required: true, message: "该选项为必填项， 请确认", trigger: "blur" }],
         codecs: [
           { required: true, message: "该选项为必填项， 请确认", trigger: "blur" }
         ],
@@ -426,10 +416,6 @@ export default {
       this.forms.pageNum++;
       this.getPbxAll(this.forms);
     },
-    realmBlur() {
-      console.log("aaaa");
-      this.addFrom.proxyIp = this.addFrom.realm;
-    },
     prev() {
       this.forms.pageNum--;
       this.getPbxAll(this.forms);
@@ -442,6 +428,9 @@ export default {
       this.forms = this.$options.data().forms;
       this.forms.pageSize = e;
       this.getPbxAll(this.forms);
+    },
+    gatewayIpCahnge() {
+      this.addFrom.realm = this.addFrom.gatewayIp;
     },
     clear() {
       this.forms = this.$options.data().forms;
@@ -560,7 +549,7 @@ export default {
           _dtmfModeData.code = item.code;
           getDictionaryAll(_dtmfModeData).then(res => {
             this.dtmfModeData = res.data.data;
-            this.addFrom.dtmfMode = this.dtmfModeData[0];
+            this.addFrom.dtmfMode = this.dtmfModeData[0].id;
           });
         }
       });

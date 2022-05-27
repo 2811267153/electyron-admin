@@ -56,15 +56,16 @@
           </div>
           <div class="width">
             <el-form-item
-              label="计费方式"
+              label="费率"
               :label-width="formLabelWidth"
               required
+              style="width: 100%"
             >
               <div class="flex">
                 <el-form-item prop="rate">
                   <el-input v-model="addListFrom.rate" placeholder="请输入计费金额(元)"></el-input>
                 </el-form-item>
-                <el-form-item class="l-20" prop="billingPeriod">
+                <el-form-item label="计费周期" class="l-20" prop="billingPeriod">
                   <el-input v-model="addListFrom.billingPeriod" placeholder="请输入计费时间(秒)"></el-input>
                 </el-form-item>
               </div>
@@ -73,7 +74,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <div class="footers">
-            <p>注意: 费率默认以元为单位, 计费时间为60(s)秒</p>
+            <p>注意: 费率默认以元为单位, 计费周期为60(s)秒</p>
             <div class="footers">
               <el-button @click="listDialogFormVisible = false">取 消</el-button>
               <el-button type="primary" @click="submitForms('编辑')"
@@ -141,10 +142,11 @@ export default {
       listTitle: "添加费率组",
       addListFrom: {
         rateName: "",  //费率名称
-        billingPeriod: "",//计费周期单位为秒
+        billingPeriod: "60",//计费周期单位为秒
         rateGroupId: "", //费率组ID
         ratePrefix: "", //费率前缀
-        rate: "" //费率
+        rate: "", //费率
+        area: "home"
       },
       row: {},
       list: [],
@@ -276,6 +278,7 @@ export default {
 
 .flex {
   display: flex;
+  width: 100%;
   justify-content: space-between;
 }
 

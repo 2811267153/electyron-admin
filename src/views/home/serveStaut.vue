@@ -2,60 +2,69 @@
   <div class="warps">
     <my-el-header />
     <div class="container">
-      <div class="overview">
-        <div class="overview-l">
-          <h2>服务器运行状态总揽</h2>
+      <el-row justify="start">
+        <el-col :span="12" class="bg-purples">
+          <div class="grid-content">
+            <div class="overview-l">
+              <h2>服务器运行状态总揽</h2>
+              <div class="percentage-item">
+                <span>用户使用率</span>
+                <el-progress class="percentage" :percentage="percentage.used" :color="customColor"></el-progress>
+              </div>
+              <div class="percentage-item">
+                <span>系统使用率</span>
+                <el-progress class="percentage" :percentage="percentage.sys" :color="customColor"></el-progress>
+              </div>
+              <div class="percentage-item">
+                <span>当前空闲率</span>
+                <el-progress stroke-width="20px" class="percentage" :percentage="percentage.free"
+                             :color="customColor"></el-progress>
 
-          <div class="percentage-item">
-            <span>用户使用率</span>
-            <el-progress class="percentage" :percentage="percentage.used" :color="customColor"></el-progress>
+              </div>
+            </div>
           </div>
-          <div class="percentage-item">
-            <span>系统使用率</span>
-            <el-progress class="percentage" :percentage="percentage.sys" :color="customColor"></el-progress>
-          </div>
-          <div class="percentage-item">
-            <span>当前空闲率</span>
-            <el-progress class="percentage" :percentage="percentage.free" :color="customColor"></el-progress>
-          </div>
-        </div>
-        <div class="warp" style="border: none; border-radius: 5px; background-color: #f2f2f2;">
-          <h2>磁盘状态</h2>
-          <el-table :row-style="{background: '#f2f2f2'}" :header-cell-style="{background:'#f2f2f2', }"
-                    class="table"
-                    :data="serveData.sysFiles"
-                    style="width: 100%">
-            <el-table-column
-              align="center"
-              prop="dirName"
-              label="盘符路径"
-              width="180">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="sysTypeName"
-              label="文件系统">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="total"
-              label="总大小">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="usage"
-              label="已使用">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="used"
-              label="未使用">
-            </el-table-column>
-          </el-table>
+        </el-col>
+        <el-col :span="12">
+          <div class="grid-content bg-purple-light">
+            <div style="border: none; border-radius: 5px; background-color: #f2f2f2;">
+              <h2 style="padding-left: 10px">磁盘状态</h2>
+              <el-table :row-style="{background: '#f2f2f2'}" :header-cell-style="{background:'#f2f2f2', }"
+                        class="table"
+                        :data="serveData.sysFiles"
+                        style="width: 100%">
+                <el-table-column
+                  align="left"
+                  prop="dirName"
+                  label="盘符路径"
+                  width="200">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="sysTypeName"
+                  label="文件系统">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="total"
+                  label="总大小">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="usage"
+                  label="已使用">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="used"
+                  label="未使用">
+                </el-table-column>
+              </el-table>
 
-        </div>
+            </div>
+          </div>
+        </el-col>
+      </el-row>
 
-      </div>
       <div class="warp">
         <h2>服务器信息</h2>
         <ul>
@@ -135,40 +144,35 @@ export default {
 </script>
 
 <style>
-#serve-stauts {
-
+h2 {
+  color: #606266;
+  padding: 10px 0;
+  text-align: left;
 }
 
-.overview {
-  display: flex;
-  justify-content: space-between;
+.bg-purples {
+  height: 100%;
+  text-align: left;
+}
+
+.grid-content {
+  padding: 15px 20px;
+  border: 1px solid #f2f2f2;
+  height: 330px;
 }
 
 .overview-l {
-
-  width: 50%;
-  padding: 20px 40px;
+  padding: 0px 10px;
   background-color: #f2f2f2;
-  margin: 20px 0 30px;
   border-radius: 5px;
-}
-
-.overview > * {
-  flex: 1;
-  padding: 20px 15px;
-  margin: 10px 20px;
-}
-
-.overview .percentage {
-  margin: 20px 10px;
-  height: 20px;
-  flex: 1;
-  display: flex;
+  height: 100%;
+  color: #606266;
 }
 
 .warp {
   padding: 20px 0;
   width: 100%;
+  color: #606266;
   border: 1px solid #f2f2f2;
 }
 
@@ -184,9 +188,12 @@ export default {
 .percentage-item {
   align-items: center;
   display: flex;
+  width: 100%;
+  line-height: 40px;
 }
 
-.percentage-item .el-progress-bar__outer {
+.percentage-item .percentage {
+  width: 80%;
 }
 
 .warp-li {
@@ -202,4 +209,6 @@ export default {
   display: inline-block;
   padding-right: 20px;
 }
+
+
 </style>

@@ -1,72 +1,84 @@
 <template>
   <div class="tree">
-    <el-tree
-      class="filter-tree"
-      :data="data"
-      :props="defaultProps"
-      default-expand-all
-      :expand-on-click-node="false"
-      accordion
-      @node-click="handleNodeClick"
-      :node-key="data.deptId"
-      ref="tree"
-      :default-expanded-keys="['1524594032656699393',101]">
-    </el-tree>
+    <h2>组织 </h2>
+    <div class="tree-warp">
+      <el-tree
+        class="filter-tree"
+        :data="data"
+        :props="defaultProps"
+        default-expand-all
+        :expand-on-click-node="false"
+        accordion
+        @node-click="handleNodeClick"
+        :node-key="data.deptId"
+        ref="tree"
+        :default-expanded-keys="['1524594032656699393',101]">
+      </el-tree>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'e-tree',
+  name: "e-tree",
   props: {
     data: {
       type: Array,
-      default(){
-        return []
+      default() {
+        return [];
       }
     }
   },
-  data(){
+  data() {
     return {
       defaultProps: {
-        children: 'children',
-        label: 'deptName'
+        children: "children",
+        label: "deptName"
       },
-      isStatus: true,
-    }
+      isStatus: true
+    };
   },
   watch: {
     filterText(val) {
-      this.$refs.tree.filter(val)
+      this.$refs.tree.filter(val);
     },
-    isStatus(val){
-      if(val){
+    isStatus(val) {
+      if (val) {
 
       }
     }
   },
 
   methods: {
-    handleNodeClick(a, b){
-      console.log(a, )
-      this.$emit('treeClick', a)
-      a.status === 0 ? this.isStatus = true : this.isStatus = false
+    handleNodeClick(a, b) {
+      console.log(a);
+      this.$emit("treeClick", a);
+      a.status === 0 ? this.isStatus = true : this.isStatus = false;
     }
-  },
-}
+  }
+};
 </script>
 
 <style scoped>
+.tree h2 {
+  font-size: 16px;
+  padding: 10px 10px 10px 20px;
+  border-bottom: 2px solid #ccc;
+}
+
 .tree {
-  box-shadow: inset 0 0 10px #cccccc;
   height: 100%;
-  padding: 20px;
-  border-radius: 10px;
   margin-right: 10px;
   display: block;
-  background-color: #f2f2f2;
+  border-right: 5px solid #ccc;
 }
-.filter-tree{
+
+.filter-tree {
   background-color: transparent;
 }
+
+.tree-warp {
+  padding: 10px;
+}
+
 </style>
