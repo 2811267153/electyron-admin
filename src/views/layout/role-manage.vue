@@ -5,9 +5,9 @@
       <my-el-header />
     </el-header>
     <div class="container">
-      <div class="nav">
+      <div class="form-nav">
         <div class="nav-l">
-          <el-form ref="form" label-width="80px" :inline="true" :rules="form_rules" :model="navForm">
+          <el-form ref="form" label-width="40px" :inline="true" :rules="form_rules" :model="navForm">
             <el-form-item label="角色名称" prop="roleName">
               <el-input v-model="navForm.roleName" placeholder="请输入内容"></el-input>
             </el-form-item>

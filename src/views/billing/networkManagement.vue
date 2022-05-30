@@ -2,7 +2,7 @@
   <div class="warps">
     <my-el-header />
     <div class="container" id="networkManagement">
-      <div class="nav-form">
+      <div class="form-nav">
         <el-form :model="forms" :hide-required-asterisk="true" :show-message="false" :inline="true"
                  class="demo-form-inline" ref="form" :rules="rule">
           <el-form-item :span="5" label="网关名称" prop="gatewayName">

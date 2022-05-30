@@ -2,7 +2,7 @@
   <div class="warps">
     <my-el-header />
     <div class="container">
-      <div class="nav-form">
+      <div class="form-nav">
         <el-form :inline="true" ref="form" :rules="rule" :model="form" class="demo-form-inline">
           <el-form-item label="中继名称" prop="groupName">
             <el-input v-model="form.groupName" placeholder="请输入内容"></el-input>

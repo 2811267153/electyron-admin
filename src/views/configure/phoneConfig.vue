@@ -5,7 +5,7 @@
     </my-el-header>
     <div class="container">
       <div class="phone-r">
-        <div class="nav-form">
+        <div class="form-nav">
           <el-form :inline="true" :model="form" ref="form" class="demo-form-inline">
             <el-form-item label="分机名称" prop="directoryName">
               <el-input v-model="form.directoryName" placeholder="请输入内容"></el-input>

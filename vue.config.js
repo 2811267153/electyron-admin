@@ -4,7 +4,7 @@ module.exports = defineConfig({
   publicPath: "./",
   devServer: {
     open: true,
-    host: "localhost", //如果是真机测试，就使用这个IP
+    host: "192.168.2.12", //如果是真机测试，就使用这个IP
     port: 8080,
     proxy: {
       "dispatch": {

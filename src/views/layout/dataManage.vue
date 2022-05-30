@@ -107,7 +107,6 @@
     <my-footer v-on:next="next" @prev="prev" @pageCheng="changPage"
                :form="form"
                @change="change"></my-footer>
-
   </div>
 </template>
 

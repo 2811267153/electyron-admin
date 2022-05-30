@@ -70,7 +70,7 @@
               </el-form-item>
             </div>
             <div class="width">
-              <el-form-item label="菜单图标" :label-width="formLabelWidth" prop="orderNum">
+              <el-form-item label="菜单图标" :label-width="formLabelWidth" prop="icon">
                 <el-input v-model="addForm.icon" placeholder="请输入内容" />
               </el-form-item>
             </div>
@@ -179,7 +179,8 @@ export default {
         parentId: [{ required: true, message: "该选项不可为空, 请确认", trigger: "blur" }],
         path: [{ required: true, message: "改选行不可为空, 请确认", trigger: "blur" }],
         perms: [{ required: true, message: "改选行不可为空, 请确认", trigger: "blur" }],
-        status: [{ required: false, message: "改选行不可为空, 请确认", trigger: "blur" }]
+        status: [{ required: false, message: "改选行不可为空, 请确认", trigger: "blur" }],
+        icon: [{ required: false, message: "改选行不可为空, 请确认", trigger: "blur" }]
       }
     };
   },

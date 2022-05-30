@@ -3,7 +3,7 @@
   <div class="warps">
     <my-el-header></my-el-header>
     <div class="container">
-      <div class="nav-form">
+      <div class="form-nav">
         <el-form ref="form" class="form" :model="form" label-width="80px" :inline="true">
           <el-form-item label="组织名称">
             <el-input placeholder="请输入内容" v-model="form.deptName"></el-input>
@@ -141,7 +141,7 @@ export default {
         };
       },
       isDisabled: false,
-      title: "新增",
+      title: "新增下一级",
       dialogFormVisible: false,
       dialogFormVisibles: false,
       defaultShowNodes: [], //默认展开
@@ -168,7 +168,7 @@ export default {
         label: "deptName"
       },
       currentNodeKey: "",
-      showTitle: ["新增", "编辑", "删除"],
+      showTitle: ["新增下一级", "编辑", "删除"],
       showIndex: null,
       list: [], //未被格式化 以前的列表
       rules: {
@@ -213,6 +213,9 @@ export default {
         this.getOrganizeList(this.form);
       }
     },
+    currentShow(index) {
+      this.showIndex = index;
+    },
     handleNodeClick(data) {
       this.row = data;
       this.showIndex === null ? console.log("1") : this.showForm(this.showTitle[this.showIndex]);
@@ -225,20 +228,18 @@ export default {
         this.addForm.deptName = this.row.deptName;
         this.addForm.orderNum = this.row.orderNum;
         this.addForm.parentId = this.row.parentId;
-      } else if (type === "添加组织") {
+      } else if (type === "添加组织" || type === "新增下一级") {
         this.dialogFormVisible = true;
         this.title = type;
         this.addForm = this.$options.data().addForm;
         this.addForm.parentId = this.row.deptId;
       } else {
+        console.log(type);
         this.removeIt();
-        this.showIndex = 0;
-        console.log("--------");
+        this.showIndex = null;
       }
     },
-    currentShow(index) {
-      this.showIndex = index;
-    },
+
     removeIt() {
       delOrganizeList(this.row.deptId).then(res => {
         if (res.data.code === 200) {
@@ -253,15 +254,14 @@ export default {
     getSelectedValue(value) {
       this.addForm.parentId = value;
     },
-    submitForm(addForm) {
-      this.$refs[addForm].validate((valid) => {
+    submitForm() {
+      this.$refs.addForm.validate((valid) => {
         if (valid) {
-          this.title === "新增" ? addOrganize(this.addForm).then(res => {
+          this.title === "添加组织" ? addOrganize(this.addForm).then(res => {
             if (res.data.code === 200) {
               this.dialogFormVisible = false;
               this.getOrganizeList(this.form);
               this.$message.success("提交完成");
-              // this.getOrganizeList(this.form)
             } else {
               this.$message.error(res.data.msg);
             }

@@ -2,19 +2,19 @@
   <div class="warps">
     <my-el-header />
     <div class="container">
-      <div class="nav-form">
+      <div class="form-nav">
         <el-form :inline="true" :model="form" class="demo-form-inline">
           <el-form-item label="计费账户">
-            <el-input v-model="form.name" placeholder="审批人"></el-input>
+            <el-input v-model="form.name" placeholder="请输入内容"></el-input>
           </el-form-item>
           <el-form-item label="被叫号码">
-            <el-input v-model="form.mobilePhone" placeholder="审批人"></el-input>
+            <el-input v-model="form.mobilePhone" placeholder="请输入内容"></el-input>
           </el-form-item>
           <el-form-item label="开始时间">
-            <el-input v-model="form.startingTime" placeholder="审批人"></el-input>
+            <el-input v-model="form.startingTime" placeholder="请输入内容"></el-input>
           </el-form-item>
           <el-form-item label="结束时间">
-            <el-input v-model="form.endTime" placeholder="审批人"></el-input>
+            <el-input v-model="form.endTime" placeholder="请输入内容"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="find">查询</el-button>

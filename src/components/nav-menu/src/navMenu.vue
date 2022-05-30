@@ -1,14 +1,16 @@
 <template>
   <div class="el-menu">
     <el-menu
-      default-active="2"
+      default-active="1"
       background-color="#545c64"
       text-color="#fff"
-      unique-opened
       active-text-color="#ff7300">
       <template v-for="item in menuList">
         <div v-if="!item.hasOwnProperty('children')">
-          <el-menu-item @click.native="handMenuClick(item)" :index="item.menuId + ''"><span>{{ item.menuName }}</span>
+          <el-menu-item @click.native="handMenuClick(item)" :index="item.menuId + ''"><span>
+           <i class="icon iconfont" :class="item.icon"></i>
+            <span>{{ item.menuName }}</span>
+          </span>
           </el-menu-item>
         </div>
         <template v-else>
@@ -20,6 +22,7 @@
             <el-menu-item-group @click="item" :index="item.menuId + ''">
               <template v-for="submit in item.children">
                 <el-menu-item @click.native="handMenuClick(submit)" class="menu-item" :index="submit.menuId + ''">
+                  <i class="icon" :class="submit.icon"></i>
                   <span>{{ submit.menuName }}</span>
                 </el-menu-item>
               </template>

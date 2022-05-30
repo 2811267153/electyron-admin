@@ -33,7 +33,6 @@ const login = {
       if (result.data.code === 200) {
         const { JSESSIONID, user } = result.data.data;
         const { sysMenuList } = result.data.data.user;
-        console.log(sysMenuList, "------");
         //数据存储到vuex
         commit("changeToken", JSESSIONID);
         commit("changeUserInfo", user);
@@ -43,7 +42,6 @@ const login = {
         cache.setCache("token", JSESSIONID);
         cache.setCache("user", user);
         cache.setCache("menuList", menuToTree(user.sysMenuList)[0].children);
-
         await router.push("/home");
       } else {
         Message.error(result.data.msg);

@@ -3,7 +3,7 @@
     <my-el-header />
     <div class="container">
       <div class="form-nav">
-        <el-form :inline="true" :model="form" class="demo-form-inline" ref="form" :rules="rules">
+        <el-form :inline="true" :model="form" class="demo-form-inline" ref="form">
           <el-form-item label="方案名称" prop="diaplanName">
             <el-input v-model="form.diaplanName" placeholder="请输入内容"></el-input>
           </el-form-item>

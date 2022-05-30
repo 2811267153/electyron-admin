@@ -23,7 +23,7 @@
             <el-button @click="resetForm('clear')">重置</el-button>
           </el-form-item>
         </el-form>
-        <el-button type="primary" @click="addForms(null, '新增')">新增队列</el-button>
+        <el-button type="primary" @click="addForms(null, '添加队列')">添加队列</el-button>
       </div>
       <el-dialog :width="$store.state.dialogWidth" :close-on-click-modal="false" :title="title" destroy-on-close
                  ref="addForm"
@@ -155,7 +155,7 @@
         <el-table-column
           align="center"
           prop="fifoAgent"
-          label="队列号码">
+          label="调度队列">
         </el-table-column>
         <el-table-column
           align="center"
@@ -392,11 +392,10 @@ export default {
       this.title = type;
       this.getFifo(this.form);
       this.dialogFormVisible = true;
-      if (type === "新增") {
+      if (type === "添加队列") {
         this.addForm = this.$options.data().addForm;
       } else {
         this.addForm = row;
-        console.log(row);
       }
     },
     resetForm(type) {
@@ -409,7 +408,7 @@ export default {
     submitForm() {
       this.$refs.addForm.validate((valid) => {
         if (valid) {
-          this.title === "新增" ? addFifo(this.addForm).then(res => {
+          this.title === "添加队列" ? addFifo(this.addForm).then(res => {
             if (res.data.code === 200) {
               this.getFifo(this.form);
               this.$message.success("提交完成");

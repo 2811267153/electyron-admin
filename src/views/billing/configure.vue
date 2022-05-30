@@ -18,7 +18,7 @@
             <el-button @click="resetForm('clear')">重置</el-button>
           </el-form-item>
         </el-form>
-        <el-button type="primary" @click="addForms(null, '新增')">新增配置</el-button>
+        <el-button type="primary" @click="addForms(null, '添加配置')">添加配置</el-button>
       </div>
 
       <el-table
@@ -305,7 +305,7 @@ export default {
     submitForm() {
       this.$refs.addForm.validate((valid) => {
         if (valid) {
-          this.title === "新增" ? this.addDataForm() : this.upDataForm();
+          this.title === "添加配置" ? this.addDataForm() : this.upDataForm();
         } else {
           console.log("error submit!!");
           return false;

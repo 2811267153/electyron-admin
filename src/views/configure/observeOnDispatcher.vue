@@ -410,18 +410,6 @@ export default {
   padding: 0;
 }
 
-.container {
-  padding: 0;
-}
-
-.serve-container {
-  margin: 20px;
-}
-
-.serve-bar {
-  width: 200px;
-}
-
 .serve-container {
   width: calc(100vw - 200px - 200px - 20px);
 }

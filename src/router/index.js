@@ -30,6 +30,7 @@ import intercept from "@/views/converse/intercept";
 import rateList from "@/views/billing/rateList";
 import account from "@/views/user/account";
 import callRouting from "@/views/call/callRouting";
+import systemParameters from "@/views/layout/systemParameters";
 
 Vue.use(VueRouter);
 
@@ -174,6 +175,11 @@ const routes = [
       {
         path: "/home/call/callRouting",
         component: callRouting,
+        meta: { icon: "" }
+      },
+      {
+        path: "/home/layout/systemParameters",
+        component: systemParameters,
         meta: { icon: "" }
       }
     ]
