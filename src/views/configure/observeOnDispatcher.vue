@@ -86,7 +86,7 @@
                 :label-width="formLabelWidth"
                 prop="userId"
               >
-                <el-select @change="blur" v-model="userId" placeholder="请选择" style="width: 100%" multiple collapse-tags>
+                <el-select @change="blur" v-model="userId" placeholder="请选择" style="width: 100%" multiple>
                   <el-option
                     v-for="item in userList"
                     :key="item.userId"
@@ -263,6 +263,7 @@ export default {
     },
     blur() {
       this.addForm.userId = this.userId.join(",");
+      console.log(this.userId);
     },
     treeClick(a) {
       this.form = this.$options.data().form;
@@ -296,7 +297,7 @@ export default {
     },
     addDesk() {
       addDeskList(this.addForm).then(res => {
-        if (res.code === 200) {
+        if (res.data.code === 200) {
           this.$message.success("提交完成");
         } else {
           this.$message.error(res.data.msg);
@@ -317,7 +318,24 @@ export default {
       this.title = title;
       if (title === "编辑") {
         this.addForm = row;
-        this.userId = this.addForm.userList;
+        // let list = [];
+        // // this.userId = this.addForm.userList;
+        // console.log(this.userId);
+        // list = this.addForm.userList.some(item => {
+        //   return item.userId;
+        // });
+        // console.log(list);
+        this.addForm.userList.forEach(item => {
+          this.userId.push(item.userId);
+        });
+        this.blur();
+        // this.addForm.userId = this.userId.forEach(item => {
+        //   console.log(item);
+        //
+        // });
+        // for (let i = 0; i < this.userId.length; i++) {
+        //   this.addForm.userId = this.userId[i].id
+        // }
       }
     },
     tableRowClassName({ row, rowIndex }) {
