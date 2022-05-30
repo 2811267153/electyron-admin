@@ -23,7 +23,7 @@
           </el-form-item>
         </el-form>
         <el-button type="primary" @click="showAddForm(null, '添加呼叫路由')"
-        >添加调度台
+        >添加呼叫路由
         </el-button
         >
       </div>
@@ -44,11 +44,25 @@ export default {
   },
   data() {
     return {
-      form: {}
+      form: {},
+      addForm: {
+        routerName: "",
+        fifoId: "",
+        desType: "",
+        callType: ""
+      },
+      title: "添加呼叫路由"
     };
   },
   methods: {
-    showAddForm() {
+    find() {
+
+    },
+    clear() {
+      this.form = this.$options.data().form;
+    },
+    showAddForm(row, title) {
+      this.title = title;
 
     }
   }

@@ -70,7 +70,14 @@
                 :label-width="formLabelWidth"
                 prop="fifoId"
               >
-                <el-input v-model="addForm.fifoId" style="width: 100%"></el-input>
+                <el-select v-model="addForm.fifoId" placeholder="请选择" style="width: 100%">
+                  <el-option
+                    v-for="item in fifoIdList"
+                    :key="item.id"
+                    :label="item.fifoName"
+                    :value="item.id">
+                  </el-option>
+                </el-select>
               </el-form-item>
             </div>
             <div class="width">
@@ -169,7 +176,7 @@ import treeselect from "@riophae/vue-treeselect";
 // import the styles
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import myElHeader from "@/components/myElHeader";
-import { delFifo } from "@/newwork/directory";
+import { delFifo, getFifo } from "@/newwork/directory";
 
 
 export default {
@@ -191,7 +198,8 @@ export default {
         nickName: ""
       },
 
-      userList: "", //用户列表
+      userList: "", //用户列表,
+      fifoIdList: "",//队列号码
       list: [],
       userId: [], //用户选择的列表
       addForm: {
@@ -297,7 +305,7 @@ export default {
     },
     upDataDesk() {
       putDeskList(this.addForm).then(res => {
-        if (res.code === 200) {
+        if (res.data.code === 200) {
           this.$message.success("提交完成");
         } else {
           this.$message.error(res.data.msg);
@@ -349,6 +357,14 @@ export default {
         console.log(res);
         this.userList = res.data.data.records;
       });
+    },
+    getFifo() {
+      getFifo().then(res => {
+        console.log(res);
+        if (res.data.code === 200) {
+          this.fifoIdList = res.data.data.records;
+        }
+      });
     }
   },
 
@@ -362,6 +378,7 @@ export default {
   },
   created() {
     this.getDeskList(this.form);
+    this.getFifo();
     this.getUserList();
     getOrganizeList().then(res => {
       this.treeArr = fn(res.data.data);
