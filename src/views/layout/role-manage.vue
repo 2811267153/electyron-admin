@@ -2,7 +2,7 @@
   <!--  角色管理-->
   <div class="warps roleManage">
     <el-header>
-      <my-el-header />
+      <my-el-header title="角色管理" />
     </el-header>
     <div class="container">
       <div class="form-nav">

@@ -1,6 +1,6 @@
 <template>
   <div class="warps">
-    <my-el-header />
+    <my-el-header title="会议记录" />
     <div class="container">
       <div class="meeting">
         <div class="feDetail" v-if="!isDetail">

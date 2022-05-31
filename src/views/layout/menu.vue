@@ -1,6 +1,6 @@
 <template>
   <div class="warps">
-    <my-el-header />
+    <my-el-header title="菜单管理" />
     <div class="container">
       <div class="tree-menu">
         <div class="tree-path" style="padding-left: 20px">

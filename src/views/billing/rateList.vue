@@ -1,6 +1,6 @@
 <template>
   <div class="warps">
-    <my-el-header />
+    <my-el-header title="费率列表" />
     <div class="container">
       <div>
         <div class="form-nav">

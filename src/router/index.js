@@ -3,7 +3,6 @@ import VueRouter from "vue-router";
 import login from "@/views/login";
 import index from "@/views/index";
 import cache from "@/util/cache";
-import { setupStore } from "@/store";
 import serveStaut from "@/views/home/serveStaut";
 import menu from "@/views/layout/menu";
 import recordMange from "@/views/layout/record-mange";
@@ -42,6 +41,7 @@ const routes = [
   {
     path: "/login",
     component: login
+
   },
   {
     path: "/home",
@@ -199,7 +199,7 @@ router.beforeEach((to, from, next) => {
       next("/login");
     }
     next();
-    setupStore();
+
   }
   next();
 });

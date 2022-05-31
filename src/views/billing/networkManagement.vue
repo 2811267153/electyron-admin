@@ -1,6 +1,6 @@
 <template>
   <div class="warps">
-    <my-el-header />
+    <my-el-header title="网关管理" />
     <div class="container" id="networkManagement">
       <div class="form-nav">
         <el-form :model="forms" :hide-required-asterisk="true" :show-message="false" :inline="true"

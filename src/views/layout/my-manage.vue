@@ -1,6 +1,6 @@
 <template>
   <div class="warps">
-    <my-el-header />
+    <my-el-header title="用户管理" />
     <div class="container">
       <div class="container-l">
         <e-tree @treeClick="treeClick" :data="treeArr" />

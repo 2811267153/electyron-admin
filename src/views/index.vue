@@ -23,7 +23,7 @@
       </div>
     </el-header>
     <el-container>
-      <el-aside width="200px">
+      <el-aside width="200">
         <nav-menu></nav-menu>
       </el-aside>
       <el-main>

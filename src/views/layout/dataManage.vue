@@ -1,6 +1,6 @@
 <template>
   <div class="warps">
-    <my-el-header />
+    <my-el-header title="字典类型" />
     <div class="container">
       <div class="data-manage">
         <div class="nav">

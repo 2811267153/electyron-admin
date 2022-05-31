@@ -1,6 +1,6 @@
 <template>
   <div class="warps">
-    <my-el-header />
+    <my-el-header title="首页" />
     <div class="container">
       <el-row justify="start">
         <el-col :span="12" class="bg-purples">

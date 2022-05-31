@@ -2,7 +2,7 @@
   <div>
     <div v-show="toggle">
       <div class="warps">
-        <my-el-header />
+        <my-el-header title="费率组" />
         <div class="container">
           <div class="form-nav">
             <el-form :inline="true" :model="form" class="demo-form-inline" :rules="addFroms" ref="form">
@@ -192,7 +192,7 @@ export default {
         path: "/home/billing/rate/list",
         query: {
           rateGroupId: row.id
-          
+
         }
       });
       // this.toggle = false;

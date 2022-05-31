@@ -42,6 +42,7 @@ const login = {
         cache.setCache("token", JSESSIONID);
         cache.setCache("user", user);
         cache.setCache("menuList", menuToTree(user.sysMenuList)[0].children);
+        cache.setCache("defaultCurrentIndex", "1");
         await router.push("/home");
       } else {
         Message.error(result.data.msg);

@@ -1,8 +1,8 @@
 <template>
   <div class="content-nav">
     <el-breadcrumb class="nav-bar" separator="/">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item><a>{{ $route.meta.title }}</a></el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="title !== '首页'"><a>{{ title }}</a></el-breadcrumb-item>
     </el-breadcrumb>
     <div class="btn">
       <slot></slot>
@@ -12,7 +12,15 @@
 
 <script>
 export default {
-  name: "myElHeader"
+  name: "myElHeader",
+  props: {
+    title: {
+      type: String,
+      default() {
+        return "";
+      }
+    }
+  }
 };
 </script>
 

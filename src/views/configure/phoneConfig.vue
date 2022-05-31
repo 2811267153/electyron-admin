@@ -1,6 +1,6 @@
 <template>
   <div class="warps">
-    <my-el-header>
+    <my-el-header title="话机管理">
       <!--      <el-button @click.native="resetConfigure" type="primary" icon="el-icon-edit" size="small">重置话机配置</el-button>-->
     </my-el-header>
     <div class="container">
@@ -203,7 +203,6 @@
                 multiple
                 @change="change"
                 style="width: 100%"
-                collapse-tags
                 placeholder="请选择">
                 <el-option
                   v-for="item in bussiness"
@@ -392,7 +391,7 @@ export default {
         domain: "", //域地址
         accountUser: "", //计费账号
         balance: "", // balance
-        billingType: 0, //计费方式（1、为后付费。2、预付费）
+        billingType: 1, //计费方式（1、为后付费。2、预付费）
         bussiness: 0, //支持的业务类型（语音、视频、广播）
         deptId: null, // 部门ID
         diaplan: "", //拨号方案
@@ -459,9 +458,9 @@ export default {
         longitude: [{ required: false, message: "该项为必填项目,请确认", trigger: "blur" }]
       },
       bussiness: [
-        { label: "语音", value: 0 },
-        { label: "视频", value: 1 },
-        { label: "广播", value: 2 }
+        { label: "语音", value: "0" },
+        { label: "视频", value: "1" },
+        { label: "广播", value: "2" }
       ],
       disable: [
         { label: "正常", value: 0 },

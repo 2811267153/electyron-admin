@@ -1,6 +1,6 @@
 <template>
   <div class="warps">
-    <my-el-header />
+    <my-el-header title="系统参数" />
     <div class="container">
       <div class="form-nav">
         <el-form :model="form" destroy-on-close inline label-width="68px"

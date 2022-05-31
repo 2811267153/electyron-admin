@@ -1,6 +1,6 @@
 <template>
   <div class="warps">
-    <my-el-header>
+    <my-el-header title="调度队列">
       <!--      <el-button @click.nav.native="resetConfigure" type="primary" icon="el-icon-edit" size="small">重置队列配置</el-button>-->
     </my-el-header>
     <div class="container">

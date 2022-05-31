@@ -1,7 +1,7 @@
 <template>
   <div class="el-menu">
     <el-menu
-      default-active="1"
+      :default-active="defaultCurrentIndex"
       background-color="#545c64"
       text-color="#fff"
       active-text-color="#ff7300">
@@ -36,19 +36,22 @@
 
 <script>
 import { pathMapToMenu } from "@/util/map-menu";
+import cache from "@/util/cache";
 
 export default {
   name: "navMenu",
   data() {
     return {
-      menuList: []
+      menuList: [],
+      defaultCurrentIndex: 1,
+      isCollapse: true
     };
   },
   created() {
     this.menuList = [];
     this.menuList = this.$store.state.login.menuList;
     const menu = pathMapToMenu(this.menuList, this.$route.path);
-
+    this.defaultCurrentIndex = cache.getCache("defaultCurrentIndex");
   },
   mounted() {
     console.log(this.menuList, "aa");

@@ -1,7 +1,7 @@
 <template>
   <!--  组织管理-->
   <div class="warps">
-    <my-el-header></my-el-header>
+    <my-el-header title="组织管理"></my-el-header>
     <div class="container">
       <div class="form-nav">
         <el-form ref="form" class="form" :model="form" label-width="80px" :inline="true">

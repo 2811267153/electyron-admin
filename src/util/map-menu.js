@@ -11,7 +11,6 @@ export function mapMenuRouter(menuList) {
   });
 
   const _recurseGetRouter = (menuList) => {
-    console.log(menuList);
     if (menuList.left !== 0) {
       for (const menu of menuList) {
         if (menu.menuType === "M") {
@@ -27,7 +26,10 @@ export function mapMenuRouter(menuList) {
       }
     }
   };
-  // _recurseGetRouter(menuList);
+  if (menuList !== undefined) {
+    console.log(menuList);
+    // _recurseGetRouter(menuList);
+  }
   return routers;
 }
 

@@ -4,6 +4,7 @@ import router from "./router";
 import store, { setupStore } from "./store";
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
+import locale from "element-ui/lib/locale/lang/en";
 
 // import echarts from "echarts";
 // import axios from "axios";
@@ -15,7 +16,7 @@ Vue.prototype.$bus = new Vue();
 // axios.defaults.timeout = 1500;
 // Vue.config.productionTip = false;
 // Vue.prototype.$echarts = echarts;
-Vue.use(ElementUI);
+Vue.use(ElementUI, { locale });
 setupStore();
 new Vue({
   router,
