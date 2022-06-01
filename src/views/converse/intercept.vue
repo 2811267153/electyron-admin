@@ -50,17 +50,17 @@
         <el-table-column prop="alegCallerAnsweredTime" label="应答时间">
           <template scope="scope">
 						<span v-if="scope.row.alegCallerAnsweredTime">
-							{{ scope.row.alegCallerAnsweredTime | formaTime }}
+							{{ scope.row.alegCallerAnsweredTime || "" | formaTime }}
 						</span>
             <span v-else>
-							{{ scope.row.alegCallerHangupTime | formaTime }}
+							{{ scope.row.alegCallerHangupTime || "" | formaTime }}
 						</span>
           </template>
         </el-table-column>
         <el-table-column prop="alegCallerHangupTime" label="挂断时间">
           <template scope="scope">
 						<span v-if="scope.row.alegCallerHangupTime">
-							{{ scope.row.alegCallerHangupTime | formaTime }}
+							{{ scope.row.alegCallerHangupTime || "" | formaTime }}
 						</span>
           </template>
         </el-table-column>
@@ -68,7 +68,7 @@
         </el-table-column>
         <el-table-column prop="blegChannelName" label="通道名称">
           <template scope="scope">
-            {{ scope.row.alegChannelName |formaString }}
+            {{ scope.row.alegChannelName || "" |formaString }}
           </template>
         </el-table-column>
         <el-table-column prop="alegContext" label="接口名称"></el-table-column>
