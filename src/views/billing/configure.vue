@@ -240,26 +240,26 @@ export default {
     pageCheng(e) {
       this.form = this.$options.data().form;
       this.form.pageSize = e;
-      this.getProfile(this.form);
+      this.getProfileInfo(this.form);
     },
     find() {
       this.getProfileInfo(this.form);
     },
     next() {
       this.form.pageNum++;
-      this.getProfile(this.form);
+      this.getProfileInfo(this.form);
     },
     prev() {
       this.form.pageNum--;
-      this.getProfile(this.form);
+      this.getProfileInfo(this.form);
     },
     formChange(e) {
       this.form.pageNum = e;
-      this.getProfile(this.form);
+      this.getProfileInfo(this.form);
     },
     clear() {
       this.form = this.$options.data().form;
-      this.getProfile(this.form);
+      this.getProfileInfo(this.form);
     },
     change(e) {
       console.log(e);

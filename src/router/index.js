@@ -30,6 +30,7 @@ import rateList from "@/views/billing/rateList";
 import account from "@/views/user/account";
 import callRouting from "@/views/call/callRouting";
 import systemParameters from "@/views/layout/systemParameters";
+import { setupStore } from "@/store";
 
 Vue.use(VueRouter);
 
@@ -199,7 +200,7 @@ router.beforeEach((to, from, next) => {
       next("/login");
     }
     next();
-
+    setupStore();
   }
   next();
 });

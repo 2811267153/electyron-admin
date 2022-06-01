@@ -506,7 +506,7 @@ export default {
     pageCheng(e) {
       this.form = this.$options.data().form;
       this.form.pageSize = e;
-      this.getDirectory();
+      this.getDirectory(this.form);
     },
     prev() {
       this.form.pageNum--;

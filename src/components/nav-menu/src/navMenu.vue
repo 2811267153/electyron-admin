@@ -1,7 +1,7 @@
 <template>
   <div class="el-menu">
     <el-menu
-      :default-active="defaultCurrentIndex"
+      default-active="2"
       background-color="#545c64"
       text-color="#fff"
       active-text-color="#ff7300">

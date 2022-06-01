@@ -41,7 +41,7 @@ const login = {
         //数据存储到本地浏览器
         cache.setCache("token", JSESSIONID);
         cache.setCache("user", user);
-        cache.setCache("menuList", menuToTree(user.sysMenuList)[0].children);
+        cache.setCache("menuList", menuToTree(sysMenuList)[0].children);
         cache.setCache("defaultCurrentIndex", "1");
         await router.push("/home");
       } else {
