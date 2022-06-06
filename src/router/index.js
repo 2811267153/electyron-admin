@@ -31,6 +31,7 @@ import account from "@/views/user/account";
 import callRouting from "@/views/call/callRouting";
 import systemParameters from "@/views/layout/systemParameters";
 import { setupStore } from "@/store";
+import file from "@/views/call/file";
 
 Vue.use(VueRouter);
 
@@ -181,6 +182,11 @@ const routes = [
       {
         path: "/home/layout/systemParameters",
         component: systemParameters,
+        meta: { icon: "" }
+      },
+      {
+        path: "/home/call/file",
+        component: file,
         meta: { icon: "" }
       }
     ]

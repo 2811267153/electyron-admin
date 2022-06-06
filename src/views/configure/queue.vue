@@ -317,7 +317,8 @@ export default {
         ]
       },
       limit: 1,
-      uploadFileUrl: "http://123.60.212.9/dispatch/file/upload",
+      // uploadFileUrl: "http://123.60.212.9/dispatch/system/file/upload",
+      uploadFileUrl: "/dispatch/system/file/upload",
       headers: {
         Authorization: "Bearer " + getCookie()
       },
@@ -338,16 +339,16 @@ export default {
     next() {
       this.form.pageNum++;
       console.log(this.form);
-      this.getUserAll(this.form);
+      this.getFifo(this.form);
     },
     prev() {
       this.form.pageNum--;
-      this.getUserAll(this.form);
+      this.getFifo(this.form);
     },
     change(e) {
       console.log(e);
       this.form.pageNum = e;
-      this.getUserAll(this.form);
+      this.getFifo(this.form);
     },
     handleBeforeUpload(file) {
       console.log(file);
