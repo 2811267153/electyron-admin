@@ -91,6 +91,11 @@
               </el-form-item>
             </div>
             <div class="width">
+              <el-form-item label="菜单序号" :label-width="formLabelWidth" prop="serial">
+                <el-input v-model="addForm.serial" placeholder="请输入内容" />
+              </el-form-item>
+            </div>
+            <div class="width">
               <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
                 <el-radio-group v-model="addForm.status">
                   <el-radio :label="0">开启</el-radio>
@@ -180,7 +185,8 @@ export default {
         path: [{ required: true, message: "改选行不可为空, 请确认", trigger: "blur" }],
         perms: [{ required: true, message: "改选行不可为空, 请确认", trigger: "blur" }],
         status: [{ required: false, message: "改选行不可为空, 请确认", trigger: "blur" }],
-        icon: [{ required: false, message: "改选行不可为空, 请确认", trigger: "blur" }]
+        icon: [{ required: false, message: "改选行不可为空, 请确认", trigger: "blur" }],
+        serial: [{ required: true, message: "改选行不可为空, 请确认", trigger: "blur" }]
       }
     };
   },

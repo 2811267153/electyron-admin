@@ -317,7 +317,7 @@ export default {
         ]
       },
       limit: 1,
-      uploadFileUrl: "http://localhost:8080/dispatch/file/upload",
+      uploadFileUrl: "http://123.60.212.9:9528/dispatch/file/upload",
       headers: {
         Authorization: "Bearer " + getCookie()
       },
