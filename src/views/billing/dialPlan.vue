@@ -293,6 +293,9 @@ export default {
   watch: {
     dialogFormVisible(val) {
       if (val === true) {
+        this.form = {
+          pageSize: 19999999
+        };
         getGwgroup(this.form);
         {
           getGwgroup(this.form).then(res => {
@@ -308,6 +311,10 @@ export default {
             this.$message.error(res.data.msg);
           }
         }).catch(e => this.$message.error(e));
+      } else {
+        this.form = {
+          pageSize: 10
+        };
       }
     },
     diaplanPrefix() {
