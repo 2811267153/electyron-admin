@@ -176,7 +176,7 @@ import treeselect from "@riophae/vue-treeselect";
 // import the styles
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import myElHeader from "@/components/myElHeader";
-import { delFifo, getFifo } from "@/newwork/directory";
+import { delFifo, unGetFilo } from "@/newwork/directory";
 
 
 export default {
@@ -369,11 +369,11 @@ export default {
         this.userList = res.data.data.records;
       });
     },
+    //获取未绑定的队列
     getFifo() {
-      getFifo().then(res => {
-        console.log(res);
+      unGetFilo().then(res => {
         if (res.data.code === 200) {
-          this.fifoIdList = res.data.data.records;
+          this.fifoIdList = res.data.data;
         }
       });
     }

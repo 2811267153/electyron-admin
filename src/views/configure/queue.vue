@@ -200,7 +200,7 @@
 </template>
 
 <script>
-import { addFifo, delFifo, getDirectory, getFifo, upDataFifo } from "@/newwork/directory";
+import { addFifo, delFifo, fifoRouterIn, fifoRouterOut, getDirectory, getFifo, upDataFifo } from "@/newwork/directory";
 import myEmpty from "@/newwork/myEmpty";
 import { getOrganizeList } from "@/newwork/system-colltroner";
 import { fn } from "@/uti";
@@ -404,12 +404,12 @@ export default {
       const data = {};
       data.type = type;
       if (type === 4) {
-        getDirectory(data).then(res => {
-          this.fifoRouterInList = res.data.data.records;
+        fifoRouterIn(data).then(res => {
+          this.fifoRouterInList = res.data.data;
         });
       } else if (type === 5) {
-        getDirectory(data).then(res => {
-          this.fifoRouterOutList = res.data.data.records;
+        fifoRouterOut(data).then(res => {
+          this.fifoRouterOutList = res.data.data;
         });
       } else {
         getDirectory(data).then(res => {
@@ -434,7 +434,6 @@ export default {
     },
     getFileList() {
       getFileList().then(res => {
-        console.log(res);
         if (res.data.code === 200) {
           this.fifoWaitMusicList = res.data.data;
         }
