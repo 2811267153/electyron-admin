@@ -67,8 +67,8 @@
                 <el-option
                   v-for="item in fifoWaitMusicList"
                   :key="item.id"
-                  :label="item.filePath"
-                  :value="item.filePath">
+                  :label="item.fileName"
+                  :value="item.fileName">
                 </el-option>
               </el-select>
             </el-form-item>

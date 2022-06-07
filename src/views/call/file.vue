@@ -16,6 +16,8 @@
       </div>
 
       <el-table
+        height="calc(100vh - 100px - 100px - 100px - 100px)"
+        :header-cell-style="{background:'#ccc', color: '#fff',}"
         :data="list"
         style="width: 100%">
         <el-table-column
@@ -101,8 +103,8 @@ export default {
       },
       title: "0",
       limit: 1,
-      // uploadFileUrl: "http://123.60.212.9/dispatch/system/file/upload",
-      uploadFileUrl: "/dispatch/system/file/upload",
+      uploadFileUrl: "http://123.60.212.9/dispatch/system/file/upload",
+      // uploadFileUrl: "/dispatch/system/file/upload",
       headers: {
         Authorization: "Bearer " + getCookie()
       },
