@@ -39,34 +39,39 @@
         </el-table-column>
       </el-table>
     </div>
-    <el-dialog :title="title" :visible.sync="dialogFormVisible">
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" :width="$store.state.dialogWidth" destroy-on-close
+               :close-on-click-modal="false">
       <el-form :model="addForm">
-        <el-form-item label="活动名称" :label-width="formLabelWidth">
-          <el-input v-model="addForm.fifoWaitMusic" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="活动区域" :label-width="formLabelWidth">
-          <el-upload
-            :action="uploadFileUrl"
-            :limit="limit"
-            :with-credentials="true"
-            :show-file-list="false"
-            :before-upload="handleBeforeUpload"
-            :headers="headers"
-            :on-success="handleUploadSuccess"
-            :on-error="handleUploadError"
-          >
-            <el-button size="small" type="primary" style="margin-right: 20px">点击上传</el-button>
-            <div class="el-upload__tip" slot="tip" v-if="addForm.fifoWaitMusic.length === 0">
-              请上传
-              <template v-if="fileSize"> 大小不超过 <b style="color: #f56c6c">{{ fileSize }}MB</b></template>
-              <template v-if="fileType"> 格式为 <b style="color: #f56c6c">{{ fileType.join("/") }}</b></template>
-              的文件
-            </div>
-            <div class="el-upload__tip" slot="tip" v-else>
-              当前选择的文件: {{ addForm.fifoWaitMusic }}
-            </div>
-          </el-upload>
-        </el-form-item>
+        <div class="width">
+          <el-form-item label="文件名" :label-width="formLabelWidth">
+            <el-input v-model="addForm.fifoWaitMusic" autocomplete="off"></el-input>
+          </el-form-item>
+        </div>
+        <div class="width">
+          <el-form-item label="文件" :label-width="formLabelWidth">
+            <el-upload
+              :action="uploadFileUrl"
+              :limit="limit"
+              :with-credentials="true"
+              :show-file-list="false"
+              :before-upload="handleBeforeUpload"
+              :headers="headers"
+              :on-success="handleUploadSuccess"
+              :on-error="handleUploadError"
+            >
+              <el-button size="small" type="primary" style="margin-right: 20px">点击上传</el-button>
+              <div class="el-upload__tip" slot="tip" v-if="addForm.fifoWaitMusic.length === 0">
+                请上传
+                <template v-if="fileSize"> 大小不超过 <b style="color: #f56c6c">{{ fileSize }}MB</b></template>
+                <template v-if="fileType"> 格式为 <b style="color: #f56c6c">{{ fileType.join("/") }}</b></template>
+                的文件
+              </div>
+              <div class="el-upload__tip" slot="tip" v-else>
+                当前选择的文件: {{ addForm.fifoWaitMusic }}
+              </div>
+            </el-upload>
+          </el-form-item>
+        </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
