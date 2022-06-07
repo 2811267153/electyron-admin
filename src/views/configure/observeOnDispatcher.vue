@@ -318,13 +318,6 @@ export default {
       this.title = title;
       if (title === "编辑") {
         this.addForm = row;
-        // let list = [];
-        // // this.userId = this.addForm.userList;
-        // console.log(this.userId);
-        // list = this.addForm.userList.some(item => {
-        //   return item.userId;
-        // });
-        // console.log(list);
         this.addForm.userList.forEach(item => {
           this.userId.push(item.userId);
         });
