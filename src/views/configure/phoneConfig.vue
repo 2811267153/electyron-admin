@@ -652,9 +652,6 @@ export default {
       this.getDirectory(this.form);
     });
   },
-  destroyed() {
-    this.$bus.$off("pageChang");
-  },
   watch: {
     dialogFormVisible(val, newVal) {
       if (val) {
@@ -666,7 +663,10 @@ export default {
          *
          * 拨号方案
          */
-        diaPlanList().then(res => {
+        this.form = {
+          pageSize: 1000000
+        };
+        diaPlanList(this.form).then(res => {
           this.diaPlanList = res.data.data.records;
         }).catch(e => this.$message.error(e));
 
@@ -680,7 +680,7 @@ export default {
        *
        * 费率组
        */
-      getRateList().then(res => {
+      getRateList(this.form).then(res => {
         this.rateGroup = res.data.data.records;
       }).catch(e => this.$message.error(e));
     },

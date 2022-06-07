@@ -103,7 +103,7 @@ export default {
       },
       title: "0",
       limit: 1,
-      uploadFileUrl: "http://123.60.212.9:9528/dispatch/system/file/upload",
+      uploadFileUrl: "http://123.60.212.9/dispatch/system/file/upload",
       // uploadFileUrl: "/dispatch/system/file/upload",
       headers: {
         Authorization: "Bearer " + getCookie()
