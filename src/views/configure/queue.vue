@@ -63,27 +63,14 @@
           </div>
           <div class="width">
             <el-form-item label="队列等待音" :label-width="formLabelWidth" prop="fifoWaitMusic">
-              <el-upload
-                :action="uploadFileUrl"
-                :limit="limit"
-                :with-credentials="true"
-                :show-file-list="false"
-                :before-upload="handleBeforeUpload"
-                :headers="headers"
-                :on-success="handleUploadSuccess"
-                :on-error="handleUploadError"
-              >
-                <el-button size="small" type="primary" style="margin-right: 20px">点击上传</el-button>
-                <div class="el-upload__tip" slot="tip" v-if="addForm.fifoWaitMusic.length === 0">
-                  请上传
-                  <template v-if="fileSize"> 大小不超过 <b style="color: #f56c6c">{{ fileSize }}MB</b></template>
-                  <template v-if="fileType"> 格式为 <b style="color: #f56c6c">{{ fileType.join("/") }}</b></template>
-                  的文件
-                </div>
-                <div class="el-upload__tip" slot="tip" v-else>
-                  当前选择的文件: {{ addForm.fifoWaitMusic }}
-                </div>
-              </el-upload>
+              <el-select v-model="addForm.fifoWaitMusic" placeholder="请选择" style="width: 100%">
+                <el-option
+                  v-for="item in fifoWaitMusicList"
+                  :key="item.id"
+                  :label="item.filePath"
+                  :value="item.filePath">
+                </el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label="等待时间" :label-width="formLabelWidth" prop="memberTimeout">
               <el-input v-model="addForm.memberTimeout" autocomplete="off" placeholder="请输入内容"></el-input>
@@ -221,10 +208,10 @@ import myTree from "@/components/myTree";
 import myFooter from "@/components/myFooter";
 import myElHeader from "@/components/myElHeader";
 import { delPbxConfigure } from "@/newwork/conferencr";
-import { getCookie } from "@/auth";
 import treeselect from "@riophae/vue-treeselect";
 // import the styles
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import { getFileList } from "@/newwork/ground-colltroner";
 
 export default {
   name: "queue",
@@ -247,6 +234,7 @@ export default {
         memberTimeout: "" //	agent等待时间
       },
       treeArr: [],
+      fifoWaitMusicList: [],
       addForm: {
         domain: "", //域
         fifoAgent: "", //号码
@@ -315,15 +303,7 @@ export default {
         memberTimeout: [
           { required: false, message: "该选项不可为空,请确认", trigger: "blur" }
         ]
-      },
-      limit: 1,
-      // uploadFileUrl: "http://123.60.212.9/dispatch/system/file/upload",
-      uploadFileUrl: "/dispatch/system/file/upload",
-      headers: {
-        Authorization: "Bearer " + getCookie()
-      },
-      fileSize: 5,
-      fileType: ["avi"]
+      }
     };
   },
   methods: {
@@ -349,45 +329,6 @@ export default {
       console.log(e);
       this.form.pageNum = e;
       this.getFifo(this.form);
-    },
-    handleBeforeUpload(file) {
-      console.log(file);
-      this.fileData = file;
-      if (this.fileType) {
-        let fileExtension = "";
-        if (file.name.lastIndexOf(".") > -1) {
-          fileExtension = file.name.slice(file.name.lastIndexOf(".") + 1);
-        }
-        const isTypeOk = this.fileType.some((type) => {
-          if (file.type.indexOf(type) > -1) return true;
-          if (fileExtension && fileExtension.indexOf(type) > -1) return true;
-          return false;
-        });
-        if (!isTypeOk) {
-          this.$message.error(`文件格式不正确, 请上传${this.fileType.join("/")}格式文件!`);
-          return false;
-        }
-      }
-      // 校检文件大小
-      if (this.fileSize) {
-        const isLt = file.size / 1024 / 1024 < this.fileSize;
-        if (!isLt) {
-          this.$message.error(`上传文件大小不能超过 ${this.fileSize} MB!`);
-          return false;
-        }
-      }
-      return true;
-    },
-    handleUploadError() {
-      this.$message.error("上传失败, 请重试");
-    },
-    handleUploadSuccess(res) {
-      if (res.code === 200) {
-        this.$message.success("上传成功");
-        this.addForm.fifoWaitMusic = this.fileData.name;
-      } else {
-        this.$message.error("上传失败, 请重试");
-      }
     },
     addForms(row, type) {
       this.title = type;
@@ -490,13 +431,21 @@ export default {
           this.$message.error(res.data.msg);
         }
       });
+    },
+    getFileList() {
+      getFileList().then(res => {
+        console.log(res);
+        if (res.data.code === 200) {
+          this.fifoWaitMusicList = res.data.data;
+        }
+      });
     }
-
 
   },
   created() {
     this.getFifo(this.form);
     this.getOrganizeList();
+    this.getFileList();
   },
   components: {
     myEmpty,
