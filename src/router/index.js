@@ -32,6 +32,9 @@ import callRouting from "@/views/call/callRouting";
 import systemParameters from "@/views/layout/systemParameters";
 import { setupStore } from "@/store";
 import file from "@/views/call/file";
+import callGrouping from "@/views/call/callGrouping";
+import callMeeting from "@/views/call/callMeeting";
+import callRoll from "@/views/call/callRoll";
 
 Vue.use(VueRouter);
 
@@ -187,6 +190,21 @@ const routes = [
       {
         path: "/home/call/file",
         component: file,
+        meta: { icon: "" }
+      },
+      {
+        path: "/home/call/callGrouping",
+        component: callGrouping,
+        meta: { icon: "" }
+      },
+      {
+        path: "/home/call/callMeeting",
+        component: callMeeting,
+        meta: { icon: "" }
+      },
+      {
+        path: "/home/call/callRoll",
+        component: callRoll,
         meta: { icon: "" }
       }
     ]

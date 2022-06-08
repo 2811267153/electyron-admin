@@ -493,6 +493,9 @@ export default {
       }).catch(e => {
         this.$message.error(e);
       });
+      this.form = {
+        pageSize: 100000
+      };
       getRoleList().then(res => {
         console.log(res);
         if (res.data.code === 200) {
@@ -510,7 +513,7 @@ export default {
         deleteUser(row.userId).then(res => {
           if (res.data.code === 200) {
             this.$message.success("删除完成!");
-            this.getUserAll(this.$store.state.formPage);
+            this.getUserAll(this.form);
           } else {
             this.$message.error(res.data.msg);
           }
@@ -572,6 +575,7 @@ export default {
     isShow(val, newVal) {
       if (!val) {
         this.addForm = this.$options.data().addForm;
+        this.form = this.$options.data().form;
       }
     }
   }

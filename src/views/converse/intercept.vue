@@ -103,10 +103,10 @@ export default {
   },
   filters: {
     formaTime(value) {
-      return formatDate(value);
+      return formatDate(value / 1000);
     },
     formaString(value) {
-      return value.slice(20);
+      return value.slice(19);
     }
   },
   methods: {

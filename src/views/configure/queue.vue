@@ -62,6 +62,18 @@
             </el-form-item>
           </div>
           <div class="width">
+            <el-form-item label="所属部门" :label-width="formLabelWidth" prop="fifoEmergency">
+              <treeselect v-model="addForm.deptId" :multiple="false" :options="treeArr" :normalizer="normalizer"
+                          placeholder="请输入内容" />
+            </el-form-item>
+
+            <el-form-item label="域地址" :label-width="formLabelWidth" prop="fifoEmergency">
+              <el-input v-model="addForm.domain" placeholder="请输入内容"></el-input>
+            </el-form-item>
+
+          </div>
+
+          <div class="width">
             <el-form-item label="队列等待音" :label-width="formLabelWidth" prop="fifoWaitMusic">
               <el-select v-model="addForm.fifoWaitMusic" placeholder="请选择" style="width: 100%">
                 <el-option
@@ -101,17 +113,6 @@
 
             <el-form-item label="夜服号码" :label-width="formLabelWidth" prop="fifoEmergency">
               <el-input v-model="addForm.fifoNight" placeholder="请输入内容"></el-input>
-            </el-form-item>
-
-          </div>
-          <div class="width">
-            <el-form-item label="所属部门" :label-width="formLabelWidth" prop="fifoEmergency">
-              <treeselect v-model="addForm.deptId" :multiple="false" :options="treeArr" :normalizer="normalizer"
-                          placeholder="请输入内容" />
-            </el-form-item>
-
-            <el-form-item label="域地址" :label-width="formLabelWidth" prop="fifoEmergency">
-              <el-input v-model="addForm.domain" placeholder="请输入内容"></el-input>
             </el-form-item>
 
           </div>

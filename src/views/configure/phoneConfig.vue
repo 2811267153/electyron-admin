@@ -674,6 +674,7 @@ export default {
       } else {
         this.resetForm();
         this.deptIdList = [];
+        this.form = this.$options.data().form;
         this.getDirectory(this.form);
       }
       /**

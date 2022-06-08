@@ -80,6 +80,7 @@
         <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
       </div>
     </el-dialog>
+    <my-footer v-on:next="next" @prev="prev" :form="form" @change="change" @pageCheng="pageCheng"></my-footer>
   </div>
 </template>
 
@@ -87,15 +88,20 @@
 import myElHeader from "@/components/myElHeader";
 import { getCookie } from "@/auth";
 import { getFileList } from "@/newwork/ground-colltroner";
+import myFooter from "@/components/myFooter";
 
 export default {
   name: "file",
   components: {
-    myElHeader
+    myElHeader,
+    myFooter
   },
   data() {
     return {
-      form: {},
+      form: {
+        pageSize: 10,
+        pageNum: 1
+      },
       dialogFormVisible: false,
       formLabelWidth: "120px",
       addForm: {
@@ -115,6 +121,26 @@ export default {
   },
   computed: {},
   methods: {
+    pageCheng(e) {
+      this.form = this.$options.data().form;
+      this.form.pageSize = e;
+      this.getFileList(this.form);
+    },
+
+    next() {
+      this.form.pageNum++;
+      console.log(this.form);
+      this.getFileList(this.form);
+    },
+    prev() {
+      this.form.pageNum--;
+      this.getFileList(this.form);
+    },
+    change(e) {
+      console.log(e);
+      this.form.pageNum = e;
+      this.getFileList(this.form);
+    },
     find() {
     },
     fileName(row) {

@@ -78,14 +78,14 @@
               </el-radio-group>
             </el-form-item>
           </div>
-          <div class="width">
-            <el-form-item :label="'中继' + (index + 1)" :label-width="formLabelWidth"
-                          :key="addFrom.pbxGwgroupGatewayList.key"
-                          v-for="(pbxGwgroupGatewayList, index) in addFrom.pbxGwgroupGatewayList"
-                          :prop="'pbxGwgroupGatewayList.' + index + '.gatewayId'"
-                          :rules="[
+          <el-form-item :label="'中继' + (index + 1)" :label-width="formLabelWidth"
+                        :key="addFrom.pbxGwgroupGatewayList.key"
+                        v-for="(pbxGwgroupGatewayList, index) in addFrom.pbxGwgroupGatewayList"
+                        :prop="'pbxGwgroupGatewayList.' + index + '.gatewayId'"
+                        :rules="[
                               { required: true, message: '该项为必填项,请确认', trigger: 'blur' },
                           ]">
+            <div class="width">
               <div class="widths">
                 <el-select class="w200" v-model="pbxGwgroupGatewayList.gatewayId" placeholder="请选择">
                   <el-option
@@ -117,8 +117,8 @@
 
                 </div>
               </div>
-            </el-form-item>
-          </div>
+            </div>
+          </el-form-item>
           <div class="width">
             <el-form-item
               label="备注"

@@ -325,8 +325,10 @@ export default {
       });
     },
     getProfile() {
-      getProfile().then(res => {
-        console.log(res);
+      const form = {
+        pageSize: 1000000
+      };
+      getProfile(form).then(res => {
         this.netNameList = res.data.data;
       });
     },

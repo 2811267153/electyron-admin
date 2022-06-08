@@ -127,8 +127,11 @@
         </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submit">确 定</el-button>
+        <p>平台呼入 经过平台注册的方式进行呼叫,中继呼入则相反</p>
+        <div class="footer-info">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="submit">确 定</el-button>
+        </div>
       </div>
     </el-dialog>
 
@@ -155,7 +158,7 @@ export default {
         regular: "", //正则
         regularType: "", // regularType
         desType: "", //类型（0：禁止 1：did（找系统分机）2：呼出到socket应用3: ivr）
-        callType: 0,//呼叫类型 0:中继呼入 1:平台呼出
+        callType: 1,//呼叫类型 0:中继呼入 1:平台呼出
         content: ""//content
       },
       list: [],
@@ -273,5 +276,13 @@ export default {
 </script>
 
 <style scoped>
+.dialog-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
+.dialog-footer p {
+  color: #6d6c6c;
+}
 </style>

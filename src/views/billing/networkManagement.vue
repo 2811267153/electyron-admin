@@ -529,8 +529,9 @@ export default {
      */
     filterGateway(dictionaryTypeList) {
       let _data = {};
-      let _dtmfModeData = {};
-
+      let _dtmfModeData = {
+        pageSize: 1000000
+      };
       dictionaryTypeList.forEach(item => {
         if (item.name === "网关编码") {
           _data.id = item.id;
@@ -564,14 +565,17 @@ export default {
     dialogFormVisible(val) {
       if (val === false) {
         this.addFrom = this.$options.data().addFrom;
+        this.forms = this.$options.data().forms;
       } else {
         let dictionaryTypeList = [];
         this.codecs = [];
         //获取编码
-        addDictionaryList().then(res => {
+        this.forms = {
+          pageSize: 100000
+        };
+        addDictionaryList(this.forms).then(res => {
           dictionaryTypeList = res.data.data.records;
           // this.addFrom.codecs = this.codecsBlur();
-          console.log(dictionaryTypeList);
           //过滤网关ID
           this.filterGateway(dictionaryTypeList);
         });
