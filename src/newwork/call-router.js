@@ -34,3 +34,40 @@ export function delRouter(data) {
     method: "delete"
   });
 }
+
+/**
+ * 获取分组数据
+ * @param data
+ * @return {AxiosPromise}
+ */
+export function getGroupData(data) {
+  return request({
+    url: "/pbx/group/list",
+    params: data
+  });
+}
+
+export function addGroupData(data) {
+  return request({
+    url: "/pbx/group/list",
+    method: "post",
+    data
+  });
+}
+
+export function upDataGroupData(data) {
+  return request({
+    url: "/pbx/group/list",
+    method: "put",
+    data
+  });
+}
+
+export function deleteGroupData(data) {
+  return request({
+    url: "/pbx/group/list",
+    method: "delete",
+    data
+  });
+}
+
