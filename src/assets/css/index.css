@@ -196,3 +196,12 @@ header {
 .operate .el-link {
     color: #409eff !important;
 }
+
+.popup-result {
+    display: none;
+}
+
+.width-cron .el-form-item__content {
+    height: 40px;
+    line-height: 40px;
+}

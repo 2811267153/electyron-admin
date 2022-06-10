@@ -105,7 +105,7 @@
         </div>
         <div class="width">
           <el-form-item label="会议成员" :label-width="formLabelWidth">
-            <el-select v-model="addForm.member" multiple placeholder="请选择" style="width: 100% ">
+            <el-select @change="selectChange" v-model="member" multiple placeholder="请选择" style="width: 100% ">
               <el-option
                 v-for="item in memberList"
                 :key="item.nickName"
@@ -124,7 +124,7 @@
           </el-form-item>
         </div>
 
-        <div class="width" v-if="addForm.seqType === 0">
+        <div class="width" v-show="addForm.seqType === 0">
           <el-form-item label="会议开始时间" :label-width="formLabelWidth">
             <el-time-select
               v-model="addForm.currentStartTime"
@@ -148,13 +148,18 @@
             </el-time-select>
           </el-form-item>
         </div>
-        <div class="width" v-else>
+        <div class="width" style="height: auto" v-show="addForm.seqType !== 0">
           <el-form-item label="时间周期" :label-width="formLabelWidth">
-            <el-radio-group v-model="addForm.recurringType">
-              <el-radio :label="0">每天</el-radio>
-              <el-radio :label="1">每周</el-radio>
-              <el-radio :label="2">每月</el-radio>
-            </el-radio-group>
+            <div class="width-cron">
+              <el-input v-model="addForm.cron" placeholder></el-input>
+              <vcrontab @hide="showCron=false" :hideComponent="hideComponent" @fill="crontabFill"
+                        :expression="expression"></vcrontab>
+            </div>
+            <!--            反编译-->
+            <!--            <div class="box">-->
+            <!--              <el-input v-model="addForm.cron" placeholder class="inp"></el-input>-->
+            <!--              <el-button type="primary" @click="showDialog">生成 cron</el-button>-->
+            <!--            </div>-->
           </el-form-item>
         </div>
         <div class="width" v-if="addForm.recurringType ===0">
@@ -181,34 +186,15 @@
             </el-time-select>
           </el-form-item>
         </div>
-        <div class="width" v-else-if="addForm.recurringType === 1">
-          <el-form-item label="时间周期" :label-width="formLabelWidth">
-            <el-checkbox-group v-model="addForm">
-              <el-checkbox label="复选框 A"></el-checkbox>
-              <el-checkbox label="复选框 B"></el-checkbox>
-              <el-checkbox label="复选框 C"></el-checkbox>
-              <el-checkbox label="禁用" disabled></el-checkbox>
-              <el-checkbox label="选中且禁用" disabled></el-checkbox>
-            </el-checkbox-group>
+        <div class="width">
+          <el-form-item label="会议密码" :label-width="formLabelWidth">
+            <el-input v-model="addForm.password" autocomplete="off"></el-input>
           </el-form-item>
         </div>
-
-        <div class="width">
-          <el-popover v-model="cronPopover">
-            <cron></cron>
-            <el-input slot="reference" @click="cronPopover=true" v-model="cron" placeholder="请输入定时策略"></el-input>
-          </el-popover>
-        </div>
-        <el-form-item label="活动区域" :label-width="formLabelWidth">
-          <el-select v-model="form.region" placeholder="请选择活动区域">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
-          </el-select>
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="submitForm">确 定</el-button>
       </div>
     </el-dialog>
     <my-footer />
@@ -223,7 +209,8 @@ import { getOrganizeList, getUserAll } from "@/newwork/system-colltroner";
 import { fn } from "@/uti";
 import treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-import { cron } from "vue-cron";
+import { addMeeting } from "@/newwork/call-router";
+import vcrontab from "@illidanj/cron-editor";
 
 export default {
   name: "callMeeting",
@@ -232,7 +219,7 @@ export default {
     myFooter,
     eTree,
     treeselect,
-    cron
+    vcrontab
   },
   data() {
     return {
@@ -246,8 +233,8 @@ export default {
           label: node.deptName
         };
       },
-      cronPopover: "",
-      cron: "",
+      cronPopover: false,
+
 
       form: {},
       addForm: {
@@ -264,16 +251,16 @@ export default {
         remark: "",//备注
         roundEnd: "",//周期结束日期
         startTime: "", //会议开始时间(时分秒)
-        week: "", //周几（1-7 1＝星期日）（每周每月）
         seqType: 0, // 会议类型(0:即时会议 1:周期会议)
         currentEndTime: "", //临时会议结束时间
-        currentStartTime: "" //临时会议开始时间
+        currentStartTime: "", //临时会议开始时间
+        cron: ""
       },
       memberList: "",
       treeArr: [],
       dialogFormVisible: true,
       formLabelWidth: "120px",
-      title: "添加会议",
+      title: "添加分组",
       meetingState: [
         { label: "已开始", value: 0 },
         { label: "进行中", value: 1 },
@@ -282,7 +269,11 @@ export default {
       meetingType: [
         { label: "临时会议", value: 0 },
         { label: "周期会议", value: 1 }
-      ]
+      ],
+      member: [],
+      expression: "",
+      showCron: false,
+      hideComponent: ["year"]
     };
   },
   methods: {
@@ -305,8 +296,23 @@ export default {
         this.memberList = res.data.data.records;
       });
     },
-    changeCron(val) {
-      this.cron = val;
+    submitForm() {
+      if (this.title === "添加分组") {
+        addMeeting(this.addForm).then(res => {
+          console.log(res);
+        });
+      }
+    },
+    selectChange() {
+      this.addForm.member = this.member.join("|");
+    },
+    showDialog() {
+      this.expression = this.input;//传入的 cron 表达式，可以反解析到 UI 上
+      this.showCron = true;
+    },
+    crontabFill(value) {
+      //确定后回传的值
+      this.addForm.cron = value;
     }
   },
   created() {
@@ -314,6 +320,7 @@ export default {
       this.treeArr = fn(res.data.data);
     });
   },
+
   watch: {
     addForm: {
       deep: true,
@@ -338,4 +345,5 @@ export default {
 .container-r {
   flex: 1;
 }
+
 </style>

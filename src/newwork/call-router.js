@@ -49,7 +49,7 @@ export function getGroupData(data) {
 
 export function addGroupData(data) {
   return request({
-    url: "/pbx/group/list",
+    url: "/pbx/group/add",
     method: "post",
     data
   });
@@ -57,7 +57,7 @@ export function addGroupData(data) {
 
 export function upDataGroupData(data) {
   return request({
-    url: "/pbx/group/list",
+    url: "/pbx/group/update",
     method: "put",
     data
   });
@@ -65,9 +65,38 @@ export function upDataGroupData(data) {
 
 export function deleteGroupData(data) {
   return request({
-    url: "/pbx/group/list",
+    url: "/pbx/group/delete" + data,
     method: "delete",
     data
   });
 }
 
+export function getMeeting(data) {
+  return request({
+    url: "/pbx/conference/list",
+    params: data
+  });
+}
+
+export function addMeeting(data) {
+  return request({
+    url: "/pbx/conference/add",
+    data,
+    method: "post"
+  });
+}
+
+export function upDataMeeting(data) {
+  return request({
+    url: "/pbx/conference/update",
+    method: "put",
+    data
+  });
+}
+
+export function deleteMeeting(data) {
+  return request({
+    url: "/pbx/conference/delete/" + data,
+    method: "delete"
+  });
+}
