@@ -48,15 +48,10 @@
     </div>
 
     <el-dialog :title="title" width="1000px" :visible.sync="dialogFormVisible">
-      <el-form :model="addForm">
+      <el-form :model="addForm" ref="addForm">
         <div class="width">
           <el-form-item label="活动名称" :label-width="formLabelWidth">
-            <el-input v-model="addForm.name" autocomplete="off"></el-input>
-          </el-form-item>
-        </div>
-        <div class="width">
-          <el-form-item label="域地址" :label-width="formLabelWidth">
-            <el-input v-model="addForm.name" autocomplete="off"></el-input>
+            <el-input v-model="addForm.groupName" autocomplete="off"></el-input>
           </el-form-item>
         </div>
         <div class="width">
@@ -65,7 +60,7 @@
                         :normalizer="normalizer" />
           </el-form-item>
         </div>
-        <div>
+        <div style="padding-bottom: 20px">
           <el-row>
             <el-col :span="8">
               <el-form-item label="分组成员" :label-width="formLabelWidth">
@@ -79,33 +74,36 @@
               </el-form-item>
             </el-col>
             <el-col :span="16">
-              <el-transfer v-model="value" :data="userList" :props="{
-                key: 'id',
-                label: 'deptName'
-              }"></el-transfer>
+              <el-transfer v-model="addForm.directoryIdList" :titles="['全部', '已筛选']" :data="userList">
+                <span slot-scope="{option}">
+                  {{ option.label }}
+                </span>
+              </el-transfer>
             </el-col>
           </el-row>
 
         </div>
         <div class="width">
-          <el-form-item label="状态" :label-width="formLabelWidth">
-            <el-input v-model="addForm.name" autocomplete="off"></el-input>
-          </el-form-item>
-        </div>
-        <div class="width">
           <el-form-item label="排序" :label-width="formLabelWidth">
-            <el-input v-model="addForm.name" autocomplete="off"></el-input>
+            <el-input v-model="addForm.orderNum" autocomplete="off"></el-input>
           </el-form-item>
         </div>
         <div class="width">
-          <el-form-item label="备注" :label-width="formLabelWidth">
-            <el-input v-model="addForm.name" autocomplete="off"></el-input>
+          <el-form-item label="控制台显示" :label-width="formLabelWidth">
+            <el-select v-model="value" placeholder="请选择" style="width: 100%">
+              <el-option
+                v-for="item in displayBench"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
         </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="subInfo">确 定</el-button>
       </div>
     </el-dialog>
     <my-footer />
@@ -119,7 +117,7 @@ import myElHeader from "@/components/myElHeader";
 import myFooter from "@/components/myFooter";
 import { getOrganizeList, getUserAll } from "@/newwork/system-colltroner";
 import { fn } from "@/uti";
-import { getGroupData } from "@/newwork/call-router";
+import { addGroupData, getGroupData } from "@/newwork/call-router";
 import treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
@@ -151,7 +149,7 @@ export default {
       form: {},
       addForm: {
         deptId: null,
-        directoryIdList: "", //分组列表,
+        directoryIdList: [], //分组列表,
         displayBench: "", //      控制台显示(0：显示 1：不显示)
         groupName: "", // 分组名称
         orderNum: ""   //    排序
@@ -165,7 +163,11 @@ export default {
       props: {
         key: "id",
         label: "deptName"
-      }
+      },
+      displayBench: [
+        { label: "显示", value: 0 },
+        { label: "不显示", value: 1 }
+      ]
     };
   },
   methods: {
@@ -185,14 +187,39 @@ export default {
       form.deptId = a.deptId;
       getUserAll(form).then(res => {
         console.log(res);
-        this.userList = res.data.data.records;
+        let data = res.data.data.records;
+        let fomaterData = [];
+        for (let i = 0; i < data.length; i++) {
+          fomaterData.push({
+            key: data[i].userId,
+            label: data[i].nickName
+          });
+        }
+        this.userList = fomaterData;
       });
     },
     getGroupData(form) {
       getGroupData(form).then(res => {
         console.log(res);
         if (res.data.code === 200) {
+
           this.list = res.data.data.records;
+        }
+      });
+    },
+    subInfo() {
+      this.$refs.addForm.validate((valid) => {
+        if (valid) {
+          addGroupData(this.addForm).then(res => {
+            console.log(res);
+            if (res.data.code === 200) {
+              this.getGroupData(this.form);
+              this.$message.success("提交完成");
+            }
+          });
+        } else {
+          console.log("error submit!!");
+          return false;
         }
       });
     }

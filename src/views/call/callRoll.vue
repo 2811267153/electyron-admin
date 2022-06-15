@@ -30,18 +30,18 @@
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="form">
         <div class="width">
-          <el-form-item label="点名组名称" :label-width="formLabelWidth">
+          <el-form-item label="点名组名称" :label-width="formLabelWidth" prop="name">
             <el-input v-model="form.name" autocomplete="off"></el-input>
           </el-form-item>
         </div>
         <div class="width">
-          <el-form-item label="所属部门" :label-width="formLabelWidth">
+          <el-form-item label="所属部门" :label-width="formLabelWidth" prop="deptId">
             <treeselect v-model="addForm.deptId" :multiple="false " :options="treeArr"
                         :normalizer="normalizer" />
           </el-form-item>
         </div>
         <div class="width">
-          <el-form-item label="点名类型" :label-width="formLabelWidth">
+          <el-form-item label="点名类型" :label-width="formLabelWidth" prop="seqType">
             <el-radio-group v-model="addForm.seqType">
               <el-radio :label="0">计划点名</el-radio>
               <el-radio :label="1">周期点名</el-radio>
@@ -50,7 +50,7 @@
         </div>
 
         <div class="width" v-show="addForm.seqType === 0">
-          <el-form-item label="会议开始时间" :label-width="formLabelWidth">
+          <el-form-item label="会议开始时间" :label-width="formLabelWidth" prop="time1">
             <el-date-picker
               style="width: 100%"
               @change="dataChange"
@@ -65,7 +65,7 @@
           </el-form-item>
         </div>
         <div class="width" v-show="addForm.seqType !== 0">
-          <el-form-item label="cron" :label-width="formLabelWidth">
+          <el-form-item label="cron" :label-width="formLabelWidth" prop="icon">
             <div class="width-cron" :class="isActive ? '' : 'z-index'" style="width: 100%" @click="aClick">
               <el-input v-model="addForm.cron" ref="inputs" @focus="focus" @blur="blur" placeholder
                         style="width: 100%"></el-input>
@@ -81,7 +81,7 @@
           </el-form-item>
         </div>
         <div class="width" v-show="addForm.seqType !== 0">
-          <el-form-item label="会议开始时间" :label-width="formLabelWidth">
+          <el-form-item label="会议开始时间" :label-width="formLabelWidth" prop="time">
             <el-time-picker
               is-range
               @change="timeChange"
@@ -157,7 +157,8 @@ export default {
       treeArr: [],
       isActive: false,
       expression: "",
-      hideComponent: ["year", "second", "min", "hour"]
+      hideComponent: ["year", "second", "min", "hour"],
+      showCron: false
     };
   },
   methods: {

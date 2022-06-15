@@ -109,9 +109,9 @@
       </div>
     </div>
     <el-dialog top="7vh" :title="title" :visible.sync="dialogFormVisible">
-      <el-form :model="form">
+      <el-form :model="addForm" :rules="rules" ref="addForm">
         <div class="width">
-          <el-form-item label="会议名称" :label-width="formLabelWidth">
+          <el-form-item label="会议名称" :label-width="formLabelWidth" prop="conferenceName">
             <el-input v-model="addForm.conferenceName" autocomplete="off"></el-input>
           </el-form-item>
         </div>
@@ -131,7 +131,7 @@
           </el-form-item>
         </div>
         <div class="width">
-          <el-form-item label="所属组织" :label-width="formLabelWidth">
+          <el-form-item label="所属组织" :label-width="formLabelWidth" prop="deptId">
             <treeselect v-model="addForm.deptId" :multiple="false " :options="treeArr"
                         :normalizer="normalizer" />
           </el-form-item>
@@ -139,7 +139,7 @@
 
 
         <div class="width">
-          <el-form-item label="主持人号码" :label-width="formLabelWidth">
+          <el-form-item label="主持人号码" :label-width="formLabelWidth" prop="master">
             <el-select v-model="addForm.master" placeholder="请选择" style="width: 100% ">
               <el-option
                 v-for="item in memberList"
@@ -151,7 +151,7 @@
           </el-form-item>
         </div>
         <div class="width">
-          <el-form-item label="会议成员" :label-width="formLabelWidth">
+          <el-form-item label="会议成员" :label-width="formLabelWidth" prop="member">
             <el-select @change="selectChange" v-model="member" multiple placeholder="请选择" style="width: 100% ">
               <el-option
                 v-for="item in memberList"
@@ -166,15 +166,15 @@
         <!--        会议周期-->
         <div>
           <div class="width">
-            <el-form-item label="会议类型" :label-width="formLabelWidth">
+            <el-form-item label="会议类型" :label-width="formLabelWidth" prop="seqType">
               <el-radio-group v-model="addForm.seqType">
                 <el-radio :label="0">临时会议</el-radio>
                 <el-radio :label="1">周期会议</el-radio>
               </el-radio-group>
             </el-form-item>
           </div>
-          <div class="width" v-show="addForm.seqType === 0">
-            <el-form-item label="会议开始时间" :label-width="formLabelWidth">
+          <div class="width" v-if="addForm.seqType === 0">
+            <el-form-item label="会议开始时间" :label-width="formLabelWidth" prop="time1">
               <el-date-picker
                 style="width: 100%"
                 @change="dataChange"
@@ -188,8 +188,8 @@
               </el-date-picker>
             </el-form-item>
           </div>
-          <div class="width" v-show="addForm.seqType !== 0">
-            <el-form-item label="cron" :label-width="formLabelWidth">
+          <div class="width" v-else-if="addForm.seqType !== 0">
+            <el-form-item label="cron" :label-width="formLabelWidth" prop="icon">
               <div class="width-cron" :class="isActive ? '' : 'z-index'" style="width: 100%" @click="aClick">
                 <el-input v-model="addForm.cron" ref="inputs" @focus="focus" @blur="blur" placeholder
                           style="width: 100%"></el-input>
@@ -204,8 +204,8 @@
               <!--            </div>-->
             </el-form-item>
           </div>
-          <div class="width" v-show="addForm.seqType !== 0">
-            <el-form-item label="会议开始时间" :label-width="formLabelWidth">
+          <div class="width" v-else>
+            <el-form-item label="会议开始时间" :label-width="formLabelWidth" prop="time">
               <el-time-picker
                 is-range
                 @change="timeChange"
@@ -221,7 +221,7 @@
           </div>
         </div>
         <div class="width">
-          <el-form-item label="会议密码" :label-width="formLabelWidth">
+          <el-form-item label="会议密码" :label-width="formLabelWidth" prop="password">
             <el-input v-model="addForm.password" autocomplete="off"></el-input>
           </el-form-item>
         </div>
@@ -313,7 +313,19 @@ export default {
       expression: "",
       showCron: false,
       hideComponent: ["year", "second", "min", "hour"],
-      isActive: false
+      isActive: false,
+      rules: {
+        conferenceName: [{ required: true, message: "该项为必填项，请确认", trigger: "blur" }],
+        conferenceType: [{ required: true, message: "该项为必填项，请确认", trigger: "blur" }],
+        deptId: [{ required: true, message: "该项为必填项，请确认", trigger: "blur" }],
+        seqType: [{ required: true, message: "该项为必填项，请确认", trigger: "blur" }],
+        icon: [{ required: false, message: "该项为必填项，请确认", trigger: "blur" }],
+        time: [{ required: false, message: "该项为必填项，请确认", trigger: "blur" }],
+        password: [{ required: true, message: "该项为必填项，请确认", trigger: "blur" }],
+        master: [{ required: true, message: "该项为必填项，请确认", trigger: "blur" }],
+        member: [{ required: true, message: "该项为必填项，请确认", trigger: "blur" }],
+        time1: [{ required: false, message: "该项为必填项，请确认", trigger: "blur" }]
+      }
     };
   },
   methods: {
@@ -352,30 +364,40 @@ export default {
       });
     },
     submitForm() {
-      if (this.title === "添加会议") {
-        addMeeting(this.addForm).then(res => {
-          if (res.data.code === 200) {
-            this.getCallMetting(this.form);
-            this.$message.success("提交完成");
-            this.dialogFormVisible = false;
+      this.$refs.addForm.validate((valid) => {
+        if (valid) {
+          if (this.title === "添加会议") {
+            addMeeting(this.addForm).then(res => {
+              if (res.data.code === 200) {
+                this.getCallMetting(this.form);
+                this.$message.success("提交完成");
+                this.dialogFormVisible = false;
+              } else {
+                this.$message.error(res.data.msg);
+              }
+            });
           } else {
-            this.$message.error(res.data.msg);
-          }
-        });
-      } else {
-        if (this.title === "编辑") {
-          upDataMeeting(this.addForm).then(res => {
-            console.log(res);
-            if (res.data.code === 200) {
-              this.getCallMetting(this.form);
-              this.$message.success("提交完成");
-              this.dialogFormVisible = false;
-            } else {
-              this.$message.error(res.data.msg);
+            if (this.title === "编辑") {
+              upDataMeeting(this.addForm).then(res => {
+                console.log(res);
+                if (res.data.code === 200) {
+                  this.getCallMetting(this.form);
+                  this.$message.success("提交完成");
+                  this.dialogFormVisible = false;
+                } else {
+                  this.$message.error(res.data.msg);
+                }
+              });
             }
-          });
+          }
+        } else {
+          console.log("error submit!!");
+          return false;
         }
-      }
+      });
+    },
+    resetForm() {
+      this.$refs.addForm.resetFields();
     },
     selectChange() {
       this.addForm.member = this.member.join("|");
@@ -399,7 +421,7 @@ export default {
     },
     getCallMetting(form) {
       getMeeting(form).then(res => {
-        console.log(res);
+        this.$bus.$emit("total", res.data.data.total);
         this.list = res.data.data.records;
       });
     }
