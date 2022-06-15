@@ -65,7 +65,7 @@ export function upDataGroupData(data) {
 
 export function deleteGroupData(data) {
   return request({
-    url: "/pbx/group/delete" + data,
+    url: "/pbx/group/delete/" + data,
     method: "delete",
     data
   });
