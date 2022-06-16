@@ -28,16 +28,35 @@
       </div>
     </div>
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
-      <el-form :model="form">
+      <el-form :model="addForm">
         <div class="width">
           <el-form-item label="点名组名称" :label-width="formLabelWidth" prop="name">
-            <el-input v-model="form.name" autocomplete="off"></el-input>
+            <el-input v-model="addForm.broadcastName" autocomplete="off"></el-input>
           </el-form-item>
         </div>
         <div class="width">
           <el-form-item label="所属部门" :label-width="formLabelWidth" prop="deptId">
             <treeselect v-model="addForm.deptId" :multiple="false " :options="treeArr"
                         :normalizer="normalizer" />
+          </el-form-item>
+        </div>
+        <div class="width">
+          <el-form-item label="广播成员" :label-width="formLabelWidth">
+            <draggable
+              class="grid"
+              v-model="selectList"
+              group="people"
+              @change="draggableChange"
+              v-if="selectList.length !== 0"
+            >
+              <div
+                class="user-item"
+                v-for="element in selectList"
+                :key="element.key"
+              >
+                {{ element.label || element.directoryNumber }}
+              </div>
+            </draggable>
           </el-form-item>
         </div>
         <div class="width">
@@ -62,6 +81,18 @@
               start-placeholder="开始日期"
               end-placeholder="结束日期">
             </el-date-picker>
+          </el-form-item>
+        </div>
+        <div class="width">
+          <el-form-item label="广播方式" :label-width="formLabelWidth">
+            <el-select v-model="addForm.mode" placeholder="请选择" style="width: 100%;">
+              <el-option
+                v-for="item in broadcasType"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
         </div>
         <div class="width" v-show="addForm.seqType !== 0">
@@ -112,9 +143,9 @@ import myFooter from "@/components/myFooter";
 import eTree from "@/components/eTree";
 import { getOrganizeList } from "@/newwork/system-colltroner";
 import { fn } from "@/uti";
-import vcrontab from "@illidanj/cron-editor";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import treeselect from "@riophae/vue-treeselect";
+import draggable from "vuedraggable";
 
 export default {
   name: "callRoll",
@@ -122,8 +153,8 @@ export default {
     myElHeader,
     myFooter,
     eTree,
-    vcrontab,
-    treeselect
+    treeselect,
+    draggable
   },
   data() {
     return {
@@ -138,15 +169,20 @@ export default {
         };
       },
       form: {},
+      selectList: [], //广播成员
       addForm: {
-        rollName: "",//点名组名称
+        broadcastName: "",//点名组名称
+        context: "", //广播内容
+        currentEndTime: "",//	 即时广播结束时间(年月日时分秒)
+        currentStartTime: "",//	 即时广播开始时间(年月日时分秒)
+        deptId: null, //所属部门,
         cron: "", //cron,
-        endTime: "", //结束时间(计划点名)
-        startTime: "", //开始时间(计划点名)
+        endTime: "", //周广播结束时间(计划点名)
+        startTime: "", //周广播开始时间(计划点名)
         member: "", //会议成员
+        mode: "",//广播方式（1：文字任务 2：音乐任务 3：采播任务）
         recurringType: "", //重复类型0：每天1：每周2：每月
         roundEnd: "", //周期结束日期
-        deptId: null, //所属部门,
         seqType: 0 //会议类型(0:即时会议 1:周期会议)
       },
       title: "新增点名组",
@@ -158,7 +194,12 @@ export default {
       isActive: false,
       expression: "",
       hideComponent: ["year", "second", "min", "hour"],
-      showCron: false
+      showCron: false,
+      broadcasType: [
+        { label: "文字任务", value: 1 },
+        { label: "音乐任务", value: 2 },
+        { label: "采播任务", value: 3 }
+      ]
     };
   },
   methods: {
@@ -169,6 +210,9 @@ export default {
     },
     showAddForm() {
 
+    },
+    draggableChange(e) {
+      console.log(e);
     },
     treeClick() {
     },
@@ -231,17 +275,45 @@ export default {
   background-color: #fff;
 }
 
-.active {
-  opacity: 1;
+
+.grid {
+  display: flex;
+  border-radius: 5px;
+  padding: 10px 15px;
+  flex-wrap: wrap;
+  height: 65px;
+  align-items: center;
+  background-color: #f2f2f2;
+  margin: 0;
+  width: 100%;
 }
 
-.feActive {
-  opacity: 0;
-  transition-delay: .2s;
-  z-index: -11;
+.user-item {
+  padding: 4px 15px;
+  margin: 5px;
+  height: 35px;
+  background-color: #fff;
+  border-radius: 5px;
+  line-height: 30px;
 }
 
-.z-index {
-  z-index: 0;
+.margin {
+  align-items: center;
+  justify-content: center;
+}
+
+.dialog {
+  margin: 0 50px 0 120px;
+  width: calc(100% - 120px - 50px);
+}
+
+.user-item {
+  position: relative;
+}
+
+.user-item i {
+  position: absolute;
+  right: 0;
+  bottom: 0;
 }
 </style>
