@@ -95,22 +95,6 @@
             />
           </el-form-item>
         </div>
-        <!--        <div style="padding-bottom: 20px">-->
-        <!--          <el-row>-->
-        <!--            <el-col :span="8">-->
-
-        <!--            </el-col>-->
-        <!--            <el-col :span="16">-->
-        <!--                                    <el-transfer v-model="addForm.directoryIdList" :titles="['全部', '已筛选']" :data="userList">-->
-        <!--                                      <span slot-scope="{option}">-->
-        <!--                                        {{ option.label }}-->
-        <!--                                      </span>-->
-        <!--                                    </el-transfer>-->
-        <!--            </el-col>-->
-        <!--          </el-row>-->
-        <!--        </div>-->
-
-
         <div class="width" style="height: auto">
           <el-form-item label="分组成员" :label-width="formLabelWidth">
             <draggable
@@ -313,7 +297,6 @@ export default {
       };
       form.deptId = deptId;
       getDirectory(form).then((res) => {
-        console.log("form", res.data.data.records);
         let data = res.data.data.records;
         let fomaterData = [];
         for (let i = 0; i < data.length; i++) {

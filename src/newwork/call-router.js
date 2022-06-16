@@ -71,6 +71,11 @@ export function deleteGroupData(data) {
   });
 }
 
+/**
+ * 添加会议接口
+ * @param data
+ * @return {*}
+ */
 export function getMeeting(data) {
   return request({
     url: "/pbx/conference/list",
@@ -97,6 +102,33 @@ export function upDataMeeting(data) {
 export function deleteMeeting(data) {
   return request({
     url: "/pbx/conference/delete/" + data,
+    method: "delete"
+  });
+}
+
+/**
+ * 添加广播
+ * @param data
+ * @return {*}
+ */
+export function addBroadcast(data) {
+  return request({
+    url: "/pbx/broadcast/add",
+    method: "post",
+    data
+  });
+}
+
+export function getBroadcast(data) {
+  return request({
+    url: "/pbx/broadcast/list",
+    params: data
+  });
+}
+
+export function delBroadcast(data) {
+  return request({
+    url: "/pbx/broadcast/delete/" + data,
     method: "delete"
   });
 }

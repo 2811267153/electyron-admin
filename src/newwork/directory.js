@@ -45,6 +45,13 @@ export function recharge(data) {
   });
 }
 
+export function getGuangbo(data) {
+  return request({
+    url: "/pbx/directory/list/all",
+    params: data
+  });
+}
+
 /**
  *
  *
@@ -104,3 +111,4 @@ export function fifoRouterOut() {
     url: "/pbx/directory/router/out/list"
   });
 }
+

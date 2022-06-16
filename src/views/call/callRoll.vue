@@ -25,12 +25,71 @@
           </el-button
           >
         </div>
+        <el-table
+          :data="list"
+          style="width: 100%">
+          <el-table-column
+            prop="date"
+            label="日期"
+            width="50">
+            <template scope="scope">{{ scope.$index + 1 }}</template>
+          </el-table-column>
+          <el-table-column
+            prop="broadcastName"
+            label="广播名称"
+            width="">
+          </el-table-column>
+          <el-table-column
+            prop="broadcastName"
+            label="广播内容"
+            width="">
+          </el-table-column>
+          <el-table-column
+            prop="currentStartTime"
+            label="开始时间"
+            width="">
+          </el-table-column>
+          <el-table-column
+            prop="currentStartTime"
+            label="结束时间"
+            width="">
+          </el-table-column>
+          <el-table-column
+            prop="deptId"
+            label="所属组织"
+            width="">
+            <template scope="scope">{{ deptName(scope.row.deptId) }}</template>
+          </el-table-column>
+          <el-table-column
+            prop="mode"
+            label="广播类型"
+            width="">
+            <template scope="scope">
+              <div v-if="scope.row.mode === '1'">文字任务</div>
+              <div v-if="scope.row.mode === '2'">音乐任务</div>
+              <div v-if="scope.row.mode === '3'">采播任务</div>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="address" label="操作" fixed="right" :width="$store.state.tableMixWidth">
+            <template scope="scope">
+              <div class="operate">
+                <el-link type="info" @click="showAddForm(scope.row, '编辑')">编辑</el-link>
+                <template>
+                  <el-popconfirm title="确认要删除吗？" @confirm="removeIt(scope.row)">
+                    <el-link type="info" slot="reference">删除
+                    </el-link>
+                  </el-popconfirm>
+                </template>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
       </div>
     </div>
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
-      <el-form :model="addForm">
+      <el-form :model="addForm" ref="addForm">
         <div class="width">
-          <el-form-item label="点名组名称" :label-width="formLabelWidth" prop="name">
+          <el-form-item label="广播名称" :label-width="formLabelWidth" prop="name">
             <el-input v-model="addForm.broadcastName" autocomplete="off"></el-input>
           </el-form-item>
         </div>
@@ -41,8 +100,14 @@
           </el-form-item>
         </div>
         <div class="width">
+          <el-form-item label="广播内容" :label-width="formLabelWidth" prop="deptId">
+            <el-input v-model="addForm.context" autocomplete="off"></el-input>
+          </el-form-item>
+        </div>
+        <div class="width" style="height: auto">
           <el-form-item label="广播成员" :label-width="formLabelWidth">
             <draggable
+              @click.native="showGridDialog"
               class="grid"
               v-model="selectList"
               group="people"
@@ -57,32 +122,27 @@
                 {{ element.label || element.directoryNumber }}
               </div>
             </draggable>
+            <draggable
+              @click.native="showGridDialog"
+              class="grid margin"
+              v-model="selectList"
+              group="people"
+              @change="draggableChange"
+              v-else
+            >
+              (点击打开悬浮窗编辑分组成员)
+            </draggable>
           </el-form-item>
         </div>
         <div class="width">
-          <el-form-item label="点名类型" :label-width="formLabelWidth" prop="seqType">
+          <el-form-item label="广播类型" :label-width="formLabelWidth" prop="seqType">
             <el-radio-group v-model="addForm.seqType">
               <el-radio :label="0">计划点名</el-radio>
-              <el-radio :label="1">周期点名</el-radio>
+              <el-radio :label="1" disabled>周期点名</el-radio>
             </el-radio-group>
           </el-form-item>
         </div>
 
-        <div class="width" v-show="addForm.seqType === 0">
-          <el-form-item label="会议开始时间" :label-width="formLabelWidth" prop="time1">
-            <el-date-picker
-              style="width: 100%"
-              @change="dataChange"
-              v-model="time1"
-              format="yyyy MM dd HH:mm"
-              value-format="yyyy-MM-dd HH:mm"
-              type="datetimerange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期">
-            </el-date-picker>
-          </el-form-item>
-        </div>
         <div class="width">
           <el-form-item label="广播方式" :label-width="formLabelWidth">
             <el-select v-model="addForm.mode" placeholder="请选择" style="width: 100%;">
@@ -93,6 +153,21 @@
                 :value="item.value">
               </el-option>
             </el-select>
+          </el-form-item>
+        </div>
+        <div class="width" v-show="addForm.seqType === 0">
+          <el-form-item label="会议开始时间" :label-width="formLabelWidth" prop="time1">
+            <el-date-picker
+              style="width: 100%"
+              @change="dataChange"
+              v-model="time1"
+              format="yyyy MM dd HH:mm:ss"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              type="datetimerange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期">
+            </el-date-picker>
           </el-form-item>
         </div>
         <div class="width" v-show="addForm.seqType !== 0">
@@ -130,7 +205,38 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="subInfo">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!--    选择广播成员弹出框-->
+    <el-dialog title="组织成员" :visible.sync="deptIdDialogFormVisible">
+      <el-form :model="form">
+        <div class="width">
+          <el-form-item label="选择部门" :label-width="formLabelWidth">
+            <treeselect
+              v-model="deptId"
+              @input="treeselectChange"
+              :multiple="false"
+              :options="treeArr"
+              :normalizer="normalizer"
+            />
+          </el-form-item>
+        </div>
+
+        <div class="grid dialog">
+          <div
+            class="grid-item user-item"
+            @click="gridItemClick(item)"
+            v-for="item in userList"
+            :key="item.id"
+          >
+            <p>{{ item.directoryName }}</p>
+            <i class="el-icon-circle-check"></i>
+          </div>
+        </div>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click.native="deptIdDialogFormVisible = false">确 定</el-button>
       </div>
     </el-dialog>
     <my-footer />
@@ -141,11 +247,14 @@
 import myElHeader from "@/components/myElHeader";
 import myFooter from "@/components/myFooter";
 import eTree from "@/components/eTree";
-import { getOrganizeList } from "@/newwork/system-colltroner";
+import { getOrganizeId, getOrganizeList } from "@/newwork/system-colltroner";
 import { fn } from "@/uti";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import treeselect from "@riophae/vue-treeselect";
 import draggable from "vuedraggable";
+import vcrontab from "@illidanj/cron-editor";
+import { getDirectory } from "@/newwork/directory";
+import { addBroadcast, delBroadcast, getBroadcast } from "@/newwork/call-router";
 
 export default {
   name: "callRoll",
@@ -154,7 +263,8 @@ export default {
     myFooter,
     eTree,
     treeselect,
-    draggable
+    draggable,
+    vcrontab
   },
   data() {
     return {
@@ -169,6 +279,7 @@ export default {
         };
       },
       form: {},
+      deptIdDialogFormVisible: false,
       selectList: [], //广播成员
       addForm: {
         broadcastName: "",//点名组名称
@@ -185,20 +296,23 @@ export default {
         roundEnd: "", //周期结束日期
         seqType: 0 //会议类型(0:即时会议 1:周期会议)
       },
+      list: [],
       title: "新增点名组",
-      dialogFormVisible: true,
+      dialogFormVisible: false,
       formLabelWidth: "120px",
       time1: [],
       time: [],
+      userList: "", //话单成员
+      deptId: null, //当前选择的部门
       treeArr: [],
       isActive: false,
       expression: "",
       hideComponent: ["year", "second", "min", "hour"],
       showCron: false,
       broadcasType: [
-        { label: "文字任务", value: 1 },
-        { label: "音乐任务", value: 2 },
-        { label: "采播任务", value: 3 }
+        { label: "文字任务", value: "1" },
+        { label: "音乐任务", value: "2" },
+        { label: "采播任务", value: "3" }
       ]
     };
   },
@@ -208,8 +322,19 @@ export default {
     clear() {
       this.form = this.$options.data().form;
     },
-    showAddForm() {
-
+    showAddForm(row, title) {
+      this.title = title;
+      this.dialogFormVisible = true;
+      if (title === "编辑") {
+        this.addForm = JSON.parse(JSON.stringify(row));
+        let res = [];
+        res = this.addForm.member.split("|");
+        // res.forEach(item => {
+        //   getDirectory(ite);
+        // });
+        this.time1[1] = this.addForm.currentEndTime;
+        this.time1[0] = this.addForm.currentStartTime;
+      }
     },
     draggableChange(e) {
       console.log(e);
@@ -225,6 +350,11 @@ export default {
       this.addForm.startTime = this.time[0];
     },
 
+    //选择话单成员弹出框
+    showGridDialog() {
+      this.deptIdDialogFormVisible = true;
+    },
+
     crontabFill(value) {
       //确定后回传的值
       this.addForm.cron = value;
@@ -237,13 +367,92 @@ export default {
     },
     aClick() {
       this.$refs.inputs.focus();
+    },
+    treeselectChange() {
+      const form = {};
+      form.pageSize = 10000;
+      form.deptId = this.deptId;
+      getDirectory(form).then(res => {
+        console.log(res);
+        if (res.data.code === 200) {
+          this.userList = res.data.data.records;
+        }
+      });
+    },
+    removeIt(row) {
+      delBroadcast(row.id).then(res => {
+        if (res.data.code === 200) {
+          this.$message.success("提交完成");
+          this.getBroadcast(this.form);
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      });
+    },
+    //讲选择的话机成员添加到列表内
+    gridItemClick(item) {
+      this.selectList.push(item);
+      const selectListID = [];
+      this.addForm.member = this.selectList.join("|");
+      this.selectList.forEach(item => {
+        selectListID.push(item.id);
+      });
+      this.addForm.member = selectListID.join("|");
+    },
+    //提交表单
+    subInfo() {
+      this.$refs.addForm.validate((valid) => {
+        if (valid) {
+          addBroadcast(this.addForm).then(res => {
+            console.log(res);
+            if (res.data.code === 200) {
+              this.getBroadcast(this.form);
+              this.$message.success("提交完成");
+              this.dialogFormVisible = false;
+            }
+          });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    getBroadcast(form) {
+      getBroadcast(form).then(res => {
+        console.log(res);
+        if (res.data.code === 200) {
+          this.$bus.$emit("total", res.data.data.total);
+          this.list = res.data.data.records;
+        }
+      });
+    },
+    //查询组织列表
+    deptName(deptId) {
+      getOrganizeId(deptId).then(res => {
+          
+      });
+      return deptId;
     }
 
   },
   created() {
+    this.getBroadcast(this.form);
     getOrganizeList().then(res => {
       this.treeArr = fn(res.data.data);
     });
+  },
+
+  computed: {},
+
+  watch: {
+    dialogFormVisible(value) {
+      if (!value) {
+        this.addForm = this.$options.data().addForm;
+        this.selectList = [];
+        this.time1 = [];
+        this.time = [];
+      }
+    }
   }
 };
 </script>
