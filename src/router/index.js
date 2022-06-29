@@ -34,7 +34,7 @@ import { setupStore } from "@/store";
 import file from "@/views/call/file";
 import callGrouping from "@/views/call/callGrouping";
 import callMeeting from "@/views/call/callMeeting";
-import callRoll from "@/views/call/callRoll";
+import rollCall from "@/views/call/rollCall";
 
 Vue.use(VueRouter);
 
@@ -204,9 +204,10 @@ const routes = [
       },
       {
         path: "/home/call/callRoll",
-        component: callRoll,
+        component: rollCall,
         meta: { icon: "" }
       }
+
     ]
   }
 

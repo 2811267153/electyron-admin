@@ -1,6 +1,6 @@
 <template>
   <div class="warps">
-    <my-el-header title="分组管理" />
+    <my-el-header title="点名" />
     <div class="container">
       <div class="container-l">
         <e-tree @treeClick="treeClick" :data="treeArr" />
@@ -32,21 +32,22 @@
               <el-button @click="clear">重置</el-button>
             </el-form-item>
           </el-form>
-          <el-button type="primary" @click="showAddForm(null, '添加呼叫路由')"
-          >添加分组
+          <el-button type="primary" @click="showAddForm(null, '添加点名')"
+          >添加点名
           </el-button>
         </div>
         <el-table :data="list" style="width: 100%">
           <el-table-column prop="date" label="序号" width="50">
             <template scope="scope">{{ scope.$index + 1 }}</template>
           </el-table-column>
-          <el-table-column prop="groupName" label="分组名称" width="180">
+          <el-table-column prop="rollName" label="点名名称" width="180">
           </el-table-column>
-          <el-table-column prop="deptId" label="所属部门"></el-table-column>
-          <el-table-column prop="displayBench" label="是否显示">
+          <el-table-column prop="deptName" label="所属部门"></el-table-column>
+          <el-table-column prop="createTime" label="创建时间"></el-table-column>
+          <el-table-column prop="callType" label="点名类型">
             <template scope="scope">
-              <div v-if="scope.row.displayBench === 0">显示</div>
-              <div v-else>不显示</div>
+              <div v-if="scope.row.callType === 'DM'">点名</div>
+              <div v-else>轮训</div>
             </template>
           </el-table-column>
           <el-table-column
@@ -58,11 +59,7 @@
           >
             <template scope="scope">
               <div class="operate">
-                <el-link type="info" @click="showAddForm(scope.row, '编辑')"
-                >编辑
-                </el-link
-                >
-
+                <el-link type="info" @click="showAddForm(scope.row, '编辑')">编辑</el-link>
                 <template>
                   <el-popconfirm
                     title="确认要删除吗？"
@@ -81,8 +78,8 @@
     <el-dialog :title="title" width="1000px" :visible.sync="dialogFormVisible">
       <el-form :model="addForm" ref="addForm">
         <div class="width">
-          <el-form-item label="组织名称" :label-width="formLabelWidth">
-            <el-input v-model="addForm.groupName" autocomplete="off"></el-input>
+          <el-form-item label="点名名称" :label-width="formLabelWidth">
+            <el-input v-model="addForm.rollName" autocomplete="off"></el-input>
           </el-form-item>
         </div>
         <div class="width">
@@ -96,13 +93,10 @@
           </el-form-item>
         </div>
         <div class="width" style="height: auto">
-          <el-form-item label="分组成员" :label-width="formLabelWidth">
-            <draggable
-              @click.native="showGridDialog"
+          <el-form-item label="点名成员" :label-width="formLabelWidth">
+            <div
+              @click="showGridDialog"
               class="grid"
-              v-model="selectList"
-              group="people"
-              @change="draggableChange"
               v-if="selectList.length !== 0"
             >
               <div
@@ -110,31 +104,23 @@
                 v-for="element in selectList"
                 :key="element.key"
               >
-                {{ element.label || element.directoryNumber }}
+                {{ element.directoryName }}
               </div>
-            </draggable>
-            <draggable
-              @click.native="showGridDialog"
+            </div>
+            <div
+              @click="showGridDialog"
               class="grid margin"
-              v-model="selectList"
-              group="people"
-              @change="draggableChange"
               v-else
             >
               (点击打开悬浮窗编辑分组成员)
-            </draggable>
+            </div>
 
           </el-form-item>
         </div>
-        <div class="width" style="margin-top: 20px;">
-          <el-form-item label="排序" :label-width="formLabelWidth">
-            <el-input v-model="addForm.orderNum" autocomplete="off"></el-input>
-          </el-form-item>
-        </div>
-        <div class="width">
-          <el-form-item label="控制台显示" :label-width="formLabelWidth">
+        <div class="width" style="margin-top: 20px">
+          <el-form-item label="点名类型" :label-width="formLabelWidth">
             <el-select
-              v-model="addForm.displayBench"
+              v-model="addForm.callType"
               placeholder="请选择"
               style="width: 100%"
             >
@@ -168,21 +154,21 @@
             />
           </el-form-item>
         </div>
-
         <div class="grid dialog">
           <div
             class="grid-item user-item"
             @click="gridItemClick(item)"
             v-for="item in userList"
             :key="item.key"
+            v-if="!item.show"
           >
-            <p>{{ item.label }}</p>
-            <i class="el-icon-circle-check"></i>
+            <p>{{ item.directoryName }}</p>
+
           </div>
         </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click.native="deptIdDialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click.native="draggableChange">确 定</el-button>
       </div>
     </el-dialog>
     <my-footer />
@@ -195,7 +181,7 @@ import myElHeader from "@/components/myElHeader";
 import myFooter from "@/components/myFooter";
 import { getOrganizeList } from "@/newwork/system-colltroner";
 import { fn } from "@/uti";
-import { addGroupData, deleteGroupData, getGroupData } from "@/newwork/call-router";
+import { addRollCall, deleteRollCall, getRollCall, upDataRollCall } from "@/newwork/call-router";
 import treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import draggable from "vuedraggable";
@@ -229,11 +215,10 @@ export default {
       value: [],
       form: {},
       addForm: {
+        member: "", //点名成员
         deptId: null,
-        directoryIdList: [], //分组列表,
-        displayBench: "", //      控制台显示(0：显示 1：不显示)
-        groupName: "", // 分组名称
-        orderNum: "" //    排序
+        rollName: "", // 分组名称
+        callType: "" //DM：点名 LX：轮询
       },
       deptId: null, // 选择部门id
       selectList: [], //当前选择的用户
@@ -244,13 +229,9 @@ export default {
       dialogFormVisible: false,
       formLabelWidth: "120px",
       deptIdDialogFormVisible: false,
-      props: {
-        key: "id",
-        label: "deptName"
-      },
       displayBench: [
-        { label: "显示", value: 0 },
-        { label: "不显示", value: 1 }
+        { label: "点名", value: "DM" },
+        { label: "轮训", value: "LX" }
       ]
     };
   },
@@ -264,28 +245,37 @@ export default {
       this.title = title;
       this.dialogFormVisible = true;
       if (title === "编辑") {
-        this.selectList = JSON.parse(JSON.stringify(row.directoryIdList));
-        this.addForm.displayBench = row.displayBench;
-        this.addForm.groupName = row.groupName;
-        this.addForm.orderNum = row.orderNum;
-        this.addForm.deptId = row.deptId;
+        this.addForm = JSON.parse(JSON.stringify(row));
+        const a = row.member.split("|");
+        console.log(a);
+        a.forEach((item, i) => {
+          this.selectList.push({
+            i: i,
+            directoryName: item
+          });
+        });
+        // this.selectList = JSON.parse(JSON.stringify(row));
+        // this.addForm.displayBench = row.displayBench;
+        // this.addForm.groupName = row.groupName;
+        // this.addForm.orderNum = row.orderNum;
+        // this.addForm.deptId = row.deptId;
         // this.userList = JSON.parse(JSON.stringify(row.directoryIdList));
         // console.log("addForm", this.addForm);
-        console.log(row);
       }
     },
     treeClick() {
     },
     //获取选中的用户列表
     gridItemClick(item) {
+      item.show = true;
       this.selectList.push(item);
     },
     removeIt(row) {
-      deleteGroupData(row.id).then((res) => {
+      deleteRollCall(row.id).then((res) => {
         console.log(res);
         if (res.data.code === 200) {
           this.$message.success("提交完成");
-          this.getGroupData(this.form);
+          this.getRollCall(this.form);
         }
       });
     },
@@ -297,30 +287,23 @@ export default {
       };
       form.deptId = deptId;
       getDirectory(form).then((res) => {
-        let data = res.data.data.records;
-        let fomaterData = [];
-        for (let i = 0; i < data.length; i++) {
-          fomaterData.push({
-            key: data[i].id,
-            label: data[i].directoryName
-          });
-        }
-        this.userList = fomaterData;
+        console.log(res);
+        this.userList.push(...res.data.data.records);
 
         //检测重复添加项
-        this.userList.forEach((item, i) => {
-          if (item.key === this.selectList[i].key) {
-            console.log("aaaa");
-          }
-        });
+
       });
     },
     treeselectChange() {
-      this.handleNodeClick(this.deptId);
+      if (this.deptId !== undefined) {
+        this.handleNodeClick(this.deptId);
+      } else {
+        this.userList = [];
+      }
     },
 
-    getGroupData(form) {
-      getGroupData(form).then((res) => {
+    getRollCall(form) {
+      getRollCall(form).then((res) => {
         if (res.data.code === 200) {
           this.list = res.data.data.records;
         }
@@ -329,11 +312,26 @@ export default {
     subInfo() {
       this.$refs.addForm.validate((valid) => {
         if (valid) {
-          addGroupData(this.addForm).then((res) => {
+          if (this.title === "编辑") {
+            upDataRollCall(this.addForm).then(res => {
+              console.log(res);
+              if (res.data.code === 200) {
+                this.getRollCall(this.form);
+                this.$message.success("提交完成");
+                this.dialogFormVisible = false;
+              } else {
+                this.$message.error(res.data.msg);
+              }
+            });
+          }
+          addRollCall(this.addForm).then((res) => {
+            console.log(res);
             if (res.data.code === 200) {
-              this.getGroupData(this.form);
+              this.getRollCall(this.form);
               this.$message.success("提交完成");
               this.dialogFormVisible = false;
+            } else {
+              this.$message.error(res.data.msg);
             }
           });
         } else {
@@ -343,12 +341,10 @@ export default {
     },
     draggableChange() {
       let fomaterSelectList = [];
+      this.deptIdDialogFormVisible = false;
       this.selectList.forEach((item, i) => {
-        fomaterSelectList.push({
-          directoryId: item.key || item.directoryId,
-          orderNum: i
-        });
-        this.addForm.directoryIdList = fomaterSelectList;
+        fomaterSelectList.push(item.key || item.directoryName);
+        this.addForm.member = fomaterSelectList.join("|");
       });
     },
     showGridDialog() {
@@ -359,23 +355,23 @@ export default {
     getOrganizeList().then((res) => {
       this.treeArr = fn(res.data.data);
     });
-    this.getGroupData(this.form);
+    this.getRollCall(this.form);
   },
   watch: {
     deptId(value) {
       if (value.length === 0) {
         this.selectList = [];
         this.userList = [];
-
       }
     },
-    selectList() {
-      this.draggableChange();
-    },
+    // selectList() {
+    //   this.draggableChange();
+    // },
     dialogFormVisible(value) {
       if (!value) {
         this.addForm = this.$options.data().addForm;
         this.selectList = [];
+        this.userList = [];
         this.deptId = null;
       }
     },

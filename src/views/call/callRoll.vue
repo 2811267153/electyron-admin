@@ -9,10 +9,10 @@
         <div class="form-nav">
           <el-form :inline="true" :close-on-click-modal="false" :model="form" class="demo-form-inline" :rules="form"
                    ref="form">
-            <el-form-item label="点名组名称" prop="diaplanRateGroup">
+            <el-form-item label="广播名称" prop="diaplanRateGroup">
               <el-input v-model="form.routerName" placeholder="请输入内容"></el-input>
             </el-form-item>
-            <el-form-item label="点名组状态" prop="diaplanRateGroup">
+            <el-form-item label="点广播状态" prop="diaplanRateGroup">
               <el-input v-model="form.desType" placeholder="请输入内容"></el-input>
             </el-form-item>
             <el-form-item>
@@ -20,8 +20,8 @@
               <el-button @click="clear">重置</el-button>
             </el-form-item>
           </el-form>
-          <el-button type="primary" @click="showAddForm(null, '新增点名组')"
-          >添加分组
+          <el-button type="primary" @click="showAddForm(null, '新增广播')"
+          >添加广播
           </el-button
           >
         </div>
@@ -30,7 +30,7 @@
           style="width: 100%">
           <el-table-column
             prop="date"
-            label="日期"
+            label="序号"
             width="50">
             <template scope="scope">{{ scope.$index + 1 }}</template>
           </el-table-column>
@@ -116,10 +116,10 @@
             >
               <div
                 class="user-item"
-                v-for="element in selectList"
+                v-for="element in a"
                 :key="element.key"
               >
-                {{ element.label || element.directoryNumber }}
+                {{ element.label || element.directoryName }}
               </div>
             </draggable>
             <draggable
@@ -210,7 +210,7 @@
     </el-dialog>
     <!--    选择广播成员弹出框-->
     <el-dialog title="组织成员" :visible.sync="deptIdDialogFormVisible">
-      <el-form :model="form">
+      <el-form :model="form" style="height: 300px">
         <div class="width">
           <el-form-item label="选择部门" :label-width="formLabelWidth">
             <treeselect
@@ -254,7 +254,7 @@ import treeselect from "@riophae/vue-treeselect";
 import draggable from "vuedraggable";
 import vcrontab from "@illidanj/cron-editor";
 import { getDirectory } from "@/newwork/directory";
-import { addBroadcast, delBroadcast, getBroadcast } from "@/newwork/call-router";
+import { addBroadcast, delBroadcast, getBroadcast, upDataBroadcast } from "@/newwork/call-router";
 
 export default {
   name: "callRoll",
@@ -302,7 +302,7 @@ export default {
       formLabelWidth: "120px",
       time1: [],
       time: [],
-      userList: "", //话单成员
+      userList: [], //话单成员
       deptId: null, //当前选择的部门
       treeArr: [],
       isActive: false,
@@ -313,7 +313,8 @@ export default {
         { label: "文字任务", value: "1" },
         { label: "音乐任务", value: "2" },
         { label: "采播任务", value: "3" }
-      ]
+      ],
+      a: []
     };
   },
   methods: {
@@ -329,9 +330,10 @@ export default {
         this.addForm = JSON.parse(JSON.stringify(row));
         let res = [];
         res = this.addForm.member.split("|");
-        // res.forEach(item => {
-        //   getDirectory(ite);
-        // });
+        console.log(res);
+        res.forEach(item => {
+          this.getDirectory(item);
+        });
         this.time1[1] = this.addForm.currentEndTime;
         this.time1[0] = this.addForm.currentStartTime;
       }
@@ -342,14 +344,24 @@ export default {
     treeClick() {
     },
     dataChange() {
-      this.addForm.currentEndTime = this.time1[1];
       this.addForm.currentStartTime = this.time1[0];
+      this.addForm.currentEndTime = this.time1[1];
     },
     timeChange() {
-      this.addForm.endTime = this.time[1];
       this.addForm.startTime = this.time[0];
+      this.addForm.endTime = this.time[1];
     },
-
+    //根据广播成员 获取成员信息
+    getDirectory(item) {
+      let data = {};
+      data.detpId = item;
+      data.pageNum = 1;
+      data.pageSize = 1;
+      getDirectory(data).then(res => {
+        console.log(res);
+        this.selectList.push(...res.data.data.records);
+      });
+    },
     //选择话单成员弹出框
     showGridDialog() {
       this.deptIdDialogFormVisible = true;
@@ -391,26 +403,41 @@ export default {
     },
     //讲选择的话机成员添加到列表内
     gridItemClick(item) {
-      this.selectList.push(item);
-      const selectListID = [];
-      this.addForm.member = this.selectList.join("|");
-      this.selectList.forEach(item => {
-        selectListID.push(item.id);
-      });
-      this.addForm.member = selectListID.join("|");
+      if (item.select) {
+        item.select = false;
+      } else {
+        item.select = true;
+        this.selectList.push(item);
+        this.a = [...new Set(this.selectList)];
+        const selectListID = [];
+        this.a.forEach(item => {
+          selectListID.push(item.id);
+        });
+        this.addForm.member = selectListID.join("|");
+      }
     },
     //提交表单
     subInfo() {
       this.$refs.addForm.validate((valid) => {
         if (valid) {
-          addBroadcast(this.addForm).then(res => {
-            console.log(res);
-            if (res.data.code === 200) {
-              this.getBroadcast(this.form);
-              this.$message.success("提交完成");
-              this.dialogFormVisible = false;
-            }
-          });
+          if (this.title === "编辑") {
+            upDataBroadcast(this.addForm).then(res => {
+              if (res.data.code === 200) {
+                this.getBroadcast(this.form);
+                this.$message.success("修改完成");
+                this.dialogFormVisible = false;
+              }
+            });
+          } else {
+            addBroadcast(this.addForm).then(res => {
+              if (res.data.code === 200) {
+                this.getBroadcast(this.form);
+                this.$message.success("提交完成");
+                this.dialogFormVisible = false;
+              }
+            });
+          }
+          ;
         } else {
           console.log("error submit!!");
           return false;
@@ -429,7 +456,7 @@ export default {
     //查询组织列表
     deptName(deptId) {
       getOrganizeId(deptId).then(res => {
-          
+
       });
       return deptId;
     }
@@ -490,8 +517,8 @@ export default {
   border-radius: 5px;
   padding: 10px 15px;
   flex-wrap: wrap;
-  height: 65px;
   align-items: center;
+  min-height: 65px;
   background-color: #f2f2f2;
   margin: 0;
   width: 100%;

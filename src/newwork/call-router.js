@@ -119,6 +119,14 @@ export function addBroadcast(data) {
   });
 }
 
+export function upDataBroadcast(data) {
+  return request({
+    url: "/pbx/broadcast/update",
+    method: "put",
+    data
+  });
+}
+
 export function getBroadcast(data) {
   return request({
     url: "/pbx/broadcast/list",
@@ -129,6 +137,40 @@ export function getBroadcast(data) {
 export function delBroadcast(data) {
   return request({
     url: "/pbx/broadcast/delete/" + data,
+    method: "delete"
+  });
+}
+
+/**
+ * 新增点名组
+ */
+export function addRollCall(data) {
+  return request({
+    url: "/pbx/rollcall/add",
+    method: "post",
+    data: data
+  });
+}
+
+export function getRollCall(data) {
+  return request({
+    url: "/pbx/rollcall/list",
+    method: "get",
+    params: data
+  });
+}
+
+export function upDataRollCall(data) {
+  return request({
+    url: "/pbx/rollcall/update",
+    method: "put",
+    data: data
+  });
+}
+
+export function deleteRollCall(data) {
+  return request({
+    url: "/pbx/rollcall/delete/" + data,
     method: "delete"
   });
 }

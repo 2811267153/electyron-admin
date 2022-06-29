@@ -20,11 +20,12 @@ const login = {
       state.menuList = value;
       //动态添加路由
       const routers = mapMenuRouter(value);
-      console.log(routers);
-      router.addRoutes(routers);
-      routers.forEach(item => {
-        console.log(router, "_____");
-      });
+      // cache.setCache("menuList", menuToTree(value)[0].children);
+      // console.log(routers);
+      // router.addRoutes(routers);
+      // routers.forEach(item => {
+      //   console.log(router, "_____");
+      // });
     }
   },
   actions: {
@@ -37,13 +38,13 @@ const login = {
         commit("changeToken", JSESSIONID);
         commit("changeUserInfo", user);
         commit("changeMenu", sysMenuList);
-
         //数据存储到本地浏览器
         cache.setCache("token", JSESSIONID);
         cache.setCache("user", user);
-        console.log("sysMenuList", sysMenuList);
         cache.setCache("menuList", menuToTree(sysMenuList)[0].children);
-        cache.setCache("defaultCurrentIndex", "1");
+
+        // console.log("sysMenuList", sysMenuList);
+
         await router.push("/home");
       } else {
         Message.error(result.data.msg);
@@ -66,7 +67,6 @@ const login = {
           return a.orderNum - b.orderNum;
         });
       }
-      console.log("formatMenuList", formatMenuList);
       if (formatMenuList) {
         commit("changeMenu", formatMenuList);
       }
