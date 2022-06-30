@@ -20,12 +20,6 @@ const login = {
       state.menuList = value;
       //动态添加路由
       const routers = mapMenuRouter(value);
-      // cache.setCache("menuList", menuToTree(value)[0].children);
-      // console.log(routers);
-      // router.addRoutes(routers);
-      // routers.forEach(item => {
-      //   console.log(router, "_____");
-      // });
     }
   },
   actions: {
